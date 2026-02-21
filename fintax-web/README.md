@@ -1,0 +1,36 @@
+# fintax-web
+
+## Requisitos
+
+- Node.js 20+
+- pnpm
+
+## Ejecutar en desarrollo
+
+```bash
+pnpm dev
+```
+
+## Ejecutar lint
+
+```bash
+pnpm lint
+```
+
+## Ejecutar build
+
+```bash
+pnpm build
+```
+
+## Estrategia de ramas
+
+- Rama estable: `main`
+- Trabajo de features: `feature/*`
+- Abrir Pull Request de `feature/*` hacia `main`
+
+## Convencion de commits
+
+- Usar Conventional Commits
+- Formato: `<type>(scope opcional): descripcion`
+- Tipos recomendados: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`
