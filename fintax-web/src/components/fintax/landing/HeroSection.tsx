@@ -47,14 +47,20 @@ export function HeroSection() {
           <div className="relative">
             <div className="absolute inset-0 -z-10 rounded-card bg-gradient-to-tr from-green/20 via-transparent to-teal/15 blur-3xl" />
             <div className="overflow-hidden rounded-card border border-border/60 bg-surface/70 p-3 shadow-glass backdrop-blur-md">
-              <Image
-                src="/visuals/hero-dashboard.png"
-                alt={t("heroImageAlt")}
-                width={1200}
-                height={860}
-                className="h-auto w-full rounded-[18px] border border-border/50 object-cover"
-                priority
-              />
+              <div
+                className="relative aspect-[12/9] w-full overflow-hidden rounded-[18px] border border-border/50 bg-surface2"
+                style={{ backgroundImage: 'url("/visuals/hero-bg.png")', backgroundSize: "cover" }}
+              >
+                <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-bg/30" />
+                <Image
+                  src="/visuals/hero-dashboard.png"
+                  alt={t("heroImageAlt")}
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="relative z-10 object-contain"
+                  priority
+                />
+              </div>
             </div>
           </div>
         </div>
