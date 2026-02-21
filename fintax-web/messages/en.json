@@ -1,0 +1,358 @@
+{
+  "Common": {
+    "languages": {
+      "en": "EN",
+      "nl": "NL",
+      "es": "ES",
+      "ro": "RO",
+      "pl": "PL"
+    }
+  },
+  "Navbar": {
+    "brand": "FinTax",
+    "languageLabel": "Language",
+    "links": {
+      "product": "Product",
+      "pricing": "Pricing",
+      "resources": "Resources",
+      "contact": "Contact"
+    },
+    "signIn": "Sign in",
+    "freePrecheck": "Free precheck"
+  },
+  "Footer": {
+    "sections": {
+      "product": "Product",
+      "company": "Company",
+      "legal": "Legal",
+      "languages": "Languages"
+    },
+    "links": {
+      "taxEngine": "Tax Engine",
+      "pricing": "Pricing",
+      "integrations": "Integrations",
+      "about": "About",
+      "careers": "Careers",
+      "contact": "Contact",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    }
+  },
+  "Landing": {
+    "hero": {
+      "eyebrow": "FinTax for internationals in NL",
+      "title": "Dutch taxes & benefits explained in your language.",
+      "subtitle": "File your tax return (P/M/C), manage ZZP + VAT, apply for toeslagen, and understand government letters. Automation + human review. Fixed pricing.",
+      "primaryCta": "Start free precheck",
+      "secondaryCta": "Explore services",
+      "trustBadges": [
+        "Fixed pricing",
+        "Case tracking dashboard",
+        "Multilingual support",
+        "GDPR-ready"
+      ],
+      "heroImageAlt": "FinTax dashboard with client cases and tax filing status"
+    },
+    "services": {
+      "eyebrow": "Services",
+      "title": "What we handle end-to-end",
+      "cta": "Precheck",
+      "items": [
+        {
+          "title": "Income Tax Return (P-form)",
+          "copy": "Employees and residents filing annual returns."
+        },
+        {
+          "title": "M-form Migration Tax",
+          "copy": "Arrival/departure year support with full checks."
+        },
+        {
+          "title": "C-form Non-resident",
+          "copy": "For non-residents with Dutch income sources."
+        },
+        {
+          "title": "ZZP + VAT Setup",
+          "copy": "Registration, quarterly VAT and deductible guidance."
+        },
+        {
+          "title": "Toeslagen Applications",
+          "copy": "Healthcare, rent and childcare benefit applications."
+        },
+        {
+          "title": "Government Letter Review",
+          "copy": "Translate and explain Belastingdienst letters."
+        },
+        {
+          "title": "Tax Optimization Review",
+          "copy": "Missed deductions and filing corrections review."
+        },
+        {
+          "title": "Benefits Eligibility Check",
+          "copy": "Quick scan of possible allowances and credits."
+        },
+        {
+          "title": "Compliance Health Check",
+          "copy": "Deadlines, risks and action plan in one dashboard."
+        }
+      ]
+    },
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "title": "Simple 4-step workflow",
+      "steps": [
+        {
+          "title": "Free precheck",
+          "copy": "Share your case type and we confirm scope, timeline and fixed pricing."
+        },
+        {
+          "title": "Document intake",
+          "copy": "Upload documents in your dashboard and track missing items in real time."
+        },
+        {
+          "title": "Multilingual review",
+          "copy": "Automation prepares drafts, then a tax specialist verifies everything."
+        },
+        {
+          "title": "File & follow-up",
+          "copy": "Submission support, status monitoring and response handling if needed."
+        }
+      ]
+    },
+    "why": {
+      "eyebrow": "Why FinTax",
+      "title": "Built for expats, workers and ZZP",
+      "imageAlt": "Example of translated Dutch tax letter with highlighted actions",
+      "items": [
+        {
+          "title": "Language clarity",
+          "copy": "EN/NL/ES/RO/PL communication for each step."
+        },
+        {
+          "title": "Fixed pricing",
+          "copy": "No surprise invoices after submission."
+        },
+        {
+          "title": "Fast turnaround",
+          "copy": "Clear SLA based on case complexity."
+        },
+        {
+          "title": "Human review",
+          "copy": "Automation + specialist check before filing."
+        },
+        {
+          "title": "GDPR-first",
+          "copy": "Secure storage and strict access controls."
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "Trusted by people filing in Dutch systems",
+      "items": [
+        {
+          "quote": "They translated every Belastingdienst letter and I finally understood what to do.",
+          "author": "Elena P.",
+          "role": "Employee, Rotterdam"
+        },
+        {
+          "quote": "M-form filing felt impossible before. FinTax handled it from intake to submission.",
+          "author": "Andrei M.",
+          "role": "Relocated professional"
+        },
+        {
+          "quote": "As a ZZP, quarterly VAT and annual return are now predictable and fast.",
+          "author": "Diego R.",
+          "role": "Freelance designer"
+        },
+        {
+          "quote": "The fixed pricing and dashboard updates removed all uncertainty for my family.",
+          "author": "Marta K.",
+          "role": "Dual-income household"
+        },
+        {
+          "quote": "Their review found deductions I missed for two years. Great process and support.",
+          "author": "Luis T.",
+          "role": "Engineer, Eindhoven"
+        },
+        {
+          "quote": "The team answered in my language and tracked every step clearly in one place.",
+          "author": "Ioana V.",
+          "role": "Startup employee"
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "Fixed plans + flexible add-ons",
+      "featured": "Featured",
+      "primaryCta": "Start free precheck",
+      "addonsTitle": "Add-ons",
+      "plans": [
+        {
+          "name": "Basic",
+          "price": "EUR 149",
+          "summary": "For straightforward P-form returns",
+          "features": [
+            "Annual tax return filing",
+            "Document checklist",
+            "Email support"
+          ]
+        },
+        {
+          "name": "Standard",
+          "price": "EUR 299",
+          "summary": "Most common cases incl. migration and benefits",
+          "features": [
+            "P/M/C filing support",
+            "Toeslagen review",
+            "Case dashboard",
+            "Priority review"
+          ]
+        },
+        {
+          "name": "Complex",
+          "price": "Custom",
+          "summary": "ZZP, multi-income and advanced scenarios",
+          "features": [
+            "ZZP + VAT workflows",
+            "Advanced letter handling",
+            "Custom timelines"
+          ]
+        }
+      ],
+      "addons": [
+        "Urgent 48h turnaround",
+        "Quarterly VAT filing",
+        "Historical correction filing",
+        "Extra translated letter review"
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Common questions",
+      "items": [
+        {
+          "q": "Do you only support expats?",
+          "a": "We support expats, international employees, students, families and ZZP clients living or earning in the Netherlands."
+        },
+        {
+          "q": "Which forms do you handle?",
+          "a": "We handle P-form, M-form and C-form workflows, plus related letters and follow-up actions."
+        },
+        {
+          "q": "Can I get help with toeslagen?",
+          "a": "Yes, we review eligibility and help with aanvragen for zorgtoeslag, huurtoeslag and other relevant allowances."
+        },
+        {
+          "q": "How does fixed pricing work?",
+          "a": "After free precheck, you get a fixed quote before work starts. Scope changes are flagged before any extra cost."
+        },
+        {
+          "q": "What languages do you support?",
+          "a": "We support EN, NL, ES, RO and PL for communication and document explanation."
+        },
+        {
+          "q": "How long does filing take?",
+          "a": "Typical cases are completed in days, complex cases in weeks. You get timeline estimates in your dashboard."
+        },
+        {
+          "q": "Do you work with ZZP + VAT?",
+          "a": "Yes. We support quarterly VAT workflows, annual reporting and deductible reviews for freelancers."
+        },
+        {
+          "q": "Can you review old tax years?",
+          "a": "Yes, we can assess prior filings and help submit corrections where applicable."
+        },
+        {
+          "q": "How secure is my data?",
+          "a": "We use GDPR-ready practices with least-access controls, secure storage and audit-friendly process tracking."
+        },
+        {
+          "q": "What happens after submission?",
+          "a": "We monitor updates, help interpret responses and can support next actions if Dutch authorities request follow-up."
+        }
+      ]
+    }
+  },
+  "Auth": {
+    "eyebrow": "Account access",
+    "title": "Welcome to FinTax",
+    "tabs": {
+      "login": "Login",
+      "register": "Create account"
+    },
+    "social": {
+      "google": "Continue with Google",
+      "apple": "Continue with Apple",
+      "emailDivider": "or continue with email"
+    },
+    "form": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "emailPlaceholder": "you@example.com",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPasswordPlaceholder": "Repeat password",
+      "submitLogin": "Login",
+      "submitRegister": "Create account",
+      "backToLanding": "Back to landing"
+    },
+    "validation": {
+      "invalidEmail": "Enter a valid email address.",
+      "passwordLength": "Password must be at least 8 characters.",
+      "passwordMismatch": "Passwords do not match."
+    },
+    "a11y": {
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "showConfirmPassword": "Show confirm password",
+      "hideConfirmPassword": "Hide confirm password",
+      "modeLabel": "Authentication mode"
+    }
+  },
+  "Dashboard": {
+    "sidebar": {
+      "brand": "FinTax",
+      "items": [
+        "Dashboard",
+        "Tax return",
+        "Benefits",
+        "Income",
+        "Government",
+        "Settings"
+      ]
+    },
+    "topbar": {
+      "title": "Dashboard",
+      "currentCase": "Current Case",
+      "openSidebar": "Open sidebar",
+      "closeSidebar": "Close sidebar",
+      "closeOverlay": "Close sidebar overlay"
+    },
+    "overview": {
+      "caseTitle": "Case",
+      "statusLabel": "Status",
+      "statusValue": "In review",
+      "deadlineLabel": "Deadline",
+      "deadlineValue": "12 May 2026",
+      "checklistTitle": "Checklist",
+      "progressLabel": "Progress",
+      "refundTitle": "Refund estimate",
+      "refundAmount": "2,345",
+      "chartTitle": "Last 7 checkpoints",
+      "chartNote": "Updated after latest payroll upload",
+      "caseRows": [
+        { "label": "Zorgtoeslag", "amount": "EUR 1,286" },
+        { "label": "Huurtoeslag", "amount": "EUR 2,140" },
+        { "label": "Kinderbijslag", "amount": "EUR 1,102" }
+      ],
+      "checklistItems": [
+        { "label": "Passport / ID uploaded", "done": true },
+        { "label": "Annual income statements", "done": true },
+        { "label": "Housing contract details", "done": true },
+        { "label": "Childcare invoices", "done": false }
+      ]
+    }
+  }
+}
