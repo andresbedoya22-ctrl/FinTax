@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
@@ -12,6 +13,7 @@ export interface DashboardShellProps {
 }
 
 export function DashboardShell({ children }: DashboardShellProps) {
+  const t = useTranslations("Dashboard.topbar");
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
 
   return (
@@ -32,7 +34,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
           type="button"
           className="fixed inset-0 z-40 bg-black/50"
           onClick={() => setIsMobileOpen(false)}
-          aria-label="Close sidebar overlay"
+          aria-label={t("closeOverlay")}
         />
         <div className="fixed inset-y-0 left-0 z-50 flex w-[84%] max-w-80 flex-col">
           <div className="flex items-center justify-end border-b border-border/60 bg-surface/90 p-3">
@@ -40,7 +42,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
               type="button"
               className="inline-flex size-8 items-center justify-center rounded-md border border-border/70 text-secondary transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               onClick={() => setIsMobileOpen(false)}
-              aria-label="Close sidebar"
+              aria-label={t("closeSidebar")}
             >
               <X className="size-4" />
             </button>

@@ -1,25 +1,28 @@
-import { ChevronDown, Globe } from "lucide-react";
-import Link from "next/link";
-import * as React from "react";
+"use client";
 
+import * as React from "react";
+import { useTranslations } from "next-intl";
+
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/fintax/Button";
 import { Container } from "@/components/fintax/Container";
+import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 
 const defaultLinks = [
-  { label: "Product", href: "#product" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Resources", href: "#resources" },
-  { label: "Contact", href: "#contact" },
-];
-
-const languages = ["EN", "NL", "ES", "RO", "PL"] as const;
+  { key: "product", href: "#product" },
+  { key: "pricing", href: "#pricing" },
+  { key: "resources", href: "#resources" },
+  { key: "contact", href: "#contact" },
+] as const;
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
-  links?: Array<{ label: string; href: string }>;
+  links?: ReadonlyArray<{ key: "product" | "pricing" | "resources" | "contact"; href: string }>;
 }
 
 export function Navbar({ className, links = defaultLinks, ...props }: NavbarProps) {
+  const t = useTranslations("Navbar");
+
   return (
     <header
       className={cn(
@@ -33,56 +36,32 @@ export function Navbar({ className, links = defaultLinks, ...props }: NavbarProp
           href="/"
           className="font-heading text-lg font-semibold tracking-tight text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         >
-          FinTax
+          {t("brand")}
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
           {links.map((link) => (
             <Link
-              key={link.label}
+              key={link.key}
               href={link.href}
               className="rounded-md px-3 py-2 text-sm text-secondary transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
-              {link.label}
+              {t(`links.${link.key}`)}
             </Link>
           ))}
         </nav>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <div className="relative">
-            <label htmlFor="language" className="sr-only">
-              Language
-            </label>
-            <Globe
-              className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted"
-              aria-hidden="true"
-            />
-            <select
-              id="language"
-              name="language"
-              defaultValue="EN"
-              className="h-9 appearance-none rounded-md border border-border/60 bg-surface2 pl-8 pr-7 text-sm text-secondary outline-none transition-colors hover:text-text focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-            >
-              {languages.map((language) => (
-                <option key={language} value={language}>
-                  {language}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              className="pointer-events-none absolute right-2 top-1/2 size-4 -translate-y-1/2 text-muted"
-              aria-hidden="true"
-            />
-          </div>
+          <LanguageSwitcher />
 
           <Link
-            href="/signin"
+            href="/auth"
             className="rounded-md px-2 py-2 text-sm text-secondary transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
           >
-            Sign in
+            {t("signIn")}
           </Link>
 
-          <Button size="sm">Free precheck</Button>
+          <Button size="sm">{t("freePrecheck")}</Button>
         </div>
       </Container>
     </header>

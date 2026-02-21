@@ -1,0 +1,53 @@
+{
+  "Navbar": {
+    "links": {
+      "product": "Produs",
+      "pricing": "Preturi",
+      "resources": "Resurse",
+      "contact": "Contact"
+    },
+    "signIn": "Autentificare",
+    "freePrecheck": "Precheck gratuit"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Taxele si beneficiile olandeze explicate in limba ta.",
+      "primaryCta": "Incepe precheck gratuit",
+      "secondaryCta": "Exploreaza servicii"
+    },
+    "services": {
+      "title": "Ce gestionam cap-coada"
+    },
+    "howItWorks": {
+      "title": "Flux simplu in 4 pasi"
+    },
+    "pricing": {
+      "title": "Planuri fixe + add-on-uri flexibile",
+      "featured": "Recomandat",
+      "primaryCta": "Incepe precheck gratuit"
+    },
+    "faq": {
+      "title": "Intrebari frecvente"
+    }
+  },
+  "Auth": {
+    "title": "Bun venit la FinTax",
+    "tabs": {
+      "login": "Autentificare",
+      "register": "Creeaza cont"
+    },
+    "form": {
+      "submitLogin": "Autentificare",
+      "submitRegister": "Creeaza cont",
+      "backToLanding": "Inapoi la landing"
+    }
+  },
+  "Dashboard": {
+    "sidebar": {
+      "items": ["Dashboard", "Declaratie fiscala", "Beneficii", "Venit", "Guvern", "Setari"]
+    },
+    "topbar": {
+      "currentCase": "Caz curent"
+    }
+  }
+}

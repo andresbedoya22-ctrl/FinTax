@@ -1,0 +1,53 @@
+{
+  "Navbar": {
+    "links": {
+      "product": "Producto",
+      "pricing": "Precios",
+      "resources": "Recursos",
+      "contact": "Contacto"
+    },
+    "signIn": "Iniciar sesion",
+    "freePrecheck": "Precheck gratis"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Impuestos y beneficios en Paises Bajos explicados en tu idioma.",
+      "primaryCta": "Iniciar precheck gratis",
+      "secondaryCta": "Explorar servicios"
+    },
+    "services": {
+      "title": "Lo que gestionamos de punta a punta"
+    },
+    "howItWorks": {
+      "title": "Flujo simple en 4 pasos"
+    },
+    "pricing": {
+      "title": "Planes fijos + add-ons flexibles",
+      "featured": "Destacado",
+      "primaryCta": "Iniciar precheck gratis"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes"
+    }
+  },
+  "Auth": {
+    "title": "Bienvenido a FinTax",
+    "tabs": {
+      "login": "Iniciar sesion",
+      "register": "Crear cuenta"
+    },
+    "form": {
+      "submitLogin": "Iniciar sesion",
+      "submitRegister": "Crear cuenta",
+      "backToLanding": "Volver al landing"
+    }
+  },
+  "Dashboard": {
+    "sidebar": {
+      "items": ["Dashboard", "Declaracion", "Beneficios", "Ingresos", "Gobierno", "Configuracion"]
+    },
+    "topbar": {
+      "currentCase": "Caso actual"
+    }
+  }
+}

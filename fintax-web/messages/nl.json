@@ -1,0 +1,53 @@
+{
+  "Navbar": {
+    "links": {
+      "product": "Product",
+      "pricing": "Prijzen",
+      "resources": "Bronnen",
+      "contact": "Contact"
+    },
+    "signIn": "Inloggen",
+    "freePrecheck": "Gratis precheck"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Nederlandse belastingen en toeslagen uitgelegd in jouw taal.",
+      "primaryCta": "Start gratis precheck",
+      "secondaryCta": "Bekijk diensten"
+    },
+    "services": {
+      "title": "Wat wij van A tot Z regelen"
+    },
+    "howItWorks": {
+      "title": "Eenvoudige workflow in 4 stappen"
+    },
+    "pricing": {
+      "title": "Vaste pakketten + flexibele add-ons",
+      "featured": "Aanbevolen",
+      "primaryCta": "Start gratis precheck"
+    },
+    "faq": {
+      "title": "Veelgestelde vragen"
+    }
+  },
+  "Auth": {
+    "title": "Welkom bij FinTax",
+    "tabs": {
+      "login": "Inloggen",
+      "register": "Account maken"
+    },
+    "form": {
+      "submitLogin": "Inloggen",
+      "submitRegister": "Account maken",
+      "backToLanding": "Terug naar landing"
+    }
+  },
+  "Dashboard": {
+    "sidebar": {
+      "items": ["Dashboard", "Belastingaangifte", "Toeslagen", "Inkomen", "Overheid", "Instellingen"]
+    },
+    "topbar": {
+      "currentCase": "Huidige zaak"
+    }
+  }
+}

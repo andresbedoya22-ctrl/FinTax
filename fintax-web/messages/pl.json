@@ -1,0 +1,53 @@
+{
+  "Navbar": {
+    "links": {
+      "product": "Produkt",
+      "pricing": "Cennik",
+      "resources": "Zasoby",
+      "contact": "Kontakt"
+    },
+    "signIn": "Zaloguj",
+    "freePrecheck": "Darmowy precheck"
+  },
+  "Landing": {
+    "hero": {
+      "title": "Holenderskie podatki i swiadczenia wyjasnione w Twoim jezyku.",
+      "primaryCta": "Rozpocznij darmowy precheck",
+      "secondaryCta": "Poznaj uslugi"
+    },
+    "services": {
+      "title": "Co obslugujemy od A do Z"
+    },
+    "howItWorks": {
+      "title": "Prosty proces w 4 krokach"
+    },
+    "pricing": {
+      "title": "Stale pakiety + elastyczne dodatki",
+      "featured": "Wyróżnione",
+      "primaryCta": "Rozpocznij darmowy precheck"
+    },
+    "faq": {
+      "title": "Najczesciej zadawane pytania"
+    }
+  },
+  "Auth": {
+    "title": "Witamy w FinTax",
+    "tabs": {
+      "login": "Logowanie",
+      "register": "Utworz konto"
+    },
+    "form": {
+      "submitLogin": "Zaloguj",
+      "submitRegister": "Utworz konto",
+      "backToLanding": "Powrot na landing"
+    }
+  },
+  "Dashboard": {
+    "sidebar": {
+      "items": ["Dashboard", "Rozliczenie", "Swiadczenia", "Dochody", "Urzedy", "Ustawienia"]
+    },
+    "topbar": {
+      "currentCase": "Biezaca sprawa"
+    }
+  }
+}
