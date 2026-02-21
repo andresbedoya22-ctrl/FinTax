@@ -1,5 +1,8 @@
+"use client";
+
 import { Check } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/fintax/Badge";
 import { Button } from "@/components/fintax/Button";
@@ -7,47 +10,29 @@ import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Container } from "@/components/fintax/Container";
 import { Section } from "@/components/fintax/Section";
 
-const plans = [
-  {
-    name: "Basic",
-    price: "€149",
-    summary: "For straightforward P-form returns",
-    features: ["Annual tax return filing", "Document checklist", "Email support"],
-  },
-  {
-    name: "Standard",
-    price: "€299",
-    summary: "Most common cases incl. migration and benefits",
-    features: ["P/M/C filing support", "Toeslagen review", "Case dashboard", "Priority review"],
-    featured: true,
-  },
-  {
-    name: "Complex",
-    price: "Custom",
-    summary: "ZZP, multi-income and advanced scenarios",
-    features: ["ZZP + VAT workflows", "Advanced letter handling", "Custom timelines"],
-  },
-];
-
-const addOns = [
-  "Urgent 48h turnaround",
-  "Quarterly VAT filing",
-  "Historical correction filing",
-  "Extra translated letter review",
-];
+type Plan = {
+  name: string;
+  price: string;
+  summary: string;
+  features: string[];
+};
 
 export function PricingSection() {
+  const t = useTranslations("Landing.pricing");
+  const plans = t.raw("plans") as Plan[];
+  const addOns = t.raw("addons") as string[];
+
   return (
     <Section id="pricing">
       <Container>
-        <p className="text-sm uppercase tracking-[0.16em] text-teal">Pricing</p>
-        <h2 className="mt-2 text-3xl font-semibold text-text">Fixed plans + flexible add-ons</h2>
+        <p className="text-sm uppercase tracking-[0.16em] text-teal">{t("eyebrow")}</p>
+        <h2 className="mt-2 text-3xl font-semibold text-text">{t("title")}</h2>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          {plans.map((plan) => (
+          {plans.map((plan, index) => (
             <Card
               key={plan.name}
-              className={plan.featured ? "relative border-green/60 bg-surface shadow-glass" : ""}
+              className={index === 1 ? "relative border-green/60 bg-surface shadow-glass" : ""}
             >
               <CardHeader>
                 <div className="flex items-start justify-between gap-3">
@@ -55,7 +40,7 @@ export function PricingSection() {
                     <h3 className="text-xl font-semibold text-text">{plan.name}</h3>
                     <p className="mt-1 text-sm text-secondary">{plan.summary}</p>
                   </div>
-                  {plan.featured ? <Badge variant="success">Featured</Badge> : null}
+                  {index === 1 ? <Badge variant="success">{t("featured")}</Badge> : null}
                 </div>
                 <p className="mt-4 text-3xl font-semibold text-text">{plan.price}</p>
               </CardHeader>
@@ -69,7 +54,7 @@ export function PricingSection() {
                   ))}
                 </ul>
                 <Button asChild className="mt-6 w-full">
-                  <Link href="#hero">Start free precheck</Link>
+                  <Link href="#hero">{t("primaryCta")}</Link>
                 </Button>
               </CardBody>
             </Card>
@@ -78,7 +63,7 @@ export function PricingSection() {
 
         <Card className="mt-6">
           <CardHeader>
-            <h3 className="text-lg font-semibold text-text">Add-ons</h3>
+            <h3 className="text-lg font-semibold text-text">{t("addonsTitle")}</h3>
           </CardHeader>
           <CardBody>
             <ul className="grid gap-2 sm:grid-cols-2">

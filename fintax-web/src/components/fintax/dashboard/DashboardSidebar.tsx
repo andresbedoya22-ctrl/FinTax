@@ -1,3 +1,5 @@
+"use client";
+
 import {
   BadgeDollarSign,
   FileText,
@@ -6,17 +8,18 @@ import {
   Landmark,
   Settings,
 } from "lucide-react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 
 const navItems = [
-  { label: "Dashboard", href: "/app", icon: LayoutDashboard, active: true },
-  { label: "Tax return", href: "#tax-return", icon: FileText },
-  { label: "Benefits", href: "#benefits", icon: Gift },
-  { label: "Income", href: "#income", icon: BadgeDollarSign },
-  { label: "Government", href: "#government", icon: Landmark },
-  { label: "Settings", href: "#settings", icon: Settings },
+  { key: 0, href: "/app", icon: LayoutDashboard, active: true },
+  { key: 1, href: "#tax-return", icon: FileText },
+  { key: 2, href: "#benefits", icon: Gift },
+  { key: 3, href: "#income", icon: BadgeDollarSign },
+  { key: 4, href: "#government", icon: Landmark },
+  { key: 5, href: "#settings", icon: Settings },
 ];
 
 export interface DashboardSidebarProps {
@@ -25,6 +28,9 @@ export interface DashboardSidebarProps {
 }
 
 export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProps) {
+  const t = useTranslations("Dashboard.sidebar");
+  const labels = t.raw("items") as string[];
+
   return (
     <aside
       className={cn(
@@ -36,7 +42,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
         href="/"
         className="mb-6 flex items-center rounded-md px-2 py-2 font-heading text-lg font-semibold text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
       >
-        FinTax
+        {t("brand")}
       </Link>
 
       <nav className="space-y-1" aria-label="Sidebar navigation">
@@ -44,7 +50,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
           const Icon = item.icon;
           return (
             <Link
-              key={item.label}
+              key={item.key}
               href={item.href}
               onClick={onNavigate}
               className={cn(
@@ -55,7 +61,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
               )}
             >
               <Icon className="size-4" aria-hidden="true" />
-              <span>{item.label}</span>
+              <span>{labels[item.key]}</span>
             </Link>
           );
         })}

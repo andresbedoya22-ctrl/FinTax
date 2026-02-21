@@ -1,12 +1,12 @@
 "use client";
 
 import { Apple, Eye, EyeOff, Mail } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody } from "@/components/fintax/Card";
+import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 
 type AuthMode = "login" | "register";
@@ -18,15 +18,16 @@ type FormState = {
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
+type ValidationTranslator = (key: "invalidEmail" | "passwordLength" | "passwordMismatch") => string;
 
-function validate(mode: AuthMode, form: FormState): FormErrors {
+function validate(mode: AuthMode, form: FormState, t: ValidationTranslator): FormErrors {
   const errors: FormErrors = {};
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
 
-  if (!emailOk) errors.email = "Enter a valid email address.";
-  if (form.password.length < 8) errors.password = "Password must be at least 8 characters.";
+  if (!emailOk) errors.email = t("invalidEmail");
+  if (form.password.length < 8) errors.password = t("passwordLength");
   if (mode === "register" && form.confirmPassword !== form.password) {
-    errors.confirmPassword = "Passwords do not match.";
+    errors.confirmPassword = t("passwordMismatch");
   }
 
   return errors;
@@ -34,6 +35,9 @@ function validate(mode: AuthMode, form: FormState): FormErrors {
 
 export function AuthScreen() {
   const router = useRouter();
+  const t = useTranslations("Auth");
+  const tValidation = useTranslations("Auth.validation");
+  const tA11y = useTranslations("Auth.a11y");
   const [mode, setMode] = React.useState<AuthMode>("login");
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -59,7 +63,7 @@ export function AuthScreen() {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const validationErrors = validate(mode, form);
+    const validationErrors = validate(mode, form, tValidation);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) return;
@@ -73,14 +77,14 @@ export function AuthScreen() {
     <Card className="mx-auto w-full max-w-xl border-border/60 bg-surface/80">
       <CardBody className="p-6 sm:p-8">
         <div className="mb-6">
-          <p className="text-sm uppercase tracking-[0.16em] text-teal">Account access</p>
-          <h1 className="mt-2 text-3xl font-semibold text-text">Welcome to FinTax</h1>
+          <p className="text-sm uppercase tracking-[0.16em] text-teal">{t("eyebrow")}</p>
+          <h1 className="mt-2 text-3xl font-semibold text-text">{t("title")}</h1>
         </div>
 
         <div
           className="mb-6 grid grid-cols-2 rounded-md border border-border/60 bg-surface2 p-1"
           role="tablist"
-          aria-label="Authentication mode"
+          aria-label={tA11y("modeLabel")}
         >
           <button
             type="button"
@@ -92,7 +96,7 @@ export function AuthScreen() {
             )}
             onClick={() => onModeChange("login")}
           >
-            Login
+            {t("tabs.login")}
           </button>
           <button
             type="button"
@@ -104,7 +108,7 @@ export function AuthScreen() {
             )}
             onClick={() => onModeChange("register")}
           >
-            Create account
+            {t("tabs.register")}
           </button>
         </div>
 
@@ -121,24 +125,24 @@ export function AuthScreen() {
               <path d="M4.63 14.1a7.2 7.2 0 010-4.2L1.29 7.31a11.26 11.26 0 000 9.38l3.34-2.59z" />
               <path d="M12 23.25c2.7 0 4.97-.89 6.63-2.43l-3.7-2.87c-1.02.69-2.32 1.1-3.93 1.1-3.58 0-6.56-2.08-7.37-5.15L1.29 16.7c1.99 3.89 6.02 6.55 10.71 6.55z" />
             </svg>
-            Continue with Google
+            {t("social.google")}
           </Button>
           <Button type="button" variant="secondary" className="w-full">
             <Apple className="size-4" aria-hidden="true" />
-            Continue with Apple
+            {t("social.apple")}
           </Button>
         </div>
 
         <div className="mb-5 flex items-center gap-3 text-xs text-muted">
           <span className="h-px flex-1 bg-border/70" />
-          <span>or continue with email</span>
+          <span>{t("social.emailDivider")}</span>
           <span className="h-px flex-1 bg-border/70" />
         </div>
 
         <form className="space-y-4" onSubmit={onSubmit} noValidate>
           <div>
             <label htmlFor="email" className="mb-1.5 block text-sm text-secondary">
-              Email
+              {t("form.email")}
             </label>
             <div className="relative">
               <Mail
@@ -157,7 +161,7 @@ export function AuthScreen() {
                   "outline-none transition-colors focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
                   errors.email ? "border-error" : "border-border/70"
                 )}
-                placeholder="you@example.com"
+                placeholder={t("form.emailPlaceholder")}
               />
             </div>
             {errors.email ? <p className="mt-1 text-xs text-error">{errors.email}</p> : null}
@@ -165,7 +169,7 @@ export function AuthScreen() {
 
           <div>
             <label htmlFor="password" className="mb-1.5 block text-sm text-secondary">
-              Password
+              {t("form.password")}
             </label>
             <div className="relative">
               <input
@@ -180,13 +184,13 @@ export function AuthScreen() {
                   "outline-none transition-colors focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
                   errors.password ? "border-error" : "border-border/70"
                 )}
-                placeholder="At least 8 characters"
+                placeholder={t("form.passwordPlaceholder")}
               />
               <button
                 type="button"
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? tA11y("hidePassword") : tA11y("showPassword")}
               >
                 {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
@@ -197,7 +201,7 @@ export function AuthScreen() {
           {mode === "register" ? (
             <div>
               <label htmlFor="confirmPassword" className="mb-1.5 block text-sm text-secondary">
-                Confirm password
+                {t("form.confirmPassword")}
               </label>
               <div className="relative">
                 <input
@@ -212,13 +216,17 @@ export function AuthScreen() {
                     "outline-none transition-colors focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
                     errors.confirmPassword ? "border-error" : "border-border/70"
                   )}
-                  placeholder="Repeat password"
+                  placeholder={t("form.confirmPasswordPlaceholder")}
                 />
                 <button
                   type="button"
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  aria-label={
+                    showConfirmPassword
+                      ? tA11y("hideConfirmPassword")
+                      : tA11y("showConfirmPassword")
+                  }
                 >
                   {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
@@ -230,7 +238,7 @@ export function AuthScreen() {
           ) : null}
 
           <Button type="submit" className="mt-2 w-full" loading={isSubmitting}>
-            {mode === "login" ? "Login" : "Create account"}
+            {mode === "login" ? t("form.submitLogin") : t("form.submitRegister")}
           </Button>
         </form>
 
@@ -239,7 +247,7 @@ export function AuthScreen() {
             href="/"
             className="text-sm text-secondary underline-offset-4 transition-colors hover:text-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
           >
-            Back to landing
+            {t("form.backToLanding")}
           </Link>
         </div>
       </CardBody>

@@ -23,6 +23,20 @@ pnpm lint
 pnpm build
 ```
 
+## Ejecutar typecheck
+
+```bash
+pnpm typecheck
+```
+
+## Ejecutar test
+
+```bash
+pnpm test
+```
+
+Nota: actualmente `pnpm test` es un placeholder y termina en exito hasta agregar tests reales.
+
 ## Estrategia de ramas
 
 - Rama estable: `main`

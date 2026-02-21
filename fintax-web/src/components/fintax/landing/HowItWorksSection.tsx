@@ -1,42 +1,27 @@
+"use client";
+
 import { CheckCheck, FileSearch, Languages, Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Card, CardBody } from "@/components/fintax/Card";
 import { Container } from "@/components/fintax/Container";
 import { Section } from "@/components/fintax/Section";
 
-const steps = [
-  {
-    title: "Free precheck",
-    copy: "Share your case type and we confirm scope, timeline and fixed pricing.",
-    icon: FileSearch,
-  },
-  {
-    title: "Document intake",
-    copy: "Upload documents in your dashboard and track missing items in real time.",
-    icon: Send,
-  },
-  {
-    title: "Multilingual review",
-    copy: "Automation prepares drafts, then a tax specialist verifies everything.",
-    icon: Languages,
-  },
-  {
-    title: "File & follow-up",
-    copy: "Submission support, status monitoring and response handling if needed.",
-    icon: CheckCheck,
-  },
-];
+const stepIcons = [FileSearch, Send, Languages, CheckCheck];
 
 export function HowItWorksSection() {
+  const t = useTranslations("Landing.howItWorks");
+  const steps = t.raw("steps") as Array<{ title: string; copy: string }>;
+
   return (
     <Section id="how-it-works">
       <Container>
-        <p className="text-sm uppercase tracking-[0.16em] text-teal">How it works</p>
-        <h2 className="mt-2 text-3xl font-semibold text-text">Simple 4-step workflow</h2>
+        <p className="text-sm uppercase tracking-[0.16em] text-teal">{t("eyebrow")}</p>
+        <h2 className="mt-2 text-3xl font-semibold text-text">{t("title")}</h2>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {steps.map((step, index) => {
-            const Icon = step.icon;
+            const Icon = stepIcons[index] ?? FileSearch;
             return (
               <Card key={step.title} className="relative overflow-hidden">
                 <CardBody>

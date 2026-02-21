@@ -1,5 +1,6 @@
-@config "../../tailwind.config.ts";
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --bg: #0d1b2a;
@@ -19,29 +20,6 @@
   --radius-24: 24px;
   --shadow-glass: 0 10px 30px rgb(0 0 0 / 24%), inset 0 1px 0 rgb(255 255 255 / 4%);
   --shadow-glass-soft: 0 4px 16px rgb(0 0 0 / 20%), inset 0 1px 0 rgb(255 255 255 / 3%);
-}
-
-@theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface2: var(--surface2);
-  --color-border: var(--border);
-  --color-text: var(--text);
-  --color-secondary: var(--secondary);
-  --color-muted: var(--muted);
-  --color-green: var(--green);
-  --color-green-hover: var(--green-hover);
-  --color-teal: var(--teal);
-  --color-warning: var(--warning);
-  --color-error: var(--error);
-  --radius-sm: var(--radius-12);
-  --radius-md: var(--radius-16);
-  --radius-lg: var(--radius-24);
-  --radius-card: var(--radius-24);
-  --shadow-glass: var(--shadow-glass);
-  --shadow-glass-soft: var(--shadow-glass-soft);
-  --font-heading: var(--font-heading), "Space Grotesk", system-ui, sans-serif;
-  --font-body: var(--font-body), Inter, system-ui, sans-serif;
 }
 
 * {
