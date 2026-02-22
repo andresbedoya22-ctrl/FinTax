@@ -1,0 +1,124 @@
+@config "../../tailwind.config.ts";
+@import "tailwindcss";
+
+:root {
+  --bg: #0d1b2a;
+  --surface: #12263a;
+  --surface2: #102338;
+  --border: #223246;
+  --text: #eaf0f6;
+  --secondary: #b8c4d2;
+  --muted: #8ea0b5;
+  --green: #4caf50;
+  --green-hover: #5bd15f;
+  --teal: #2dd4bf;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-24: 24px;
+  --shadow-glass: 0 10px 30px rgb(0 0 0 / 24%), inset 0 1px 0 rgb(255 255 255 / 4%);
+  --shadow-glass-soft: 0 4px 16px rgb(0 0 0 / 20%), inset 0 1px 0 rgb(255 255 255 / 3%);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-green: var(--green);
+  --color-green-hover: var(--green-hover);
+  --color-teal: var(--teal);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --radius-sm: var(--radius-12);
+  --radius-md: var(--radius-16);
+  --radius-lg: var(--radius-24);
+  --radius-card: var(--radius-24);
+  --shadow-glass: var(--shadow-glass);
+  --shadow-glass-soft: var(--shadow-glass-soft);
+  --font-heading: var(--font-heading), "Space Grotesk", system-ui, sans-serif;
+  --font-body: var(--font-body), Inter, system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), Inter, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), "Space Grotesk", system-ui, sans-serif;
+}
+
+.fintax-bg {
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgb(45 212 191 / 10%), transparent 60%),
+    radial-gradient(1000px 500px at 85% 0%, rgb(76 175 80 / 12%), transparent 55%),
+    var(--bg);
+}
+
+.hero-glow {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: -120px -80px auto -80px;
+  height: 520px;
+  background:
+    radial-gradient(circle at 30% 25%, rgb(76 175 80 / 26%), transparent 45%),
+    radial-gradient(circle at 70% 35%, rgb(45 212 191 / 22%), transparent 48%);
+  filter: blur(56px);
+  opacity: 0.72;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.texture-grid {
+  position: relative;
+}
+
+.texture-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/textures/grid.svg");
+  background-size: 36px 36px;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.texture-noise {
+  position: relative;
+}
+
+.texture-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("/textures/noise.png"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  background-size: 220px 220px, 180px 180px;
+  background-repeat: repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -1;
+}
