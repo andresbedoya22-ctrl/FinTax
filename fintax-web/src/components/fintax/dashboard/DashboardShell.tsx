@@ -17,7 +17,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-[#08111E]">
       <div className="flex min-h-screen">
         <div className="hidden lg:block">
           <DashboardSidebar />
