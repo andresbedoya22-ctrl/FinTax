@@ -1,53 +1,358 @@
 {
+  "Common": {
+    "languages": {
+      "en": "EN",
+      "nl": "NL",
+      "es": "ES",
+      "ro": "RO",
+      "pl": "PL"
+    }
+  },
   "Navbar": {
+    "brand": "FinTax",
+    "languageLabel": "Język",
     "links": {
       "product": "Produkt",
       "pricing": "Cennik",
       "resources": "Zasoby",
       "contact": "Kontakt"
     },
-    "signIn": "Zaloguj",
-    "freePrecheck": "Darmowy precheck"
+    "signIn": "Zaloguj się",
+    "freePrecheck": "Bezpłatny precheck"
+  },
+  "Footer": {
+    "sections": {
+      "product": "Produkt",
+      "company": "Firma",
+      "legal": "Prawne",
+      "languages": "Języki"
+    },
+    "links": {
+      "taxEngine": "Silnik podatkowy",
+      "pricing": "Cennik",
+      "integrations": "Integracje",
+      "about": "O nas",
+      "careers": "Kariera",
+      "contact": "Kontakt",
+      "privacy": "Prywatność",
+      "terms": "Warunki",
+      "cookies": "Cookies"
+    }
   },
   "Landing": {
     "hero": {
-      "title": "Holenderskie podatki i swiadczenia wyjasnione w Twoim jezyku.",
-      "primaryCta": "Rozpocznij darmowy precheck",
-      "secondaryCta": "Poznaj uslugi"
+      "eyebrow": "FinTax dla cudzoziemców w NL",
+      "title": "Holenderskie podatki wyjaśnione w Twoim języku.",
+      "subtitle": "Złóż zeznanie podatkowe (P/M/C), zarządzaj ZZP + VAT, składaj wnioski o toeslagen i rozumiej pisma rządowe. Automatyzacja + weryfikacja przez specjalistę. Stała cena.",
+      "primaryCta": "Rozpocznij bezpłatny precheck",
+      "secondaryCta": "Przeglądaj usługi",
+      "trustBadges": [
+        "Stała cena",
+        "Panel śledzenia spraw",
+        "Wsparcie wielojęzyczne",
+        "Zgodność z RODO"
+      ],
+      "heroImageAlt": "Panel FinTax ze sprawami klientów i statusem zeznania podatkowego"
     },
     "services": {
-      "title": "Co obslugujemy od A do Z"
+      "eyebrow": "Usługi",
+      "title": "Co obsługujemy od początku do końca",
+      "cta": "Precheck",
+      "items": [
+        {
+          "title": "Zeznanie podatkowe (formularz P)",
+          "copy": "Dla pracowników i rezydentów składających roczne zeznania."
+        },
+        {
+          "title": "Podatek migracyjny (formularz M)",
+          "copy": "Wsparcie dla roku przybycia/wyjazdu z pełną weryfikacją."
+        },
+        {
+          "title": "Formularz C nierezydent",
+          "copy": "Dla nierezydentów z holenderskimi źródłami dochodu."
+        },
+        {
+          "title": "Konfiguracja ZZP + VAT",
+          "copy": "Rejestracja, kwartalne rozliczenia VAT i wskazówki dot. odliczeń."
+        },
+        {
+          "title": "Wnioski o toeslagen",
+          "copy": "Wnioski o zasiłki zdrowotne, mieszkaniowe i na opiekę nad dzieckiem."
+        },
+        {
+          "title": "Przegląd pism rządowych",
+          "copy": "Tłumaczenie i wyjaśnianie pism Belastingdienst."
+        },
+        {
+          "title": "Przegląd optymalizacji podatkowej",
+          "copy": "Przegląd pominiętych odliczeń i korekt zeznań."
+        },
+        {
+          "title": "Sprawdzenie uprawnień do świadczeń",
+          "copy": "Szybki skan możliwych zasiłków i ulg."
+        },
+        {
+          "title": "Kontrola zgodności podatkowej",
+          "copy": "Terminy, ryzyka i plan działania w jednym panelu."
+        }
+      ]
     },
     "howItWorks": {
-      "title": "Prosty proces w 4 krokach"
+      "eyebrow": "Jak to działa",
+      "title": "Prosty 4-etapowy przepływ pracy",
+      "steps": [
+        {
+          "title": "Bezpłatny precheck",
+          "copy": "Podaj rodzaj sprawy, a my potwierdzimy zakres, harmonogram i stałą cenę."
+        },
+        {
+          "title": "Przyjęcie dokumentów",
+          "copy": "Prześlij dokumenty do panelu i śledź brakujące elementy w czasie rzeczywistym."
+        },
+        {
+          "title": "Wielojęzyczna weryfikacja",
+          "copy": "Automatyzacja przygotowuje projekty, następnie specjalista podatkowy weryfikuje wszystko."
+        },
+        {
+          "title": "Złożenie i działania następcze",
+          "copy": "Wsparcie przy składaniu, monitorowanie statusu i obsługa odpowiedzi w razie potrzeby."
+        }
+      ]
+    },
+    "why": {
+      "eyebrow": "Dlaczego FinTax",
+      "title": "Stworzony dla ekspatów, pracowników i ZZP",
+      "imageAlt": "Przykład przetłumaczonego holenderskiego pisma podatkowego z wyróżnionymi działaniami",
+      "items": [
+        {
+          "title": "Jasność językowa",
+          "copy": "Komunikacja EN/NL/ES/RO/PL na każdym etapie."
+        },
+        {
+          "title": "Stała cena",
+          "copy": "Brak niespodziewanych faktur po złożeniu."
+        },
+        {
+          "title": "Szybka realizacja",
+          "copy": "Jasne SLA oparte na złożoności sprawy."
+        },
+        {
+          "title": "Weryfikacja przez specjalistę",
+          "copy": "Automatyzacja + sprawdzenie przez specjalistę przed złożeniem."
+        },
+        {
+          "title": "RODO przede wszystkim",
+          "copy": "Bezpieczne przechowywanie i ścisła kontrola dostępu."
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Opinie",
+      "title": "Zaufany przez osoby składające deklaracje w Holandii",
+      "items": [
+        {
+          "quote": "Przetłumaczyli każde pismo Belastingdienst i w końcu zrozumiałam, co robić.",
+          "author": "Elena P.",
+          "role": "Pracownica, Rotterdam"
+        },
+        {
+          "quote": "Formularz M wydawał się niemożliwy. FinTax obsłużył go od przyjęcia do złożenia.",
+          "author": "Andrei M.",
+          "role": "Pracownik po relokacji"
+        },
+        {
+          "quote": "Jako ZZP, kwartalne VAT i roczne zeznanie są teraz przewidywalne i szybkie.",
+          "author": "Diego R.",
+          "role": "Freelancer projektant"
+        },
+        {
+          "quote": "Stała cena i aktualizacje panelu usunęły całą niepewność dla mojej rodziny.",
+          "author": "Marta K.",
+          "role": "Gospodarstwo z podwójnym dochodem"
+        },
+        {
+          "quote": "Ich weryfikacja znalazła odliczenia, które przeoczyłem przez dwa lata. Świetny proces i wsparcie.",
+          "author": "Luis T.",
+          "role": "Inżynier, Eindhoven"
+        },
+        {
+          "quote": "Zespół odpowiedział w moim języku i śledził każdy krok w jednym miejscu.",
+          "author": "Ioana V.",
+          "role": "Pracownica startupu"
+        }
+      ]
     },
     "pricing": {
-      "title": "Stale pakiety + elastyczne dodatki",
-      "featured": "Wyróżnione",
-      "primaryCta": "Rozpocznij darmowy precheck"
+      "eyebrow": "Cennik",
+      "title": "Stałe plany + elastyczne dodatki",
+      "featured": "Polecany",
+      "primaryCta": "Rozpocznij bezpłatny precheck",
+      "addonsTitle": "Dodatki",
+      "plans": [
+        {
+          "name": "Podstawowy",
+          "price": "EUR 149",
+          "summary": "Dla prostych zeznań w formularzu P",
+          "features": [
+            "Roczne zeznanie podatkowe",
+            "Lista wymaganych dokumentów",
+            "Wsparcie emailowe"
+          ]
+        },
+        {
+          "name": "Standardowy",
+          "price": "EUR 299",
+          "summary": "Najpopularniejsze sprawy, w tym migracja i świadczenia",
+          "features": [
+            "Wsparcie P/M/C",
+            "Przegląd toeslagen",
+            "Panel śledzenia spraw",
+            "Priorytetowa weryfikacja"
+          ]
+        },
+        {
+          "name": "Złożony",
+          "price": "Wycena indywidualna",
+          "summary": "ZZP, wielokrotne dochody i zaawansowane scenariusze",
+          "features": [
+            "Procesy ZZP + VAT",
+            "Zaawansowana obsługa pism",
+            "Indywidualne harmonogramy"
+          ]
+        }
+      ],
+      "addons": [
+        "Pilna realizacja w 48h",
+        "Kwartalne rozliczenie VAT",
+        "Korekta historyczna zeznania",
+        "Dodatkowe tłumaczenie pisma"
+      ]
     },
     "faq": {
-      "title": "Najczesciej zadawane pytania"
+      "eyebrow": "FAQ",
+      "title": "Często zadawane pytania",
+      "items": [
+        {
+          "q": "Czy obsługujecie tylko ekspatów?",
+          "a": "Obsługujemy ekspatów, pracowników zagranicznych, studentów, rodziny i klientów ZZP mieszkających lub zarabiających w Holandii."
+        },
+        {
+          "q": "Jakie formularze obsługujecie?",
+          "a": "Obsługujemy formularze P, M i C, a także powiązane pisma i działania następcze."
+        },
+        {
+          "q": "Czy mogę uzyskać pomoc z toeslagen?",
+          "a": "Tak, sprawdzamy uprawnienia i pomagamy z aanvragen dla zorgtoeslag, huurtoeslag i innych stosownych zasiłków."
+        },
+        {
+          "q": "Jak działa stała cena?",
+          "a": "Po bezpłatnym prechecku otrzymujesz stałą wycenę przed rozpoczęciem pracy. Zmiany zakresu są sygnalizowane przed jakimikolwiek dodatkowymi kosztami."
+        },
+        {
+          "q": "Jakie języki obsługujecie?",
+          "a": "Obsługujemy EN, NL, ES, RO i PL w komunikacji i wyjaśnianiu dokumentów."
+        },
+        {
+          "q": "Jak długo trwa złożenie zeznania?",
+          "a": "Typowe sprawy są realizowane w dni, złożone w tygodnie. Szacowany czas otrzymasz w panelu."
+        },
+        {
+          "q": "Czy pracujecie z ZZP + VAT?",
+          "a": "Tak. Obsługujemy kwartalne rozliczenia VAT, roczne raportowanie i przeglądy odliczeń dla freelancerów."
+        },
+        {
+          "q": "Czy możecie sprawdzić poprzednie lata podatkowe?",
+          "a": "Tak, możemy ocenić poprzednie zeznania i pomóc w złożeniu korekt, gdzie to możliwe."
+        },
+        {
+          "q": "Jak bezpieczne są moje dane?",
+          "a": "Stosujemy praktyki zgodne z RODO z minimalnymi uprawnieniami dostępu, bezpiecznym przechowywaniem i śledzeniem procesów."
+        },
+        {
+          "q": "Co się dzieje po złożeniu zeznania?",
+          "a": "Monitorujemy aktualizacje, pomagamy w interpretacji odpowiedzi i możemy wspierać dalsze działania, jeśli holenderskie władze poproszą o działania następcze."
+        }
+      ]
     }
   },
   "Auth": {
-    "title": "Witamy w FinTax",
+    "eyebrow": "Dostęp do konta",
+    "title": "Witaj w FinTax",
     "tabs": {
-      "login": "Logowanie",
-      "register": "Utworz konto"
+      "login": "Zaloguj się",
+      "register": "Utwórz konto"
+    },
+    "social": {
+      "google": "Kontynuuj z Google",
+      "apple": "Kontynuuj z Apple",
+      "emailDivider": "lub kontynuuj z emailem"
     },
     "form": {
-      "submitLogin": "Zaloguj",
-      "submitRegister": "Utworz konto",
-      "backToLanding": "Powrot na landing"
+      "email": "Adres email",
+      "password": "Hasło",
+      "confirmPassword": "Potwierdź hasło",
+      "emailPlaceholder": "ty@przyklad.pl",
+      "passwordPlaceholder": "Co najmniej 8 znaków",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "submitLogin": "Zaloguj się",
+      "submitRegister": "Utwórz konto",
+      "backToLanding": "Powrót do strony głównej"
+    },
+    "validation": {
+      "invalidEmail": "Wprowadź prawidłowy adres email.",
+      "passwordLength": "Hasło musi mieć co najmniej 8 znaków.",
+      "passwordMismatch": "Hasła nie pasują do siebie."
+    },
+    "a11y": {
+      "showPassword": "Pokaż hasło",
+      "hidePassword": "Ukryj hasło",
+      "showConfirmPassword": "Pokaż potwierdzenie hasła",
+      "hideConfirmPassword": "Ukryj potwierdzenie hasła",
+      "modeLabel": "Tryb uwierzytelniania"
     }
   },
   "Dashboard": {
     "sidebar": {
-      "items": ["Dashboard", "Rozliczenie", "Swiadczenia", "Dochody", "Urzedy", "Ustawienia"]
+      "brand": "FinTax",
+      "items": [
+        "Panel",
+        "Zeznanie podatkowe",
+        "Świadczenia",
+        "Dochody",
+        "Rząd",
+        "Ustawienia"
+      ]
     },
     "topbar": {
-      "currentCase": "Biezaca sprawa"
+      "title": "Panel",
+      "currentCase": "Bieżąca sprawa",
+      "openSidebar": "Otwórz panel boczny",
+      "closeSidebar": "Zamknij panel boczny",
+      "closeOverlay": "Zamknij nakładkę"
+    },
+    "overview": {
+      "caseTitle": "Sprawa",
+      "statusLabel": "Status",
+      "statusValue": "W trakcie weryfikacji",
+      "deadlineLabel": "Termin",
+      "deadlineValue": "12 maja 2026",
+      "checklistTitle": "Lista kontrolna",
+      "progressLabel": "Postęp",
+      "refundTitle": "Szacowany zwrot",
+      "refundAmount": "2 345",
+      "chartTitle": "Ostatnie 7 punktów kontrolnych",
+      "chartNote": "Zaktualizowano po ostatnim przesłaniu listy płac",
+      "caseRows": [
+        { "label": "Zorgtoeslag", "amount": "EUR 1 286" },
+        { "label": "Huurtoeslag", "amount": "EUR 2 140" },
+        { "label": "Kinderbijslag", "amount": "EUR 1 102" }
+      ],
+      "checklistItems": [
+        { "label": "Paszport / dowód osobisty przesłany", "done": true },
+        { "label": "Roczne zestawienia dochodów", "done": true },
+        { "label": "Szczegóły umowy najmu", "done": true },
+        { "label": "Faktury za opiekę nad dzieckiem", "done": false }
+      ]
     }
   }
 }

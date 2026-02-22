@@ -1,53 +1,358 @@
 {
+  "Common": {
+    "languages": {
+      "en": "EN",
+      "nl": "NL",
+      "es": "ES",
+      "ro": "RO",
+      "pl": "PL"
+    }
+  },
   "Navbar": {
+    "brand": "FinTax",
+    "languageLabel": "Idioma",
     "links": {
       "product": "Producto",
       "pricing": "Precios",
       "resources": "Recursos",
       "contact": "Contacto"
     },
-    "signIn": "Iniciar sesion",
-    "freePrecheck": "Precheck gratis"
+    "signIn": "Iniciar sesión",
+    "freePrecheck": "Precheck gratuito"
+  },
+  "Footer": {
+    "sections": {
+      "product": "Producto",
+      "company": "Empresa",
+      "legal": "Legal",
+      "languages": "Idiomas"
+    },
+    "links": {
+      "taxEngine": "Motor fiscal",
+      "pricing": "Precios",
+      "integrations": "Integraciones",
+      "about": "Sobre nosotros",
+      "careers": "Empleo",
+      "contact": "Contacto",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "cookies": "Cookies"
+    }
   },
   "Landing": {
     "hero": {
-      "title": "Impuestos y beneficios en Paises Bajos explicados en tu idioma.",
-      "primaryCta": "Iniciar precheck gratis",
-      "secondaryCta": "Explorar servicios"
+      "eyebrow": "FinTax para internacionales en NL",
+      "title": "Impuestos holandeses explicados en tu idioma.",
+      "subtitle": "Presenta tu declaración (P/M/C), gestiona ZZP + IVA, solicita toeslagen y entiende cartas del gobierno. Automatización + revisión humana. Precio fijo.",
+      "primaryCta": "Iniciar precheck gratuito",
+      "secondaryCta": "Ver servicios",
+      "trustBadges": [
+        "Precio fijo",
+        "Panel de seguimiento",
+        "Soporte multilingüe",
+        "GDPR-ready"
+      ],
+      "heroImageAlt": "Panel de FinTax con casos de clientes y estado de declaración fiscal"
     },
     "services": {
-      "title": "Lo que gestionamos de punta a punta"
+      "eyebrow": "Servicios",
+      "title": "Lo que gestionamos de principio a fin",
+      "cta": "Precheck",
+      "items": [
+        {
+          "title": "Declaración de renta (formulario P)",
+          "copy": "Para empleados y residentes que presentan declaraciones anuales."
+        },
+        {
+          "title": "Impuesto de migración (formulario M)",
+          "copy": "Soporte para el año de llegada/salida con comprobaciones completas."
+        },
+        {
+          "title": "Formulario C no residente",
+          "copy": "Para no residentes con fuentes de ingresos holandesas."
+        },
+        {
+          "title": "Configuración ZZP + IVA",
+          "copy": "Registro, declaración trimestral de IVA y orientación sobre deducciones."
+        },
+        {
+          "title": "Solicitudes de toeslagen",
+          "copy": "Solicitudes de subsidios de salud, alquiler y guardería."
+        },
+        {
+          "title": "Revisión de cartas gubernamentales",
+          "copy": "Traducción y explicación de cartas de la Belastingdienst."
+        },
+        {
+          "title": "Revisión de optimización fiscal",
+          "copy": "Revisión de deducciones perdidas y correcciones de declaraciones."
+        },
+        {
+          "title": "Comprobación de elegibilidad de prestaciones",
+          "copy": "Análisis rápido de posibles subsidios y créditos."
+        },
+        {
+          "title": "Control de cumplimiento fiscal",
+          "copy": "Plazos, riesgos y plan de acción en un panel."
+        }
+      ]
     },
     "howItWorks": {
-      "title": "Flujo simple en 4 pasos"
+      "eyebrow": "Cómo funciona",
+      "title": "Flujo de 4 pasos simple",
+      "steps": [
+        {
+          "title": "Precheck gratuito",
+          "copy": "Comparte el tipo de caso y confirmamos el alcance, plazo y precio fijo."
+        },
+        {
+          "title": "Recepción de documentos",
+          "copy": "Sube documentos en tu panel y sigue los elementos pendientes en tiempo real."
+        },
+        {
+          "title": "Revisión multilingüe",
+          "copy": "La automatización prepara borradores, luego un especialista fiscal lo verifica todo."
+        },
+        {
+          "title": "Presentación y seguimiento",
+          "copy": "Soporte de envío, monitoreo de estado y gestión de respuestas si es necesario."
+        }
+      ]
+    },
+    "why": {
+      "eyebrow": "Por qué FinTax",
+      "title": "Construido para expats, trabajadores y ZZP",
+      "imageAlt": "Ejemplo de carta fiscal holandesa traducida con acciones destacadas",
+      "items": [
+        {
+          "title": "Claridad idiomática",
+          "copy": "Comunicación EN/NL/ES/RO/PL para cada paso."
+        },
+        {
+          "title": "Precio fijo",
+          "copy": "Sin facturas sorpresa tras la presentación."
+        },
+        {
+          "title": "Respuesta rápida",
+          "copy": "SLA claro según la complejidad del caso."
+        },
+        {
+          "title": "Revisión humana",
+          "copy": "Automatización + verificación de especialista antes de la presentación."
+        },
+        {
+          "title": "GDPR primero",
+          "copy": "Almacenamiento seguro y controles de acceso estrictos."
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Testimonios",
+      "title": "De confianza para quienes declaran en los Países Bajos",
+      "items": [
+        {
+          "quote": "Tradujeron cada carta de la Belastingdienst y finalmente entendí qué hacer.",
+          "author": "Elena P.",
+          "role": "Empleada, Rotterdam"
+        },
+        {
+          "quote": "El formulario M parecía imposible. FinTax lo gestionó desde la recepción hasta el envío.",
+          "author": "Andrei M.",
+          "role": "Profesional reubicado"
+        },
+        {
+          "quote": "Como ZZP, el IVA trimestral y la declaración anual son ahora predecibles y rápidos.",
+          "author": "Diego R.",
+          "role": "Diseñador freelance"
+        },
+        {
+          "quote": "El precio fijo y las actualizaciones del panel eliminaron toda incertidumbre para mi familia.",
+          "author": "Marta K.",
+          "role": "Hogar con dos ingresos"
+        },
+        {
+          "quote": "Su revisión encontró deducciones que perdí durante dos años. Excelente proceso y soporte.",
+          "author": "Luis T.",
+          "role": "Ingeniero, Eindhoven"
+        },
+        {
+          "quote": "El equipo respondió en mi idioma y siguió cada paso claramente en un solo lugar.",
+          "author": "Ioana V.",
+          "role": "Empleada de startup"
+        }
+      ]
     },
     "pricing": {
-      "title": "Planes fijos + add-ons flexibles",
+      "eyebrow": "Precios",
+      "title": "Planes fijos + complementos flexibles",
       "featured": "Destacado",
-      "primaryCta": "Iniciar precheck gratis"
+      "primaryCta": "Iniciar precheck gratuito",
+      "addonsTitle": "Complementos",
+      "plans": [
+        {
+          "name": "Básico",
+          "price": "EUR 149",
+          "summary": "Para declaraciones P sencillas",
+          "features": [
+            "Presentación de declaración anual",
+            "Lista de documentos necesarios",
+            "Soporte por email"
+          ]
+        },
+        {
+          "name": "Estándar",
+          "price": "EUR 299",
+          "summary": "Los casos más comunes incl. migración y prestaciones",
+          "features": [
+            "Soporte P/M/C",
+            "Revisión de toeslagen",
+            "Panel de seguimiento de casos",
+            "Revisión prioritaria"
+          ]
+        },
+        {
+          "name": "Complejo",
+          "price": "Personalizado",
+          "summary": "ZZP, múltiples ingresos y escenarios avanzados",
+          "features": [
+            "Flujos de trabajo ZZP + IVA",
+            "Gestión avanzada de cartas",
+            "Plazos personalizados"
+          ]
+        }
+      ],
+      "addons": [
+        "Resolución urgente en 48h",
+        "Declaración trimestral de IVA",
+        "Corrección de declaración histórica",
+        "Revisión adicional de carta traducida"
+      ]
     },
     "faq": {
-      "title": "Preguntas frecuentes"
+      "eyebrow": "Preguntas frecuentes",
+      "title": "Preguntas comunes",
+      "items": [
+        {
+          "q": "¿Solo apoyan a expatriados?",
+          "a": "Apoyamos a expats, empleados internacionales, estudiantes, familias y clientes ZZP que viven o perciben ingresos en los Países Bajos."
+        },
+        {
+          "q": "¿Qué formularios gestionan?",
+          "a": "Gestionamos formularios P, M y C, además de cartas relacionadas y acciones de seguimiento."
+        },
+        {
+          "q": "¿Puedo obtener ayuda con toeslagen?",
+          "a": "Sí, verificamos la elegibilidad y ayudamos con las solicitudes de zorgtoeslag, huurtoeslag y otras prestaciones relevantes."
+        },
+        {
+          "q": "¿Cómo funciona el precio fijo?",
+          "a": "Tras el precheck gratuito, recibirás un presupuesto fijo antes de iniciar el trabajo. Los cambios de alcance se informan antes de cualquier coste adicional."
+        },
+        {
+          "q": "¿Qué idiomas apoyan?",
+          "a": "Apoyamos EN, NL, ES, RO y PL para comunicación y explicación de documentos."
+        },
+        {
+          "q": "¿Cuánto tarda la presentación?",
+          "a": "Los casos típicos se completan en días, los complejos en semanas. Recibirás estimaciones de plazo en tu panel."
+        },
+        {
+          "q": "¿Trabajan con ZZP + IVA?",
+          "a": "Sí. Apoyamos la gestión trimestral de IVA, el informe anual y las revisiones de deducciones para autónomos."
+        },
+        {
+          "q": "¿Pueden revisar años fiscales anteriores?",
+          "a": "Sí, podemos evaluar declaraciones anteriores y ayudar a presentar correcciones cuando corresponda."
+        },
+        {
+          "q": "¿Qué tan segura está mi información?",
+          "a": "Usamos prácticas compatibles con GDPR con controles de acceso mínimo, almacenamiento seguro y seguimiento de procesos auditable."
+        },
+        {
+          "q": "¿Qué ocurre después de la presentación?",
+          "a": "Monitoreamos actualizaciones, ayudamos a interpretar respuestas y podemos apoyar en los siguientes pasos si las autoridades holandesas solicitan seguimiento."
+        }
+      ]
     }
   },
   "Auth": {
+    "eyebrow": "Acceso a tu cuenta",
     "title": "Bienvenido a FinTax",
     "tabs": {
-      "login": "Iniciar sesion",
+      "login": "Iniciar sesión",
       "register": "Crear cuenta"
     },
+    "social": {
+      "google": "Continuar con Google",
+      "apple": "Continuar con Apple",
+      "emailDivider": "o continuar con email"
+    },
     "form": {
-      "submitLogin": "Iniciar sesion",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "passwordPlaceholder": "Al menos 8 caracteres",
+      "confirmPasswordPlaceholder": "Repite la contraseña",
+      "submitLogin": "Iniciar sesión",
       "submitRegister": "Crear cuenta",
-      "backToLanding": "Volver al landing"
+      "backToLanding": "Volver al inicio"
+    },
+    "validation": {
+      "invalidEmail": "Introduce un correo electrónico válido.",
+      "passwordLength": "La contraseña debe tener al menos 8 caracteres.",
+      "passwordMismatch": "Las contraseñas no coinciden."
+    },
+    "a11y": {
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "showConfirmPassword": "Mostrar confirmar contraseña",
+      "hideConfirmPassword": "Ocultar confirmar contraseña",
+      "modeLabel": "Modo de autenticación"
     }
   },
   "Dashboard": {
     "sidebar": {
-      "items": ["Dashboard", "Declaracion", "Beneficios", "Ingresos", "Gobierno", "Configuracion"]
+      "brand": "FinTax",
+      "items": [
+        "Inicio",
+        "Declaración",
+        "Prestaciones",
+        "Ingresos",
+        "Gobierno",
+        "Ajustes"
+      ]
     },
     "topbar": {
-      "currentCase": "Caso actual"
+      "title": "Inicio",
+      "currentCase": "Caso actual",
+      "openSidebar": "Abrir menú",
+      "closeSidebar": "Cerrar menú",
+      "closeOverlay": "Cerrar superposición"
+    },
+    "overview": {
+      "caseTitle": "Caso",
+      "statusLabel": "Estado",
+      "statusValue": "En revisión",
+      "deadlineLabel": "Fecha límite",
+      "deadlineValue": "12 de mayo de 2026",
+      "checklistTitle": "Lista de tareas",
+      "progressLabel": "Progreso",
+      "refundTitle": "Estimación de devolución",
+      "refundAmount": "2.345",
+      "chartTitle": "Últimos 7 puntos de control",
+      "chartNote": "Actualizado tras la última carga de nómina",
+      "caseRows": [
+        { "label": "Zorgtoeslag", "amount": "EUR 1.286" },
+        { "label": "Huurtoeslag", "amount": "EUR 2.140" },
+        { "label": "Kinderbijslag", "amount": "EUR 1.102" }
+      ],
+      "checklistItems": [
+        { "label": "Pasaporte / DNI subido", "done": true },
+        { "label": "Extractos anuales de ingresos", "done": true },
+        { "label": "Detalles del contrato de alquiler", "done": true },
+        { "label": "Facturas de guardería", "done": false }
+      ]
     }
   }
 }

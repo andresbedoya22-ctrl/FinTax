@@ -1,53 +1,358 @@
 {
+  "Common": {
+    "languages": {
+      "en": "EN",
+      "nl": "NL",
+      "es": "ES",
+      "ro": "RO",
+      "pl": "PL"
+    }
+  },
   "Navbar": {
+    "brand": "FinTax",
+    "languageLabel": "Limbă",
     "links": {
       "product": "Produs",
-      "pricing": "Preturi",
+      "pricing": "Prețuri",
       "resources": "Resurse",
       "contact": "Contact"
     },
     "signIn": "Autentificare",
     "freePrecheck": "Precheck gratuit"
   },
+  "Footer": {
+    "sections": {
+      "product": "Produs",
+      "company": "Companie",
+      "legal": "Legal",
+      "languages": "Limbi"
+    },
+    "links": {
+      "taxEngine": "Motor fiscal",
+      "pricing": "Prețuri",
+      "integrations": "Integrări",
+      "about": "Despre",
+      "careers": "Cariere",
+      "contact": "Contact",
+      "privacy": "Confidențialitate",
+      "terms": "Termeni",
+      "cookies": "Cookie-uri"
+    }
+  },
   "Landing": {
     "hero": {
-      "title": "Taxele si beneficiile olandeze explicate in limba ta.",
-      "primaryCta": "Incepe precheck gratuit",
-      "secondaryCta": "Exploreaza servicii"
+      "eyebrow": "FinTax pentru internaționali în NL",
+      "title": "Taxe olandeze explicate în limba ta.",
+      "subtitle": "Depune declarația fiscală (P/M/C), gestionează ZZP + TVA, aplică pentru toeslagen și înțelege scrisorile guvernamentale. Automatizare + verificare umană. Preț fix.",
+      "primaryCta": "Începe precheck gratuit",
+      "secondaryCta": "Explorează serviciile",
+      "trustBadges": [
+        "Preț fix",
+        "Panou de urmărire",
+        "Suport multilingv",
+        "Conform GDPR"
+      ],
+      "heroImageAlt": "Panoul FinTax cu cazuri de clienți și statusul declarației fiscale"
     },
     "services": {
-      "title": "Ce gestionam cap-coada"
+      "eyebrow": "Servicii",
+      "title": "Ce gestionăm de la cap la coadă",
+      "cta": "Precheck",
+      "items": [
+        {
+          "title": "Declarație de impozit pe venit (formularul P)",
+          "copy": "Pentru angajați și rezidenți care depun declarații anuale."
+        },
+        {
+          "title": "Impozit de migrare (formularul M)",
+          "copy": "Suport pentru anul sosirii/plecării cu verificări complete."
+        },
+        {
+          "title": "Formularul C nerezident",
+          "copy": "Pentru nerezidenți cu surse de venit din Olanda."
+        },
+        {
+          "title": "Configurare ZZP + TVA",
+          "copy": "Înregistrare, depunere TVA trimestrial și ghidare privind deducerile."
+        },
+        {
+          "title": "Cereri toeslagen",
+          "copy": "Cereri pentru alocații de sănătate, chirie și îngrijire copii."
+        },
+        {
+          "title": "Revizuire scrisori guvernamentale",
+          "copy": "Traducerea și explicarea scrisorilor Belastingdienst."
+        },
+        {
+          "title": "Revizuire optimizare fiscală",
+          "copy": "Revizuirea deducerilor ratate și corectarea declarațiilor."
+        },
+        {
+          "title": "Verificare eligibilitate beneficii",
+          "copy": "Scanare rapidă a posibilelor alocații și credite."
+        },
+        {
+          "title": "Control de conformitate fiscală",
+          "copy": "Termene, riscuri și plan de acțiune într-un singur panou."
+        }
+      ]
     },
     "howItWorks": {
-      "title": "Flux simplu in 4 pasi"
+      "eyebrow": "Cum funcționează",
+      "title": "Flux simplu în 4 pași",
+      "steps": [
+        {
+          "title": "Precheck gratuit",
+          "copy": "Descrie tipul cazului și confirmăm domeniul, calendarul și prețul fix."
+        },
+        {
+          "title": "Primire documente",
+          "copy": "Încarcă documente în panoul tău și urmărește elementele lipsă în timp real."
+        },
+        {
+          "title": "Revizuire multilingvă",
+          "copy": "Automatizarea pregătește ciorne, apoi un specialist fiscal verifică totul."
+        },
+        {
+          "title": "Depunere și urmărire",
+          "copy": "Suport pentru depunere, monitorizarea statusului și gestionarea răspunsurilor dacă este necesar."
+        }
+      ]
+    },
+    "why": {
+      "eyebrow": "De ce FinTax",
+      "title": "Construit pentru expați, angajați și ZZP",
+      "imageAlt": "Exemplu de scrisoare fiscală olandeză tradusă cu acțiuni evidențiate",
+      "items": [
+        {
+          "title": "Claritate lingvistică",
+          "copy": "Comunicare EN/NL/ES/RO/PL pentru fiecare etapă."
+        },
+        {
+          "title": "Preț fix",
+          "copy": "Fără facturi surpriză după depunere."
+        },
+        {
+          "title": "Timp de răspuns rapid",
+          "copy": "SLA clar bazat pe complexitatea cazului."
+        },
+        {
+          "title": "Revizuire umană",
+          "copy": "Automatizare + verificare de specialist înainte de depunere."
+        },
+        {
+          "title": "GDPR prioritar",
+          "copy": "Stocare securizată și controale stricte de acces."
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Testimoniale",
+      "title": "De încredere pentru cei care depun declarații în Olanda",
+      "items": [
+        {
+          "quote": "Au tradus fiecare scrisoare de la Belastingdienst și în sfârșit am înțeles ce să fac.",
+          "author": "Elena P.",
+          "role": "Angajată, Rotterdam"
+        },
+        {
+          "quote": "Formularul M părea imposibil înainte. FinTax l-a gestionat de la primire până la depunere.",
+          "author": "Andrei M.",
+          "role": "Profesionist relocat"
+        },
+        {
+          "quote": "Ca ZZP, TVA trimestrial și declarația anuală sunt acum previzibile și rapide.",
+          "author": "Diego R.",
+          "role": "Designer freelancer"
+        },
+        {
+          "quote": "Prețul fix și actualizările panoului au eliminat toată incertitudinea pentru familia mea.",
+          "author": "Marta K.",
+          "role": "Gospodărie cu venit dual"
+        },
+        {
+          "quote": "Revizuirea lor a găsit deduceri pe care le-am ratat timp de doi ani. Proces excelent și suport.",
+          "author": "Luis T.",
+          "role": "Inginer, Eindhoven"
+        },
+        {
+          "quote": "Echipa a răspuns în limba mea și a urmărit fiecare pas clar într-un singur loc.",
+          "author": "Ioana V.",
+          "role": "Angajată startup"
+        }
+      ]
     },
     "pricing": {
-      "title": "Planuri fixe + add-on-uri flexibile",
+      "eyebrow": "Prețuri",
+      "title": "Planuri fixe + suplimente flexibile",
       "featured": "Recomandat",
-      "primaryCta": "Incepe precheck gratuit"
+      "primaryCta": "Începe precheck gratuit",
+      "addonsTitle": "Suplimente",
+      "plans": [
+        {
+          "name": "De bază",
+          "price": "EUR 149",
+          "summary": "Pentru declarații P simple",
+          "features": [
+            "Depunere declarație anuală",
+            "Listă documente necesare",
+            "Suport email"
+          ]
+        },
+        {
+          "name": "Standard",
+          "price": "EUR 299",
+          "summary": "Cele mai frecvente cazuri incl. migrare și beneficii",
+          "features": [
+            "Suport depunere P/M/C",
+            "Revizuire toeslagen",
+            "Panou urmărire cazuri",
+            "Revizuire prioritară"
+          ]
+        },
+        {
+          "name": "Complex",
+          "price": "Personalizat",
+          "summary": "ZZP, venituri multiple și scenarii avansate",
+          "features": [
+            "Fluxuri de lucru ZZP + TVA",
+            "Gestionare avansată scrisori",
+            "Termene personalizate"
+          ]
+        }
+      ],
+      "addons": [
+        "Termen urgent de 48h",
+        "Depunere TVA trimestrial",
+        "Corectare declarație istorică",
+        "Revizuire suplimentară scrisoare tradusă"
+      ]
     },
     "faq": {
-      "title": "Intrebari frecvente"
+      "eyebrow": "Întrebări frecvente",
+      "title": "Întrebări comune",
+      "items": [
+        {
+          "q": "Vă adresați numai expatriaților?",
+          "a": "Ne adresăm expatriaților, angajaților internaționali, studenților, familiilor și clienților ZZP care locuiesc sau câștigă în Olanda."
+        },
+        {
+          "q": "Ce formulare gestionați?",
+          "a": "Gestionăm fluxuri de lucru pentru formularele P, M și C, plus scrisorile aferente și acțiunile ulterioare."
+        },
+        {
+          "q": "Pot primi ajutor cu toeslagen?",
+          "a": "Da, verificăm eligibilitatea și ajutăm cu aanvragen pentru zorgtoeslag, huurtoeslag și alte alocații relevante."
+        },
+        {
+          "q": "Cum funcționează prețul fix?",
+          "a": "După precheck-ul gratuit, primești o ofertă fixă înainte de a începe lucrul. Modificările de domeniu sunt semnalate înainte de orice cost suplimentar."
+        },
+        {
+          "q": "Ce limbi suportați?",
+          "a": "Suportăm EN, NL, ES, RO și PL pentru comunicare și explicarea documentelor."
+        },
+        {
+          "q": "Cât durează depunerea?",
+          "a": "Cazurile tipice sunt finalizate în zile, cazurile complexe în săptămâni. Primești estimări de timp în panoul tău."
+        },
+        {
+          "q": "Lucrați cu ZZP + TVA?",
+          "a": "Da. Suportăm fluxuri de TVA trimestrial, raportare anuală și revizuiri ale deducerilor pentru freelanceri."
+        },
+        {
+          "q": "Puteți revizui ani fiscali anteriori?",
+          "a": "Da, putem evalua declarațiile anterioare și ajuta la depunerea corecțiilor acolo unde este aplicabil."
+        },
+        {
+          "q": "Cât de sigure sunt datele mele?",
+          "a": "Folosim practici conforme GDPR cu controale de acces minim, stocare securizată și urmărire auditabilă a proceselor."
+        },
+        {
+          "q": "Ce se întâmplă după depunere?",
+          "a": "Monitorizăm actualizările, ajutăm la interpretarea răspunsurilor și putem sprijini acțiunile ulterioare dacă autoritățile olandeze solicită urmărire."
+        }
+      ]
     }
   },
   "Auth": {
-    "title": "Bun venit la FinTax",
+    "eyebrow": "Acces la cont",
+    "title": "Bine ai venit la FinTax",
     "tabs": {
       "login": "Autentificare",
-      "register": "Creeaza cont"
+      "register": "Creare cont"
+    },
+    "social": {
+      "google": "Continuă cu Google",
+      "apple": "Continuă cu Apple",
+      "emailDivider": "sau continuă cu email"
     },
     "form": {
+      "email": "Email",
+      "password": "Parolă",
+      "confirmPassword": "Confirmă parola",
+      "emailPlaceholder": "tu@exemplu.com",
+      "passwordPlaceholder": "Cel puțin 8 caractere",
+      "confirmPasswordPlaceholder": "Repetă parola",
       "submitLogin": "Autentificare",
-      "submitRegister": "Creeaza cont",
-      "backToLanding": "Inapoi la landing"
+      "submitRegister": "Creare cont",
+      "backToLanding": "Înapoi la pagina principală"
+    },
+    "validation": {
+      "invalidEmail": "Introduceți o adresă de email validă.",
+      "passwordLength": "Parola trebuie să aibă cel puțin 8 caractere.",
+      "passwordMismatch": "Parolele nu coincid."
+    },
+    "a11y": {
+      "showPassword": "Afișează parola",
+      "hidePassword": "Ascunde parola",
+      "showConfirmPassword": "Afișează confirmarea parolei",
+      "hideConfirmPassword": "Ascunde confirmarea parolei",
+      "modeLabel": "Mod de autentificare"
     }
   },
   "Dashboard": {
     "sidebar": {
-      "items": ["Dashboard", "Declaratie fiscala", "Beneficii", "Venit", "Guvern", "Setari"]
+      "brand": "FinTax",
+      "items": [
+        "Panou",
+        "Declarație fiscală",
+        "Beneficii",
+        "Venituri",
+        "Guvern",
+        "Setări"
+      ]
     },
     "topbar": {
-      "currentCase": "Caz curent"
+      "title": "Panou",
+      "currentCase": "Caz curent",
+      "openSidebar": "Deschide bara laterală",
+      "closeSidebar": "Închide bara laterală",
+      "closeOverlay": "Închide suprapunerea"
+    },
+    "overview": {
+      "caseTitle": "Caz",
+      "statusLabel": "Status",
+      "statusValue": "În revizuire",
+      "deadlineLabel": "Termen limită",
+      "deadlineValue": "12 mai 2026",
+      "checklistTitle": "Listă de verificare",
+      "progressLabel": "Progres",
+      "refundTitle": "Estimare rambursare",
+      "refundAmount": "2.345",
+      "chartTitle": "Ultimele 7 puncte de control",
+      "chartNote": "Actualizat după ultimul upload de salarii",
+      "caseRows": [
+        { "label": "Zorgtoeslag", "amount": "EUR 1.286" },
+        { "label": "Huurtoeslag", "amount": "EUR 2.140" },
+        { "label": "Kinderbijslag", "amount": "EUR 1.102" }
+      ],
+      "checklistItems": [
+        { "label": "Pașaport / CI încărcat", "done": true },
+        { "label": "Declarații anuale de venit", "done": true },
+        { "label": "Detalii contract de chirie", "done": true },
+        { "label": "Facturi îngrijire copii", "done": false }
+      ]
     }
   }
 }
