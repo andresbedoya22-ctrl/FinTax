@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Test files require vitest / @testing-library which are not installed yet
+    "src/**/__tests__/**",
   ]),
 ]);
 
