@@ -26,7 +26,7 @@ export function Navbar({ className, links = defaultLinks, ...props }: NavbarProp
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-border/60 bg-bg/80 backdrop-blur-xl",
+        "fixed top-0 z-50 w-full border-b border-border/60 bg-bg/80 backdrop-blur-xl",
         className
       )}
       {...props}
@@ -34,8 +34,11 @@ export function Navbar({ className, links = defaultLinks, ...props }: NavbarProp
       <Container className="flex h-16 items-center gap-4">
         <Link
           href="/"
-          className="font-heading text-lg font-semibold tracking-tight text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          className="font-heading text-lg font-semibold tracking-tight text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg flex items-center"
         >
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-green to-teal flex items-center justify-center text-xs font-black text-bg mr-2">
+            F
+          </div>
           {t("brand")}
         </Link>
 

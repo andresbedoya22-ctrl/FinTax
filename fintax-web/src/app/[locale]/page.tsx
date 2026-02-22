@@ -34,6 +34,8 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="fintax-bg texture-grid texture-noise min-h-screen">
+      <div className="orb orb-1" aria-hidden="true" />
+      <div className="orb orb-2" aria-hidden="true" />
       <Navbar />
       <main>
         <HeroSection />

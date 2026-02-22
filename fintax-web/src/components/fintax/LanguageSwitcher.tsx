@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronDown, Globe2 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { ChevronDown, Check } from "lucide-react";
+import { useLocale } from "next-intl";
 import * as React from "react";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -13,45 +13,121 @@ export interface LanguageSwitcherProps {
   compact?: boolean;
 }
 
-export function LanguageSwitcher({ className, compact = false }: LanguageSwitcherProps) {
-  const t = useTranslations("Common.languages");
+type LocaleInfo = {
+  flag: string;
+  name: string;
+  native: string;
+};
+
+const LOCALE_INFO: Record<AppLocale, LocaleInfo> = {
+  en: { flag: "🇬🇧", name: "English", native: "English" },
+  es: { flag: "🇪🇸", name: "Spanish", native: "Español" },
+  pl: { flag: "🇵🇱", name: "Polish", native: "Polski" },
+  ro: { flag: "🇷🇴", name: "Romanian", native: "Română" },
+  nl: { flag: "🇳🇱", name: "Dutch", native: "Nederlands" },
+};
+
+const REAL_LOCALES: AppLocale[] = routing.locales.filter(
+  (l): l is AppLocale => l !== "nl"
+) as AppLocale[];
+
+export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const locale = useLocale() as AppLocale;
   const router = useRouter();
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextLocale = event.target.value as AppLocale;
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (nextLocale: AppLocale) => {
     router.replace(pathname, { locale: nextLocale });
+    setIsOpen(false);
   };
 
+  const current = LOCALE_INFO[locale] ?? LOCALE_INFO.en;
+
   return (
-    <div className={cn("relative", className)}>
-      {!compact ? (
-        <Globe2
-          className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted"
+    <div ref={containerRef} className={cn("relative", className)}>
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm font-semibold text-white flex items-center gap-2 cursor-pointer hover:bg-white/[0.08] transition-all"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+      >
+        <span>{current.flag}</span>
+        <span className="uppercase">{locale}</span>
+        <ChevronDown
+          className="size-4 text-white/60 transition-transform duration-200"
+          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
           aria-hidden="true"
         />
-      ) : null}
-      <select
-        value={locale}
-        onChange={onChange}
-        className={cn(
-          "appearance-none rounded-md border border-border/60 bg-surface2 text-sm text-secondary outline-none transition-colors hover:text-text focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-          compact ? "h-8 rounded-full px-2.5 pr-7 text-xs font-medium" : "h-9 pl-8 pr-7",
-          className
-        )}
-        aria-label="Language"
-      >
-        {routing.locales.map((option) => (
-          <option key={option} value={option}>
-            {t(option)}
-          </option>
-        ))}
-      </select>
-      <ChevronDown
-        className="pointer-events-none absolute right-2 top-1/2 size-4 -translate-y-1/2 text-muted"
-        aria-hidden="true"
-      />
+      </button>
+
+      {isOpen && (
+        <div
+          role="listbox"
+          aria-label="Select language"
+          className="absolute right-0 top-full mt-2 z-50 bg-[#0f1e30] border border-white/10 rounded-2xl shadow-xl overflow-hidden min-w-[200px]"
+        >
+          <div className="p-1.5 flex flex-col gap-0.5">
+            {REAL_LOCALES.map((loc) => {
+              const info = LOCALE_INFO[loc];
+              const isActive = loc === locale;
+              return (
+                <button
+                  key={loc}
+                  type="button"
+                  role="option"
+                  aria-selected={isActive}
+                  onClick={() => handleSelect(loc)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left w-full transition-colors",
+                    isActive
+                      ? "bg-green/10 text-green"
+                      : "text-white/80 hover:bg-white/5"
+                  )}
+                >
+                  <span className="text-base">{info.flag}</span>
+                  <span className="flex-1">
+                    <span className="font-medium block">{info.name}</span>
+                    <span className="text-xs opacity-60">{info.native}</span>
+                  </span>
+                  {isActive && (
+                    <Check className="size-4 text-green shrink-0" aria-hidden="true" />
+                  )}
+                </button>
+              );
+            })}
+
+            {/* Coming soon — Dutch */}
+            <div
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left w-full opacity-40 cursor-not-allowed"
+              aria-disabled="true"
+            >
+              <span className="text-base">{LOCALE_INFO.nl.flag}</span>
+              <span className="flex-1">
+                <span className="font-medium block text-white/80">
+                  {LOCALE_INFO.nl.name}
+                </span>
+                <span className="text-xs text-white/40">Coming soon</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
