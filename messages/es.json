@@ -296,7 +296,11 @@
       "confirmPasswordPlaceholder": "Repite la contraseña",
       "submitLogin": "Iniciar sesión",
       "submitRegister": "Crear cuenta",
-      "backToLanding": "Volver al inicio"
+      "backToLanding": "Volver al inicio",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Tu nombre completo",
+      "termsLabel": "Acepto los",
+      "termsLink": "T?rminos y Privacidad"
     },
     "validation": {
       "invalidEmail": "Introduce un correo electrónico válido.",
@@ -314,45 +318,408 @@
   "Dashboard": {
     "sidebar": {
       "brand": "FinTax",
-      "items": [
-        "Inicio",
-        "Declaración",
-        "Prestaciones",
-        "Ingresos",
-        "Gobierno",
-        "Ajustes"
-      ]
+      "items": {
+        "dashboard": "Dashboard",
+        "taxReturn": "Declaraciones",
+        "benefits": "Subsidios",
+        "settings": "Ajustes",
+        "admin": "Admin"
+      },
+      "sections": {
+        "main": "Espacio de trabajo"
+      },
+      "profile": {
+        "name": "Cliente FinTax",
+        "role": "Cuenta est?ndar",
+        "progress": "Onboarding y carga inicial del caso en progreso"
+      },
+      "help": "Centro de ayuda"
     },
     "topbar": {
-      "title": "Inicio",
+      "title": "Dashboard",
       "currentCase": "Caso actual",
-      "openSidebar": "Abrir menú",
-      "closeSidebar": "Cerrar menú",
-      "closeOverlay": "Cerrar superposición"
+      "openSidebar": "Abrir men?",
+      "closeSidebar": "Cerrar men?",
+      "closeOverlay": "Cerrar superposici?n",
+      "alerts": "Alertas"
     },
     "overview": {
-      "caseTitle": "Caso",
+      "caseTitle": "Resumen del caso",
       "statusLabel": "Estado",
-      "statusValue": "En revisión",
-      "deadlineLabel": "Fecha límite",
+      "statusValue": "En revisi?n",
+      "deadlineLabel": "Fecha l?mite",
       "deadlineValue": "12 de mayo de 2026",
-      "checklistTitle": "Lista de tareas",
-      "progressLabel": "Progreso",
-      "refundTitle": "Estimación de devolución",
+      "checklistTitle": "Checklist",
+      "progressLabel": "Continuar checklist",
+      "refundTitle": "Estimaci?n de devoluci?n",
       "refundAmount": "2.345",
-      "chartTitle": "Últimos 7 puntos de control",
-      "chartNote": "Actualizado tras la última carga de nómina",
+      "chartTitle": "?ltimos 7 puntos de control",
+      "chartNote": "Actualizado tras la ?ltima carga de n?mina",
       "caseRows": [
-        { "label": "Zorgtoeslag", "amount": "EUR 1.286" },
-        { "label": "Huurtoeslag", "amount": "EUR 2.140" },
-        { "label": "Kinderbijslag", "amount": "EUR 1.102" }
+        {
+          "label": "Zorgtoeslag",
+          "amount": "EUR 1.286"
+        },
+        {
+          "label": "Huurtoeslag",
+          "amount": "EUR 2.140"
+        },
+        {
+          "label": "Devoluci?n renta",
+          "amount": "EUR 1.102"
+        }
       ],
       "checklistItems": [
-        { "label": "Pasaporte / DNI subido", "done": true },
-        { "label": "Extractos anuales de ingresos", "done": true },
-        { "label": "Detalles del contrato de alquiler", "done": true },
-        { "label": "Facturas de guardería", "done": false }
+        {
+          "label": "Pasaporte / DNI subido",
+          "done": true
+        },
+        {
+          "label": "Certificados anuales de ingresos",
+          "done": true
+        },
+        {
+          "label": "Detalles del contrato de alquiler",
+          "done": true
+        },
+        {
+          "label": "Facturas de guarder?a",
+          "done": false
+        }
+      ],
+      "openCase": "Abrir flujo",
+      "reviewBenefits": "Revisar elegibilidad de subsidios",
+      "cta": "Abrir estimador de subsidios"
+    }
+  },
+  "Onboarding": {
+    "title": "Completa tu configuraci?n",
+    "subtitle": "Elige tu idioma y cu?ntanos con qu? necesitas ayuda primero.",
+    "languageLabel": "Idioma preferido",
+    "needsLabel": "?Con qu? necesitas ayuda?",
+    "needTaxReturn": "Declaraci?n de renta",
+    "needZorgtoeslag": "Zorgtoeslag",
+    "needHuurtoeslag": "Huurtoeslag",
+    "needZzp": "ZZP + IVA",
+    "needOther": "Otro soporte fiscal/subsidios",
+    "cta": "Continuar al dashboard"
+  },
+  "Notifications": {
+    "label": "Notificaciones",
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todo como le?do",
+    "items": {
+      "docsReview": {
+        "title": "Documentos revisados",
+        "body": "Tus n?minas fueron aprobadas. Siguiente paso: confirmar datos de vivienda."
+      },
+      "payment": {
+        "title": "Recordatorio de pago",
+        "body": "Completa el pago para desbloquear la presentaci?n y la solicitud de machtiging."
+      },
+      "caseComplete": {
+        "title": "Actualizaci?n del caso",
+        "body": "Un especialista dej? una nota en la actividad de tu caso."
+      }
+    }
+  },
+  "TaxReturn": {
+    "catalogTitle": "Servicios de declaraci?n",
+    "catalogSubtitle": "Elige un flujo y contin?a el wizard. El progreso se guarda en cada paso.",
+    "start": "Empezar",
+    "continue": "Continuar",
+    "wizardTitle": "Wizard de declaraci?n",
+    "back": "Atr?s",
+    "next": "Siguiente",
+    "finish": "Finalizar",
+    "fields": {
+      "fullName": "Nombre completo",
+      "bsn": "BSN (se permite parcial)",
+      "taxYear": "A?o fiscal",
+      "employerName": "Empresa",
+      "grossIncome": "Ingresos brutos",
+      "monthsWorked": "Meses trabajados en NL",
+      "address": "Direcci?n en NL",
+      "monthlyRent": "Alquiler mensual",
+      "ownsHome": "Soy propietario/a",
+      "box3Assets": "Activos Box 3",
+      "partnerAssets": "Activos de la pareja",
+      "healthcareCosts": "Gastos m?dicos",
+      "educationCosts": "Gastos educativos",
+      "donationCosts": "Donaciones",
+      "machtigingCode": "C?digo de activaci?n de machtiging"
+    },
+    "services": {
+      "formP": {
+        "title": "Formulario P",
+        "description": "Declaraci?n de residente"
+      },
+      "formM": {
+        "title": "Formulario M",
+        "description": "A?o de migraci?n"
+      },
+      "formC": {
+        "title": "Formulario C",
+        "description": "No residente"
+      },
+      "zzp": {
+        "title": "ZZP",
+        "description": "Aut?nomos"
+      },
+      "btw": {
+        "title": "BTW",
+        "description": "Declaraci?n de IVA"
+      }
+    },
+    "steps": {
+      "personal": {
+        "title": "Paso 1 ? Personal",
+        "short": "Personal"
+      },
+      "employment": {
+        "title": "Paso 2 ? Empleo",
+        "short": "Empleo"
+      },
+      "housing": {
+        "title": "Paso 3 ? Vivienda",
+        "short": "Vivienda"
+      },
+      "assets": {
+        "title": "Paso 4 ? Activos (Box 3)",
+        "short": "Activos"
+      },
+      "deductions": {
+        "title": "Paso 5 ? Deducciones",
+        "short": "Deducc."
+      },
+      "summary": {
+        "title": "Paso 6 ? Resumen + Estimaci?n + Pago",
+        "short": "Resumen"
+      },
+      "postPayment": {
+        "title": "Paso 7 ? Post-pago",
+        "short": "Post-pago"
+      }
+    },
+    "summary": {
+      "estimate": "Devoluci?n estimada",
+      "serviceFee": "Tarifa del servicio",
+      "netPotential": "Resultado neto potencial",
+      "copy": "Esta estimaci?n es orientativa y ser? revisada por un especialista de FinTax antes de presentar.",
+      "pay": "Marcar pago completado (demo)",
+      "paid": "Pago marcado como completado"
+    },
+    "postPayment": {
+      "machtigingTitle": "Instrucciones de machtiging",
+      "machtigingCopy": "FinTax solicita autorizaci?n v?a Digipoort. Recibir?s una carta f?sica de Belastingdienst/Logius y luego compartes el c?digo aqu?.",
+      "checklistTitle": "Checklist de documentos",
+      "checklist": [
+        "ID / pasaporte",
+        "Certificado anual de ingresos",
+        "Contrato de alquiler o prueba de domicilio",
+        "Soportes de deducciones relevantes"
       ]
+    }
+  },
+  "Benefits": {
+    "heroTitle": "Comprueba tu elegibilidad",
+    "heroSubtitle": "Wizard universal 2026 de toeslagen con reglas tipadas y estimaci?n por subsidio.",
+    "wizardTitle": "Wizard de subsidios",
+    "back": "Atr?s",
+    "next": "Siguiente",
+    "finish": "Finalizar",
+    "options": {
+      "single": "Individual",
+      "partners": "Pareja",
+      "daycare": "Guarder?a",
+      "outOfSchoolCare": "Extraescolar",
+      "childminder": "Cuidador/a"
+    },
+    "fields": {
+      "age": "Edad",
+      "householdType": "Tipo de hogar",
+      "nlResident": "Residente en NL",
+      "annualIncome": "Ingresos anuales",
+      "assets": "Patrimonio",
+      "hasIndependentHome": "Vivienda independiente",
+      "hasRentalContract": "Contrato de alquiler",
+      "monthlyRent": "Alquiler mensual",
+      "hasHealthInsurance": "Seguro m?dico holand?s",
+      "childrenUnder18": "Hijos menores de 18",
+      "receivesKinderbijslag": "Recibe kinderbijslag",
+      "childcareHoursPerMonth": "Horas de guarder?a / mes",
+      "childcareType": "Tipo de guarder?a",
+      "childcareHourlyRate": "Tarifa por hora",
+      "registeredChildcare": "Centro registrado",
+      "bothParentsWork": "Ambos progenitores trabajan"
+    },
+    "hints": {
+      "zorgIncomeMax": "Umbral ingresos zorgtoeslag 2026",
+      "assetThresholds": "Umbrales patrimonio 2026 (huur / zorg+KGB)",
+      "huurRentCap": "Alquiler m?ximo considerado en estimaci?n",
+      "zorgMax": "M?ximo anual de zorgtoeslag"
+    },
+    "steps": {
+      "personal": {
+        "title": "Paso 1 ? Personal",
+        "short": "Personal"
+      },
+      "income": {
+        "title": "Paso 2 ? Ingresos",
+        "short": "Ingresos"
+      },
+      "assets": {
+        "title": "Paso 3 ? Patrimonio",
+        "short": "Patrim."
+      },
+      "housing": {
+        "title": "Paso 4 ? Vivienda",
+        "short": "Vivienda"
+      },
+      "health": {
+        "title": "Paso 5 ? Seguro m?dico",
+        "short": "Seguro"
+      },
+      "children": {
+        "title": "Paso 6 ? Hijos",
+        "short": "Hijos"
+      },
+      "results": {
+        "title": "Paso 7 ? Resultados",
+        "short": "Resultados"
+      }
+    },
+    "results": {
+      "totalLabel": "Total anual estimado",
+      "copy": "Resultados orientativos basados en reglas 2026 hardcodeadas del brief.",
+      "eligible": "Elegible",
+      "notEligible": "No elegible",
+      "applyFee": "Solicitar con FinTax ? EUR 39",
+      "selected": "Seleccionado en bundle",
+      "select": "Seleccionar en bundle",
+      "cards": {
+        "zorgtoeslag": {
+          "title": "Zorgtoeslag"
+        },
+        "huurtoeslag": {
+          "title": "Huurtoeslag"
+        },
+        "kindgebondenBudget": {
+          "title": "Kindgebonden Budget"
+        },
+        "kinderopvangtoeslag": {
+          "title": "Kinderopvangtoeslag"
+        }
+      }
+    },
+    "bundle": {
+      "label": "Subsidios seleccionados en bundle",
+      "checkout": "Continuar al pago (demo)"
+    }
+  },
+  "CaseDetail": {
+    "notFound": "Caso no encontrado.",
+    "status": "Estado",
+    "deadline": "Fecha l?mite",
+    "tabs": {
+      "overview": "Resumen",
+      "documents": "Documentos",
+      "authorization": "Autorizaci?n",
+      "activity": "Actividad"
+    },
+    "overview": {
+      "estimatedRefund": "Estimaci?n",
+      "machtigingStatus": "Estado de machtiging",
+      "progress": "Progreso checklist",
+      "timeline": "Timeline",
+      "timelineItems": {
+        "intake": "Intake completado",
+        "review": "En revisi?n de especialista",
+        "submission": "Pendiente de env?o tras pago + docs"
+      }
+    },
+    "documents": {
+      "title": "Documentos",
+      "supported": "PDF / JPG / PNG hasta 10MB (listo para Supabase Storage)",
+      "uploadCta": "Subir archivos (demo)"
+    },
+    "authorization": {
+      "title": "Machtiging",
+      "copy": "Introduce el c?digo de activaci?n recibido por carta para autorizar a FinTax a actuar en tu nombre.",
+      "placeholder": "C?digo de activaci?n",
+      "submit": "Enviar c?digo"
+    },
+    "activity": {
+      "title": "Registro de actividad",
+      "items": {
+        "created": "Caso creado y onboarding completado.",
+        "payment": "Enlace de pago generado.",
+        "review": "Revisi?n de especialista iniciada.",
+        "pending": "Esperando documentos finales y c?digo de autorizaci?n."
+      }
+    },
+    "checklist": {
+      "title": "Checklist"
+    }
+  },
+  "Settings": {
+    "title": "Ajustes",
+    "subtitle": "Gestiona perfil, seguridad, notificaciones, idioma, apariencia y facturaci?n.",
+    "sections": {
+      "profile": "Perfil",
+      "security": "Seguridad",
+      "notifications": "Notificaciones",
+      "languageAppearance": "Idioma y apariencia",
+      "billing": "Facturaci?n",
+      "privacy": "Datos y privacidad"
+    },
+    "fields": {
+      "name": "Nombre",
+      "email": "Correo",
+      "phone": "Tel?fono"
+    },
+    "security": {
+      "password": "Acceso con contrase?a habilitado",
+      "sessions": "Gesti?n de sesiones (pr?ximamente)",
+      "resetPassword": "Restablecer contrase?a"
+    },
+    "notifications": {
+      "email": "Notificaciones por email",
+      "inApp": "Notificaciones en app"
+    },
+    "appearance": {
+      "language": "Idioma",
+      "theme": "Tema",
+      "dark": "Oscuro",
+      "light": "Claro"
+    },
+    "privacy": {
+      "copy": "Exporta tus datos o solicita eliminaci?n. FinTax sigue acceso m?nimo y flujos auditables.",
+      "exportData": "Exportar datos",
+      "deleteRequest": "Solicitar eliminaci?n"
+    }
+  },
+  "Admin": {
+    "title": "Admin",
+    "subtitle": "Operaciones de casos, usuarios, precios y notificaciones.",
+    "kpi": {
+      "activeCases": "Casos activos",
+      "pendingPayment": "Pendiente de pago",
+      "inReview": "En revisi?n",
+      "completed": "Completados"
+    },
+    "sections": {
+      "caseManagement": "Gesti?n de casos",
+      "users": "Usuarios",
+      "pricing": "Editor de precios"
+    },
+    "actions": {
+      "notify": "Notificar cliente",
+      "assign": "Asignar admin",
+      "save": "Guardar"
+    },
+    "placeholders": {
+      "internalNote": "Notas internas"
     }
   }
 }

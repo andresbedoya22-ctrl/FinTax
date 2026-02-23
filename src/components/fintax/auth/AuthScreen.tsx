@@ -3,34 +3,37 @@
 import { Apple, Check, Eye, EyeOff, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 import * as React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { Button } from "@/components/fintax/Button";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
+import { createClient } from "@/lib/supabase/client";
 
 type AuthMode = "login" | "register";
 
-type FormState = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
 
-type FormErrors = Partial<Record<keyof FormState, string>>;
-type ValidationTranslator = (key: "invalidEmail" | "passwordLength" | "passwordMismatch") => string;
+const registerSchema = z
+  .object({
+    fullName: z.string().min(2),
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+    terms: z.boolean().refine((v) => v === true, { message: "You must accept the terms" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
-function validate(mode: AuthMode, form: FormState, t: ValidationTranslator): FormErrors {
-  const errors: FormErrors = {};
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
-
-  if (!emailOk) errors.email = t("invalidEmail");
-  if (form.password.length < 8) errors.password = t("passwordLength");
-  if (mode === "register" && form.confirmPassword !== form.password) {
-    errors.confirmPassword = t("passwordMismatch");
-  }
-
-  return errors;
-}
+type LoginValues = z.infer<typeof loginSchema>;
+type RegisterValues = z.infer<typeof registerSchema>;
 
 const inputClass =
   "h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-green/50 focus:ring-1 focus:ring-green/30 transition-all";
@@ -47,48 +50,97 @@ const TRUST_ITEMS = [
 export function AuthScreen() {
   const router = useRouter();
   const t = useTranslations("Auth");
-  const tValidation = useTranslations("Auth.validation");
   const tA11y = useTranslations("Auth.a11y");
+  const supabase = createClient();
+
   const [mode, setMode] = React.useState<AuthMode>("login");
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [form, setForm] = React.useState<FormState>({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = React.useState<FormErrors>({});
+  const [serverError, setServerError] = React.useState<string | null>(null);
 
-  const onFieldChange =
-    (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setForm((prev) => ({ ...prev, [field]: value }));
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    };
+  const loginForm = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
+
+  const registerForm = useForm<RegisterValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      fullName: "",
+      terms: false,
+    },
+  });
+
+  const isSubmitting =
+    mode === "login"
+      ? loginForm.formState.isSubmitting
+      : registerForm.formState.isSubmitting;
 
   const onModeChange = (nextMode: AuthMode) => {
     setMode(nextMode);
-    setErrors({});
+    setServerError(null);
+    loginForm.reset();
+    registerForm.reset();
   };
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const validationErrors = validate(mode, form, tValidation);
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) return;
-
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 250));
+  const onLoginSubmit = async (values: LoginValues) => {
+    setServerError(null);
+    if (!supabase) {
+      setServerError("Supabase is not configured in this environment.");
+      return;
+    }
+    const { error } = await supabase.auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
+    });
+    if (error) {
+      setServerError(error.message);
+      return;
+    }
     router.push("/app");
+  };
+
+  const onRegisterSubmit = async (values: RegisterValues) => {
+    setServerError(null);
+    if (!supabase) {
+      setServerError("Supabase is not configured in this environment.");
+      return;
+    }
+    const { error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+      options: {
+        data: { full_name: values.fullName },
+        emailRedirectTo: `${window.location.origin}/en/auth/callback`,
+      },
+    });
+    if (error) {
+      setServerError(error.message);
+      return;
+    }
+    router.push("/onboarding");
+  };
+
+  const onGoogleLogin = async () => {
+    if (!supabase) {
+      setServerError("Supabase is not configured in this environment.");
+      return;
+    }
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/en/auth/callback`,
+      },
+    });
   };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* ── LEFT PANEL ── */}
       <div className="hidden lg:flex flex-col justify-between bg-[#08111E] p-10 relative overflow-hidden">
-        {/* Subtle green radial glow top-right */}
         <div
           className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
           style={{
@@ -98,7 +150,6 @@ export function AuthScreen() {
           aria-hidden="true"
         />
 
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 z-10">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green to-teal flex items-center justify-center text-sm font-black text-bg shrink-0">
             F
@@ -106,7 +157,6 @@ export function AuthScreen() {
           <span className="font-heading text-lg font-semibold text-text">FinTax</span>
         </Link>
 
-        {/* Middle content */}
         <div className="z-10 space-y-8">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-green mb-4">
@@ -137,7 +187,6 @@ export function AuthScreen() {
           </div>
         </div>
 
-        {/* Testimonial */}
         <div className="z-10 bg-white/5 border border-white/10 rounded-2xl p-6">
           <p className="text-sm italic text-secondary leading-relaxed mb-4">
             &ldquo;They translated every Belastingdienst letter and I finally understood what to
@@ -166,7 +215,6 @@ export function AuthScreen() {
             <span className="font-heading text-lg font-semibold text-text">FinTax</span>
           </div>
 
-          {/* Eyebrow + Title */}
           <div className="mb-8">
             <p className="text-xs font-semibold uppercase tracking-widest text-green mb-2">
               {t("eyebrow")}
@@ -210,7 +258,7 @@ export function AuthScreen() {
 
           {/* Social buttons */}
           <div className="mb-5 grid grid-cols-2 gap-3">
-            <button type="button" className={socialBtnClass}>
+            <button type="button" className={socialBtnClass} onClick={onGoogleLogin}>
               <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4" fill="currentColor">
                 <path d="M12 4.75c1.88 0 3.15.81 3.87 1.48l2.85-2.78C16.97 1.84 14.7.75 12 .75 7.31.75 3.28 3.42 1.29 7.31l3.34 2.59C5.44 6.83 8.42 4.75 12 4.75z" />
                 <path d="M23.49 12.27c0-.79-.07-1.54-.21-2.27H12v4.3h6.46c-.28 1.5-1.13 2.78-2.41 3.64l3.7 2.87c2.16-1.99 3.74-4.93 3.74-8.54z" />
@@ -232,80 +280,198 @@ export function AuthScreen() {
             <span className="h-px flex-1 bg-white/10" />
           </div>
 
-          {/* Form */}
-          <form className="space-y-4" onSubmit={onSubmit} noValidate>
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="mb-1.5 block text-xs text-white/50">
-                {t("form.email")}
-              </label>
-              <div className="relative">
-                <Mail
-                  className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/30"
-                  aria-hidden="true"
-                />
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={form.email}
-                  onChange={onFieldChange("email")}
-                  className={cn(inputClass, "pl-9", errors.email ? "border-error" : "")}
-                  placeholder={t("form.emailPlaceholder")}
-                />
-              </div>
-              {errors.email ? <p className="mt-1 text-xs text-error">{errors.email}</p> : null}
+          {/* Server error */}
+          {serverError && (
+            <div className="mb-4 rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error">
+              {serverError}
             </div>
+          )}
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="mb-1.5 block text-xs text-white/50">
-                {t("form.password")}
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete={mode === "login" ? "current-password" : "new-password"}
-                  value={form.password}
-                  onChange={onFieldChange("password")}
-                  className={cn(inputClass, "pr-10", errors.password ? "border-error" : "")}
-                  placeholder={t("form.passwordPlaceholder")}
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? tA11y("hidePassword") : tA11y("showPassword")}
-                >
-                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
-              </div>
-              {errors.password ? (
-                <p className="mt-1 text-xs text-error">{errors.password}</p>
-              ) : null}
-            </div>
-
-            {/* Confirm password */}
-            {mode === "register" ? (
+          {/* LOGIN FORM */}
+          {mode === "login" && (
+            <form
+              className="space-y-4"
+              onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+              noValidate
+            >
               <div>
-                <label htmlFor="confirmPassword" className="mb-1.5 block text-xs text-white/50">
+                <label htmlFor="login-email" className="mb-1.5 block text-xs text-white/50">
+                  {t("form.email")}
+                </label>
+                <div className="relative">
+                  <Mail
+                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/30"
+                    aria-hidden="true"
+                  />
+                  <input
+                    id="login-email"
+                    type="email"
+                    autoComplete="email"
+                    {...loginForm.register("email")}
+                    className={cn(
+                      inputClass,
+                      "pl-9",
+                      loginForm.formState.errors.email ? "border-error" : ""
+                    )}
+                    placeholder={t("form.emailPlaceholder")}
+                  />
+                </div>
+                {loginForm.formState.errors.email && (
+                  <p className="mt-1 text-xs text-error">
+                    {loginForm.formState.errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="login-password" className="mb-1.5 block text-xs text-white/50">
+                  {t("form.password")}
+                </label>
+                <div className="relative">
+                  <input
+                    id="login-password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    {...loginForm.register("password")}
+                    className={cn(
+                      inputClass,
+                      "pr-10",
+                      loginForm.formState.errors.password ? "border-error" : ""
+                    )}
+                    placeholder={t("form.passwordPlaceholder")}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? tA11y("hidePassword") : tA11y("showPassword")}
+                  >
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
+                {loginForm.formState.errors.password && (
+                  <p className="mt-1 text-xs text-error">
+                    {loginForm.formState.errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                className="mt-2 w-full rounded-xl"
+                loading={isSubmitting}
+              >
+                {t("form.submitLogin")}
+              </Button>
+            </form>
+          )}
+
+          {/* REGISTER FORM */}
+          {mode === "register" && (
+            <form
+              className="space-y-4"
+              onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+              noValidate
+            >
+              <div>
+                <label htmlFor="reg-name" className="mb-1.5 block text-xs text-white/50">
+                  {t("form.fullName")}
+                </label>
+                <input
+                  id="reg-name"
+                  type="text"
+                  autoComplete="name"
+                  {...registerForm.register("fullName")}
+                  className={cn(
+                    inputClass,
+                    registerForm.formState.errors.fullName ? "border-error" : ""
+                  )}
+                  placeholder={t("form.fullNamePlaceholder")}
+                />
+                {registerForm.formState.errors.fullName && (
+                  <p className="mt-1 text-xs text-error">
+                    {registerForm.formState.errors.fullName.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="reg-email" className="mb-1.5 block text-xs text-white/50">
+                  {t("form.email")}
+                </label>
+                <div className="relative">
+                  <Mail
+                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/30"
+                    aria-hidden="true"
+                  />
+                  <input
+                    id="reg-email"
+                    type="email"
+                    autoComplete="email"
+                    {...registerForm.register("email")}
+                    className={cn(
+                      inputClass,
+                      "pl-9",
+                      registerForm.formState.errors.email ? "border-error" : ""
+                    )}
+                    placeholder={t("form.emailPlaceholder")}
+                  />
+                </div>
+                {registerForm.formState.errors.email && (
+                  <p className="mt-1 text-xs text-error">
+                    {registerForm.formState.errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="reg-password" className="mb-1.5 block text-xs text-white/50">
+                  {t("form.password")}
+                </label>
+                <div className="relative">
+                  <input
+                    id="reg-password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    {...registerForm.register("password")}
+                    className={cn(
+                      inputClass,
+                      "pr-10",
+                      registerForm.formState.errors.password ? "border-error" : ""
+                    )}
+                    placeholder={t("form.passwordPlaceholder")}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? tA11y("hidePassword") : tA11y("showPassword")}
+                  >
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
+                {registerForm.formState.errors.password && (
+                  <p className="mt-1 text-xs text-error">
+                    {registerForm.formState.errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="reg-confirm" className="mb-1.5 block text-xs text-white/50">
                   {t("form.confirmPassword")}
                 </label>
                 <div className="relative">
                   <input
-                    id="confirmPassword"
-                    name="confirmPassword"
+                    id="reg-confirm"
                     type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"
-                    value={form.confirmPassword}
-                    onChange={onFieldChange("confirmPassword")}
+                    {...registerForm.register("confirmPassword")}
                     className={cn(
                       inputClass,
                       "pr-10",
-                      errors.confirmPassword ? "border-error" : ""
+                      registerForm.formState.errors.confirmPassword ? "border-error" : ""
                     )}
                     placeholder={t("form.confirmPasswordPlaceholder")}
                   />
@@ -326,17 +492,39 @@ export function AuthScreen() {
                     )}
                   </button>
                 </div>
-                {errors.confirmPassword ? (
-                  <p className="mt-1 text-xs text-error">{errors.confirmPassword}</p>
-                ) : null}
+                {registerForm.formState.errors.confirmPassword && (
+                  <p className="mt-1 text-xs text-error">
+                    {registerForm.formState.errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
-            ) : null}
 
-            {/* Submit */}
-            <Button type="submit" size="lg" className="mt-2 w-full rounded-xl" loading={isSubmitting}>
-              {mode === "login" ? t("form.submitLogin") : t("form.submitRegister")}
-            </Button>
-          </form>
+              {/* Terms */}
+              <div className="flex items-start gap-3">
+                <input
+                  id="reg-terms"
+                  type="checkbox"
+                  {...registerForm.register("terms")}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-green"
+                />
+                <label htmlFor="reg-terms" className="text-xs text-white/50 leading-relaxed">
+                  {t("form.termsLabel")}{" "}
+                  <a href="#" className="text-teal underline-offset-2 hover:underline">
+                    {t("form.termsLink")}
+                  </a>
+                </label>
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                className="mt-2 w-full rounded-xl"
+                loading={isSubmitting}
+              >
+                {t("form.submitRegister")}
+              </Button>
+            </form>
+          )}
 
           {/* Back link */}
           <div className="mt-6 text-center">
