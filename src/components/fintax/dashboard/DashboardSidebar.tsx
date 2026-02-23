@@ -1,27 +1,19 @@
 "use client";
 
-import {
-  BadgeDollarSign,
-  ChevronDown,
-  FileText,
-  Gift,
-  LayoutDashboard,
-  Landmark,
-  Settings,
-} from "lucide-react";
+import { FileText, Gift, HelpCircle, LayoutDashboard, Settings, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
+import * as React from "react";
 
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 
 const navItems = [
-  { key: 0, href: "/app", icon: LayoutDashboard, active: true },
-  { key: 1, href: "#tax-return", icon: FileText },
-  { key: 2, href: "#benefits", icon: Gift },
-  { key: 3, href: "#income", icon: BadgeDollarSign },
-  { key: 4, href: "#government", icon: Landmark },
-  { key: 5, href: "#settings", icon: Settings },
-];
+  { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { key: "taxReturn", href: "/tax-return", icon: FileText },
+  { key: "benefits", href: "/benefits", icon: Gift },
+  { key: "settings", href: "/settings", icon: Settings },
+  { key: "admin", href: "/admin", icon: ShieldCheck },
+] as const;
 
 export interface DashboardSidebarProps {
   className?: string;
@@ -30,7 +22,19 @@ export interface DashboardSidebarProps {
 
 export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProps) {
   const t = useTranslations("Dashboard.sidebar");
-  const labels = t.raw("items") as string[];
+  const pathname = usePathname();
+  const rawItems = t.raw("items") as
+    | string[]
+    | {
+        dashboard?: string;
+        taxReturn?: string;
+        benefits?: string;
+        settings?: string;
+        admin?: string;
+      };
+
+  const getLabel = (key: (typeof navItems)[number]["key"], index: number) =>
+    Array.isArray(rawItems) ? (rawItems[index] ?? key) : (rawItems[key] ?? key);
 
   return (
     <aside
@@ -39,7 +43,6 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
         className
       )}
     >
-      {/* ── TOP: Logo + profile card ── */}
       <div className="px-5 py-5">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-green to-teal text-xs font-black text-[#08111E]">
@@ -48,36 +51,32 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
           <span className="font-heading text-lg font-bold text-white">{t("brand")}</span>
         </Link>
 
-        {/* Profile / progress card */}
         <div className="mt-4 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3">
           <div className="mb-2.5 flex items-center gap-2.5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal to-green text-xs font-bold text-[#08111E]">
-              A
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal to-green text-[10px] font-bold text-[#08111E]">
+              FT
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-medium text-white">@1loober</p>
-              <p className="truncate text-xs text-muted">Volleat</p>
+              <p className="truncate text-xs font-medium text-white">{t("profile.name")}</p>
+              <p className="truncate text-xs text-muted">{t("profile.role")}</p>
             </div>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-            <div className="h-full rounded-full bg-green" style={{ width: "85%" }} />
+            <div className="h-full rounded-full bg-green" style={{ width: "68%" }} />
           </div>
-          <p className="mt-1.5 text-xs text-muted">Som om ni ve dienen</p>
+          <p className="mt-1.5 text-xs text-muted">{t("profile.progress")}</p>
         </div>
       </div>
 
-      {/* ── MAIN NAV ── */}
       <div className="mt-6 overflow-y-auto px-3">
-        <div className="mb-2 flex items-center justify-between px-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-white/30">
-            Dashboard
-          </span>
-          <ChevronDown className="size-3.5 text-white/30" aria-hidden="true" />
-        </div>
+        <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-white/30">
+          {t("sections.main")}
+        </p>
 
-        <nav className="space-y-0.5" aria-label="Sidebar navigation">
-          {navItems.map((item) => {
+        <nav className="space-y-0.5" aria-label={t("sections.main")}>
+          {navItems.map((item, index) => {
             const Icon = item.icon;
+            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.key}
@@ -85,54 +84,26 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
                 onClick={onNavigate}
                 className={cn(
                   "flex cursor-pointer items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all",
-                  item.active
-                    ? "bg-white/[0.08] text-white"
-                    : "text-white/50 hover:bg-white/5 hover:text-white"
+                  isActive ? "bg-white/[0.08] text-white" : "text-white/50 hover:bg-white/5 hover:text-white"
                 )}
               >
                 <Icon className="size-4 shrink-0" aria-hidden="true" />
-                <span>{labels[item.key]}</span>
+                <span>{getLabel(item.key, index)}</span>
               </Link>
             );
           })}
         </nav>
       </div>
 
-      {/* ── BOTTOM SECONDARY NAV ── */}
-      <div className="mt-auto px-3 pb-2">
-        <div className="mb-2 flex items-center justify-between px-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-white/30">
-            Meer
-          </span>
-          <ChevronDown className="size-3.5 text-white/30" aria-hidden="true" />
-        </div>
-
-        <nav className="space-y-0.5" aria-label="Secondary navigation">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={`secondary-${item.key}`}
-                href={item.href}
-                onClick={onNavigate}
-                className="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-2 text-xs text-white/40 transition-all hover:bg-white/5 hover:text-white"
-              >
-                <Icon className="size-3.5 shrink-0" aria-hidden="true" />
-                <span>{labels[item.key]}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* ── BOTTOM CTA ── */}
-      <div className="mx-3 mb-4 mt-3">
-        <button
-          type="button"
-          className="w-full rounded-xl border border-green/40 bg-green/[0.08] py-2.5 text-sm font-medium text-green transition-all hover:bg-green/[0.15]"
+      <div className="mt-auto px-3 pb-4">
+        <Link
+          href="/dashboard"
+          onClick={onNavigate}
+          className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/70 transition-all hover:bg-white/[0.08] hover:text-white"
         >
-          Controleer alles nogeens
-        </button>
+          <HelpCircle className="size-4 text-teal" aria-hidden="true" />
+          <span>{t("help")}</span>
+        </Link>
       </div>
     </aside>
   );

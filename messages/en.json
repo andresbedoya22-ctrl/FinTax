@@ -296,7 +296,11 @@
       "confirmPasswordPlaceholder": "Repeat password",
       "submitLogin": "Login",
       "submitRegister": "Create account",
-      "backToLanding": "Back to landing"
+      "backToLanding": "Back to landing",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Your full name",
+      "termsLabel": "I agree to the",
+      "termsLink": "Terms & Privacy"
     },
     "validation": {
       "invalidEmail": "Enter a valid email address.",
@@ -314,45 +318,408 @@
   "Dashboard": {
     "sidebar": {
       "brand": "FinTax",
-      "items": [
-        "Dashboard",
-        "Tax return",
-        "Benefits",
-        "Income",
-        "Government",
-        "Settings"
-      ]
+      "items": {
+        "dashboard": "Dashboard",
+        "taxReturn": "Tax Returns",
+        "benefits": "Benefits",
+        "settings": "Settings",
+        "admin": "Admin"
+      },
+      "sections": {
+        "main": "Workspace"
+      },
+      "profile": {
+        "name": "FinTax Client",
+        "role": "Standard account",
+        "progress": "Onboarding and case intake in progress"
+      },
+      "help": "Help center"
     },
     "topbar": {
       "title": "Dashboard",
       "currentCase": "Current Case",
       "openSidebar": "Open sidebar",
       "closeSidebar": "Close sidebar",
-      "closeOverlay": "Close sidebar overlay"
+      "closeOverlay": "Close sidebar overlay",
+      "alerts": "Alerts"
     },
     "overview": {
-      "caseTitle": "Case",
+      "caseTitle": "Case Overview",
       "statusLabel": "Status",
       "statusValue": "In review",
       "deadlineLabel": "Deadline",
       "deadlineValue": "12 May 2026",
       "checklistTitle": "Checklist",
-      "progressLabel": "Progress",
+      "progressLabel": "Continue checklist",
       "refundTitle": "Refund estimate",
       "refundAmount": "2,345",
       "chartTitle": "Last 7 checkpoints",
       "chartNote": "Updated after latest payroll upload",
       "caseRows": [
-        { "label": "Zorgtoeslag", "amount": "EUR 1,286" },
-        { "label": "Huurtoeslag", "amount": "EUR 2,140" },
-        { "label": "Kinderbijslag", "amount": "EUR 1,102" }
+        {
+          "label": "Zorgtoeslag",
+          "amount": "EUR 1,286"
+        },
+        {
+          "label": "Huurtoeslag",
+          "amount": "EUR 2,140"
+        },
+        {
+          "label": "Tax return refund",
+          "amount": "EUR 1,102"
+        }
       ],
       "checklistItems": [
-        { "label": "Passport / ID uploaded", "done": true },
-        { "label": "Annual income statements", "done": true },
-        { "label": "Housing contract details", "done": true },
-        { "label": "Childcare invoices", "done": false }
+        {
+          "label": "Passport / ID uploaded",
+          "done": true
+        },
+        {
+          "label": "Annual income statements",
+          "done": true
+        },
+        {
+          "label": "Housing contract details",
+          "done": true
+        },
+        {
+          "label": "Childcare invoices",
+          "done": false
+        }
+      ],
+      "openCase": "Open flow",
+      "reviewBenefits": "Review benefits eligibility",
+      "cta": "Open benefits estimator"
+    }
+  },
+  "Onboarding": {
+    "title": "Finish your setup",
+    "subtitle": "Choose your language and tell us what you need help with first.",
+    "languageLabel": "Preferred language",
+    "needsLabel": "What do you need help with?",
+    "needTaxReturn": "Tax return filing",
+    "needZorgtoeslag": "Zorgtoeslag",
+    "needHuurtoeslag": "Huurtoeslag",
+    "needZzp": "ZZP + VAT",
+    "needOther": "Other tax/benefits support",
+    "cta": "Continue to dashboard"
+  },
+  "Notifications": {
+    "label": "Notifications",
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "items": {
+      "docsReview": {
+        "title": "Documents reviewed",
+        "body": "Your salary slips were approved. Next step: confirm housing details."
+      },
+      "payment": {
+        "title": "Payment reminder",
+        "body": "Complete payment to unlock filing and machtiging request."
+      },
+      "caseComplete": {
+        "title": "Case update",
+        "body": "A specialist left a note in your case activity timeline."
+      }
+    }
+  },
+  "TaxReturn": {
+    "catalogTitle": "Tax return services",
+    "catalogSubtitle": "Choose a flow and continue the wizard. Progress is saved on every step.",
+    "start": "Start",
+    "continue": "Continue",
+    "wizardTitle": "Tax return wizard",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "fields": {
+      "fullName": "Full name",
+      "bsn": "BSN (masked allowed)",
+      "taxYear": "Tax year",
+      "employerName": "Employer name",
+      "grossIncome": "Gross income",
+      "monthsWorked": "Months worked in NL",
+      "address": "Address in NL",
+      "monthlyRent": "Monthly rent",
+      "ownsHome": "I own my home",
+      "box3Assets": "Box 3 assets",
+      "partnerAssets": "Partner assets",
+      "healthcareCosts": "Healthcare costs",
+      "educationCosts": "Education costs",
+      "donationCosts": "Donations",
+      "machtigingCode": "Machtiging activation code"
+    },
+    "services": {
+      "formP": {
+        "title": "Form P",
+        "description": "Resident annual return"
+      },
+      "formM": {
+        "title": "Form M",
+        "description": "Migration year"
+      },
+      "formC": {
+        "title": "Form C",
+        "description": "Non-resident income"
+      },
+      "zzp": {
+        "title": "ZZP",
+        "description": "Self-employed return"
+      },
+      "btw": {
+        "title": "BTW",
+        "description": "VAT declaration"
+      }
+    },
+    "steps": {
+      "personal": {
+        "title": "Step 1 ? Personal",
+        "short": "Personal"
+      },
+      "employment": {
+        "title": "Step 2 ? Employment",
+        "short": "Employment"
+      },
+      "housing": {
+        "title": "Step 3 ? Housing",
+        "short": "Housing"
+      },
+      "assets": {
+        "title": "Step 4 ? Assets (Box 3)",
+        "short": "Assets"
+      },
+      "deductions": {
+        "title": "Step 5 ? Deductions",
+        "short": "Deductions"
+      },
+      "summary": {
+        "title": "Step 6 ? Summary + Estimate + Pay",
+        "short": "Summary"
+      },
+      "postPayment": {
+        "title": "Step 7 ? Post-payment",
+        "short": "After Pay"
+      }
+    },
+    "summary": {
+      "estimate": "Estimated refund",
+      "serviceFee": "Service fee",
+      "netPotential": "Potential net result",
+      "copy": "This estimate is indicative and will be reviewed by a FinTax specialist before filing.",
+      "pay": "Mark payment as completed (demo)",
+      "paid": "Payment marked as completed"
+    },
+    "postPayment": {
+      "machtigingTitle": "Machtiging instructions",
+      "machtigingCopy": "FinTax requests authorization via Digipoort. You receive a physical letter from Belastingdienst/Logius, then share the activation code here.",
+      "checklistTitle": "Document upload checklist",
+      "checklist": [
+        "ID / passport",
+        "Annual income statement",
+        "Housing contract or address proof",
+        "Relevant deductions evidence"
       ]
+    }
+  },
+  "Benefits": {
+    "heroTitle": "Check your eligibility",
+    "heroSubtitle": "Universal 2026 toeslagen wizard with typed rules and estimate per benefit.",
+    "wizardTitle": "Benefits wizard",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "options": {
+      "single": "Single",
+      "partners": "Partners",
+      "daycare": "Daycare",
+      "outOfSchoolCare": "Out-of-school care",
+      "childminder": "Childminder"
+    },
+    "fields": {
+      "age": "Age",
+      "householdType": "Household type",
+      "nlResident": "NL resident",
+      "annualIncome": "Annual income",
+      "assets": "Assets",
+      "hasIndependentHome": "Independent living space",
+      "hasRentalContract": "Rental contract",
+      "monthlyRent": "Monthly rent",
+      "hasHealthInsurance": "Dutch health insurance",
+      "childrenUnder18": "Children under 18",
+      "receivesKinderbijslag": "Receiving kinderbijslag",
+      "childcareHoursPerMonth": "Childcare hours / month",
+      "childcareType": "Childcare type",
+      "childcareHourlyRate": "Hourly childcare rate",
+      "registeredChildcare": "Registered childcare provider",
+      "bothParentsWork": "Both parents work"
+    },
+    "hints": {
+      "zorgIncomeMax": "2026 zorgtoeslag income threshold",
+      "assetThresholds": "2026 assets thresholds (huur / zorg+KGB)",
+      "huurRentCap": "Max rent considered in estimate",
+      "zorgMax": "Max annual zorgtoeslag"
+    },
+    "steps": {
+      "personal": {
+        "title": "Step 1 ? Personal",
+        "short": "Personal"
+      },
+      "income": {
+        "title": "Step 2 ? Income",
+        "short": "Income"
+      },
+      "assets": {
+        "title": "Step 3 ? Assets",
+        "short": "Assets"
+      },
+      "housing": {
+        "title": "Step 4 ? Housing",
+        "short": "Housing"
+      },
+      "health": {
+        "title": "Step 5 ? Health insurance",
+        "short": "Health"
+      },
+      "children": {
+        "title": "Step 6 ? Children",
+        "short": "Children"
+      },
+      "results": {
+        "title": "Step 7 ? Results",
+        "short": "Results"
+      }
+    },
+    "results": {
+      "totalLabel": "Total estimated annual amount",
+      "copy": "Results are indicative and based on hardcoded 2026 rules from the product brief.",
+      "eligible": "Eligible",
+      "notEligible": "Not eligible",
+      "applyFee": "Apply through FinTax ? EUR 39",
+      "selected": "Selected for bundle",
+      "select": "Select for bundle",
+      "cards": {
+        "zorgtoeslag": {
+          "title": "Zorgtoeslag"
+        },
+        "huurtoeslag": {
+          "title": "Huurtoeslag"
+        },
+        "kindgebondenBudget": {
+          "title": "Kindgebonden Budget"
+        },
+        "kinderopvangtoeslag": {
+          "title": "Kinderopvangtoeslag"
+        }
+      }
+    },
+    "bundle": {
+      "label": "Bundle selected benefits",
+      "checkout": "Continue to payment (demo)"
+    }
+  },
+  "CaseDetail": {
+    "notFound": "Case not found.",
+    "status": "Status",
+    "deadline": "Deadline",
+    "tabs": {
+      "overview": "Overview",
+      "documents": "Documents",
+      "authorization": "Authorization",
+      "activity": "Activity"
+    },
+    "overview": {
+      "estimatedRefund": "Estimate",
+      "machtigingStatus": "Machtiging status",
+      "progress": "Checklist progress",
+      "timeline": "Timeline",
+      "timelineItems": {
+        "intake": "Intake completed",
+        "review": "Under specialist review",
+        "submission": "Pending submission after payment + docs"
+      }
+    },
+    "documents": {
+      "title": "Documents",
+      "supported": "PDF / JPG / PNG up to 10MB (Supabase Storage-ready)",
+      "uploadCta": "Upload files (demo)"
+    },
+    "authorization": {
+      "title": "Machtiging",
+      "copy": "Enter the activation code received by post to authorize FinTax to act on your behalf.",
+      "placeholder": "Activation code",
+      "submit": "Submit code"
+    },
+    "activity": {
+      "title": "Activity log",
+      "items": {
+        "created": "Case created and onboarding completed.",
+        "payment": "Payment link generated.",
+        "review": "Specialist review started.",
+        "pending": "Waiting for final documents and authorization code."
+      }
+    },
+    "checklist": {
+      "title": "Checklist"
+    }
+  },
+  "Settings": {
+    "title": "Settings",
+    "subtitle": "Manage profile, security, notifications, language, appearance and billing.",
+    "sections": {
+      "profile": "Profile",
+      "security": "Security",
+      "notifications": "Notifications",
+      "languageAppearance": "Language & Appearance",
+      "billing": "Billing",
+      "privacy": "Data & Privacy"
+    },
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "security": {
+      "password": "Password login enabled",
+      "sessions": "Session management (coming soon)",
+      "resetPassword": "Reset password"
+    },
+    "notifications": {
+      "email": "Email notifications",
+      "inApp": "In-app notifications"
+    },
+    "appearance": {
+      "language": "Language",
+      "theme": "Theme",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "privacy": {
+      "copy": "Export your data or request deletion. FinTax follows least-privilege access and audit-friendly workflows.",
+      "exportData": "Export data",
+      "deleteRequest": "Request deletion"
+    }
+  },
+  "Admin": {
+    "title": "Admin",
+    "subtitle": "Case operations, user management, pricing and notifications.",
+    "kpi": {
+      "activeCases": "Active cases",
+      "pendingPayment": "Pending payment",
+      "inReview": "In review",
+      "completed": "Completed"
+    },
+    "sections": {
+      "caseManagement": "Case management",
+      "users": "Users",
+      "pricing": "Pricing editor"
+    },
+    "actions": {
+      "notify": "Notify client",
+      "assign": "Assign admin",
+      "save": "Save"
+    },
+    "placeholders": {
+      "internalNote": "Internal notes"
     }
   }
 }
