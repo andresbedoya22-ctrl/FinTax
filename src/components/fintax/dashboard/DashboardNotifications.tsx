@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
+import { Button } from "@/components/ui";
 
 export function DashboardNotifications() {
   const t = useTranslations("Notifications");
@@ -34,27 +35,29 @@ export function DashboardNotifications() {
     <div ref={containerRef} className="relative">
       <button
         type="button"
-        className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] transition-all hover:bg-white/10"
+        className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-border/40 bg-surface/45 transition-all hover:border-copper/25 hover:bg-surface2/55"
         aria-label={t("label")}
         onClick={() => setOpen((prev) => !prev)}
       >
-        <Bell className="size-4 text-white/60" aria-hidden="true" />
+        <Bell className="size-4 text-secondary" aria-hidden="true" />
         {unreadCount > 0 && (
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />
+          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-copper" aria-hidden="true" />
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-2xl border border-white/10 bg-[#0F1E30] p-2 shadow-xl">
+        <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-2xl border border-border/35 bg-surface/90 p-2 shadow-floating backdrop-blur-xl">
           <div className="mb-1 flex items-center justify-between px-2 py-1">
-            <p className="text-sm font-semibold text-white">{t("title")}</p>
-            <button
+            <p className="text-sm font-semibold text-text">{t("title")}</p>
+            <Button
               type="button"
-              className="text-xs text-teal hover:text-white"
+              size="sm"
+              variant="ghost"
+              className="h-7 px-2 text-xs"
               onClick={() => setReadIds(items.map((item) => item.id))}
             >
               {t("markAllRead")}
-            </button>
+            </Button>
           </div>
           <ul className="space-y-1">
             {items.map((item) => {
@@ -68,20 +71,20 @@ export function DashboardNotifications() {
                     className={cn(
                       "w-full rounded-xl border px-3 py-2 text-left transition-colors",
                       isRead
-                        ? "border-white/5 bg-white/[0.02]"
-                        : "border-white/10 bg-white/[0.04] hover:bg-white/[0.06]"
+                        ? "border-border/20 bg-surface2/20"
+                        : "border-border/35 bg-surface2/35 hover:border-copper/20 hover:bg-surface2/50"
                     )}
                   >
                     <div className="flex items-start gap-3">
-                      <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-teal">
+                      <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/30 bg-surface2/40 text-copper">
                         <Icon className="size-4" aria-hidden="true" />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2">
-                          <span className="block text-sm font-medium text-white">{item.title}</span>
-                          {!isRead && <span className="inline-block h-1.5 w-1.5 rounded-full bg-red-400" />}
+                          <span className="block text-sm font-medium text-text">{item.title}</span>
+                          {!isRead && <span className="inline-block h-1.5 w-1.5 rounded-full bg-copper" />}
                         </span>
-                        <span className="mt-0.5 block text-xs text-white/60">{item.body}</span>
+                        <span className="mt-0.5 block text-xs text-secondary">{item.body}</span>
                       </span>
                     </div>
                   </button>

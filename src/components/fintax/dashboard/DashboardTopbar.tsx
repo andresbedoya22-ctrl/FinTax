@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 import { DashboardNotifications } from "@/components/fintax/dashboard/DashboardNotifications";
+import { Badge, Button } from "@/components/ui";
 
 export interface DashboardTopbarProps {
   onOpenSidebar: () => void;
@@ -14,44 +15,63 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
   const t = useTranslations("Dashboard.topbar");
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-[#0A1628]/90 px-4 py-3 backdrop-blur-xl sm:px-6">
+    <header className="sticky top-0 z-30 border-b border-border/35 bg-bg/70 px-4 py-3 backdrop-blur-xl sm:px-6 lg:px-8">
       <div className="flex items-center gap-3">
-        <button
+        <Button
           type="button"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] lg:hidden"
+          size="icon"
+          variant="secondary"
+          className="lg:hidden"
           onClick={onOpenSidebar}
           aria-label={t("openSidebar")}
         >
-          <Menu className="size-5 text-white/70" aria-hidden="true" />
-        </button>
+          <Menu className="size-5" aria-hidden="true" />
+        </Button>
 
-        <h1 className="font-heading text-xl font-semibold text-white sm:text-2xl">{t("title")}</h1>
+        <div className="min-w-0">
+          <h1 className="font-heading text-xl font-semibold text-text sm:text-2xl">{t("title")}</h1>
+          <p className="hidden text-xs uppercase tracking-[0.14em] text-muted sm:block">Authenticated workspace</p>
+        </div>
 
         <button
           type="button"
-          className="ml-1 hidden items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-white/70 transition-all hover:bg-white/10 hover:text-white sm:flex"
+          className="ml-1 hidden items-center gap-2 rounded-xl border border-border/40 bg-surface/45 px-3 py-2 text-sm text-secondary transition-all hover:border-copper/25 hover:text-text sm:flex"
         >
-          <LayoutGrid className="size-4" aria-hidden="true" />
+          <LayoutGrid className="size-4 text-copper" aria-hidden="true" />
           {t("currentCase")}
-          <ChevronDown className="size-4 text-white/40" aria-hidden="true" />
+          <ChevronDown className="size-4 text-muted" aria-hidden="true" />
         </button>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <DashboardNotifications />
 
-          <button
+          <Button
             type="button"
-            className="hidden h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] transition-all hover:bg-white/10 sm:flex"
+            size="icon"
+            variant="secondary"
+            className="hidden sm:inline-flex"
             aria-label={t("alerts")}
           >
-            <BellDot className="size-4 text-white/60" aria-hidden="true" />
-          </button>
+            <BellDot className="size-4" aria-hidden="true" />
+          </Button>
 
           <LanguageSwitcher compact />
 
-          <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-br from-teal to-green text-xs font-bold text-[#08111E]">
+          <button
+            type="button"
+            className="focus-ring hidden items-center gap-2 rounded-xl border border-border/40 bg-surface/45 px-2.5 py-2 text-left sm:flex"
+            aria-label="Open profile menu"
+          >
+            <div className="grid h-7 w-7 place-items-center rounded-lg border border-green/20 bg-green/10 text-xs font-bold text-green">FT</div>
+            <div className="hidden md:block">
+              <p className="text-xs font-medium text-text">FinTax User</p>
+              <p className="text-[11px] text-muted">Profile menu</p>
+            </div>
+            <ChevronDown className="h-4 w-4 text-muted" />
+          </button>
+          <Badge variant="neutral" className="sm:hidden">
             FT
-          </div>
+          </Badge>
         </div>
       </div>
     </header>
