@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
-const sora = Sora({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--font-display",
   display: "swap",
-  fallback: ["Space Grotesk", "system-ui", "sans-serif"],
+  fallback: ["Georgia", "serif"],
 });
 
-const inter = Inter({
+const plexSans = IBM_Plex_Sans({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-sans",
   display: "swap",
-  fallback: ["system-ui", "sans-serif"],
+  weight: ["300", "400", "500", "600", "700"],
+  fallback: ["Segoe UI", "sans-serif"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500", "600"],
+  fallback: ["Consolas", "monospace"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +38,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${sora.variable} ${inter.variable} bg-bg text-text antialiased`}>
+      <body
+        className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable} bg-bg text-text antialiased`}
+      >
         {children}
       </body>
     </html>
