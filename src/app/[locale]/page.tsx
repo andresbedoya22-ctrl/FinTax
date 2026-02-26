@@ -12,7 +12,7 @@ export const metadata: Metadata = {
       "Multilingual Dutch tax support with fixed pricing, dashboard tracking, and human-reviewed filing.",
     type: "website",
     images: [
-      { url: "/visuals/app-mock.png", width: 1600, height: 1000, alt: "FinTax premium conversion landing preview" },
+      { url: "/visuals/app-mock.svg", width: 1600, height: 1000, alt: "FinTax premium conversion landing preview" },
     ],
   },
 };

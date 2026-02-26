@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { ChevronDown, Check } from "lucide-react";
+import { Check, ChevronDown, Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import * as React from "react";
 
@@ -14,46 +14,22 @@ export interface LanguageSwitcherProps {
 }
 
 type LocaleInfo = {
+  code: string;
   name: string;
   native: string;
 };
 
-const FLAG_SRCS: Record<string, string> = {
-  en: "https://flagcdn.com/w20/gb.png",
-  es: "https://flagcdn.com/w20/es.png",
-  pl: "https://flagcdn.com/w20/pl.png",
-  ro: "https://flagcdn.com/w20/ro.png",
-  nl: "https://flagcdn.com/w20/nl.png",
-};
-
-function FlagImg({ locale, className }: { locale: string; className?: string }) {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={FLAG_SRCS[locale] ?? `https://flagcdn.com/w20/${locale}.png`}
-      alt={locale.toUpperCase()}
-      width={20}
-      height={15}
-      crossOrigin="anonymous"
-      className={cn("rounded-[2px] object-cover shadow-sm", className)}
-      style={{ minWidth: 20 }}
-    />
-  );
-}
-
 const LOCALE_INFO: Record<AppLocale, LocaleInfo> = {
-  en: { name: "English", native: "English" },
-  es: { name: "Spanish", native: "Español" },
-  pl: { name: "Polish", native: "Polski" },
-  ro: { name: "Romanian", native: "Română" },
-  nl: { name: "Dutch", native: "Nederlands" },
+  en: { code: "EN", name: "English", native: "English" },
+  es: { code: "ES", name: "Spanish", native: "Espanol" },
+  pl: { code: "PL", name: "Polish", native: "Polski" },
+  ro: { code: "RO", name: "Romanian", native: "Romana" },
+  nl: { code: "NL", name: "Dutch", native: "Nederlands" },
 };
 
-const REAL_LOCALES: AppLocale[] = routing.locales.filter(
-  (l): l is AppLocale => l !== "nl"
-) as AppLocale[];
+const REAL_LOCALES: AppLocale[] = routing.locales.filter((l): l is AppLocale => l !== "nl") as AppLocale[];
 
-export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
+export function LanguageSwitcher({ className, compact = false }: LanguageSwitcherProps) {
   const locale = useLocale() as AppLocale;
   const router = useRouter();
   const pathname = usePathname();
@@ -64,17 +40,16 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   React.useEffect(() => setMounted(true), []);
 
   React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+    const onPointerDown = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
   }, []);
+
+  const active = LOCALE_INFO[locale] ?? LOCALE_INFO.en;
 
   const handleSelect = (nextLocale: AppLocale) => {
     router.replace(pathname, { locale: nextLocale });
@@ -86,27 +61,37 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm font-semibold text-white flex items-center gap-2 cursor-pointer hover:bg-white/[0.08] transition-all"
+        className={cn(
+          "focus-ring inline-flex items-center gap-2 rounded-xl border border-border/40 bg-surface/55 text-text transition",
+          "hover:border-copper/25 hover:bg-surface/70",
+          compact ? "h-10 px-3 text-xs" : "h-11 px-3.5 text-sm"
+        )}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        aria-label="Change language"
         suppressHydrationWarning
       >
-        <FlagImg locale={locale} />
-        <span className="uppercase">{locale}</span>
+        <span className="grid h-6 w-6 place-items-center rounded-md border border-copper/25 bg-copper/8 text-copper" aria-hidden="true">
+          <Languages className="h-3.5 w-3.5" />
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="font-medium tracking-[0.08em] uppercase">{active.code}</span>
+          {!compact ? <span className="hidden text-muted sm:inline">{active.native}</span> : null}
+        </span>
         <ChevronDown
-          className="size-4 text-white/60 transition-transform duration-200"
-          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+          className={cn("h-4 w-4 text-muted transition-transform", isOpen && "rotate-180")}
           aria-hidden="true"
         />
       </button>
 
-      {mounted && isOpen && (
+      {mounted && isOpen ? (
         <div
           role="listbox"
           aria-label="Select language"
-          className="absolute right-0 top-full mt-2 z-50 bg-[#0f1e30] border border-white/10 rounded-2xl shadow-xl overflow-hidden min-w-[220px]"
+          className="absolute right-0 top-full z-50 mt-2 min-w-[248px] overflow-hidden rounded-2xl border border-border/45 bg-surface/95 p-1.5 shadow-panel backdrop-blur-xl"
         >
-          <div className="p-1.5 flex flex-col gap-0.5">
+          <div className="mb-1 px-2 py-1 text-[11px] uppercase tracking-[0.14em] text-muted">Supported languages</div>
+          <div className="grid gap-1">
             {REAL_LOCALES.map((loc) => {
               const info = LOCALE_INFO[loc];
               const isActive = loc === locale;
@@ -118,40 +103,37 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
                   aria-selected={isActive}
                   onClick={() => handleSelect(loc)}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left w-full transition-colors",
+                    "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition",
                     isActive
-                      ? "bg-green/10 text-green"
-                      : "text-white/80 hover:bg-white/5"
+                      ? "border-green/25 bg-green/8 text-text"
+                      : "border-transparent text-secondary hover:border-border/35 hover:bg-white/5 hover:text-text"
                   )}
                 >
-                  <FlagImg locale={loc} />
-                  <span className="flex-1">
-                    <span className="font-medium block">{info.name}</span>
-                    <span className="text-xs opacity-60">{info.native}</span>
+                  <span className={cn(
+                    "inline-flex min-w-10 items-center justify-center rounded-md border px-2 py-1 text-[11px] font-semibold tracking-[0.12em]",
+                    isActive ? "border-green/25 bg-green/10 text-green" : "border-border/35 bg-surface2/35 text-muted"
+                  )}>
+                    {info.code}
                   </span>
-                  {isActive && (
-                    <Check className="size-4 text-green shrink-0" aria-hidden="true" />
-                  )}
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-medium">{info.name}</span>
+                    <span className="block text-xs text-muted">{info.native}</span>
+                  </span>
+                  {isActive ? <Check className="h-4 w-4 shrink-0 text-green" aria-hidden="true" /> : null}
                 </button>
               );
             })}
 
-            {/* Coming soon — Dutch */}
-            <div
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left w-full cursor-not-allowed"
-              aria-disabled="true"
-            >
-              <FlagImg locale="nl" className="opacity-40" />
-              <span className="flex-1 opacity-40">
-                <span className="font-medium block text-white/80">
-                  {LOCALE_INFO.nl.name}
-                </span>
-                <span className="text-xs text-white/40">Coming soon</span>
+            <div className="mt-1 flex items-center gap-3 rounded-xl border border-border/25 bg-surface2/25 px-3 py-2.5" aria-disabled="true">
+              <span className="inline-flex min-w-10 items-center justify-center rounded-md border border-border/25 px-2 py-1 text-[11px] font-semibold tracking-[0.12em] text-muted opacity-60">NL</span>
+              <span className="flex-1">
+                <span className="block text-sm font-medium text-secondary">Dutch</span>
+                <span className="block text-xs text-muted">Available in selected flows</span>
               </span>
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

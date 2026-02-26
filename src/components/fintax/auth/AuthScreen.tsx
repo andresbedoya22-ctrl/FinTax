@@ -221,7 +221,7 @@ export function AuthScreen() {
       <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[1.05fr_0.95fr]">
         <aside className="relative hidden overflow-hidden border-r border-border/35 p-8 lg:flex lg:flex-col lg:justify-between xl:p-10">
           <div className="absolute inset-0">
-            <Image src="/visuals/hero-bg.png" alt="" width={1920} height={1080} className="h-full w-full object-cover opacity-20" aria-hidden="true" />
+            <Image src="/visuals/hero-bg.svg" alt="" width={1920} height={1080} className="h-full w-full object-cover opacity-30" aria-hidden="true" />
             <div className="absolute inset-0 bg-gradient-to-br from-bg via-bg/85 to-surface/85" />
           </div>
 
@@ -258,13 +258,13 @@ export function AuthScreen() {
             <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <Card variant="panel" padding="sm" className="bg-surface/45">
                 <p className="text-xs uppercase tracking-[0.14em] text-muted">Workspace preview</p>
-                <Image src="/visuals/app-mock.png" alt="FinTax app mockup" width={1600} height={1000} className="mt-3 h-[170px] w-full rounded-xl border border-border/40 object-cover" />
+                <Image src="/visuals/app-mock.svg" alt="FinTax app mockup" width={1600} height={1000} className="mt-3 h-[170px] w-full rounded-xl border border-border/40 object-cover" />
               </Card>
               <Card variant="soft" padding="sm" className="bg-surface2/45">
                 <p className="text-xs uppercase tracking-[0.14em] text-muted">Trust signal</p>
                 <p className="mt-3 font-heading text-xl leading-tight text-text">&ldquo;{local.quote}&rdquo;</p>
                 <p className="mt-3 text-xs uppercase tracking-[0.12em] text-muted">{local.quoteRole}</p>
-                <Image src="/visuals/letter-mock.png" alt="Letter mock preview" width={1400} height={1000} className="mt-4 h-[96px] w-full rounded-lg border border-border/40 object-cover" />
+                <Image src="/visuals/letter-mock.svg" alt="Letter mock preview" width={1400} height={1000} className="mt-4 h-[96px] w-full rounded-lg border border-border/40 object-cover" />
               </Card>
             </div>
           </div>
@@ -437,7 +437,7 @@ export function AuthScreen() {
                 </div>
               </Card>
               <Card variant="soft" padding="sm" className="bg-surface2/45">
-                <Image src="/visuals/app-mock.png" alt="App mockup" width={1600} height={1000} className="h-[120px] w-full rounded-lg border border-border/40 object-cover" />
+                <Image src="/visuals/app-mock.svg" alt="App mockup" width={1600} height={1000} className="h-[120px] w-full rounded-lg border border-border/40 object-cover" />
               </Card>
             </div>
           </div>

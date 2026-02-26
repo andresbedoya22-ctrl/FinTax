@@ -1,0 +1,90 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shell" x1="146" y1="98" x2="1456" y2="934" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#142236"/>
+      <stop offset="1" stop-color="#0C1524"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#1A2A42"/>
+      <stop offset="1" stop-color="#111D2F"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#39BB80"/>
+      <stop offset="1" stop-color="#B47B58"/>
+    </linearGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.03"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" rx="30" fill="#09111D"/>
+  <rect x="86" y="68" width="1428" height="864" rx="28" fill="url(#shell)"/>
+  <rect x="86" y="68" width="1428" height="864" rx="28" stroke="#D9E3F0" stroke-opacity="0.12"/>
+  <rect x="86" y="68" width="1428" height="56" rx="28" fill="#101C2D"/>
+  <path d="M112 96H130" stroke="#FF7368" stroke-width="12" stroke-linecap="round"/>
+  <path d="M146 96H164" stroke="#F4C24B" stroke-width="12" stroke-linecap="round"/>
+  <path d="M180 96H198" stroke="#47CC78" stroke-width="12" stroke-linecap="round"/>
+  <path d="M240 96H426" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="4" stroke-linecap="round"/>
+  <rect x="120" y="150" width="266" height="740" rx="20" fill="#101B2C" stroke="#D9E3F0" stroke-opacity="0.08"/>
+  <rect x="424" y="150" width="1056" height="740" rx="20" fill="#0F1A2A" stroke="#D9E3F0" stroke-opacity="0.07"/>
+  <rect x="150" y="194" width="206" height="58" rx="14" fill="#15253A" stroke="#D9E3F0" stroke-opacity="0.09"/>
+  <rect x="166" y="212" width="32" height="22" rx="8" fill="#1E344E"/>
+  <path d="M212 223H312" stroke="#D9E3F0" stroke-opacity="0.52" stroke-width="3" stroke-linecap="round"/>
+  <g opacity="0.9">
+    <rect x="150" y="290" width="206" height="44" rx="12" fill="#122136"/>
+    <rect x="150" y="346" width="206" height="44" rx="12" fill="#122136"/>
+    <rect x="150" y="402" width="206" height="44" rx="12" fill="#17293E"/>
+    <rect x="150" y="458" width="206" height="44" rx="12" fill="#122136"/>
+    <rect x="150" y="514" width="206" height="44" rx="12" fill="#122136"/>
+  </g>
+  <path d="M176 424H212" stroke="#39BB80" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M228 424H320" stroke="#D9E3F0" stroke-opacity="0.65" stroke-width="3.5" stroke-linecap="round"/>
+  <rect x="460" y="178" width="984" height="76" rx="16" fill="#132237" stroke="#D9E3F0" stroke-opacity="0.08"/>
+  <path d="M492 208H634" stroke="#D9E3F0" stroke-opacity="0.68" stroke-width="4" stroke-linecap="round"/>
+  <path d="M492 230H736" stroke="#D9E3F0" stroke-opacity="0.3" stroke-width="4" stroke-linecap="round"/>
+  <rect x="1242" y="194" width="172" height="44" rx="12" fill="#16293D" stroke="#D9E3F0" stroke-opacity="0.08"/>
+  <path d="M1276 216H1380" stroke="#B47B58" stroke-opacity="0.9" stroke-width="3.5" stroke-linecap="round"/>
+  <rect x="460" y="282" width="656" height="356" rx="18" fill="url(#panel)" stroke="#D9E3F0" stroke-opacity="0.09"/>
+  <rect x="1160" y="282" width="284" height="170" rx="18" fill="#13243A" stroke="#D9E3F0" stroke-opacity="0.09"/>
+  <rect x="1160" y="468" width="284" height="170" rx="18" fill="#122238" stroke="#D9E3F0" stroke-opacity="0.09"/>
+  <rect x="460" y="662" width="984" height="192" rx="18" fill="#111E31" stroke="#D9E3F0" stroke-opacity="0.07"/>
+  <g opacity="0.95">
+    <rect x="492" y="320" width="164" height="92" rx="14" fill="#15263D"/>
+    <rect x="674" y="320" width="164" height="92" rx="14" fill="#15263D"/>
+    <rect x="856" y="320" width="228" height="92" rx="14" fill="#15263D"/>
+    <path d="M520 350H612" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>
+    <path d="M520 378H594" stroke="#D9E3F0" stroke-opacity="0.6" stroke-width="4" stroke-linecap="round"/>
+    <path d="M702 350H794" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>
+    <path d="M702 378H772" stroke="#39BB80" stroke-width="4" stroke-linecap="round"/>
+    <path d="M884 350H1002" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>
+    <path d="M884 378H1048" stroke="#B47B58" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g opacity="0.9">
+    <path d="M512 480H1068" stroke="#D9E3F0" stroke-opacity="0.22" stroke-width="3" stroke-linecap="round"/>
+    <path d="M512 514H1026" stroke="#D9E3F0" stroke-opacity="0.55" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M512 548H974" stroke="#D9E3F0" stroke-opacity="0.35" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M512 582H914" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+  <g opacity="0.95">
+    <rect x="1192" y="314" width="220" height="18" rx="9" fill="#1A314A"/>
+    <rect x="1192" y="346" width="164" height="18" rx="9" fill="#233B57"/>
+    <rect x="1192" y="378" width="186" height="18" rx="9" fill="url(#accent)"/>
+    <rect x="1192" y="500" width="220" height="14" rx="7" fill="#203651"/>
+    <rect x="1192" y="530" width="176" height="14" rx="7" fill="#203651"/>
+    <rect x="1192" y="560" width="196" height="14" rx="7" fill="#2A425D"/>
+  </g>
+  <g opacity="0.8">
+    <rect x="492" y="702" width="304" height="120" rx="14" fill="#14253A"/>
+    <rect x="814" y="702" width="304" height="120" rx="14" fill="#14253A"/>
+    <rect x="1136" y="702" width="276" height="120" rx="14" fill="#14253A"/>
+    <path d="M520 734H692" stroke="#D9E3F0" stroke-opacity="0.28" stroke-width="3"/>
+    <path d="M520 766H660" stroke="#D9E3F0" stroke-opacity="0.58" stroke-width="3.5"/>
+    <path d="M842 734H1014" stroke="#D9E3F0" stroke-opacity="0.28" stroke-width="3"/>
+    <path d="M842 766H984" stroke="#39BB80" stroke-width="3.5"/>
+    <path d="M1164 734H1336" stroke="#D9E3F0" stroke-opacity="0.28" stroke-width="3"/>
+    <path d="M1164 766H1298" stroke="#B47B58" stroke-width="3.5"/>
+  </g>
+  <rect width="1600" height="1000" rx="30" filter="url(#grain)"/>
+</svg>
