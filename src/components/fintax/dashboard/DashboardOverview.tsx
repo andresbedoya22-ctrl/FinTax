@@ -16,6 +16,8 @@ export function DashboardOverview() {
   const checklistItems = t.raw("checklistItems") as Array<{ label: string; done: boolean }>;
   const caseRows = t.raw("caseRows") as Array<{ label: string; amount: string }>;
   const checklistProgress = Math.round((checklistItems.filter((i) => i.done).length / checklistItems.length) * 100);
+  const listContainerVariants = reduceMotion ? undefined : { hidden: {}, show: { transition: { staggerChildren: 0.04 } } };
+  const listItemVariants = reduceMotion ? undefined : { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
 
   return (
     <section className="space-y-6">
@@ -116,14 +118,19 @@ export function DashboardOverview() {
                 <div className="h-full rounded-full bg-gradient-to-r from-green to-copper" style={{ width: `${checklistProgress}%` }} />
               </div>
               <p className="mt-2 text-right text-sm font-semibold text-text">{checklistProgress}%</p>
-              <ul className="mt-4 space-y-2">
+              <motion.ul
+                className="mt-4 space-y-2"
+                initial={reduceMotion ? false : "hidden"}
+                animate={reduceMotion ? undefined : "show"}
+                variants={listContainerVariants}
+              >
                 {checklistItems.map((item) => (
-                  <li key={item.label} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface2/25 px-3 py-2.5">
+                  <motion.li key={item.label} variants={listItemVariants} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface2/25 px-3 py-2.5">
                     {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
                     <span className={cn("text-sm", item.done ? "text-text" : "text-secondary")}>{item.label}</span>
-                  </li>
+                  </motion.li>
                 ))}
-              </ul>
+              </motion.ul>
               <Link href="/tax-return" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-copper hover:text-text">
                 {t("progressLabel")}
                 <ChevronRight className="h-4 w-4" />

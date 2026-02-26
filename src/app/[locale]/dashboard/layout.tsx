@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AuthenticatedRouteTransition } from "@/components/fintax/motion/AuthenticatedRouteTransition";
 import { DashboardShell } from "@/components/fintax/dashboard";
 
 export const metadata: Metadata = {
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return <DashboardShell>{children}</DashboardShell>;
+  return <DashboardShell><AuthenticatedRouteTransition>{children}</AuthenticatedRouteTransition></DashboardShell>;
 }
