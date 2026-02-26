@@ -2,9 +2,11 @@
 
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
+import { createClient } from "@/lib/supabase/client";
 import { DashboardSidebar } from "@/components/fintax/dashboard/DashboardSidebar";
 import { DashboardTopbar } from "@/components/fintax/dashboard/DashboardTopbar";
 import { Button } from "@/components/ui";
@@ -15,6 +17,7 @@ export interface DashboardShellProps {
 
 export function DashboardShell({ children }: DashboardShellProps) {
   const t = useTranslations("Dashboard.topbar");
+  const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
   const shellRef = React.useRef<HTMLDivElement>(null);
 
@@ -27,6 +30,63 @@ export function DashboardShell({ children }: DashboardShellProps) {
       console.warn("Nested DashboardShell detected. Authenticated routes should render a single shell.");
     }
   }, []);
+
+  React.useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+
+    let disposed = false;
+    let channelName = "";
+
+    const refreshIfOnline = () => {
+      if (typeof navigator !== "undefined" && !navigator.onLine) return;
+      router.refresh();
+    };
+
+    const handleOnline = () => refreshIfOnline();
+    window.addEventListener("online", handleOnline);
+
+    const setup = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user || disposed) return;
+
+      channelName = `cases:${user.id}`;
+      const channel = supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "cases",
+            filter: `user_id=eq.${user.id}`,
+          },
+          () => {
+            if (disposed) return;
+            refreshIfOnline();
+          }
+        )
+        .subscribe();
+
+      if (disposed) {
+        supabase.removeChannel(channel);
+      }
+    };
+
+    void setup();
+
+    return () => {
+      disposed = true;
+      window.removeEventListener("online", handleOnline);
+      if (channelName) {
+        const channel = supabase.getChannels().find((item) => item.topic === channelName);
+        if (channel) supabase.removeChannel(channel);
+      }
+    };
+  }, [router]);
 
   return (
     <div ref={shellRef} data-dashboard-shell="true" className="min-h-screen bg-mesh">
