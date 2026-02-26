@@ -81,6 +81,7 @@ export function TaxReturnFlow() {
   const [selectedService, setSelectedService] = React.useState<string>("tax_return_p");
   const [currentStep, setCurrentStep] = React.useState(0);
   const [paymentCompleted, setPaymentCompleted] = React.useState(false);
+  const [draftCaseId, setDraftCaseId] = React.useState<string | null>(null);
 
   const services = React.useMemo<ServiceCard[]>(
     () => [
@@ -107,12 +108,12 @@ export function TaxReturnFlow() {
     const subscription = form.watch((values) => {
       void persistWizardSnapshot({
         storageKey: `fintax-tax-${selectedService}`,
-        caseId: undefined,
+        caseId: draftCaseId ?? undefined,
         payload: { ...values, selectedService, currentStep },
       });
     });
     return () => subscription.unsubscribe();
-  }, [form, selectedService, currentStep]);
+  }, [form, selectedService, currentStep, draftCaseId]);
 
   const values = form.watch();
   const refund = estimateRefund(values);
@@ -130,6 +131,24 @@ export function TaxReturnFlow() {
     ];
     const valid = await form.trigger(fieldsByStep[currentStep]);
     if (!valid) return;
+    if (currentStep === 0 && !draftCaseId) {
+      try {
+        const response = await fetch("/api/cases/draft", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            caseType: selectedService,
+            fullName: form.getValues("fullName"),
+            bsn: form.getValues("bsn"),
+            taxYear: form.getValues("taxYear"),
+          }),
+        });
+        const data = (await response.json().catch(() => null)) as { caseId?: string | null } | null;
+        if (data?.caseId) setDraftCaseId(data.caseId);
+      } catch {
+        // Non-blocking: wizard can continue and persist local metadata only.
+      }
+    }
     setCurrentStep((prev) => Math.min(prev + 1, stepKeys.length - 1));
   };
 
