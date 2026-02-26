@@ -12,7 +12,7 @@ import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, Skeleton, Stepper } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { loadWizardSnapshot, persistWizardSnapshot } from "@/lib/wizards/persistence";
+import { hasLocalWizardProgress, loadWizardSnapshot, persistWizardSnapshot } from "@/lib/wizards/persistence";
 
 const taxWizardSchema = z.object({
   fullName: z.string().min(2),
@@ -108,11 +108,11 @@ export function TaxReturnFlow() {
       void persistWizardSnapshot({
         storageKey: `fintax-tax-${selectedService}`,
         caseId: undefined,
-        payload: { ...values, selectedService },
+        payload: { ...values, selectedService, currentStep },
       });
     });
     return () => subscription.unsubscribe();
-  }, [form, selectedService]);
+  }, [form, selectedService, currentStep]);
 
   const values = form.watch();
   const refund = estimateRefund(values);
@@ -146,7 +146,7 @@ export function TaxReturnFlow() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         {services.map((service) => {
           const isActive = selectedService === service.id;
-          const hasSavedProgress = typeof window !== "undefined" && window.localStorage.getItem(`fintax-tax-${service.id}`);
+          const hasSavedProgress = hasLocalWizardProgress(`fintax-tax-${service.id}`);
           return (
             <Card key={service.id} className={cn("rounded-[var(--radius-lg)] border border-border/35 bg-surface/55", isActive ? "border-copper/35 bg-copper/6" : "")}>
               <CardHeader className="space-y-1">

@@ -7,8 +7,10 @@ export async function persistWizardSnapshot(params: {
   caseId?: string;
   payload: Record<string, unknown>;
 }) {
+  const metadata = buildLocalWizardMetadata(params.payload);
+
   if (typeof window !== "undefined") {
-    window.localStorage.setItem(params.storageKey, JSON.stringify(params.payload));
+    window.localStorage.setItem(params.storageKey, JSON.stringify(metadata));
   }
 
   if (!params.caseId) return;
@@ -24,7 +26,7 @@ export async function persistWizardSnapshot(params: {
 
     await supabase
       .from("cases")
-      .update({ wizard_data: params.payload, updated_at: new Date().toISOString() })
+      .update({ wizard_data: sanitizeWizardPayload(params.payload), updated_at: new Date().toISOString() })
       .eq("id", params.caseId)
       .eq("user_id", user.id);
   } catch {
@@ -33,12 +35,34 @@ export async function persistWizardSnapshot(params: {
 }
 
 export function loadWizardSnapshot<T>(storageKey: string, fallback: T): T {
-  if (typeof window === "undefined") return fallback;
+  void storageKey;
+  return fallback;
+}
+
+export function hasLocalWizardProgress(storageKey: string): boolean {
+  if (typeof window === "undefined") return false;
 
   try {
     const raw = window.localStorage.getItem(storageKey);
-    return raw ? ({ ...fallback, ...JSON.parse(raw) } as T) : fallback;
+    if (!raw) return false;
+    const parsed = JSON.parse(raw) as { hasDraft?: boolean };
+    return Boolean(parsed.hasDraft);
   } catch {
-    return fallback;
+    return false;
   }
+}
+
+function sanitizeWizardPayload(payload: Record<string, unknown>) {
+  const clone = { ...payload };
+  if ("bsn" in clone) clone.bsn = null;
+  return clone;
+}
+
+function buildLocalWizardMetadata(payload: Record<string, unknown>) {
+  return {
+    hasDraft: true,
+    updatedAt: new Date().toISOString(),
+    progressStep: typeof payload.currentStep === "number" ? payload.currentStep : null,
+    selectedService: typeof payload.selectedService === "string" ? payload.selectedService : null,
+  };
 }
