@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 /* eslint-disable react-hooks/incompatible-library */
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -217,7 +217,7 @@ export function TaxReturnFlow() {
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
                 <div className="h-full rounded-full bg-gradient-to-r from-green to-copper" style={{ width: `${Math.round(((currentStep + 1) / stepKeys.length) * 100)}%` }} />
               </div>
-              <p className="mt-2 text-xs text-secondary">{Math.round(((currentStep + 1) / stepKeys.length) * 100)}% complete · {stepKeys.length - currentStep - 1} steps left</p>
+              <p className="mt-2 text-xs text-secondary">{Math.round(((currentStep + 1) / stepKeys.length) * 100)}% complete | {stepKeys.length - currentStep - 1} steps left</p>
             </div>
             <div className="hidden w-44 rounded-xl border border-border/35 bg-surface2/20 p-3 md:block">
               <p className="mb-2 text-xs uppercase tracking-[0.14em] text-muted">Review queue</p>
@@ -378,3 +378,4 @@ function SummaryTile({ icon: Icon, title, value }: { icon: React.ComponentType<{
 
 const inputClass =
   "h-11 w-full rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text outline-none ring-0 placeholder:text-muted focus:border-copper/40";
+

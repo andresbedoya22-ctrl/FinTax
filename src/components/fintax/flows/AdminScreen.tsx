@@ -42,7 +42,17 @@ export function AdminScreen() {
                 <div>
                   <div className="mb-1 flex flex-wrap items-center gap-2">
                     <Badge variant="neutral">{item.case_type}</Badge>
-                    <Badge variant="copper">{item.status}</Badge>
+                    <span
+                      className={
+                        item.status === "pending_payment" || item.status === "pending_documents"
+                          ? "inline-flex items-center rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-1 text-xs text-amber-200"
+                          : item.status === "completed"
+                            ? "inline-flex items-center rounded-full border border-green/25 bg-green/10 px-2 py-1 text-xs text-green"
+                            : "inline-flex items-center rounded-full border border-copper/25 bg-copper/10 px-2 py-1 text-xs text-copper"
+                      }
+                    >
+                      {item.status}
+                    </span>
                   </div>
                   <p className="font-medium text-text">{item.display_name}</p>
                   <p className="text-xs text-muted">{item.id}</p>
@@ -91,7 +101,7 @@ export function AdminScreen() {
             {mockServicePricing.map((price) => (
               <div key={price.id} className="flex items-center justify-between rounded-xl border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
                 <span>{price.name}</span>
-                <span className="text-green">EUR {price.price.toFixed(2)}</span>
+                <span className="font-heading tracking-[-0.02em] text-green">EUR {price.price.toFixed(2)}</span>
               </div>
             ))}
           </CardBody>
