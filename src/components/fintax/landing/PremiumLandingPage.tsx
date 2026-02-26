@@ -48,6 +48,7 @@ type AppLocale = "en" | "es" | "pl" | "ro" | "nl";
 type ServiceCode = "P" | "M" | "C" | "30%" | "ZZP";
 
 const serviceCodes: ServiceCode[] = ["P", "M", "C", "30%", "ZZP"];
+type LandingIntent = "tax-return" | "benefits";
 
 const tByLocale = {
   en: {
@@ -324,6 +325,23 @@ function smoothAnchorNavigate(event: React.MouseEvent<HTMLAnchorElement>, href: 
   target.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function buildAuthIntentHref(intent: LandingIntent, service?: string) {
+  const params = new URLSearchParams({ intent });
+  if (service) params.set("service", service);
+  return `/auth?${params.toString()}`;
+}
+
+function serviceCodeToParam(code: ServiceCode) {
+  const serviceParamMap: Record<ServiceCode, string> = {
+    P: "form_p",
+    M: "form_m",
+    C: "form_c",
+    "30%": "ruling_30",
+    ZZP: "zzp",
+  };
+  return serviceParamMap[code];
+}
+
 function ServiceSelectorCard({ ctaLabel }: { ctaLabel: string }) {
   return (
     <Tabs defaultValue="P" className="w-full">
@@ -357,7 +375,7 @@ function ServiceSelectorCard({ ctaLabel }: { ctaLabel: string }) {
                   ))}
                 </ul>
                 <div className="mt-5">
-                  <Link href="/auth" className={buttonVariants({ size: "sm" })}>
+                  <Link href={buildAuthIntentHref("tax-return", serviceCodeToParam(code))} className={buttonVariants({ size: "sm" })}>
                     {ctaLabel}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -447,9 +465,9 @@ function Header({ t, scrolled }: { t: ReturnType<typeof getT>; scrolled: boolean
           <Link href="/auth" className="focus-ring hidden rounded-full px-3 py-2 text-sm text-secondary sm:inline-flex">
             {t.signIn}
           </Link>
-          <a href="#services" onClick={(e) => smoothAnchorNavigate(e, "#services")} className={cn(buttonVariants({ size: "sm" }), "hidden sm:inline-flex")}>
+          <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "sm" }), "hidden sm:inline-flex")}>
             {t.getPrice}
-          </a>
+          </Link>
         </div>
       </Container>
     </header>
@@ -486,10 +504,10 @@ export function PremiumLandingPage() {
                 </h1>
                 <p className="max-w-[58ch] text-sm leading-6 text-secondary sm:text-base sm:leading-7">{t.heroSubtitle}</p>
                 <div className="flex flex-wrap items-center gap-3">
-                  <a href="#services" onClick={(e) => smoothAnchorNavigate(e, "#services")} className={buttonVariants({ size: "lg" })}>
+                  <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "lg" })}>
                     {t.getPrice}
                     <ArrowRight className="h-4 w-4" />
-                  </a>
+                  </Link>
                   <ChecklistDialog t={t} />
                 </div>
                 <p className="text-xs tracking-[0.06em] text-muted">{t.heroNote}</p>
@@ -564,7 +582,7 @@ export function PremiumLandingPage() {
                 <p className="text-xs uppercase tracking-[0.16em] text-copper">{t.serviceLabel}</p>
                 <h2 className="mt-3 font-heading text-3xl tracking-[-0.03em] text-text sm:text-4xl">{t.serviceTitle}</h2>
                 <p className="mt-4 text-sm leading-6 text-secondary">
-                  P / M / C / 30% / ZZP selector is visible before scrolling past the hero, with scope preview and pricing anchors.
+                  P / M / C / 30% / ZZP selector is visible before scrolling past the hero, with direct handoff into the correct intake flow.
                 </p>
               </div>
               <ServiceSelectorCard ctaLabel={t.getPrice} />
@@ -655,7 +673,7 @@ export function PremiumLandingPage() {
                   title={t.getPrice}
                   description="Conversion summary card using the new UI kit. Routes and flow behavior remain unchanged in Phase 2."
                   action={
-                    <Link href="/auth" className={buttonVariants()}>
+                    <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants()}>
                       {t.footerCta}
                       <ArrowRight className="h-4 w-4" />
                     </Link>
@@ -817,7 +835,7 @@ export function PremiumLandingPage() {
                 <h3 className="mt-2 font-heading text-2xl tracking-[-0.03em] text-text">{t.getPrice}</h3>
                 <p className="mt-3 text-sm leading-6 text-secondary">Continue to the existing secure flow. Routes and business logic are unchanged.</p>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <Link href="/auth" className={buttonVariants()}>
+                  <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants()}>
                     {t.footerCta}
                     <ArrowRight className="h-4 w-4" />
                   </Link>

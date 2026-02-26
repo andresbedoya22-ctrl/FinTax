@@ -1,8 +1,8 @@
 "use client";
 
 import { Check } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 import { Badge } from "@/components/fintax/Badge";
 import { Button } from "@/components/fintax/Button";
@@ -54,7 +54,7 @@ export function PricingSection() {
                   ))}
                 </ul>
                 <Button asChild className="mt-6 w-full">
-                  <Link href="#hero">{t("primaryCta")}</Link>
+                  <Link href="/auth?intent=tax-return">{t("primaryCta")}</Link>
                 </Button>
               </CardBody>
             </Card>

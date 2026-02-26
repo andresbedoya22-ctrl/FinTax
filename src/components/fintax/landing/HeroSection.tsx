@@ -1,7 +1,7 @@
 ﻿"use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 import { Button } from "@/components/fintax/Button";
 import { Container } from "@/components/fintax/Container";
@@ -64,10 +64,10 @@ export function HeroSection() {
 
             <div className="flex flex-wrap items-center gap-3">
               <Button asChild size="lg">
-                <Link href="#pricing">{t("primaryCta")} -&gt;</Link>
+                <Link href="/auth?intent=tax-return">{t("primaryCta")} -&gt;</Link>
               </Button>
               <Button asChild variant="secondary" size="lg">
-                <Link href="#services">{t("secondaryCta")}</Link>
+                <Link href="/tax-return?service=form_p">{t("secondaryCta")}</Link>
               </Button>
             </div>
 
