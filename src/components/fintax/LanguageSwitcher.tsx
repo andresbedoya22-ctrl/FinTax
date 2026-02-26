@@ -1,12 +1,13 @@
 ﻿"use client";
 
-import { Check, ChevronDown, Languages } from "lucide-react";
+import { ChevronDown, Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import * as React from "react";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { cn } from "@/lib/cn";
+import { Pictogram } from "@/components/ui";
 
 export interface LanguageSwitcherProps {
   className?: string;
@@ -119,7 +120,7 @@ export function LanguageSwitcher({ className, compact = false }: LanguageSwitche
                     <span className="block text-sm font-medium">{info.name}</span>
                     <span className="block text-xs text-muted">{info.native}</span>
                   </span>
-                  {isActive ? <Check className="h-4 w-4 shrink-0 text-green" aria-hidden="true" /> : null}
+                  {isActive ? <Pictogram name="check" size={18} decorative className="shrink-0 opacity-90" /> : null}
                 </button>
               );
             })}

@@ -7,10 +7,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
-import { ArrowRight, Check, FileText, Globe2, HandCoins, Landmark, Languages, Receipt, Shield } from "lucide-react";
+import { ArrowRight, Globe2, HandCoins, Landmark, Languages, Receipt } from "lucide-react";
 
 import { Button } from "@/components/fintax/Button";
-import { Badge, Card } from "@/components/ui";
+import { Badge, Card, Pictogram } from "@/components/ui";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { createClient } from "@/lib/supabase/client";
@@ -21,7 +21,7 @@ const LANGUAGES = [
 ] as const;
 
 const NEEDS = [
-  { key: "tax_return", icon: FileText, labelKey: "needTaxReturn" },
+  { key: "tax_return", icon: "documento", labelKey: "needTaxReturn" },
   { key: "zorgtoeslag", icon: Landmark, labelKey: "needZorgtoeslag" },
   { key: "huurtoeslag", icon: Receipt, labelKey: "needHuurtoeslag" },
   { key: "zzp", icon: HandCoins, labelKey: "needZzp" },
@@ -134,7 +134,7 @@ export function OnboardingScreen() {
                 <Card variant="soft" padding="sm" className="bg-surface2/45">
                   <div className="flex items-start gap-3">
                     <div className="grid h-9 w-9 place-items-center rounded-full border border-green/20 bg-green/10 text-green">
-                      <Shield className="h-4 w-4" />
+                      <Pictogram name="escudo" size={20} decorative className="opacity-95" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-text">Privacy by default</p>
@@ -196,7 +196,7 @@ export function OnboardingScreen() {
                             {lang.short}
                           </span>
                           <span className="flex-1 text-sm font-medium">{lang.label}</span>
-                          {active ? <Check className="h-4 w-4 text-green" aria-hidden="true" /> : null}
+                          {active ? <Pictogram name="check" size={18} decorative className="opacity-90" /> : null}
                         </button>
                       );
                     })}
@@ -228,10 +228,14 @@ export function OnboardingScreen() {
                             "grid h-9 w-9 shrink-0 place-items-center rounded-full border",
                             active ? "border-green/20 bg-green/10 text-green" : "border-border/35 bg-surface/45 text-muted"
                           )}>
-                            <Icon className="h-4 w-4" aria-hidden="true" />
+                            {typeof Icon === "string" ? (
+                              <Pictogram name={Icon} size={20} decorative className="opacity-95" />
+                            ) : (
+                              <Icon className="h-4 w-4" aria-hidden="true" />
+                            )}
                           </div>
                           <span className="flex-1 text-sm font-medium">{t(labelKey)}</span>
-                          {active ? <Check className="h-4 w-4 text-green" aria-hidden="true" /> : null}
+                          {active ? <Pictogram name="check" size={18} decorative className="opacity-90" /> : null}
                         </button>
                       );
                     })}

@@ -5,6 +5,7 @@ export * from "./card";
 export * from "./dialog";
 export * from "./empty-state";
 export * from "./input";
+export * from "./Pictogram";
 export * from "./select";
 export * from "./skeleton";
 export * from "./stepper";
