@@ -67,7 +67,10 @@ export function SettingsScreen() {
               <span className="text-secondary">{t("appearance.language")}</span>
               <select className={selectClass} value={language} onChange={(e) => setLanguage(e.target.value as typeof language)}>
                 <option value="en">EN</option>
+                <option value="nl">NL</option>
                 <option value="es">ES</option>
+                <option value="pl">PL</option>
+                <option value="ro">RO</option>
               </select>
             </label>
             <label className="space-y-1 text-sm">

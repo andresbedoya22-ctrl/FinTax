@@ -5,19 +5,32 @@ import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
-import { Button } from "@/components/ui";
+import { createClient } from "@/lib/supabase/client";
+import { mockNotifications } from "@/lib/mock-data";
+import type { Notification } from "@/types/database";
+import { Button, EmptyState } from "@/components/ui";
+
+type NotificationItem = {
+  id: string;
+  icon: typeof FileText;
+  title: string;
+  body: string;
+  isRead?: boolean;
+};
+
+function iconForType(type: Notification["type"]): typeof FileText {
+  if (type === "success") return CheckCheck;
+  if (type === "warning" || type === "action_required") return Clock3;
+  return FileText;
+}
 
 export function DashboardNotifications() {
   const t = useTranslations("Notifications");
   const [open, setOpen] = React.useState(false);
   const [readIds, setReadIds] = React.useState<string[]>([]);
+  const [items, setItems] = React.useState<NotificationItem[]>([]);
+  const [loaded, setLoaded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
-
-  const items = [
-    { id: "1", icon: FileText, title: t("items.docsReview.title"), body: t("items.docsReview.body") },
-    { id: "2", icon: Clock3, title: t("items.payment.title"), body: t("items.payment.body") },
-    { id: "3", icon: CheckCheck, title: t("items.caseComplete.title"), body: t("items.caseComplete.body") },
-  ];
 
   React.useEffect(() => {
     const onDocClick = (event: MouseEvent) => {
@@ -28,6 +41,78 @@ export function DashboardNotifications() {
     document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
+
+  React.useEffect(() => {
+    let active = true;
+    const run = async () => {
+      const useDevMock = process.env.NEXT_PUBLIC_USE_MOCK_NOTIFICATIONS === "1";
+      try {
+        if (useDevMock) {
+          const mapped = mockNotifications.map((n) => ({
+            id: n.id,
+            icon: iconForType(n.type),
+            title: n.title,
+            body: n.message,
+            isRead: n.is_read,
+          }));
+          if (active) {
+            setItems(mapped);
+            setReadIds(mapped.filter((i) => i.isRead).map((i) => i.id));
+          }
+          return;
+        }
+
+        const supabase = createClient();
+        if (!supabase) {
+          if (active) setItems([]);
+          return;
+        }
+
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          if (active) setItems([]);
+          return;
+        }
+
+        const { data } = await supabase
+          .from("notifications")
+          .select("id,title,message,type,is_read")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(8);
+
+        const mapped = (data ?? []).map((n) => ({
+          id: n.id,
+          icon: iconForType(n.type as Notification["type"]),
+          title: n.title,
+          body: n.message,
+          isRead: n.is_read,
+        }));
+        if (active) {
+          setItems(mapped);
+          setReadIds(mapped.filter((i) => i.isRead).map((i) => i.id));
+        }
+      } catch {
+        if (active) {
+          const fallback = [
+            { id: "1", icon: FileText, title: t("items.docsReview.title"), body: t("items.docsReview.body") },
+            { id: "2", icon: Clock3, title: t("items.payment.title"), body: t("items.payment.body") },
+            { id: "3", icon: CheckCheck, title: t("items.caseComplete.title"), body: t("items.caseComplete.body") },
+          ];
+          setItems(fallback);
+        }
+      } finally {
+        if (active) setLoaded(true);
+      }
+    };
+    void run();
+    return () => {
+      active = false;
+    };
+  }, [t]);
 
   const unreadCount = items.filter((item) => !readIds.includes(item.id)).length;
 
@@ -40,60 +125,62 @@ export function DashboardNotifications() {
         onClick={() => setOpen((prev) => !prev)}
       >
         <Bell className="size-4 text-secondary" aria-hidden="true" />
-        {unreadCount > 0 && (
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-copper" aria-hidden="true" />
-        )}
+        {unreadCount > 0 && <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-copper" aria-hidden="true" />}
       </button>
 
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-2xl border border-border/35 bg-surface/90 p-2 shadow-floating backdrop-blur-xl">
           <div className="mb-1 flex items-center justify-between px-2 py-1">
             <p className="text-sm font-semibold text-text">{t("title")}</p>
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              className="h-7 px-2 text-xs"
-              onClick={() => setReadIds(items.map((item) => item.id))}
-            >
+            <Button type="button" size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => setReadIds(items.map((item) => item.id))}>
               {t("markAllRead")}
             </Button>
           </div>
-          <ul className="space-y-1">
-            {items.map((item) => {
-              const Icon = item.icon;
-              const isRead = readIds.includes(item.id);
-              return (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    onClick={() => setReadIds((prev) => (prev.includes(item.id) ? prev : [...prev, item.id]))}
-                    className={cn(
-                      "w-full rounded-xl border px-3 py-2 text-left transition-colors",
-                      isRead
-                        ? "border-border/20 bg-surface2/20"
-                        : "border-border/35 bg-surface2/35 hover:border-copper/20 hover:bg-surface2/50"
-                    )}
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/30 bg-surface2/40 text-copper">
-                        <Icon className="size-4" aria-hidden="true" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="flex items-center gap-2">
-                          <span className="block text-sm font-medium text-text">{item.title}</span>
-                          {!isRead && <span className="inline-block h-1.5 w-1.5 rounded-full bg-copper" />}
+
+          {!loaded ? (
+            <div className="space-y-2 px-1 py-2">
+              <div className="h-12 rounded-xl border border-border/25 bg-surface2/20" />
+              <div className="h-12 rounded-xl border border-border/25 bg-surface2/20" />
+              <div className="h-12 rounded-xl border border-border/25 bg-surface2/20" />
+            </div>
+          ) : items.length === 0 ? (
+            <EmptyState className="p-4" title={t("title")} description={t("label")} />
+          ) : (
+            <ul className="space-y-1">
+              {items.map((item) => {
+                const Icon = item.icon;
+                const isRead = readIds.includes(item.id);
+                return (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      onClick={() => setReadIds((prev) => (prev.includes(item.id) ? prev : [...prev, item.id]))}
+                      className={cn(
+                        "w-full rounded-xl border px-3 py-2 text-left transition-colors",
+                        isRead ? "border-border/20 bg-surface2/20" : "border-border/35 bg-surface2/35 hover:border-copper/20 hover:bg-surface2/50",
+                      )}
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/30 bg-surface2/40 text-copper">
+                          <Icon className="size-4" aria-hidden="true" />
                         </span>
-                        <span className="mt-0.5 block text-xs text-secondary">{item.body}</span>
-                      </span>
-                    </div>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-2">
+                            <span className="block text-sm font-medium text-text">{item.title}</span>
+                            {!isRead && <span className="inline-block h-1.5 w-1.5 rounded-full bg-copper" />}
+                          </span>
+                          <span className="mt-0.5 block text-xs text-secondary">{item.body}</span>
+                        </span>
+                      </div>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
       )}
     </div>
   );
 }
+
