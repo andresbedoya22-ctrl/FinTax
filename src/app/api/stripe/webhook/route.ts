@@ -4,7 +4,7 @@ import Stripe from "stripe";
 
 import { createAdminClient } from "@/lib/supabase/server";
 import { getStripeServerClient } from "@/lib/stripe/server";
-import { extractCheckoutCompletedPayload } from "@/lib/stripe/webhook";
+import { extractCheckoutCompletedPayload, isCheckoutSessionAlreadyProcessed } from "@/lib/stripe/webhook";
 
 async function handleCheckoutCompleted(event: Stripe.Event) {
   const stripe = getStripeServerClient();
@@ -21,8 +21,8 @@ async function handleCheckoutCompleted(event: Stripe.Event) {
     .eq("stripe_checkout_session_id", payload.checkoutSessionId)
     .maybeSingle();
 
-  if (existingPayment?.id) {
-    return { processed: true, idempotent: true, paymentId: existingPayment.id };
+  if (isCheckoutSessionAlreadyProcessed({ existingPaymentId: existingPayment?.id })) {
+    return { processed: true, idempotent: true, paymentId: existingPayment?.id ?? null };
   }
 
   const paymentRow = {
@@ -39,8 +39,9 @@ async function handleCheckoutCompleted(event: Stripe.Event) {
 
   const { data: insertedPayment, error: paymentError } = await admin.from("payments").insert(paymentRow).select("id").single();
   if (paymentError) {
-    const duplicate = `${paymentError.message}`.toLowerCase().includes("duplicate");
-    if (duplicate) return { processed: true, idempotent: true };
+    if (isCheckoutSessionAlreadyProcessed({ insertErrorMessage: `${paymentError.message}` })) {
+      return { processed: true, idempotent: true };
+    }
     return { processed: false, reason: "payment_insert_failed" };
   }
 
@@ -91,4 +92,3 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true, type: event.type, ignored: true });
   }
 }
-

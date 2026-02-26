@@ -45,7 +45,7 @@ export interface Profile {
   address_city: string | null;
   address_postal_code: string | null;
   address_country: string;
-  preferred_language: "en" | "es";
+  preferred_language: "en" | "nl" | "es" | "pl" | "ro";
   avatar_url: string | null;
   theme: "dark" | "light";
   notification_email: boolean;
