@@ -52,7 +52,28 @@
         "Multilingual support",
         "GDPR-ready"
       ],
-      "heroImageAlt": "FinTax dashboard with client cases and tax filing status"
+      "heroImageAlt": "FinTax dashboard with client cases and tax filing status",
+      "titleRich": "Dutch taxes & benefits explained <hl>right</hl> in your language.",
+      "sampleMockName": "Maria",
+      "sampleGreeting": "Good morning,",
+      "sampleRefundLabel": "Estimated refund",
+      "sampleRefundValue": "EUR 1,240",
+      "sampleCasesLabel": "Active cases",
+      "sampleCasesValue": "3 open",
+      "heroStats": [
+        {
+          "value": "EUR 847",
+          "label": "avg. refund recovered"
+        },
+        {
+          "value": "4 languages",
+          "label": "EN | ES | PL | RO"
+        },
+        {
+          "value": "Fixed fee",
+          "label": "clear scope before work starts"
+        }
+      ]
     },
     "services": {
       "eyebrow": "Services",

@@ -52,7 +52,28 @@
         "Wsparcie wielojęzyczne",
         "Zgodność z RODO"
       ],
-      "heroImageAlt": "Panel FinTax ze sprawami klientów i statusem zeznania podatkowego"
+      "heroImageAlt": "Panel FinTax ze sprawami klientów i statusem zeznania podatkowego",
+      "titleRich": "Holenderskie podatki i swiadczenia wyjasnione <hl>dobrze</hl> w Twoim jezyku.",
+      "sampleMockName": "Anna",
+      "sampleGreeting": "Dzien dobry,",
+      "sampleRefundLabel": "Szacowany zwrot",
+      "sampleRefundValue": "EUR 1 240",
+      "sampleCasesLabel": "Aktywne sprawy",
+      "sampleCasesValue": "3 otwarte",
+      "heroStats": [
+        {
+          "value": "EUR 847",
+          "label": "sredni odzyskany zwrot"
+        },
+        {
+          "value": "4 jezyki",
+          "label": "EN | ES | PL | RO"
+        },
+        {
+          "value": "Stala cena",
+          "label": "jasny zakres przed startem"
+        }
+      ]
     },
     "services": {
       "eyebrow": "Usługi",
@@ -343,15 +364,36 @@
       "chartTitle": "Ostatnie 7 punktów kontrolnych",
       "chartNote": "Zaktualizowano po ostatnim przesłaniu listy płac",
       "caseRows": [
-        { "label": "Zorgtoeslag", "amount": "EUR 1 286" },
-        { "label": "Huurtoeslag", "amount": "EUR 2 140" },
-        { "label": "Kinderbijslag", "amount": "EUR 1 102" }
+        {
+          "label": "Zorgtoeslag",
+          "amount": "EUR 1 286"
+        },
+        {
+          "label": "Huurtoeslag",
+          "amount": "EUR 2 140"
+        },
+        {
+          "label": "Kinderbijslag",
+          "amount": "EUR 1 102"
+        }
       ],
       "checklistItems": [
-        { "label": "Paszport / dowód osobisty przesłany", "done": true },
-        { "label": "Roczne zestawienia dochodów", "done": true },
-        { "label": "Szczegóły umowy najmu", "done": true },
-        { "label": "Faktury za opiekę nad dzieckiem", "done": false }
+        {
+          "label": "Paszport / dowód osobisty przesłany",
+          "done": true
+        },
+        {
+          "label": "Roczne zestawienia dochodów",
+          "done": true
+        },
+        {
+          "label": "Szczegóły umowy najmu",
+          "done": true
+        },
+        {
+          "label": "Faktury za opiekę nad dzieckiem",
+          "done": false
+        }
       ]
     }
   }
