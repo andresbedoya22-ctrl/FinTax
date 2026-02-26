@@ -25,11 +25,10 @@ export function mapCaseStatusToStep(status: CaseStepperStatus): number {
   }
 }
 
-export const CASE_STEPPER_STEPS = [
+export const CASE_STEPPER_STEPS: Array<{ id: string; label: string }> = [
   { id: "draft", label: "Created" },
   { id: "docs", label: "Documents" },
   { id: "review", label: "Review" },
   { id: "payment", label: "Payment" },
   { id: "done", label: "Done" },
-] as const;
-
+];

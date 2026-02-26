@@ -8,6 +8,7 @@ import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, Skeleton, Stepper, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
+import { cn } from "@/lib/cn";
 import { getMockCase, mockChecklistByCase, mockDocumentsByCase } from "@/lib/mock-data";
 import type { Document } from "@/types/database";
 
