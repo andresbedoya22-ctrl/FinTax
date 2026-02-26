@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 import { DashboardNotifications } from "@/components/fintax/dashboard/DashboardNotifications";
-import { Badge, Button } from "@/components/ui";
+import { Badge, Button, Skeleton } from "@/components/ui";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 
 export interface DashboardTopbarProps {
@@ -15,15 +15,16 @@ export interface DashboardTopbarProps {
 export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
   const t = useTranslations("Dashboard.topbar");
   const locale = useLocale();
-  const { profile } = useCurrentProfile();
+  const { profile, loading } = useCurrentProfile();
   const fallbackName = locale === "nl" ? "FinTax klant" : locale === "es" ? "Cliente FinTax" : locale === "pl" ? "Klient FinTax" : locale === "ro" ? "Client FinTax" : "FinTax client";
   const displayName = (profile?.full_name || "").trim() || fallbackName;
-  const initials = displayName
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("") || "FT";
+  const words = displayName.split(/\s+/).filter(Boolean);
+  const initials =
+    words.length === 0
+      ? "FT"
+      : words.length === 1
+        ? (words[0]![0]?.toUpperCase() ?? "FT")
+        : ((words[0]![0]?.toUpperCase() ?? "") + (words[words.length - 1]![0]?.toUpperCase() ?? ""));
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/35 bg-bg/70 px-4 py-3 backdrop-blur-xl sm:px-6 lg:px-8">
@@ -55,10 +56,17 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
             aria-label="Open profile menu"
           >
             <div className="grid h-7 w-7 place-items-center rounded-lg border border-green/20 bg-green/10 text-xs font-bold text-green">{initials}</div>
-            <div className="hidden md:block">
-              <p className="text-xs font-medium text-text">{displayName}</p>
-              <p className="text-[11px] text-muted">{profile?.role === "admin" ? "Admin" : "Account"}</p>
-            </div>
+            {loading ? (
+              <div className="hidden flex-col gap-1.5 md:flex">
+                <Skeleton className="h-3 w-24 rounded" />
+                <Skeleton className="h-2.5 w-32 rounded" />
+              </div>
+            ) : (
+              <div className="hidden md:block">
+                <p className="text-xs font-medium text-text">{displayName}</p>
+                <p className="text-[11px] text-muted">{profile?.email ?? ""}</p>
+              </div>
+            )}
             <ChevronDown className="h-4 w-4 text-muted" />
           </button>
           <Badge variant="neutral" className="sm:hidden">

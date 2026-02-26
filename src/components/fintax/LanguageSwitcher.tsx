@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { ChevronDown, Languages } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useLocale } from "next-intl";
 import * as React from "react";
 
@@ -29,6 +29,14 @@ const LOCALE_INFO: Record<AppLocale, LocaleInfo> = {
 };
 
 const REAL_LOCALES: AppLocale[] = routing.locales.filter((l): l is AppLocale => l !== "nl") as AppLocale[];
+
+const LOCALE_UNDERLINE: Record<string, string> = {
+  en: "border-b-2 border-b-blue-400/40",
+  es: "border-b-2 border-b-yellow-400/40",
+  nl: "border-b-2 border-b-orange-400/40",
+  pl: "border-b-2 border-b-red-400/40",
+  ro: "border-b-2 border-b-blue-400/40",
+};
 
 export function LanguageSwitcher({ className, compact = false }: LanguageSwitcherProps) {
   const locale = useLocale() as AppLocale;
@@ -72,13 +80,17 @@ export function LanguageSwitcher({ className, compact = false }: LanguageSwitche
         aria-label="Change language"
         suppressHydrationWarning
       >
-        <span className="grid h-6 w-6 place-items-center rounded-md border border-copper/25 bg-copper/8 text-copper" aria-hidden="true">
-          <Languages className="h-3.5 w-3.5" />
+        <span
+          className={cn(
+            "inline-flex min-w-[2.25rem] items-center justify-center rounded-md border px-2 py-1 text-[11px] font-bold tracking-[0.14em] uppercase transition-colors",
+            "border-green/30 bg-green/10 text-green",
+            LOCALE_UNDERLINE[locale] ?? ""
+          )}
+          aria-hidden="true"
+        >
+          {active.code}
         </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="font-medium tracking-[0.08em] uppercase">{active.code}</span>
-          {!compact ? <span className="hidden text-muted sm:inline">{active.native}</span> : null}
-        </span>
+        {!compact ? <span className="hidden text-muted sm:inline">{active.native}</span> : null}
         <ChevronDown
           className={cn("h-4 w-4 text-muted transition-transform", isOpen && "rotate-180")}
           aria-hidden="true"
@@ -110,10 +122,15 @@ export function LanguageSwitcher({ className, compact = false }: LanguageSwitche
                       : "border-transparent text-secondary hover:border-border/35 hover:bg-white/5 hover:text-text"
                   )}
                 >
-                  <span className={cn(
-                    "inline-flex min-w-10 items-center justify-center rounded-md border px-2 py-1 text-[11px] font-semibold tracking-[0.12em]",
-                    isActive ? "border-green/25 bg-green/10 text-green" : "border-border/35 bg-surface2/35 text-muted"
-                  )}>
+                  <span
+                    className={cn(
+                      "inline-flex min-w-[2.25rem] items-center justify-center rounded-md border px-2 py-1 text-[11px] font-bold tracking-[0.14em] uppercase transition-colors",
+                      isActive
+                        ? "border-green/30 bg-green/10 text-green"
+                        : "border-border/40 bg-surface2/40 text-muted group-hover:border-copper/30 group-hover:text-copper",
+                      LOCALE_UNDERLINE[loc] ?? ""
+                    )}
+                  >
                     {info.code}
                   </span>
                   <span className="min-w-0 flex-1">

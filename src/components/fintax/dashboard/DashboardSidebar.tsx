@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Gift, HelpCircle, LayoutDashboard, Settings, ShieldCheck, ChevronDown } from "lucide-react";
+import { HandCoins, HelpCircle, LayoutDashboard, Receipt, ShieldCheck, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
 
@@ -8,12 +8,13 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { buttonVariants } from "@/components/ui";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
+import { mockCases } from "@/lib/mock-data";
 
 const navItems = [
   { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { key: "taxReturn", href: "/tax-return", icon: FileText },
-  { key: "benefits", href: "/benefits", icon: Gift },
-  { key: "settings", href: "/settings", icon: Settings },
+  { key: "taxReturn", href: "/tax-return", icon: Receipt },
+  { key: "benefits", href: "/benefits", icon: HandCoins },
+  { key: "settings", href: "/settings", icon: SlidersHorizontal },
   { key: "admin", href: "/admin", icon: ShieldCheck },
 ] as const;
 
@@ -43,12 +44,15 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
   const visibleNavItems = navItems.filter((item) => item.key !== "admin" || profile?.role === "admin");
   const fallbackName = locale === "nl" ? "FinTax klant" : locale === "es" ? "Cliente FinTax" : locale === "pl" ? "Klient FinTax" : locale === "ro" ? "Client FinTax" : "FinTax client";
   const displayName = (profile?.full_name || "").trim() || fallbackName;
-  const initials = displayName
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("") || "FT";
+  const words = displayName.split(/\s+/).filter(Boolean);
+  const initials =
+    words.length === 0
+      ? "FT"
+      : words.length === 1
+        ? (words[0]![0]?.toUpperCase() ?? "FT")
+        : ((words[0]![0]?.toUpperCase() ?? "") + (words[words.length - 1]![0]?.toUpperCase() ?? ""));
+  const completedCases = mockCases.filter((c) => c.wizard_completed === true).length;
+  const progressWidth = mockCases.length > 0 ? Math.round((completedCases / mockCases.length) * 100) : 0;
 
   return (
     <aside
@@ -70,15 +74,26 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
             <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-green/20 bg-green/10 text-[10px] font-bold text-green">
               {initials}
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium text-text">{displayName}</p>
-              <p className="truncate text-xs text-muted">{profile?.role === "admin" ? "Admin" : "Client account"}</p>
+              <span className="inline-flex items-center rounded-full border border-copper/30 bg-copper/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-copper">
+                {profile?.role ?? "user"}
+              </span>
             </div>
-            <ChevronDown className="ml-auto h-4 w-4 text-muted" />
+            <ChevronDown className="ml-auto h-4 w-4 shrink-0 text-muted" />
           </div>
-          <p className="text-xs leading-5 text-muted">
-            {profile?.onboarding_completed ? "Onboarding complete" : "Finish onboarding to personalize your workspace."}
-          </p>
+          <div>
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="text-xs text-muted">Cases completed</span>
+              <span className="font-mono text-xs text-green">{progressWidth}%</span>
+            </div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-green to-copper transition-all"
+                style={{ width: `${progressWidth}%` }}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -97,9 +112,9 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-2.5 text-sm transition-all",
+                  "group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-sm transition-all",
                   isActive
-                    ? "border-copper/25 bg-copper/8 text-text shadow-glass-soft"
+                    ? "border-copper/25 bg-copper/[0.08] text-text shadow-glass-soft before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-copper before:content-['']"
                     : "border-transparent text-secondary hover:border-border/35 hover:bg-white/5 hover:text-text"
                 )}
               >

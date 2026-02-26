@@ -4,10 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertTriangle,
   Apple,
+  ArrowRight,
   Eye,
   EyeOff,
+  Globe2,
   LoaderCircle,
+  Lock,
   Mail,
+  ShieldCheck,
 } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -50,12 +54,12 @@ type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 type ForgotValues = z.infer<typeof forgotSchema>;
 
-const TRUST_ITEMS = [
-  { icon: "escudo", text: "Fixed pricing and clear scope before work starts" },
-  { icon: "documento", text: "Human-reviewed filings and multilingual guidance" },
-  { icon: "candado", text: "Secure upload flow for tax documents and letters" },
-  { icon: "check", text: "Fast response expectations and status visibility" },
-] as const;
+type TrustItem = { Icon: React.ComponentType<{ className?: string }>; text: string };
+const TRUST_ITEMS: TrustItem[] = [
+  { Icon: ShieldCheck, text: "BSN encrypted with AES-256" },
+  { Icon: Lock, text: "Your data never sold" },
+  { Icon: Globe2, text: "Available in 4 languages" },
+];
 
 const extraCopy = {
   en: {
@@ -185,8 +189,8 @@ function withLocalePrefix(path: string, locale: AppLocale) {
 function panelAnim(delay: number): React.CSSProperties {
   return { animation: "fadeUp 560ms cubic-bezier(.22,.61,.36,1) both", animationDelay: `${delay}ms` };
 }
-function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
-  return <label htmlFor={htmlFor} className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-muted">{children}</label>;
+function FieldLabel({ htmlFor, children, className }: { htmlFor: string; children: React.ReactNode; className?: string }) {
+  return <label htmlFor={htmlFor} className={cn("mb-1.5 block text-xs uppercase tracking-[0.12em] text-muted transition-colors", className)}>{children}</label>;
 }
 function FieldMessage({ error, touched, successText }: { error?: string; touched?: boolean; successText?: string }) {
   if (error) return <p className="mt-1.5 text-xs text-error">{error}</p>;
@@ -306,18 +310,16 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             </div>
 
             <div className="grid gap-3">
-              {TRUST_ITEMS.map((item) => {
-                return (
-                  <div key={item.text} className="editorial-frame rounded-[var(--radius-lg)] bg-surface2/35 p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-green/20 bg-green/10 text-green">
-                        <Pictogram name={item.icon} size={18} decorative className="opacity-95" />
-                      </div>
-                      <p className="text-sm leading-6 text-secondary">{item.text}</p>
+              {TRUST_ITEMS.map((item) => (
+                <div key={item.text} className="editorial-frame rounded-[var(--radius-lg)] bg-surface2/35 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-green/20 bg-green/10 text-green">
+                      <item.Icon className="h-4 w-4" />
                     </div>
+                    <p className="text-sm leading-6 text-secondary">{item.text}</p>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
 
             <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
@@ -334,11 +336,18 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             </div>
           </div>
 
-          <div className="relative z-10 rounded-[var(--radius-lg)] border border-border/40 bg-surface/35 p-4" style={panelAnim(160)}>
-            <p className="text-xs uppercase tracking-[0.14em] text-muted">Secure microcopy</p>
-            <div className="mt-2 flex items-start gap-2">
-              <Pictogram name="candado" size={18} decorative className="mt-0.5 opacity-90" />
-              <p className="text-sm leading-6 text-secondary">{local.secureMicrocopy}</p>
+          <div className="relative z-10 space-y-3" style={panelAnim(160)}>
+            <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/25 px-4 py-3">
+              <p className="font-mono text-xs text-secondary">
+                EUR 847 avg refund · 4 languages · Fixed pricing
+              </p>
+            </div>
+            <div className="rounded-[var(--radius-lg)] border border-border/40 bg-surface/35 p-4">
+              <p className="text-xs uppercase tracking-[0.14em] text-muted">Secure microcopy</p>
+              <div className="mt-2 flex items-start gap-2">
+                <Pictogram name="candado" size={18} decorative className="mt-0.5 opacity-90" />
+                <p className="text-sm leading-6 text-secondary">{local.secureMicrocopy}</p>
+              </div>
             </div>
           </div>
         </aside>
@@ -385,8 +394,8 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
                 {mode === "login" && (
                   <form className="space-y-4" onSubmit={loginForm.handleSubmit(onLoginSubmit)} noValidate>
-                    <div>
-                      <FieldLabel htmlFor="login-email">{t("form.email")}</FieldLabel>
+                    <div className="group">
+                      <FieldLabel htmlFor="login-email" className="group-focus-within:text-copper">{t("form.email")}</FieldLabel>
                       <div className="relative">
                         <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                         <Input id="login-email" type="email" autoComplete="email" placeholder={t("form.emailPlaceholder")} {...loginForm.register("email")} className={cn("pl-9", loginForm.formState.errors.email && "border-error/60 focus-visible:border-error")} />
@@ -394,10 +403,11 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                       <FieldMessage error={loginForm.formState.errors.email?.message} touched={Boolean(loginForm.formState.touchedFields.email) && !loginForm.formState.errors.email} successText="Email format looks valid." />
                     </div>
 
-                    <div>
-                      <FieldLabel htmlFor="login-password">{t("form.password")}</FieldLabel>
+                    <div className="group">
+                      <FieldLabel htmlFor="login-password" className="group-focus-within:text-copper">{t("form.password")}</FieldLabel>
                       <div className="relative">
-                        <Input id="login-password" type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder={t("form.passwordPlaceholder")} {...loginForm.register("password")} className={cn("pr-10", loginForm.formState.errors.password && "border-error/60 focus-visible:border-error")} />
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                        <Input id="login-password" type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder={t("form.passwordPlaceholder")} {...loginForm.register("password")} className={cn("pl-9 pr-10", loginForm.formState.errors.password && "border-error/60 focus-visible:border-error")} />
                         <button type="button" className="focus-ring absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-muted hover:text-text" onClick={() => setShowPassword((prev) => !prev)} aria-label={showPassword ? tA11y("hidePassword") : tA11y("showPassword")}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
                       </div>
                       <FieldMessage error={loginForm.formState.errors.password?.message} touched={Boolean(loginForm.formState.touchedFields.password) && !loginForm.formState.errors.password} successText="Password length is valid." />
@@ -409,20 +419,24 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                     </div>
 
                     <p className="rounded-[var(--radius-md)] border border-border/40 bg-surface2/35 px-3 py-2 text-xs leading-5 text-muted">{local.secureMicrocopy}</p>
-                    <Button type="submit" size="lg" className="w-full justify-center" disabled={isSubmitting}><LoadingLabel loading={isSubmitting} label={t("form.submitLogin")} /></Button>
+                    <Button type="submit" size="lg" className="w-full justify-center gap-2" disabled={isSubmitting}>
+                      {isSubmitting && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                      <span>{isSubmitting ? `${t("form.submitLogin")}...` : t("form.submitLogin")}</span>
+                      {!isSubmitting && <ArrowRight className="h-4 w-4" />}
+                    </Button>
                   </form>
                 )}
 
                 {mode === "register" && (
                   <form className="space-y-4" onSubmit={registerForm.handleSubmit(onRegisterSubmit)} noValidate>
-                    <div>
-                      <FieldLabel htmlFor="reg-name">{t("form.fullName")}</FieldLabel>
+                    <div className="group">
+                      <FieldLabel htmlFor="reg-name" className="group-focus-within:text-copper">{t("form.fullName")}</FieldLabel>
                       <Input id="reg-name" type="text" autoComplete="name" placeholder={t("form.fullNamePlaceholder")} {...registerForm.register("fullName")} className={cn(registerForm.formState.errors.fullName && "border-error/60 focus-visible:border-error")} />
                       <FieldMessage error={registerForm.formState.errors.fullName?.message} touched={Boolean(registerForm.formState.touchedFields.fullName) && !registerForm.formState.errors.fullName} successText="Looks good." />
                     </div>
 
-                    <div>
-                      <FieldLabel htmlFor="reg-email">{t("form.email")}</FieldLabel>
+                    <div className="group">
+                      <FieldLabel htmlFor="reg-email" className="group-focus-within:text-copper">{t("form.email")}</FieldLabel>
                       <div className="relative">
                         <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                         <Input id="reg-email" type="email" autoComplete="email" placeholder={t("form.emailPlaceholder")} {...registerForm.register("email")} className={cn("pl-9", registerForm.formState.errors.email && "border-error/60 focus-visible:border-error")} />
@@ -431,19 +445,21 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <FieldLabel htmlFor="reg-password">{t("form.password")}</FieldLabel>
+                      <div className="group">
+                        <FieldLabel htmlFor="reg-password" className="group-focus-within:text-copper">{t("form.password")}</FieldLabel>
                         <div className="relative">
-                          <Input id="reg-password" type={showPassword ? "text" : "password"} autoComplete="new-password" placeholder={t("form.passwordPlaceholder")} {...registerForm.register("password")} className={cn("pr-10", registerForm.formState.errors.password && "border-error/60 focus-visible:border-error")} />
+                          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                          <Input id="reg-password" type={showPassword ? "text" : "password"} autoComplete="new-password" placeholder={t("form.passwordPlaceholder")} {...registerForm.register("password")} className={cn("pl-9 pr-10", registerForm.formState.errors.password && "border-error/60 focus-visible:border-error")} />
                           <button type="button" className="focus-ring absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-muted hover:text-text" onClick={() => setShowPassword((prev) => !prev)} aria-label={showPassword ? tA11y("hidePassword") : tA11y("showPassword")}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
                         </div>
                         <FieldMessage error={registerForm.formState.errors.password?.message} touched={Boolean(registerForm.formState.touchedFields.password) && !registerForm.formState.errors.password} successText="Password length is valid." />
                       </div>
 
-                      <div>
-                        <FieldLabel htmlFor="reg-confirm">{t("form.confirmPassword")}</FieldLabel>
+                      <div className="group">
+                        <FieldLabel htmlFor="reg-confirm" className="group-focus-within:text-copper">{t("form.confirmPassword")}</FieldLabel>
                         <div className="relative">
-                          <Input id="reg-confirm" type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" placeholder={t("form.confirmPasswordPlaceholder")} {...registerForm.register("confirmPassword")} className={cn("pr-10", registerForm.formState.errors.confirmPassword && "border-error/60 focus-visible:border-error")} />
+                          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                          <Input id="reg-confirm" type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" placeholder={t("form.confirmPasswordPlaceholder")} {...registerForm.register("confirmPassword")} className={cn("pl-9 pr-10", registerForm.formState.errors.confirmPassword && "border-error/60 focus-visible:border-error")} />
                           <button type="button" className="focus-ring absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-muted hover:text-text" onClick={() => setShowConfirmPassword((prev) => !prev)} aria-label={showConfirmPassword ? tA11y("hideConfirmPassword") : tA11y("showConfirmPassword")}>{showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
                         </div>
                         <FieldMessage error={registerForm.formState.errors.confirmPassword?.message} touched={Boolean(registerForm.formState.touchedFields.confirmPassword) && !registerForm.formState.errors.confirmPassword} successText="Passwords match." />
@@ -459,7 +475,11 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                     </div>
 
                     <p className="rounded-[var(--radius-md)] border border-border/40 bg-surface2/35 px-3 py-2 text-xs leading-5 text-muted">{local.secureMicrocopy}</p>
-                    <Button type="submit" size="lg" className="w-full justify-center" disabled={isSubmitting}><LoadingLabel loading={isSubmitting} label={t("form.submitRegister")} /></Button>
+                    <Button type="submit" size="lg" className="w-full justify-center gap-2" disabled={isSubmitting}>
+                      {isSubmitting && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                      <span>{isSubmitting ? `${t("form.submitRegister")}...` : t("form.submitRegister")}</span>
+                      {!isSubmitting && <ArrowRight className="h-4 w-4" />}
+                    </Button>
                   </form>
                 )}
 
@@ -469,8 +489,8 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                       <h2 className="font-heading text-2xl tracking-[-0.03em] text-text">{local.forgotTitle}</h2>
                       <p className="mt-2 text-sm leading-6 text-secondary">{local.forgotSubtitle}</p>
                     </div>
-                    <div>
-                      <FieldLabel htmlFor="forgot-email">{t("form.email")}</FieldLabel>
+                    <div className="group">
+                      <FieldLabel htmlFor="forgot-email" className="group-focus-within:text-copper">{t("form.email")}</FieldLabel>
                       <div className="relative">
                         <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                         <Input id="forgot-email" type="email" autoComplete="email" placeholder={t("form.emailPlaceholder")} {...forgotForm.register("email")} className={cn("pl-9", forgotForm.formState.errors.email && "border-error/60 focus-visible:border-error")} />
