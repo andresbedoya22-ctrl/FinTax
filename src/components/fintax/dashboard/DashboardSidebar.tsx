@@ -7,6 +7,7 @@ import * as React from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { Badge, buttonVariants } from "@/components/ui";
+import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 
 const navItems = [
   { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -24,6 +25,7 @@ export interface DashboardSidebarProps {
 export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProps) {
   const t = useTranslations("Dashboard.sidebar");
   const pathname = usePathname();
+  const { profile } = useCurrentProfile();
   const rawItems = t.raw("items") as
     | string[]
     | {
@@ -36,6 +38,8 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
 
   const getLabel = (key: (typeof navItems)[number]["key"], index: number) =>
     Array.isArray(rawItems) ? (rawItems[index] ?? key) : (rawItems[key] ?? key);
+
+  const visibleNavItems = navItems.filter((item) => item.key !== "admin" || profile?.role === "admin");
 
   return (
     <aside
@@ -82,7 +86,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
         </p>
 
         <nav className="space-y-0.5" aria-label={t("sections.main")}>
-          {navItems.map((item, index) => {
+          {visibleNavItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (

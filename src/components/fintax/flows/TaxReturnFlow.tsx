@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 /* eslint-disable react-hooks/incompatible-library */
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +12,7 @@ import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, Skeleton, Stepper } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { loadWizardSnapshot, persistWizardSnapshot } from "@/lib/wizards/persistence";
+import { hasLocalWizardProgress, loadWizardSnapshot, persistWizardSnapshot } from "@/lib/wizards/persistence";
 
 const taxWizardSchema = z.object({
   fullName: z.string().min(2),
@@ -81,6 +81,7 @@ export function TaxReturnFlow() {
   const [selectedService, setSelectedService] = React.useState<string>("tax_return_p");
   const [currentStep, setCurrentStep] = React.useState(0);
   const [paymentCompleted, setPaymentCompleted] = React.useState(false);
+  const [draftCaseId, setDraftCaseId] = React.useState<string | null>(null);
 
   const services = React.useMemo<ServiceCard[]>(
     () => [
@@ -107,12 +108,12 @@ export function TaxReturnFlow() {
     const subscription = form.watch((values) => {
       void persistWizardSnapshot({
         storageKey: `fintax-tax-${selectedService}`,
-        caseId: undefined,
-        payload: { ...values, selectedService },
+        caseId: draftCaseId ?? undefined,
+        payload: { ...values, selectedService, currentStep },
       });
     });
     return () => subscription.unsubscribe();
-  }, [form, selectedService]);
+  }, [form, selectedService, currentStep, draftCaseId]);
 
   const values = form.watch();
   const refund = estimateRefund(values);
@@ -130,6 +131,24 @@ export function TaxReturnFlow() {
     ];
     const valid = await form.trigger(fieldsByStep[currentStep]);
     if (!valid) return;
+    if (currentStep === 0 && !draftCaseId) {
+      try {
+        const response = await fetch("/api/cases/draft", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            caseType: selectedService,
+            fullName: form.getValues("fullName"),
+            bsn: form.getValues("bsn"),
+            taxYear: form.getValues("taxYear"),
+          }),
+        });
+        const data = (await response.json().catch(() => null)) as { caseId?: string | null } | null;
+        if (data?.caseId) setDraftCaseId(data.caseId);
+      } catch {
+        // Non-blocking: wizard can continue and persist local metadata only.
+      }
+    }
     setCurrentStep((prev) => Math.min(prev + 1, stepKeys.length - 1));
   };
 
@@ -146,7 +165,7 @@ export function TaxReturnFlow() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         {services.map((service) => {
           const isActive = selectedService === service.id;
-          const hasSavedProgress = typeof window !== "undefined" && window.localStorage.getItem(`fintax-tax-${service.id}`);
+          const hasSavedProgress = hasLocalWizardProgress(`fintax-tax-${service.id}`);
           return (
             <Card key={service.id} className={cn("rounded-[var(--radius-lg)] border border-border/35 bg-surface/55", isActive ? "border-copper/35 bg-copper/6" : "")}>
               <CardHeader className="space-y-1">
@@ -198,7 +217,7 @@ export function TaxReturnFlow() {
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
                 <div className="h-full rounded-full bg-gradient-to-r from-green to-copper" style={{ width: `${Math.round(((currentStep + 1) / stepKeys.length) * 100)}%` }} />
               </div>
-              <p className="mt-2 text-xs text-secondary">{Math.round(((currentStep + 1) / stepKeys.length) * 100)}% complete · {stepKeys.length - currentStep - 1} steps left</p>
+              <p className="mt-2 text-xs text-secondary">{Math.round(((currentStep + 1) / stepKeys.length) * 100)}% complete | {stepKeys.length - currentStep - 1} steps left</p>
             </div>
             <div className="hidden w-44 rounded-xl border border-border/35 bg-surface2/20 p-3 md:block">
               <p className="mb-2 text-xs uppercase tracking-[0.14em] text-muted">Review queue</p>
@@ -359,3 +378,4 @@ function SummaryTile({ icon: Icon, title, value }: { icon: React.ComponentType<{
 
 const inputClass =
   "h-11 w-full rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text outline-none ring-0 placeholder:text-muted focus:border-copper/40";
+

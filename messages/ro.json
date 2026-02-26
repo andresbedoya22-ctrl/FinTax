@@ -52,7 +52,28 @@
         "Suport multilingv",
         "Conform GDPR"
       ],
-      "heroImageAlt": "Panoul FinTax cu cazuri de clienți și statusul declarației fiscale"
+      "heroImageAlt": "Panoul FinTax cu cazuri de clienți și statusul declarației fiscale",
+      "titleRich": "Taxe si beneficii NL explicate <hl>clar</hl> in limba ta.",
+      "sampleMockName": "Andreea",
+      "sampleGreeting": "Buna dimineata,",
+      "sampleRefundLabel": "Rambursare estimata",
+      "sampleRefundValue": "EUR 1.240",
+      "sampleCasesLabel": "Cazuri active",
+      "sampleCasesValue": "3 deschise",
+      "heroStats": [
+        {
+          "value": "EUR 847",
+          "label": "rambursare medie recuperata"
+        },
+        {
+          "value": "4 limbi",
+          "label": "EN | ES | PL | RO"
+        },
+        {
+          "value": "Pret fix",
+          "label": "scop clar inainte de lucru"
+        }
+      ]
     },
     "services": {
       "eyebrow": "Servicii",
@@ -343,15 +364,36 @@
       "chartTitle": "Ultimele 7 puncte de control",
       "chartNote": "Actualizat după ultimul upload de salarii",
       "caseRows": [
-        { "label": "Zorgtoeslag", "amount": "EUR 1.286" },
-        { "label": "Huurtoeslag", "amount": "EUR 2.140" },
-        { "label": "Kinderbijslag", "amount": "EUR 1.102" }
+        {
+          "label": "Zorgtoeslag",
+          "amount": "EUR 1.286"
+        },
+        {
+          "label": "Huurtoeslag",
+          "amount": "EUR 2.140"
+        },
+        {
+          "label": "Kinderbijslag",
+          "amount": "EUR 1.102"
+        }
       ],
       "checklistItems": [
-        { "label": "Pașaport / CI încărcat", "done": true },
-        { "label": "Declarații anuale de venit", "done": true },
-        { "label": "Detalii contract de chirie", "done": true },
-        { "label": "Facturi îngrijire copii", "done": false }
+        {
+          "label": "Pașaport / CI încărcat",
+          "done": true
+        },
+        {
+          "label": "Declarații anuale de venit",
+          "done": true
+        },
+        {
+          "label": "Detalii contract de chirie",
+          "done": true
+        },
+        {
+          "label": "Facturi îngrijire copii",
+          "done": false
+        }
       ]
     }
   }

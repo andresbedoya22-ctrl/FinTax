@@ -13,7 +13,28 @@
     "hero": {
       "title": "Nederlandse belastingen en toeslagen uitgelegd in jouw taal.",
       "primaryCta": "Start gratis precheck",
-      "secondaryCta": "Bekijk diensten"
+      "secondaryCta": "Bekijk diensten",
+      "titleRich": "Nederlandse belastingen en toeslagen <hl>duidelijk</hl> uitgelegd in jouw taal.",
+      "sampleMockName": "Jan",
+      "sampleGreeting": "Goedemorgen,",
+      "sampleRefundLabel": "Geschatte teruggaaf",
+      "sampleRefundValue": "EUR 1.240",
+      "sampleCasesLabel": "Actieve zaken",
+      "sampleCasesValue": "3 open",
+      "heroStats": [
+        {
+          "value": "EUR 847",
+          "label": "gemiddeld teruggevraagd"
+        },
+        {
+          "value": "4 talen",
+          "label": "EN | ES | PL | RO"
+        },
+        {
+          "value": "Vaste prijs",
+          "label": "heldere scope vooraf"
+        }
+      ]
     },
     "services": {
       "title": "Wat wij van A tot Z regelen"
@@ -44,7 +65,14 @@
   },
   "Dashboard": {
     "sidebar": {
-      "items": ["Dashboard", "Belastingaangifte", "Toeslagen", "Inkomen", "Overheid", "Instellingen"]
+      "items": [
+        "Dashboard",
+        "Belastingaangifte",
+        "Toeslagen",
+        "Inkomen",
+        "Overheid",
+        "Instellingen"
+      ]
     },
     "topbar": {
       "currentCase": "Huidige zaak"

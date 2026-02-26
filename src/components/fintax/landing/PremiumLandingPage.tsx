@@ -79,6 +79,22 @@ const tByLocale = {
     checklistDesc: "UI placeholder form for the checklist lead capture flow.",
     checklistSubmit: "Request checklist",
     checklistClose: "Close",
+    heroStats: [
+      { label: "Response", value: "< 1 business day" },
+      { label: "Languages", value: "EN / ES / PL / RO" },
+      { label: "Pricing", value: "Fixed fee" },
+    ],
+    footerLegalTitle: "Trust and legal",
+    footerLegalBody: "Public legal pages are available before launch. Final registration details can be added without changing the route structure.",
+    footerPrivacy: "Privacy",
+    footerTerms: "Terms",
+    footerFaq: "FAQ",
+    footerPricing: "Pricing",
+    footerContactLabel: "Contact",
+    footerContactEmail: "support@fintax.example",
+    footerKvKLabel: "KvK",
+    footerKvKValue: "Pending registration",
+    verifiedClient: "Verified client",
   },
   es: {
     nav: ["Servicios", "Como funciona", "Precios", "FAQ"],
@@ -109,6 +125,22 @@ const tByLocale = {
     checklistDesc: "Formulario placeholder para captar leads de checklist.",
     checklistSubmit: "Solicitar checklist",
     checklistClose: "Cerrar",
+    heroStats: [
+      { label: "Respuesta", value: "< 1 dia habil" },
+      { label: "Idiomas", value: "EN / ES / PL / RO" },
+      { label: "Precios", value: "Precio fijo" },
+    ],
+    footerLegalTitle: "Confianza y legal",
+    footerLegalBody: "Las paginas legales publicas estan disponibles antes del lanzamiento. Los datos de registro se completan despues.",
+    footerPrivacy: "Privacidad",
+    footerTerms: "Terminos",
+    footerFaq: "FAQ",
+    footerPricing: "Precios",
+    footerContactLabel: "Contacto",
+    footerContactEmail: "support@fintax.example",
+    footerKvKLabel: "KvK",
+    footerKvKValue: "Registro pendiente",
+    verifiedClient: "Cliente verificado",
   },
   pl: {
     nav: ["Uslugi", "Jak to dziala", "Cennik", "FAQ"],
@@ -139,6 +171,22 @@ const tByLocale = {
     checklistDesc: "Placeholder formularza do pobrania checklisty.",
     checklistSubmit: "Popros o checkliste",
     checklistClose: "Zamknij",
+    heroStats: [
+      { label: "Odpowiedz", value: "< 1 dzien roboczy" },
+      { label: "Jezyki", value: "EN / ES / PL / RO" },
+      { label: "Model", value: "Stala cena" },
+    ],
+    footerLegalTitle: "Zaufanie i informacje prawne",
+    footerLegalBody: "Publiczne strony prawne sa dostepne przed startem. Dane rejestrowe mozna uzupelnic pozniej.",
+    footerPrivacy: "Prywatnosc",
+    footerTerms: "Regulamin",
+    footerFaq: "FAQ",
+    footerPricing: "Cennik",
+    footerContactLabel: "Kontakt",
+    footerContactEmail: "support@fintax.example",
+    footerKvKLabel: "KvK",
+    footerKvKValue: "W trakcie rejestracji",
+    verifiedClient: "Zweryfikowany klient",
   },
   ro: {
     nav: ["Servicii", "Cum functioneaza", "Preturi", "FAQ"],
@@ -169,6 +217,22 @@ const tByLocale = {
     checklistDesc: "Placeholder UI pentru formularul de checklist.",
     checklistSubmit: "Solicita checklist",
     checklistClose: "Inchide",
+    heroStats: [
+      { label: "Raspuns", value: "< 1 zi lucratoare" },
+      { label: "Limbi", value: "EN / ES / PL / RO" },
+      { label: "Model", value: "Pret fix" },
+    ],
+    footerLegalTitle: "Incredere si legal",
+    footerLegalBody: "Paginile legale publice sunt disponibile inainte de lansare. Detaliile de inregistrare pot fi completate ulterior.",
+    footerPrivacy: "Confidentialitate",
+    footerTerms: "Termeni",
+    footerFaq: "FAQ",
+    footerPricing: "Preturi",
+    footerContactLabel: "Contact",
+    footerContactEmail: "support@fintax.example",
+    footerKvKLabel: "KvK",
+    footerKvKValue: "Inregistrare in curs",
+    verifiedClient: "Client verificat",
   },
 } as const;
 
@@ -229,6 +293,35 @@ function getT(locale: string) {
 
 function stagger(index: number): React.CSSProperties {
   return { animation: "fadeUp 680ms cubic-bezier(.22,.61,.36,1) both", animationDelay: `${index * 90}ms` };
+}
+
+function useSectionReveal() {
+  React.useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (elements.length === 0 || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
+    );
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+}
+
+function smoothAnchorNavigate(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
+  if (!href.startsWith("#")) return;
+  const id = href.slice(1);
+  const target = document.getElementById(id);
+  if (!target) return;
+  event.preventDefault();
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function ServiceSelectorCard({ ctaLabel }: { ctaLabel: string }) {
@@ -327,9 +420,9 @@ function ChecklistDialog({ t }: { t: ReturnType<typeof getT> }) {
   );
 }
 
-function Header({ t }: { t: ReturnType<typeof getT> }) {
+function Header({ t, scrolled }: { t: ReturnType<typeof getT>; scrolled: boolean }) {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/50 bg-bg/72 backdrop-blur-xl">
+    <header className={cn("fixed inset-x-0 top-0 z-50 border-b backdrop-blur-xl transition-colors", scrolled ? "border-border/60 bg-bg/92" : "border-border/35 bg-bg/58")}>
       <Container className="flex h-16 items-center gap-3">
         <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-text">
           <span className="grid h-8 w-8 place-items-center rounded-lg border border-copper/30 bg-copper/10 font-heading text-sm text-copper">
@@ -344,7 +437,7 @@ function Header({ t }: { t: ReturnType<typeof getT> }) {
             { href: "#pricing", label: t.nav[2] },
             { href: "#faq", label: t.nav[3] },
           ].map((item) => (
-            <a key={item.href} href={item.href} className="focus-ring rounded-full px-3 py-2 text-sm text-secondary hover:bg-white/5 hover:text-text">
+            <a key={item.href} href={item.href} onClick={(e) => smoothAnchorNavigate(e, item.href)} className="focus-ring rounded-full px-3 py-2 text-sm text-secondary hover:bg-white/5 hover:text-text">
               {item.label}
             </a>
           ))}
@@ -354,7 +447,7 @@ function Header({ t }: { t: ReturnType<typeof getT> }) {
           <Link href="/auth" className="focus-ring hidden rounded-full px-3 py-2 text-sm text-secondary sm:inline-flex">
             {t.signIn}
           </Link>
-          <a href="#services" className={cn(buttonVariants({ size: "sm" }), "hidden sm:inline-flex")}>
+          <a href="#services" onClick={(e) => smoothAnchorNavigate(e, "#services")} className={cn(buttonVariants({ size: "sm" }), "hidden sm:inline-flex")}>
             {t.getPrice}
           </a>
         </div>
@@ -367,12 +460,21 @@ export function PremiumLandingPage() {
   const locale = useLocale() as AppLocale;
   const t = getT(locale);
   const activeTestimonial = testimonials.some((x) => x.locale === locale) ? locale : "en";
+  const [scrolled, setScrolled] = React.useState(false);
+
+  useSectionReveal();
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-mesh technical-lines texture-noise">
-      <Header t={t} />
+      <Header t={t} scrolled={scrolled} />
       <main className="relative z-10 overflow-x-clip pt-16">
-        <section id="hero" className="border-b border-border/30">
+        <section id="hero" className="reveal border-b border-border/30" data-reveal>
           <Container className="section-rhythm pt-8 sm:pt-12">
             <div className="grid gap-5 lg:grid-cols-[1.02fr_0.98fr] lg:gap-6">
               <div className="space-y-4 pt-4 sm:space-y-5 sm:pt-8" style={stagger(0)}>
@@ -384,7 +486,7 @@ export function PremiumLandingPage() {
                 </h1>
                 <p className="max-w-[58ch] text-sm leading-6 text-secondary sm:text-base sm:leading-7">{t.heroSubtitle}</p>
                 <div className="flex flex-wrap items-center gap-3">
-                  <a href="#services" className={buttonVariants({ size: "lg" })}>
+                  <a href="#services" onClick={(e) => smoothAnchorNavigate(e, "#services")} className={buttonVariants({ size: "lg" })}>
                     {t.getPrice}
                     <ArrowRight className="h-4 w-4" />
                   </a>
@@ -392,18 +494,12 @@ export function PremiumLandingPage() {
                 </div>
                 <p className="text-xs tracking-[0.06em] text-muted">{t.heroNote}</p>
                 <div className="grid gap-3 pt-1 sm:grid-cols-3">
-                  <Card variant="soft" padding="sm">
-                    <p className="text-[11px] uppercase tracking-[0.14em] text-muted">Response</p>
-                    <p className="mt-2 font-heading text-lg text-text">&lt; 1 business day</p>
-                  </Card>
-                  <Card variant="soft" padding="sm">
-                    <p className="text-[11px] uppercase tracking-[0.14em] text-muted">Languages</p>
-                    <p className="mt-2 font-heading text-lg text-text">EN ES PL RO</p>
-                  </Card>
-                  <Card variant="soft" padding="sm">
-                    <p className="text-[11px] uppercase tracking-[0.14em] text-muted">Model</p>
-                    <p className="mt-2 font-heading text-lg text-text">Fixed fee</p>
-                  </Card>
+                  {t.heroStats.map((stat) => (
+                    <Card key={stat.label} variant="soft" padding="sm">
+                      <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{stat.label}</p>
+                      <p className="mt-2 font-heading text-lg tracking-[-0.02em] text-text">{stat.value}</p>
+                    </Card>
+                  ))}
                 </div>
               </div>
 
@@ -461,7 +557,7 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <section id="services" className="border-b border-border/30">
+        <section id="services" className="reveal border-b border-border/30" data-reveal>
           <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]" style={stagger(2)}>
               <div>
@@ -476,7 +572,7 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <section id="how" className="border-b border-border/30">
+        <section id="how" className="reveal border-b border-border/30" data-reveal>
           <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]" style={stagger(3)}>
               <div>
@@ -491,7 +587,7 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <section id="pricing" className="border-b border-border/30">
+        <section id="pricing" className="reveal border-b border-border/30" data-reveal>
           <Container className="section-rhythm">
             <div className="space-y-6" style={stagger(4)}>
               <div>
@@ -571,7 +667,7 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <section id="trust" className="border-b border-border/30">
+        <section id="trust" className="reveal border-b border-border/30" data-reveal>
           <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[1fr_1fr]" style={stagger(5)}>
               <div>
@@ -619,7 +715,7 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <section id="testimonials" className="border-b border-border/30">
+        <section id="testimonials" className="reveal border-b border-border/30" data-reveal>
           <Container className="section-rhythm">
             <div className="space-y-6" style={stagger(6)}>
               <div>
@@ -642,7 +738,18 @@ export function PremiumLandingPage() {
                         <blockquote className="mt-4 font-heading text-2xl leading-[1.15] tracking-[-0.03em] text-text sm:text-3xl">
                           &ldquo;{tab.quote}&rdquo;
                         </blockquote>
-                        <p className="mt-5 text-sm font-medium text-secondary">{tab.person}</p>
+                        <div className="mt-5 flex items-center gap-3">
+                          <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-copper/25 to-green/20 text-xs font-semibold text-text">
+                            {tab.person.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("")}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-secondary">{tab.person}</p>
+                            <p className="mt-0.5 inline-flex items-center gap-1.5 text-xs text-muted">
+                              <Pictogram name="check" size={16} decorative className="opacity-90" />
+                              {t.verifiedClient}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                       <div className="editorial-frame rounded-[var(--radius-lg)] bg-surface2/35 p-5">
                         <p className="text-xs uppercase tracking-[0.14em] text-muted">Why this works</p>
@@ -660,7 +767,7 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <section id="faq" className="border-b border-border/30">
+        <section id="faq" className="reveal border-b border-border/30" data-reveal>
           <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]" style={stagger(7)}>
               <div>
@@ -684,14 +791,25 @@ export function PremiumLandingPage() {
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]" style={stagger(8)}>
               <Card variant="panel" padding="lg">
                 <Badge variant="outline" className="mb-4">{t.legal}</Badge>
-                <h2 className="font-heading text-2xl tracking-[-0.03em] text-text sm:text-3xl">FinTax premium conversion landing</h2>
+                <h2 className="font-heading text-2xl tracking-[-0.03em] text-text sm:text-3xl">{t.footerLegalTitle}</h2>
                 <p className="mt-4 text-sm leading-6 text-secondary">
-                  Privacy notice, terms, cookie notice and complaint policy links will be connected before production launch. This section is intentionally a legal placeholder for now.
+                  {t.footerLegalBody}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  {["Privacy (placeholder)", "Terms (placeholder)", "Cookies (placeholder)", "Contact (placeholder)"].map((label) => (
-                    <Badge key={label} variant="neutral">{label}</Badge>
-                  ))}
+                  <Link href="/legal/privacy" className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "h-9 rounded-full")}>{t.footerPrivacy}</Link>
+                  <Link href="/legal/terms" className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "h-9 rounded-full")}>{t.footerTerms}</Link>
+                  <a href="#faq" onClick={(e) => smoothAnchorNavigate(e, "#faq")} className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "h-9 rounded-full")}>{t.footerFaq}</a>
+                  <a href="#pricing" onClick={(e) => smoothAnchorNavigate(e, "#pricing")} className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "h-9 rounded-full")}>{t.footerPricing}</a>
+                </div>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/20 p-3">
+                    <p className="text-[11px] uppercase tracking-[0.12em] text-muted">{t.footerContactLabel}</p>
+                    <a href={`mailto:${t.footerContactEmail}`} className="mt-1 block text-sm text-text hover:text-copper">{t.footerContactEmail}</a>
+                  </div>
+                  <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/20 p-3">
+                    <p className="text-[11px] uppercase tracking-[0.12em] text-muted">{t.footerKvKLabel}</p>
+                    <p className="mt-1 text-sm text-text">{t.footerKvKValue}</p>
+                  </div>
                 </div>
               </Card>
               <Card variant="soft" padding="lg" className="bg-mesh-subtle">

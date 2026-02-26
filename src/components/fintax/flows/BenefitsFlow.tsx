@@ -68,10 +68,10 @@ export function BenefitsFlow() {
 
   React.useEffect(() => {
     const sub = form.watch((values) => {
-      void persistWizardSnapshot({ storageKey: "fintax-benefits-wizard", payload: values as Record<string, unknown> });
+      void persistWizardSnapshot({ storageKey: "fintax-benefits-wizard", payload: { ...(values as Record<string, unknown>), currentStep: step } });
     });
     return () => sub.unsubscribe();
-  }, [form]);
+  }, [form, step]);
 
   const values = form.watch();
   const results = calculateEligibility(values as BenefitsWizardInput);

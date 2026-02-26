@@ -52,7 +52,28 @@
         "Soporte multilingüe",
         "GDPR-ready"
       ],
-      "heroImageAlt": "Panel de FinTax con casos de clientes y estado de declaración fiscal"
+      "heroImageAlt": "Panel de FinTax con casos de clientes y estado de declaración fiscal",
+      "titleRich": "Impuestos y beneficios de NL explicados <hl>bien</hl> en tu idioma.",
+      "sampleMockName": "Mar?a",
+      "sampleGreeting": "Buenos dias,",
+      "sampleRefundLabel": "Devolucion estimada",
+      "sampleRefundValue": "EUR 1.240",
+      "sampleCasesLabel": "Casos activos",
+      "sampleCasesValue": "3 abiertos",
+      "heroStats": [
+        {
+          "value": "EUR 847",
+          "label": "devolucion media recuperada"
+        },
+        {
+          "value": "4 idiomas",
+          "label": "EN | ES | PL | RO"
+        },
+        {
+          "value": "Precio fijo",
+          "label": "alcance claro antes de empezar"
+        }
+      ]
     },
     "services": {
       "eyebrow": "Servicios",

@@ -9,7 +9,7 @@
     "lint": "eslint . --ignore-pattern .tmp-test-build --max-warnings=0",
     "format": "prettier --write .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node scripts/test-eligibility.mjs"
+    "test": "node scripts/test-eligibility.mjs && node --experimental-strip-types tests/case-status-stepper.test.mjs && node --experimental-strip-types tests/encryption-roundtrip.test.mjs && node --experimental-strip-types tests/stripe-webhook-mapper.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

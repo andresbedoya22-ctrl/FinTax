@@ -67,7 +67,10 @@ export function SettingsScreen() {
               <span className="text-secondary">{t("appearance.language")}</span>
               <select className={selectClass} value={language} onChange={(e) => setLanguage(e.target.value as typeof language)}>
                 <option value="en">EN</option>
+                <option value="nl">NL</option>
                 <option value="es">ES</option>
+                <option value="pl">PL</option>
+                <option value="ro">RO</option>
               </select>
             </label>
             <label className="space-y-1 text-sm">
@@ -87,9 +90,9 @@ export function SettingsScreen() {
               <div key={payment.id} className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
                 <div className="flex items-center justify-between gap-3">
                   <span>{payment.case_id}</span>
-                  <span className="text-green">EUR {payment.amount.toFixed(2)}</span>
+                  <span className="font-heading tracking-[-0.02em] text-green">EUR {payment.amount.toFixed(2)}</span>
                 </div>
-                <p className="mt-1 text-xs text-muted">{payment.status} · {payment.payment_method}</p>
+                <p className="mt-1 text-xs text-muted">{payment.status} | {payment.payment_method}</p>
               </div>
             ))}
           </CardBody>

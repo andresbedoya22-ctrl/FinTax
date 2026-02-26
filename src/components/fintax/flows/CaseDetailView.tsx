@@ -6,7 +6,9 @@ import * as React from "react";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
-import { Badge, Skeleton, Stepper } from "@/components/ui";
+import { Badge, Skeleton, Stepper, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
+import { cn } from "@/lib/cn";
 import { getMockCase, mockChecklistByCase, mockDocumentsByCase } from "@/lib/mock-data";
 import type { Document } from "@/types/database";
 
@@ -30,6 +32,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   const checklist = mockChecklistByCase[caseId] ?? [];
   const tabs: TabKey[] = ["overview", "documents", "authorization", "activity"];
   const completed = checklist.filter((x) => x.is_completed).length;
+  const currentStep = mapCaseStatusToStep(caseItem.status);
 
   const onFilesSelected = (files: FileList | null) => {
     if (!files) return;
@@ -54,6 +57,13 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
     setDocs((prev) => [...nextDocs, ...prev]);
   };
 
+  const statusTone =
+    caseItem.status === "pending_payment" || caseItem.status === "pending_documents"
+      ? "amber"
+      : caseItem.status === "completed"
+        ? "green"
+        : "copper";
+
   return (
     <div className="space-y-6">
       <Card>
@@ -61,39 +71,41 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           <div>
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <Badge variant="copper">{caseItem.case_type}</Badge>
-              <Badge variant="neutral">{caseItem.status}</Badge>
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium",
+                  statusTone === "amber"
+                    ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
+                    : statusTone === "green"
+                      ? "border-green/25 bg-green/10 text-green"
+                      : "border-copper/25 bg-copper/10 text-copper",
+                )}
+              >
+                {caseItem.status}
+              </span>
             </div>
             <h2 className="font-heading text-2xl font-semibold text-text">{caseItem.display_name ?? caseItem.id}</h2>
             <p className="mt-1 text-sm text-secondary">{t("status")}: {caseItem.status} · {t("deadline")}: {caseItem.deadline ?? "-"}</p>
           </div>
           <div className="w-full max-w-md">
             <Stepper
-              steps={[
-                { id: "a", label: "Created" },
-                { id: "b", label: "Documents" },
-                { id: "c", label: "Authorization" },
-                { id: "d", label: "Review" },
-              ]}
-              currentStep={completed > 0 ? 2 : 1}
+              steps={CASE_STEPPER_STEPS}
+              currentStep={currentStep}
             />
           </div>
         </CardHeader>
       </Card>
 
-      <div className="flex flex-wrap gap-2">
-        {tabs.map((tabKey) => (
-          <button
-            type="button"
-            key={tabKey}
-            onClick={() => setTab(tabKey)}
-            className={`rounded-xl border px-3 py-2 text-sm ${tab === tabKey ? "border-copper/30 bg-copper/8 text-text" : "border-border/35 bg-surface2/20 text-secondary"}`}
-          >
-            {t(`tabs.${tabKey}`)}
-          </button>
-        ))}
-      </div>
+      <Tabs value={tab} defaultValue="overview" onValueChange={(value) => setTab(value as TabKey)}>
+        <TabsList className="flex w-full flex-wrap justify-start" size="md">
+          {tabs.map((tabKey) => (
+            <TabsTrigger key={tabKey} value={tabKey}>
+              {t(`tabs.${tabKey}`)}
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-      {tab === "overview" && (
+      <TabsContent value="overview">
         <Card>
           <CardBody className="grid gap-4 lg:grid-cols-3">
             <InfoTile label={t("overview.estimatedRefund")} value={caseItem.estimated_refund ? `EUR ${caseItem.estimated_refund}` : "-"} />
@@ -109,9 +121,9 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             </div>
           </CardBody>
         </Card>
-      )}
+      </TabsContent>
 
-      {tab === "documents" && (
+      <TabsContent value="documents">
         <Card>
           <CardHeader>
             <h3 className="text-base font-semibold text-text">{t("documents.title")}</h3>
@@ -143,9 +155,9 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             </ul>
           </CardBody>
         </Card>
-      )}
+      </TabsContent>
 
-      {tab === "authorization" && (
+      <TabsContent value="authorization">
         <Card>
           <CardBody className="space-y-4">
             <div className="flex items-center gap-2 text-text">
@@ -164,9 +176,9 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             </div>
           </CardBody>
         </Card>
-      )}
+      </TabsContent>
 
-      {tab === "activity" && (
+      <TabsContent value="activity">
         <Card>
           <CardBody>
             <div className="mb-4 flex items-center gap-2 text-text">
@@ -181,7 +193,8 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             </ul>
           </CardBody>
         </Card>
-      )}
+      </TabsContent>
+      </Tabs>
 
       <Card>
         <CardHeader>

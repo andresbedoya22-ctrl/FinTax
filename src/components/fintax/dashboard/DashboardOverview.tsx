@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import { ArrowRight, CheckCircle2, ChevronRight, Circle, Clock3, FolderCheck, Sparkles } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
@@ -11,18 +12,24 @@ const chartBars = [35, 45, 52, 61, 58, 70, 85];
 
 export function DashboardOverview() {
   const t = useTranslations("Dashboard.overview");
+  const reduceMotion = useReducedMotion();
   const checklistItems = t.raw("checklistItems") as Array<{ label: string; done: boolean }>;
   const caseRows = t.raw("caseRows") as Array<{ label: string; amount: string }>;
   const checklistProgress = Math.round((checklistItems.filter((i) => i.done).length / checklistItems.length) * 100);
 
   return (
     <section className="space-y-6">
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <motion.div
+        className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+        initial={reduceMotion ? false : "hidden"}
+        animate={reduceMotion ? undefined : "show"}
+        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
+      >
         <KpiCard title="Open cases" value="3" note="Across tax + benefits" tone="neutral" />
         <KpiCard title="Pending docs" value={`${checklistItems.filter((i) => !i.done).length}`} note="Checklist items missing" tone="copper" />
         <KpiCard title="Estimated refund" value={`EUR ${t("refundAmount")}`} note="Current active case" tone="success" />
         <KpiCard title="Next deadline" value={t("deadlineValue")} note="Tax return submission" tone="neutral" />
-      </div>
+      </motion.div>
 
       <div className="grid gap-5 xl:grid-cols-3">
         <Card variant="panel" padding="md" className="xl:col-span-2">
@@ -33,7 +40,7 @@ export function DashboardOverview() {
                 <Badge variant="success">{t("statusValue")}</Badge>
               </div>
               <CardTitle className="text-2xl">{t("caseTitle")}</CardTitle>
-              <CardDescription>{t("statusLabel")}: {t("statusValue")} · {t("deadlineLabel")}: {t("deadlineValue")}</CardDescription>
+              <CardDescription>{t("statusLabel")}: {t("statusValue")} | {t("deadlineLabel")}: {t("deadlineValue")}</CardDescription>
             </div>
             <Link href="/tax-return" className="inline-flex items-center gap-1 text-sm font-medium text-copper hover:text-text">
               {t("openCase")}
@@ -177,10 +184,13 @@ function KpiCard({
 }) {
   const toneClass = tone === "success" ? "border-green/25 bg-green/7" : tone === "copper" ? "border-copper/25 bg-copper/7" : "border-border/35 bg-surface/35";
   return (
-    <Card variant="soft" padding="sm" className={toneClass}>
-      <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{title}</p>
-      <p className="mt-2 font-heading text-2xl tracking-[-0.03em] text-text">{value}</p>
-      <p className="mt-1 text-xs text-secondary">{note}</p>
-    </Card>
+    <motion.div variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}>
+      <Card variant="soft" padding="sm" className={toneClass}>
+        <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{title}</p>
+        <p className="mt-2 font-heading text-2xl tracking-[-0.03em] text-text">{value}</p>
+        <p className="mt-1 text-xs text-secondary">{note}</p>
+      </Card>
+    </motion.div>
   );
 }
+
