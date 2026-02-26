@@ -10,10 +10,10 @@ import { Container } from "@/components/fintax/Container";
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 
 const defaultLinks = [
-  { key: "product", href: "#product" },
+  { key: "product", href: "#services" },
   { key: "pricing", href: "#pricing" },
-  { key: "resources", href: "#resources" },
-  { key: "contact", href: "#contact" },
+  { key: "resources", href: "#faq" },
+  { key: "contact", href: "/legal/privacy" },
 ] as const;
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
@@ -64,7 +64,9 @@ export function Navbar({ className, links = defaultLinks, ...props }: NavbarProp
             {t("signIn")}
           </Link>
 
-          <Button size="sm">{t("freePrecheck")}</Button>
+          <Button asChild size="sm">
+            <Link href="/auth?intent=tax-return">{t("freePrecheck")}</Link>
+          </Button>
         </div>
       </Container>
     </header>

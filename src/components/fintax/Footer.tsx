@@ -9,26 +9,26 @@ import { Container } from "@/components/fintax/Container";
 
 const footerSections = {
   Product: [
-    { label: "Tax Engine", href: "#tax-engine" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Integrations", href: "#integrations" },
+    { label: "Tax Engine", href: "/dashboard" },
+    { label: "Pricing", href: "/#pricing" },
+    { label: "Integrations", href: "/#services" },
   ],
   Company: [
-    { label: "About", href: "#about" },
-    { label: "Careers", href: "#careers" },
-    { label: "Contact", href: "#contact" },
+    { label: "About", href: "/" },
+    { label: "Careers", href: "/auth" },
+    { label: "Contact", href: "/legal/privacy" },
   ],
   Legal: [
-    { label: "Privacy", href: "#privacy" },
-    { label: "Terms", href: "#terms" },
-    { label: "Cookies", href: "#cookies" },
+    { label: "Privacy", href: "/legal/privacy" },
+    { label: "Terms", href: "/legal/terms" },
+    { label: "Cookies", href: "/legal/privacy" },
   ],
   Languages: [
-    { label: "EN", href: "#lang-en" },
-    { label: "NL", href: "#lang-nl" },
-    { label: "ES", href: "#lang-es" },
-    { label: "RO", href: "#lang-ro" },
-    { label: "PL", href: "#lang-pl" },
+    { label: "EN", href: "/" },
+    { label: "NL", href: "/" },
+    { label: "ES", href: "/" },
+    { label: "RO", href: "/" },
+    { label: "PL", href: "/" },
   ],
 };
 

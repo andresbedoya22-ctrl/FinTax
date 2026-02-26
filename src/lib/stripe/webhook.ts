@@ -11,6 +11,15 @@ export type CheckoutCompletedPayload = {
   paymentMethod: string | null;
 };
 
+export function isCheckoutSessionAlreadyProcessed(input: {
+  existingPaymentId?: string | null;
+  insertErrorMessage?: string | null;
+}) {
+  if (input.existingPaymentId) return true;
+  if (!input.insertErrorMessage) return false;
+  return input.insertErrorMessage.toLowerCase().includes("duplicate");
+}
+
 export function extractCheckoutCompletedPayload(session: Stripe.Checkout.Session): CheckoutCompletedPayload | null {
   const caseId = session.metadata?.case_id;
   const userId = session.metadata?.user_id;
@@ -28,4 +37,3 @@ export function extractCheckoutCompletedPayload(session: Stripe.Checkout.Session
     paymentMethod: session.payment_method_types?.[0] ?? null,
   };
 }
-

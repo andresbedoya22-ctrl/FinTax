@@ -11,8 +11,8 @@ import {
   ShieldCheck,
   UserRoundCheck,
 } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
@@ -31,6 +31,18 @@ const serviceIcons = [
   ShieldCheck,
 ];
 
+const serviceDestinations = [
+  "/tax-return?service=form_p",
+  "/tax-return?service=form_m",
+  "/tax-return?service=form_c",
+  "/benefits?service=huurtoeslag",
+  "/benefits?service=zorgtoeslag",
+  "/benefits?service=kinderopvangtoeslag",
+  "/benefits?service=kindgebonden_budget",
+  "/tax-return?service=ruling_30",
+  "/tax-return?service=document_review",
+] as const;
+
 export function ServicesSection() {
   const t = useTranslations("Landing.services");
   const services = t.raw("items") as Array<{ title: string; copy: string }>;
@@ -44,7 +56,7 @@ export function ServicesSection() {
             <h2 className="mt-2 text-3xl font-semibold text-text">{t("title")}</h2>
           </div>
           <Button asChild variant="secondary" size="sm" className="hidden md:inline-flex">
-            <Link href="#pricing">{t("cta")}</Link>
+            <Link href="/auth?intent=tax-return">{t("cta")}</Link>
           </Button>
         </div>
 
@@ -62,7 +74,7 @@ export function ServicesSection() {
                 <CardBody className="pt-2">
                   <p className="text-sm leading-relaxed text-secondary">{service.copy}</p>
                   <Button asChild size="sm" className="mt-5">
-                    <Link href="#pricing">{t("cta")}</Link>
+                    <Link href={serviceDestinations[index] ?? "/auth?intent=tax-return"}>{t("cta")}</Link>
                   </Button>
                 </CardBody>
               </Card>

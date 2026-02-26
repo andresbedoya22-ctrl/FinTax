@@ -22,6 +22,14 @@ import { Badge, Button, Card, Input, Pictogram, Tabs, TabsList, TabsTrigger, Tex
 
 type AuthMode = "login" | "register" | "forgot";
 type AppLocale = "en" | "es" | "pl" | "ro" | "nl";
+type AuthIntent = "tax-return" | "benefits";
+type PendingAuthIntent = { intent: AuthIntent; service?: string; next: string };
+type AuthScreenSearchParams = {
+  intent?: string;
+  service?: string;
+  next?: string;
+};
+const AUTH_INTENT_SESSION_KEY = "fintax.pending_intent";
 
 const loginSchema = z.object({ email: z.string().email(), password: z.string().min(8) });
 const registerSchema = z
@@ -123,6 +131,57 @@ const extraCopy = {
 function uiText(locale: string) {
   return extraCopy[(["en", "es", "pl", "ro"].includes(locale) ? locale : "en") as keyof typeof extraCopy];
 }
+function normalizeIntentPath(intent?: string | null, service?: string | null) {
+  const resolvedIntent: AuthIntent | null = intent === "benefits" || intent === "tax-return" ? intent : null;
+  if (!resolvedIntent) return "/app";
+  const base = resolvedIntent === "benefits" ? "/benefits" : "/tax-return";
+  if (!service) return base;
+  const params = new URLSearchParams({ service });
+  return `${base}?${params.toString()}`;
+}
+function readPendingIntent(searchParams: URLSearchParams | AuthScreenSearchParams): PendingAuthIntent | null {
+  const get = (key: keyof AuthScreenSearchParams) =>
+    searchParams instanceof URLSearchParams ? searchParams.get(key) : searchParams[key] ?? null;
+  const intent = get("intent");
+  const service = get("service");
+  const next = get("next");
+  if (next && next.startsWith("/")) return { intent: "tax-return", next, service: undefined };
+  if (intent === "tax-return" || intent === "benefits") {
+    return { intent, service: service ?? undefined, next: normalizeIntentPath(intent, service) };
+  }
+  return null;
+}
+function getStoredPendingIntent(): PendingAuthIntent | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(AUTH_INTENT_SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PendingAuthIntent>;
+    if (!parsed.next || typeof parsed.next !== "string" || !parsed.next.startsWith("/")) return null;
+    return {
+      intent: parsed.intent === "benefits" ? "benefits" : "tax-return",
+      service: typeof parsed.service === "string" ? parsed.service : undefined,
+      next: parsed.next,
+    };
+  } catch {
+    return null;
+  }
+}
+function storePendingIntent(pending: PendingAuthIntent | null) {
+  if (typeof window === "undefined") return;
+  if (!pending) {
+    window.sessionStorage.removeItem(AUTH_INTENT_SESSION_KEY);
+    return;
+  }
+  window.sessionStorage.setItem(AUTH_INTENT_SESSION_KEY, JSON.stringify(pending));
+}
+function resolveAuthSuccessPath(searchParams: URLSearchParams | AuthScreenSearchParams) {
+  return readPendingIntent(searchParams)?.next ?? getStoredPendingIntent()?.next ?? "/app";
+}
+function withLocalePrefix(path: string, locale: AppLocale) {
+  if (path.startsWith(`/${locale}/`)) return path;
+  return `/${locale}${path}`;
+}
 function panelAnim(delay: number): React.CSSProperties {
   return { animation: "fadeUp 560ms cubic-bezier(.22,.61,.36,1) both", animationDelay: `${delay}ms` };
 }
@@ -144,7 +203,7 @@ function LoadingLabel({ loading, label }: { loading: boolean; label: string }) {
   return <>{loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}{loading ? `${label}...` : label}</>;
 }
 
-export function AuthScreen() {
+export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?: AuthScreenSearchParams }) {
   const router = useRouter();
   const locale = useLocale() as AppLocale;
   const local = uiText(locale);
@@ -159,6 +218,11 @@ export function AuthScreen() {
   const [serverError, setServerError] = React.useState<string | null>(null);
   const [forgotInfo, setForgotInfo] = React.useState<string | null>(null);
   const [isAppleLoading, setIsAppleLoading] = React.useState(false);
+  const pendingIntent = readPendingIntent(initialSearchParams);
+
+  React.useEffect(() => {
+    storePendingIntent(pendingIntent);
+  }, [pendingIntent]);
 
   const loginForm = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: "", password: "" } });
   const registerForm = useForm<RegisterValues>({
@@ -176,7 +240,7 @@ export function AuthScreen() {
     if (!supabase) return setServerError("Supabase is not configured in this environment.");
     const { error } = await supabase.auth.signInWithPassword({ email: values.email, password: values.password });
     if (error) return setServerError(error.message);
-    router.push("/app");
+    router.push(resolveAuthSuccessPath(initialSearchParams));
   };
 
   const onRegisterSubmit = async (values: RegisterValues) => {
@@ -185,16 +249,24 @@ export function AuthScreen() {
     const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
-      options: { data: { full_name: values.fullName }, emailRedirectTo: `${window.location.origin}/en/auth/callback` },
+      options: {
+        data: { full_name: values.fullName },
+        emailRedirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(withLocalePrefix(resolveAuthSuccessPath(initialSearchParams), locale))}`,
+      },
     });
     if (error) return setServerError(error.message);
-    router.push("/onboarding");
+    const nextPath = resolveAuthSuccessPath(initialSearchParams);
+    router.push(nextPath === "/app" ? "/onboarding" : `/onboarding?next=${encodeURIComponent(nextPath)}`);
   };
 
   const onGoogleLogin = async () => {
     setServerError(null);
     if (!supabase) return setServerError("Supabase is not configured in this environment.");
-    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/en/auth/callback` } });
+    const nextPath = resolveAuthSuccessPath(initialSearchParams);
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(withLocalePrefix(nextPath, locale))}` },
+    });
   };
 
   const onAppleClick = async () => {
@@ -381,7 +453,7 @@ export function AuthScreen() {
                     <div className="rounded-[var(--radius-md)] border border-border/40 bg-surface2/35 p-3">
                       <label htmlFor="reg-terms" className="flex items-start gap-3 text-sm text-secondary">
                         <input id="reg-terms" type="checkbox" {...registerForm.register("terms")} className="mt-0.5 h-4 w-4 rounded border-border/70 bg-surface2/70 accent-[rgb(var(--accent-green))]" />
-                        <span className="leading-6">{t("form.termsLabel")} <a href="#" className="text-copper underline underline-offset-4">{t("form.termsLink")}</a></span>
+                        <span className="leading-6">{t("form.termsLabel")} <Link href="/legal/terms" className="text-copper underline underline-offset-4">{t("form.termsLink")}</Link></span>
                       </label>
                       {registerForm.formState.errors.terms ? <p className="mt-2 text-xs text-error">{String(registerForm.formState.errors.terms.message)}</p> : null}
                     </div>

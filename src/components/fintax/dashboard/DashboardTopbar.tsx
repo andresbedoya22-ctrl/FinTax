@@ -1,11 +1,12 @@
 "use client";
 
-import { BellDot, ChevronDown, LayoutGrid, Menu } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { ChevronDown, Menu } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 import { DashboardNotifications } from "@/components/fintax/dashboard/DashboardNotifications";
 import { Badge, Button } from "@/components/ui";
+import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 
 export interface DashboardTopbarProps {
   onOpenSidebar: () => void;
@@ -13,6 +14,16 @@ export interface DashboardTopbarProps {
 
 export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
   const t = useTranslations("Dashboard.topbar");
+  const locale = useLocale();
+  const { profile } = useCurrentProfile();
+  const fallbackName = locale === "nl" ? "FinTax klant" : locale === "es" ? "Cliente FinTax" : locale === "pl" ? "Klient FinTax" : locale === "ro" ? "Client FinTax" : "FinTax client";
+  const displayName = (profile?.full_name || "").trim() || fallbackName;
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("") || "FT";
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/35 bg-bg/70 px-4 py-3 backdrop-blur-xl sm:px-6 lg:px-8">
@@ -33,27 +44,8 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
           <p className="hidden text-xs uppercase tracking-[0.14em] text-muted sm:block">Authenticated workspace</p>
         </div>
 
-        <button
-          type="button"
-          className="ml-1 hidden items-center gap-2 rounded-xl border border-border/40 bg-surface/45 px-3 py-2 text-sm text-secondary transition-all hover:border-copper/25 hover:text-text sm:flex"
-        >
-          <LayoutGrid className="size-4 text-copper" aria-hidden="true" />
-          {t("currentCase")}
-          <ChevronDown className="size-4 text-muted" aria-hidden="true" />
-        </button>
-
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <DashboardNotifications />
-
-          <Button
-            type="button"
-            size="icon"
-            variant="secondary"
-            className="hidden sm:inline-flex"
-            aria-label={t("alerts")}
-          >
-            <BellDot className="size-4" aria-hidden="true" />
-          </Button>
 
           <LanguageSwitcher compact />
 
@@ -62,15 +54,15 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
             className="focus-ring hidden items-center gap-2 rounded-xl border border-border/40 bg-surface/45 px-2.5 py-2 text-left sm:flex"
             aria-label="Open profile menu"
           >
-            <div className="grid h-7 w-7 place-items-center rounded-lg border border-green/20 bg-green/10 text-xs font-bold text-green">FT</div>
+            <div className="grid h-7 w-7 place-items-center rounded-lg border border-green/20 bg-green/10 text-xs font-bold text-green">{initials}</div>
             <div className="hidden md:block">
-              <p className="text-xs font-medium text-text">FinTax User</p>
-              <p className="text-[11px] text-muted">Profile menu</p>
+              <p className="text-xs font-medium text-text">{displayName}</p>
+              <p className="text-[11px] text-muted">{profile?.role === "admin" ? "Admin" : "Account"}</p>
             </div>
             <ChevronDown className="h-4 w-4 text-muted" />
           </button>
           <Badge variant="neutral" className="sm:hidden">
-            FT
+            {initials}
           </Badge>
         </div>
       </div>

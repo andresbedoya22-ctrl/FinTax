@@ -3,19 +3,33 @@
 import { ArrowRight, CheckCircle2, ChevronRight, Circle, Clock3, FolderCheck, Sparkles } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import * as React from "react";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Stepper } from "@/components/ui";
 
-const chartBars = [35, 45, 52, 61, 58, 70, 85];
+const estimateProgress = [0.38, 0.52, 0.61, 0.68, 0.74, 0.83, 1];
 
 export function DashboardOverview() {
   const t = useTranslations("Dashboard.overview");
   const reduceMotion = useReducedMotion();
+  const [chartReady, setChartReady] = React.useState(false);
   const checklistItems = t.raw("checklistItems") as Array<{ label: string; done: boolean }>;
   const caseRows = t.raw("caseRows") as Array<{ label: string; amount: string }>;
   const checklistProgress = Math.round((checklistItems.filter((i) => i.done).length / checklistItems.length) * 100);
+  const refundEstimateBase = Number.parseInt(String(t("refundAmount")).replace(/[^\d]/g, ""), 10) || 1250;
+  const estimateSeries = estimateProgress.map((ratio, index) => ({
+    stage: ["Intake", "Docs", "Review", "Checks", "Draft", "Confirm", "Estimate"][index] ?? `S${index + 1}`,
+    amount: Math.round(refundEstimateBase * ratio),
+  }));
+  const listContainerVariants = reduceMotion ? undefined : { hidden: {}, show: { transition: { staggerChildren: 0.04 } } };
+  const listItemVariants = reduceMotion ? undefined : { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
+
+  React.useEffect(() => {
+    setChartReady(true);
+  }, []);
 
   return (
     <section className="space-y-6">
@@ -116,14 +130,19 @@ export function DashboardOverview() {
                 <div className="h-full rounded-full bg-gradient-to-r from-green to-copper" style={{ width: `${checklistProgress}%` }} />
               </div>
               <p className="mt-2 text-right text-sm font-semibold text-text">{checklistProgress}%</p>
-              <ul className="mt-4 space-y-2">
+              <motion.ul
+                className="mt-4 space-y-2"
+                initial={reduceMotion ? false : "hidden"}
+                animate={reduceMotion ? undefined : "show"}
+                variants={listContainerVariants}
+              >
                 {checklistItems.map((item) => (
-                  <li key={item.label} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface2/25 px-3 py-2.5">
+                  <motion.li key={item.label} variants={listItemVariants} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface2/25 px-3 py-2.5">
                     {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
                     <span className={cn("text-sm", item.done ? "text-text" : "text-secondary")}>{item.label}</span>
-                  </li>
+                  </motion.li>
                 ))}
-              </ul>
+              </motion.ul>
               <Link href="/tax-return" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-copper hover:text-text">
                 {t("progressLabel")}
                 <ChevronRight className="h-4 w-4" />
@@ -139,15 +158,61 @@ export function DashboardOverview() {
             <CardContent>
               <p className="mb-4 font-heading text-4xl tracking-[-0.03em] text-green">EUR {t("refundAmount")}</p>
               <div className="rounded-xl border border-border/30 bg-surface/35 p-4">
-                <div className="flex h-24 gap-1.5">
-                  {chartBars.map((bar, index) => (
-                    <div key={`bar-${index}`} className="flex flex-1 items-end">
-                      <div
-                        className={cn("w-full rounded-t-sm", index === chartBars.length - 1 ? "bg-copper" : "bg-white/15")}
-                        style={{ height: `${bar}%` }}
-                      />
+                <div className="mb-3 flex items-center justify-between">
+                  <Badge variant="copper">Estimate</Badge>
+                  <span className="text-xs text-muted">Deterministic projection from current case summary</span>
+                </div>
+                <div className="h-32">
+                  {chartReady ? (
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={128}>
+                      <AreaChart data={estimateSeries} margin={{ top: 6, right: 4, left: -18, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="refundArea" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="rgba(195,145,91,0.55)" />
+                            <stop offset="55%" stopColor="rgba(109,210,149,0.22)" />
+                            <stop offset="100%" stopColor="rgba(109,210,149,0.02)" />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
+                        <XAxis
+                          dataKey="stage"
+                          tick={{ fill: "rgba(228,235,244,0.72)", fontSize: 11 }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <Tooltip
+                          cursor={{ stroke: "rgba(195,145,91,0.3)" }}
+                          contentStyle={{
+                            background: "rgba(8,13,22,0.92)",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            borderRadius: 12,
+                            color: "#e8edf4",
+                          }}
+                          formatter={(value: number | string | undefined) => [`EUR ${typeof value === "number" ? value : Number(value ?? 0)}`, "Estimate"]}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="amount"
+                          stroke="rgba(195,145,91,0.92)"
+                          strokeWidth={2}
+                          fill="url(#refundArea)"
+                          dot={{ r: 2.5, fill: "rgba(109,210,149,0.95)", strokeWidth: 0 }}
+                          activeDot={{ r: 4, fill: "rgba(195,145,91,1)" }}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="grid h-full grid-cols-7 items-end gap-1.5" aria-hidden="true">
+                      {estimateSeries.map((point, index) => (
+                        <div key={point.stage} className="flex h-full items-end">
+                          <div
+                            className={cn("w-full rounded-t-sm", index === estimateSeries.length - 1 ? "bg-copper/70" : "bg-white/12")}
+                            style={{ height: `${Math.max(12, Math.round((point.amount / refundEstimateBase) * 100))}%` }}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
                 <p className="mt-3 text-xs text-muted">{t("chartNote")}</p>
               </div>

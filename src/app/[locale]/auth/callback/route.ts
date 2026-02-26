@@ -9,7 +9,11 @@ export async function GET(
   const { locale } = await params;
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? `/${locale}/app`;
+  const requestedNext = searchParams.get("next");
+  const next =
+    requestedNext && requestedNext.startsWith(`/${locale}/`)
+      ? requestedNext
+      : `/${locale}/app`;
 
   if (code) {
     const cookieStore = await cookies();
@@ -45,7 +49,9 @@ export async function GET(
           .single();
 
         if (!profile?.onboarding_completed) {
-          return NextResponse.redirect(new URL(`/${locale}/onboarding`, request.url));
+          const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
+          if (next !== `/${locale}/app`) onboardingUrl.searchParams.set("next", next);
+          return NextResponse.redirect(onboardingUrl);
         }
       }
 
