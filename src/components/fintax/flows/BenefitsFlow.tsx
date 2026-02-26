@@ -10,6 +10,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
+import { Badge, Skeleton, Stepper } from "@/components/ui";
 import { calculateEligibility, type BenefitsWizardInput } from "@/lib/utils/eligibility-calculator";
 import { loadWizardSnapshot, persistWizardSnapshot } from "@/lib/wizards/persistence";
 
@@ -100,23 +101,40 @@ export function BenefitsFlow() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-white">{t("heroTitle")}</h2>
-        <p className="mt-1 text-sm text-white/60">{t("heroSubtitle")}</p>
+        <p className="text-xs uppercase tracking-[0.16em] text-copper">Benefits flow</p>
+        <h2 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">{t("heroTitle")}</h2>
+        <p className="mt-2 text-sm text-secondary">{t("heroSubtitle")}</p>
       </div>
 
       <Card>
         <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-white">{t("wizardTitle")}</h3>
-            <p className="text-sm text-white/60">{t(`steps.${steps[step]}.title`)}</p>
+            <h3 className="font-heading text-xl font-semibold text-text">{t("wizardTitle")}</h3>
+            <p className="text-sm text-secondary">{t(`steps.${steps[step]}.title`)}</p>
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {steps.map((key, idx) => (
-              <span key={key} className={idx <= step ? badgeOn : badgeOff}>{idx + 1}. {t(`steps.${key}.short`)}</span>
-            ))}
+          <div className="min-w-0 sm:max-w-[52%]">
+            <Stepper
+              steps={steps.map((key, idx) => ({ id: key, label: `${idx + 1}. ${t(`steps.${key}.short`)}` }))}
+              currentStep={step + 1}
+            />
           </div>
         </CardHeader>
         <CardBody>
+          <div className="mb-5 grid gap-3 md:grid-cols-[1fr_auto]">
+            <div className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">
+              <p className="text-xs uppercase tracking-[0.14em] text-muted">Eligibility intake progress</p>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+                <div className="h-full rounded-full bg-gradient-to-r from-copper to-green" style={{ width: `${Math.round(((step + 1) / steps.length) * 100)}%` }} />
+              </div>
+              <p className="mt-2 text-xs text-secondary">{Math.round(((step + 1) / steps.length) * 100)}% complete</p>
+            </div>
+            <div className="hidden w-44 rounded-xl border border-border/35 bg-surface2/20 p-3 md:block">
+              <p className="mb-2 text-xs uppercase tracking-[0.14em] text-muted">Rules load</p>
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="mt-2 h-3 w-5/6" />
+              <Skeleton className="mt-2 h-3 w-3/4" />
+            </div>
+          </div>
           <form className="space-y-5" onSubmit={form.handleSubmit(() => undefined)} noValidate>
             {step === 0 && (
               <div className="grid gap-4 md:grid-cols-3">
@@ -181,12 +199,12 @@ export function BenefitsFlow() {
 
             {step === 6 && (
               <div className="space-y-4">
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <div className="rounded-xl border border-border/35 bg-surface2/25 p-4">
                   <div className="flex items-center gap-2">
                     <Sparkles className="size-4 text-teal" />
-                    <p className="text-sm font-semibold text-white">{t("results.totalLabel")}: EUR {results.totalEstimatedAnnualAmount.toFixed(2)}</p>
+                    <p className="text-sm font-semibold text-text">{t("results.totalLabel")}: EUR {results.totalEstimatedAnnualAmount.toFixed(2)}</p>
                   </div>
-                  <p className="mt-2 text-sm text-white/60">{t("results.copy")}</p>
+                  <p className="mt-2 text-sm text-secondary">{t("results.copy")}</p>
                 </div>
 
                 <div className="grid gap-3 md:grid-cols-2">
@@ -200,19 +218,19 @@ export function BenefitsFlow() {
                       type="button"
                       key={key}
                       onClick={() => result.eligible && toggleBundle(key)}
-                      className={`rounded-xl border p-4 text-left transition-colors ${result.eligible ? "border-green/30 bg-green/10 hover:bg-green/15" : "border-white/10 bg-white/5"}`}
+                      className={`rounded-xl border p-4 text-left transition-colors ${result.eligible ? "border-green/30 bg-green/8 hover:bg-green/12" : "border-border/35 bg-surface2/20"}`}
                     >
                       <div className="flex items-center justify-between gap-3">
-                        <p className="font-medium text-white">{t(`results.cards.${key}.title`)}</p>
+                        <p className="font-medium text-text">{t(`results.cards.${key}.title`)}</p>
                         {result.eligible ? <CheckCircle2 className="size-4 text-green" /> : <CircleX className="size-4 text-error" />}
                       </div>
-                      <p className="mt-1 text-sm text-white/60">
+                      <p className="mt-1 text-sm text-secondary">
                         {result.eligible ? t("results.eligible") : t("results.notEligible")}
                       </p>
-                      <p className="mt-2 text-lg font-semibold text-green">EUR {result.estimatedAnnualAmount.toFixed(2)}</p>
-                      <p className="mt-2 text-xs text-white/50">{t("results.applyFee")}</p>
+                      <p className="mt-2 font-heading text-xl font-semibold text-green">EUR {result.estimatedAnnualAmount.toFixed(2)}</p>
+                      <p className="mt-2 text-xs text-muted">{t("results.applyFee")}</p>
                       {result.eligible && (
-                        <p className="mt-1 text-xs text-teal">
+                        <p className="mt-1 text-xs text-copper">
                           {bundleSelected.includes(key) ? t("results.selected") : t("results.select")}
                         </p>
                       )}
@@ -220,15 +238,18 @@ export function BenefitsFlow() {
                   ))}
                 </div>
 
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm text-white/80">{t("bundle.label")}: {bundleSelected.length}</p>
-                  <p className="mt-1 text-lg font-semibold text-white">EUR {bundlePrice.toFixed(2)}</p>
+                <div className="rounded-xl border border-border/35 bg-surface2/25 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-secondary">{t("bundle.label")}: {bundleSelected.length}</p>
+                    <Badge variant="copper">Bundle</Badge>
+                  </div>
+                  <p className="mt-1 font-heading text-2xl font-semibold text-text">EUR {bundlePrice.toFixed(2)}</p>
                   <Button type="button" className="mt-3">{t("bundle.checkout")}</Button>
                 </div>
               </div>
             )}
 
-            <div className="flex items-center justify-between border-t border-white/10 pt-4">
+            <div className="flex items-center justify-between border-t border-border/35 pt-4">
               <Button type="button" variant="ghost" onClick={prev} disabled={step === 0} leftIcon={<ChevronLeft className="size-4" />}>
                 {t("back")}
               </Button>
@@ -246,7 +267,7 @@ export function BenefitsFlow() {
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <label className="block space-y-1">
-      <span className="text-xs font-medium text-white/70">{label}</span>
+      <span className="text-xs font-medium uppercase tracking-[0.12em] text-muted">{label}</span>
       {children}
       {error ? <span className="text-xs text-error">{error}</span> : null}
     </label>
@@ -258,7 +279,7 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`flex h-11 items-center justify-between rounded-xl border px-3 text-sm ${checked ? "border-green/40 bg-green/10 text-white" : "border-white/10 bg-white/5 text-white/70"}`}
+      className={`flex h-11 items-center justify-between rounded-xl border px-3 text-sm ${checked ? "border-green/40 bg-green/10 text-text" : "border-border/35 bg-surface2/25 text-secondary"}`}
     >
       <span>{label}</span>
       <span className={`h-2.5 w-2.5 rounded-full ${checked ? "bg-green" : "bg-white/30"}`} />
@@ -268,13 +289,11 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
 
 function ResultHint({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-      <p className="text-xs text-white/50">{label}</p>
-      <p className="text-sm font-medium text-white">{value}</p>
+    <div className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3">
+      <p className="text-xs uppercase tracking-[0.12em] text-muted">{label}</p>
+      <p className="text-sm font-medium text-text">{value}</p>
     </div>
   );
 }
 
-const inputClass = "h-11 w-full rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-white outline-none focus:border-green/40";
-const badgeOn = "rounded-full bg-green/15 px-2 py-1 text-xs font-medium text-green";
-const badgeOff = "rounded-full bg-white/5 px-2 py-1 text-xs text-white/50";
+const inputClass = "h-11 w-full rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text outline-none focus:border-copper/40";

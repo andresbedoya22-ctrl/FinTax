@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Activity, CheckCircle2, FileUp, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -6,6 +6,7 @@ import * as React from "react";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
+import { Badge, Skeleton, Stepper } from "@/components/ui";
 import { getMockCase, mockChecklistByCase, mockDocumentsByCase } from "@/lib/mock-data";
 import type { Document } from "@/types/database";
 
@@ -21,13 +22,14 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   if (!caseItem) {
     return (
       <Card>
-        <CardBody className="text-sm text-white/70">{t("notFound")}</CardBody>
+        <CardBody className="text-sm text-secondary">{t("notFound")}</CardBody>
       </Card>
     );
   }
 
   const checklist = mockChecklistByCase[caseId] ?? [];
   const tabs: TabKey[] = ["overview", "documents", "authorization", "activity"];
+  const completed = checklist.filter((x) => x.is_completed).length;
 
   const onFilesSelected = (files: FileList | null) => {
     if (!files) return;
@@ -55,15 +57,25 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-white">{caseItem.display_name ?? caseItem.id}</h2>
-            <p className="mt-1 text-sm text-white/60">
-              {t("status")}: {caseItem.status} � {t("deadline")}: {caseItem.deadline ?? "-"}
-            </p>
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              <Badge variant="copper">{caseItem.case_type}</Badge>
+              <Badge variant="neutral">{caseItem.status}</Badge>
+            </div>
+            <h2 className="font-heading text-2xl font-semibold text-text">{caseItem.display_name ?? caseItem.id}</h2>
+            <p className="mt-1 text-sm text-secondary">{t("status")}: {caseItem.status} · {t("deadline")}: {caseItem.deadline ?? "-"}</p>
           </div>
-          <div className="rounded-full bg-green/15 px-3 py-1 text-xs font-medium text-green">
-            {caseItem.case_type}
+          <div className="w-full max-w-md">
+            <Stepper
+              steps={[
+                { id: "a", label: "Created" },
+                { id: "b", label: "Documents" },
+                { id: "c", label: "Authorization" },
+                { id: "d", label: "Review" },
+              ]}
+              currentStep={completed > 0 ? 2 : 1}
+            />
           </div>
         </CardHeader>
       </Card>
@@ -74,7 +86,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             type="button"
             key={tabKey}
             onClick={() => setTab(tabKey)}
-            className={`rounded-xl border px-3 py-2 text-sm ${tab === tabKey ? "border-green/40 bg-green/10 text-white" : "border-white/10 bg-white/5 text-white/60"}`}
+            className={`rounded-xl border px-3 py-2 text-sm ${tab === tabKey ? "border-copper/30 bg-copper/8 text-text" : "border-border/35 bg-surface2/20 text-secondary"}`}
           >
             {t(`tabs.${tabKey}`)}
           </button>
@@ -86,10 +98,10 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           <CardBody className="grid gap-4 lg:grid-cols-3">
             <InfoTile label={t("overview.estimatedRefund")} value={caseItem.estimated_refund ? `EUR ${caseItem.estimated_refund}` : "-"} />
             <InfoTile label={t("overview.machtigingStatus")} value={caseItem.machtiging_status} />
-            <InfoTile label={t("overview.progress")} value={`${checklist.filter((x) => x.is_completed).length}/${checklist.length}`} />
-            <div className="lg:col-span-3 rounded-xl border border-white/10 bg-white/5 p-4">
-              <p className="mb-2 text-sm font-medium text-white">{t("overview.timeline")}</p>
-              <ul className="space-y-2 text-sm text-white/70">
+            <InfoTile label={t("overview.progress")} value={`${completed}/${checklist.length}`} />
+            <div className="lg:col-span-3 rounded-xl border border-border/35 bg-surface2/20 p-4">
+              <p className="mb-2 text-sm font-medium text-text">{t("overview.timeline")}</p>
+              <ul className="space-y-2 text-sm text-secondary">
                 <li>{t("overview.timelineItems.intake")}</li>
                 <li>{t("overview.timelineItems.review")}</li>
                 <li>{t("overview.timelineItems.submission")}</li>
@@ -102,31 +114,30 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
       {tab === "documents" && (
         <Card>
           <CardHeader>
-            <h3 className="text-base font-semibold text-white">{t("documents.title")}</h3>
-            <p className="text-sm text-white/60">{t("documents.supported")}</p>
+            <h3 className="text-base font-semibold text-text">{t("documents.title")}</h3>
+            <p className="text-sm text-secondary">{t("documents.supported")}</p>
           </CardHeader>
           <CardBody className="space-y-4">
-            <label className="block rounded-xl border border-dashed border-white/20 bg-white/5 p-6 text-center text-sm text-white/70">
+            <label className="block rounded-xl border border-dashed border-border/40 bg-surface2/20 p-6 text-center text-sm text-secondary">
               <FileUp className="mx-auto mb-2 size-5 text-teal" />
               {t("documents.uploadCta")}
-              <input
-                type="file"
-                className="hidden"
-                multiple
-                accept=".pdf,.jpg,.jpeg,.png"
-                onChange={(event) => onFilesSelected(event.target.files)}
-              />
+              <input type="file" className="hidden" multiple accept=".pdf,.jpg,.jpeg,.png" onChange={(event) => onFilesSelected(event.target.files)} />
             </label>
+            {docs.length === 0 ? (
+              <div className="space-y-2 rounded-xl border border-border/35 bg-surface2/15 p-4">
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-4/5" />
+              </div>
+            ) : null}
             <ul className="space-y-2">
               {docs.map((doc) => (
-                <li key={doc.id} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+                <li key={doc.id} className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3 text-sm">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-white">{doc.file_name}</span>
-                    <span className="text-xs text-white/60">{doc.status}</span>
+                    <span className="text-text">{doc.file_name}</span>
+                    <span className="text-xs text-secondary">{doc.status}</span>
                   </div>
-                  <p className="mt-1 text-xs text-white/50">
-                    {doc.mime_type ?? "unknown"} ? {(((doc.file_size ?? 0) / 1024)).toFixed(0)} KB
-                  </p>
+                  <p className="mt-1 text-xs text-muted">{doc.mime_type ?? "unknown"} · {(((doc.file_size ?? 0) / 1024)).toFixed(0)} KB</p>
                 </li>
               ))}
             </ul>
@@ -137,17 +148,17 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
       {tab === "authorization" && (
         <Card>
           <CardBody className="space-y-4">
-            <div className="flex items-center gap-2 text-white">
+            <div className="flex items-center gap-2 text-text">
               <ShieldCheck className="size-4 text-green" />
               <h3 className="text-base font-semibold">{t("authorization.title")}</h3>
             </div>
-            <p className="text-sm text-white/70">{t("authorization.copy")}</p>
+            <p className="text-sm text-secondary">{t("authorization.copy")}</p>
             <div className="grid gap-3 md:grid-cols-[1fr_auto]">
               <input
                 value={machtigingCode}
                 onChange={(event) => setMachtigingCode(event.target.value)}
                 placeholder={t("authorization.placeholder")}
-                className="h-11 rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-white outline-none focus:border-green/40"
+                className="h-11 rounded-xl border border-border/35 bg-surface2/20 px-3 text-sm text-text outline-none focus:border-copper/40"
               />
               <Button type="button">{t("authorization.submit")}</Button>
             </div>
@@ -158,15 +169,15 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
       {tab === "activity" && (
         <Card>
           <CardBody>
-            <div className="mb-4 flex items-center gap-2 text-white">
+            <div className="mb-4 flex items-center gap-2 text-text">
               <Activity className="size-4 text-teal" />
               <h3 className="text-base font-semibold">{t("activity.title")}</h3>
             </div>
-            <ul className="space-y-3 text-sm text-white/70">
-              <li className="rounded-xl border border-white/10 bg-white/5 p-3">{t("activity.items.created")}</li>
-              <li className="rounded-xl border border-white/10 bg-white/5 p-3">{t("activity.items.payment")}</li>
-              <li className="rounded-xl border border-white/10 bg-white/5 p-3">{t("activity.items.review")}</li>
-              <li className="rounded-xl border border-white/10 bg-white/5 p-3">{t("activity.items.pending")}</li>
+            <ul className="space-y-3 text-sm text-secondary">
+              <li className="rounded-xl border border-border/35 bg-surface2/20 p-3">{t("activity.items.created")}</li>
+              <li className="rounded-xl border border-border/35 bg-surface2/20 p-3">{t("activity.items.payment")}</li>
+              <li className="rounded-xl border border-border/35 bg-surface2/20 p-3">{t("activity.items.review")}</li>
+              <li className="rounded-xl border border-border/35 bg-surface2/20 p-3">{t("activity.items.pending")}</li>
             </ul>
           </CardBody>
         </Card>
@@ -174,18 +185,15 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
 
       <Card>
         <CardHeader>
-          <h3 className="text-base font-semibold text-white">{t("checklist.title")}</h3>
+          <h3 className="text-base font-semibold text-text">{t("checklist.title")}</h3>
         </CardHeader>
         <CardBody>
           <ul className="space-y-2">
-            {checklist.map((item) => (
-              <li key={item.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
-                {item.is_completed ? (
-                  <CheckCircle2 className="size-4 text-green" />
-                ) : (
-                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-white/30" />
-                )}
-                <span className="text-white/80">{item.label}</span>
+            {checklist.map((item, idx) => (
+              <li key={item.id} className="flex items-center gap-3 rounded-xl border border-border/35 bg-surface2/20 px-4 py-3 text-sm">
+                {item.is_completed ? <CheckCircle2 className="size-4 text-green" /> : <span className="inline-block h-2.5 w-2.5 rounded-full bg-white/30" />}
+                <span className="text-secondary">{item.label}</span>
+                <span className="ml-auto text-xs text-muted">{idx + 1}</span>
               </li>
             ))}
           </ul>
@@ -197,9 +205,10 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
 
 function InfoTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-      <p className="text-xs text-white/50">{label}</p>
-      <p className="mt-1 text-base font-semibold text-white">{value}</p>
+    <div className="rounded-xl border border-border/35 bg-surface2/20 p-4">
+      <p className="text-xs uppercase tracking-[0.12em] text-muted">{label}</p>
+      <p className="mt-1 text-base font-semibold text-text">{value}</p>
     </div>
   );
 }
+

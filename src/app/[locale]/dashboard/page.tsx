@@ -1,5 +1,9 @@
-import { DashboardOverview } from "@/components/fintax/dashboard";
+import { DashboardOverview, DashboardShell } from "@/components/fintax/dashboard";
 
 export default function DashboardPage() {
-  return <DashboardOverview />;
+  return (
+    <DashboardShell>
+      <DashboardOverview />
+    </DashboardShell>
+  );
 }

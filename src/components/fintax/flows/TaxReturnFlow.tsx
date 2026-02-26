@@ -10,6 +10,8 @@ import { z } from "zod";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
+import { Badge, Skeleton, Stepper } from "@/components/ui";
+import { cn } from "@/lib/cn";
 import { loadWizardSnapshot, persistWizardSnapshot } from "@/lib/wizards/persistence";
 
 const taxWizardSchema = z.object({
@@ -136,8 +138,9 @@ export function TaxReturnFlow() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-white">{t("catalogTitle")}</h2>
-        <p className="mt-1 text-sm text-white/60">{t("catalogSubtitle")}</p>
+        <p className="text-xs uppercase tracking-[0.16em] text-copper">Tax return flow</p>
+        <h2 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">{t("catalogTitle")}</h2>
+        <p className="mt-2 text-sm text-secondary">{t("catalogSubtitle")}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -145,13 +148,17 @@ export function TaxReturnFlow() {
           const isActive = selectedService === service.id;
           const hasSavedProgress = typeof window !== "undefined" && window.localStorage.getItem(`fintax-tax-${service.id}`);
           return (
-            <Card key={service.id} className={isActive ? "border-green/60" : undefined}>
+            <Card key={service.id} className={cn("rounded-[var(--radius-lg)] border border-border/35 bg-surface/55", isActive ? "border-copper/35 bg-copper/6" : "")}>
               <CardHeader className="space-y-1">
-                <h3 className="text-sm font-semibold text-white">{service.title}</h3>
-                <p className="text-xs text-white/50">{service.description}</p>
+                <div className="mb-1 flex items-center justify-between gap-2">
+                  <Badge variant={isActive ? "copper" : "neutral"}>{service.id.replaceAll("_", " ")}</Badge>
+                  {hasSavedProgress ? <Badge variant="success">saved</Badge> : null}
+                </div>
+                <h3 className="text-sm font-semibold text-text">{service.title}</h3>
+                <p className="text-xs text-muted">{service.description}</p>
               </CardHeader>
               <CardBody>
-                <p className="text-2xl font-bold text-green">EUR {service.price}</p>
+                <p className="font-heading text-2xl font-bold text-green">EUR {service.price}</p>
                 <Button
                   type="button"
                   size="sm"
@@ -170,25 +177,36 @@ export function TaxReturnFlow() {
       <Card>
         <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-white">{t("wizardTitle")}</h3>
-            <p className="text-sm text-white/60">{t(`steps.${stepKeys[currentStep]}.title`)}</p>
+            <h3 className="font-heading text-xl font-semibold text-text">{t("wizardTitle")}</h3>
+            <p className="text-sm text-secondary">{t(`steps.${stepKeys[currentStep]}.title`)}</p>
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {stepKeys.map((step, index) => (
-              <span
-                key={step}
-                className={
-                  index <= currentStep
-                    ? "rounded-full bg-green/15 px-2 py-1 text-xs font-medium text-green"
-                    : "rounded-full bg-white/5 px-2 py-1 text-xs text-white/50"
-                }
-              >
-                {index + 1}. {t(`steps.${step}.short`) }
-              </span>
-            ))}
+          <div className="min-w-0 sm:max-w-[52%]">
+            <Stepper
+              steps={stepKeys.map((step, index) => ({
+                id: step,
+                label: `${index + 1}. ${t(`steps.${step}.short`)}`,
+              }))}
+              currentStep={currentStep + 1}
+              className="grid-cols-1"
+            />
           </div>
         </CardHeader>
         <CardBody>
+          <div className="mb-5 grid gap-3 md:grid-cols-[1fr_auto]">
+            <div className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">
+              <p className="text-xs uppercase tracking-[0.14em] text-muted">Progress</p>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+                <div className="h-full rounded-full bg-gradient-to-r from-green to-copper" style={{ width: `${Math.round(((currentStep + 1) / stepKeys.length) * 100)}%` }} />
+              </div>
+              <p className="mt-2 text-xs text-secondary">{Math.round(((currentStep + 1) / stepKeys.length) * 100)}% complete · {stepKeys.length - currentStep - 1} steps left</p>
+            </div>
+            <div className="hidden w-44 rounded-xl border border-border/35 bg-surface2/20 p-3 md:block">
+              <p className="mb-2 text-xs uppercase tracking-[0.14em] text-muted">Review queue</p>
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="mt-2 h-3 w-4/5" />
+              <Skeleton className="mt-2 h-3 w-3/5" />
+            </div>
+          </div>
           <form className="space-y-5" onSubmit={form.handleSubmit(() => undefined)} noValidate>
             {currentStep === 0 && (
               <div className="grid gap-4 md:grid-cols-2">
@@ -226,7 +244,7 @@ export function TaxReturnFlow() {
                 <Field label={t("fields.monthlyRent")} error={form.formState.errors.monthlyRent?.message}>
                   <input type="number" className={inputClass} {...form.register("monthlyRent", { valueAsNumber: true })} />
                 </Field>
-                <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
+                <label className="flex items-center gap-2 rounded-xl border border-border/35 bg-surface2/25 px-4 py-3 text-sm text-secondary">
                   <input type="checkbox" {...form.register("ownsHome")} />
                   {t("fields.ownsHome")}
                 </label>
@@ -263,8 +281,8 @@ export function TaxReturnFlow() {
                 <SummaryTile icon={FileCheck2} title={t("summary.estimate")} value={`EUR ${refund.toFixed(2)}`} />
                 <SummaryTile icon={Receipt} title={t("summary.serviceFee")} value={`EUR ${selectedPrice.toFixed(2)}`} />
                 <SummaryTile icon={Wallet} title={t("summary.netPotential")} value={`EUR ${Math.max(0, refund - selectedPrice).toFixed(2)}`} />
-                <div className="lg:col-span-3 rounded-xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm text-white/70">{t("summary.copy")}</p>
+                <div className="lg:col-span-3 rounded-xl border border-border/35 bg-surface2/25 p-4">
+                  <p className="text-sm text-secondary">{t("summary.copy")}</p>
                   <Button type="button" className="mt-4" onClick={() => setPaymentCompleted(true)}>
                     {paymentCompleted ? t("summary.paid") : t("summary.pay")}
                   </Button>
@@ -274,23 +292,23 @@ export function TaxReturnFlow() {
 
             {currentStep === 6 && (
               <div className="space-y-4">
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="mb-2 flex items-center gap-2 text-white">
+                <div className="rounded-xl border border-border/35 bg-surface2/25 p-4">
+                  <div className="mb-2 flex items-center gap-2 text-text">
                     <LockKeyhole className="size-4 text-teal" />
                     <h4 className="font-medium">{t("postPayment.machtigingTitle")}</h4>
                   </div>
-                  <p className="text-sm text-white/70">{t("postPayment.machtigingCopy")}</p>
+                  <p className="text-sm text-secondary">{t("postPayment.machtigingCopy")}</p>
                   <Field label={t("fields.machtigingCode")} error={form.formState.errors.machtigingCode?.message}>
                     <input className={`${inputClass} mt-2`} {...form.register("machtigingCode")} />
                   </Field>
                 </div>
 
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="mb-2 flex items-center gap-2 text-white">
+                <div className="rounded-xl border border-border/35 bg-surface2/25 p-4">
+                  <div className="mb-2 flex items-center gap-2 text-text">
                     <Landmark className="size-4 text-green" />
                     <h4 className="font-medium">{t("postPayment.checklistTitle")}</h4>
                   </div>
-                  <ul className="space-y-2 text-sm text-white/70">
+                  <ul className="space-y-2 text-sm text-secondary">
                     {(t.raw("postPayment.checklist") as string[]).map((item) => (
                       <li key={item} className="flex items-center gap-2">
                         <CheckCircle2 className="size-4 text-green" />
@@ -302,7 +320,7 @@ export function TaxReturnFlow() {
               </div>
             )}
 
-            <div className="flex items-center justify-between border-t border-white/10 pt-4">
+            <div className="flex items-center justify-between border-t border-border/35 pt-4">
               <Button type="button" variant="ghost" onClick={prevStep} disabled={currentStep === 0} leftIcon={<ChevronLeft className="size-4" />}>
                 {t("back")}
               </Button>
@@ -320,7 +338,7 @@ export function TaxReturnFlow() {
 function Field(props: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <label className="block space-y-1">
-      <span className="text-xs font-medium text-white/70">{props.label}</span>
+      <span className="text-xs font-medium uppercase tracking-[0.12em] text-muted">{props.label}</span>
       {props.children}
       {props.error ? <span className="text-xs text-error">{props.error}</span> : null}
     </label>
@@ -329,15 +347,15 @@ function Field(props: { label: string; error?: string; children: React.ReactNode
 
 function SummaryTile({ icon: Icon, title, value }: { icon: React.ComponentType<{ className?: string }>; title: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-teal">
+    <div className="rounded-xl border border-border/35 bg-surface2/25 p-4">
+      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/30 bg-surface/35 text-copper">
         <Icon className="size-4" />
       </div>
-      <p className="text-xs text-white/50">{title}</p>
-      <p className="text-lg font-semibold text-white">{value}</p>
+      <p className="text-xs uppercase tracking-[0.12em] text-muted">{title}</p>
+      <p className="font-heading text-xl font-semibold text-text">{value}</p>
     </div>
   );
 }
 
 const inputClass =
-  "h-11 w-full rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-white outline-none ring-0 placeholder:text-white/30 focus:border-green/40";
+  "h-11 w-full rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text outline-none ring-0 placeholder:text-muted focus:border-copper/40";

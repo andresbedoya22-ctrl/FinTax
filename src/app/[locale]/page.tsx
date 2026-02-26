@@ -1,15 +1,6 @@
 import type { Metadata } from "next";
 
-import { Footer, Navbar } from "@/components/fintax";
-import {
-  FaqSection,
-  HeroSection,
-  HowItWorksSection,
-  PricingSection,
-  ServicesSection,
-  TestimonialsSection,
-  WhyFinTaxSection,
-} from "@/components/fintax/landing";
+import { PremiumLandingPage } from "@/components/fintax/landing";
 
 export const metadata: Metadata = {
   title: "FinTax | Dutch taxes & benefits explained in your language",
@@ -21,32 +12,11 @@ export const metadata: Metadata = {
       "Multilingual Dutch tax support with fixed pricing, dashboard tracking, and human-reviewed filing.",
     type: "website",
     images: [
-      {
-        url: "/visuals/hero-dashboard.png",
-        width: 1200,
-        height: 860,
-        alt: "FinTax dashboard preview",
-      },
+      { url: "/visuals/app-mock.png", width: 1600, height: 1000, alt: "FinTax premium conversion landing preview" },
     ],
   },
 };
 
 export default function HomePage() {
-  return (
-    <div className="fintax-bg texture-grid texture-noise min-h-screen">
-      <div className="orb orb-1" aria-hidden="true" />
-      <div className="orb orb-2" aria-hidden="true" />
-      <Navbar />
-      <main>
-        <HeroSection />
-        <ServicesSection />
-        <HowItWorksSection />
-        <WhyFinTaxSection />
-        <TestimonialsSection />
-        <PricingSection />
-        <FaqSection />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <PremiumLandingPage />;
 }

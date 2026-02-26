@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
+import { Badge, Skeleton } from "@/components/ui";
 import { mockCases, mockServicePricing } from "@/lib/mock-data";
 import type { CaseStatus } from "@/types/database";
 
@@ -20,33 +21,34 @@ export function AdminScreen() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold text-white">{t("title")}</h2>
-        <p className="mt-1 text-sm text-white/60">{t("subtitle")}</p>
+        <p className="text-xs uppercase tracking-[0.16em] text-copper">Admin</p>
+        <h2 className="mt-2 font-heading text-3xl font-semibold tracking-[-0.03em] text-text">{t("title")}</h2>
+        <p className="mt-2 text-sm text-secondary">{t("subtitle")}</p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-4">
-        <Kpi title={t("kpi.activeCases")} value={String(cases.length)} />
-        <Kpi title={t("kpi.pendingPayment")} value={String(cases.filter((c) => c.status === "pending_payment").length)} />
-        <Kpi title={t("kpi.inReview")} value={String(cases.filter((c) => c.status === "in_review").length)} />
-        <Kpi title={t("kpi.completed")} value={String(cases.filter((c) => c.status === "completed").length)} />
+        <Kpi title={t("kpi.activeCases")} value={String(cases.length)} tone="neutral" />
+        <Kpi title={t("kpi.pendingPayment")} value={String(cases.filter((c) => c.status === "pending_payment").length)} tone="copper" />
+        <Kpi title={t("kpi.inReview")} value={String(cases.filter((c) => c.status === "in_review").length)} tone="neutral" />
+        <Kpi title={t("kpi.completed")} value={String(cases.filter((c) => c.status === "completed").length)} tone="success" />
       </div>
 
       <Card>
-        <CardHeader><h3 className="text-base font-semibold text-white">{t("sections.caseManagement")}</h3></CardHeader>
+        <CardHeader><h3 className="text-base font-semibold text-text">{t("sections.caseManagement")}</h3></CardHeader>
         <CardBody className="space-y-3">
           {cases.map((item) => (
-            <div key={item.id} className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div key={item.id} className="rounded-xl border border-border/35 bg-surface2/20 p-4">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <p className="font-medium text-white">{item.display_name}</p>
-                  <p className="text-xs text-white/50">{item.id} · {item.case_type}</p>
+                  <div className="mb-1 flex flex-wrap items-center gap-2">
+                    <Badge variant="neutral">{item.case_type}</Badge>
+                    <Badge variant="copper">{item.status}</Badge>
+                  </div>
+                  <p className="font-medium text-text">{item.display_name}</p>
+                  <p className="text-xs text-muted">{item.id}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <select
-                    className="h-10 rounded-xl border border-white/10 bg-[#0A1628] px-3 text-sm text-white"
-                    value={item.status}
-                    onChange={(e) => updateStatus(item.id, e.target.value as CaseStatus)}
-                  >
+                  <select className="h-10 rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text" value={item.status} onChange={(e) => updateStatus(item.id, e.target.value as CaseStatus)}>
                     {(["draft","pending_payment","paid","pending_authorization","authorized","in_review","pending_documents","submitted","completed","rejected"] as const).map((status) => (
                       <option key={status} value={status}>{status}</option>
                     ))}
@@ -59,7 +61,7 @@ export function AdminScreen() {
                   value={notes[item.id] ?? ""}
                   onChange={(e) => setNotes((prev) => ({ ...prev, [item.id]: e.target.value }))}
                   placeholder={t("placeholders.internalNote")}
-                  className="h-10 rounded-xl border border-white/10 bg-[#0A1628] px-3 text-sm text-white outline-none"
+                  className="h-10 rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text outline-none"
                 />
                 <Button type="button" size="sm" variant="secondary">{t("actions.assign")}</Button>
                 <Button type="button" size="sm">{t("actions.save")}</Button>
@@ -71,18 +73,23 @@ export function AdminScreen() {
 
       <div className="grid gap-4 xl:grid-cols-2">
         <Card>
-          <CardHeader><h3 className="text-base font-semibold text-white">{t("sections.users")}</h3></CardHeader>
-          <CardBody className="space-y-2 text-sm text-white/70">
-            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">demo@fintax.test · user</div>
-            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">ops@fintax.test · admin</div>
+          <CardHeader><h3 className="text-base font-semibold text-text">{t("sections.users")}</h3></CardHeader>
+          <CardBody className="space-y-2 text-sm text-secondary">
+            <div className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3">demo@fintax.test · user</div>
+            <div className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3">ops@fintax.test · admin</div>
+            <div className="rounded-xl border border-border/35 bg-surface2/15 p-3">
+              <p className="mb-2 text-xs uppercase tracking-[0.12em] text-muted">Queue placeholder</p>
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="mt-2 h-3 w-2/3" />
+            </div>
           </CardBody>
         </Card>
 
         <Card>
-          <CardHeader><h3 className="text-base font-semibold text-white">{t("sections.pricing")}</h3></CardHeader>
+          <CardHeader><h3 className="text-base font-semibold text-text">{t("sections.pricing")}</h3></CardHeader>
           <CardBody className="space-y-2">
             {mockServicePricing.map((price) => (
-              <div key={price.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
+              <div key={price.id} className="flex items-center justify-between rounded-xl border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
                 <span>{price.name}</span>
                 <span className="text-green">EUR {price.price.toFixed(2)}</span>
               </div>
@@ -94,13 +101,15 @@ export function AdminScreen() {
   );
 }
 
-function Kpi({ title, value }: { title: string; value: string }) {
+function Kpi({ title, value, tone }: { title: string; value: string; tone: "neutral" | "success" | "copper" }) {
+  const toneClass = tone === "success" ? "border-green/25 bg-green/8" : tone === "copper" ? "border-copper/25 bg-copper/8" : "border-border/35 bg-surface2/20";
   return (
     <Card>
-      <CardBody>
-        <p className="text-xs text-white/50">{title}</p>
-        <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
+      <CardBody className={toneClass}>
+        <p className="text-xs uppercase tracking-[0.12em] text-muted">{title}</p>
+        <p className="mt-1 font-heading text-2xl font-semibold text-text">{value}</p>
       </CardBody>
     </Card>
   );
 }
+
