@@ -5,13 +5,7 @@ import React from "react";
 import { useLocale } from "next-intl";
 import {
   ArrowRight,
-  Check,
-  Clock3,
-  FileCheck2,
-  FileLock2,
   Globe2,
-  Landmark,
-  ShieldCheck,
 } from "lucide-react";
 
 import { Container } from "@/components/fintax/Container";
@@ -37,6 +31,7 @@ import {
   DialogTrigger,
   EmptyState,
   Input,
+  Pictogram,
   Select,
   Stepper,
   Tabs,
@@ -208,10 +203,10 @@ const addonRows = [
 ] as const;
 
 const trustItems = [
-  { icon: ShieldCheck, title: "GDPR-minded handling", body: "Only documents relevant to the selected service are requested." },
-  { icon: Clock3, title: "Response time expectations", body: "Typical response within one business day." },
-  { icon: FileLock2, title: "Secure upload", body: "Documents move through a secure intake flow, not ad hoc messages." },
-  { icon: FileCheck2, title: "Human review", body: "Automation helps, but filing outputs are reviewed by a person." },
+  { icon: "escudo", title: "GDPR-minded handling", body: "Only documents relevant to the selected service are requested." },
+  { icon: "check", title: "Response time expectations", body: "Typical response within one business day." },
+  { icon: "candado", title: "Secure upload", body: "Documents move through a secure intake flow, not ad hoc messages." },
+  { icon: "documento", title: "Human review", body: "Automation helps, but filing outputs are reviewed by a person." },
 ] as const;
 
 const testimonials = [
@@ -263,7 +258,7 @@ function ServiceSelectorCard({ ctaLabel }: { ctaLabel: string }) {
                 <ul className="grid gap-2 text-sm text-secondary">
                   {item.bullets.map((bullet) => (
                     <li key={bullet} className="flex items-start gap-2">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-green" />
+                      <Pictogram name="check" size={18} decorative className="mt-0.5 opacity-90" />
                       <span>{bullet}</span>
                     </li>
                   ))}
@@ -379,8 +374,8 @@ export function PremiumLandingPage() {
       <main className="relative z-10 overflow-x-clip pt-16">
         <section id="hero" className="border-b border-border/30">
           <Container className="section-rhythm pt-8 sm:pt-12">
-            <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr]">
-              <div className="space-y-5 pt-4 sm:pt-8" style={stagger(0)}>
+            <div className="grid gap-5 lg:grid-cols-[1.02fr_0.98fr] lg:gap-6">
+              <div className="space-y-4 pt-4 sm:space-y-5 sm:pt-8" style={stagger(0)}>
                 <Badge variant="copper" className="w-fit">
                   {t.heroEyebrow}
                 </Badge>
@@ -396,7 +391,7 @@ export function PremiumLandingPage() {
                   <ChecklistDialog t={t} />
                 </div>
                 <p className="text-xs tracking-[0.06em] text-muted">{t.heroNote}</p>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3 pt-1 sm:grid-cols-3">
                   <Card variant="soft" padding="sm">
                     <p className="text-[11px] uppercase tracking-[0.14em] text-muted">Response</p>
                     <p className="mt-2 font-heading text-lg text-text">&lt; 1 business day</p>
@@ -437,13 +432,16 @@ export function PremiumLandingPage() {
                       height={1000}
                       className="w-full rounded-2xl border border-border/45 object-cover shadow-glass"
                     />
-                    <div className="grid gap-4 sm:grid-cols-[1.2fr_0.8fr]">
+                    <div className="grid gap-3 sm:grid-cols-[1.2fr_0.8fr] sm:gap-4">
                       <Card variant="soft" padding="sm" className="bg-surface2/45">
                         <p className="mb-3 text-xs uppercase tracking-[0.14em] text-copper">{t.serviceLabel}</p>
                         <ServiceSelectorCard ctaLabel={t.getPrice} />
                       </Card>
                       <Card variant="soft" padding="sm" className="bg-surface2/45">
-                        <p className="text-xs uppercase tracking-[0.14em] text-muted">Letter support</p>
+                        <p className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted">
+                          <Pictogram name="documento" size={18} decorative className="opacity-90" />
+                          Letter support
+                        </p>
                         <Image
                           src="/visuals/letter-mock.svg"
                           alt="Official letter mock"
@@ -581,12 +579,16 @@ export function PremiumLandingPage() {
                 <h2 className="mt-3 font-heading text-3xl tracking-[-0.03em] text-text sm:text-4xl">{t.trustTitle}</h2>
                 <div className="mt-5 grid gap-3">
                   {trustItems.map((item) => {
-                    const Icon = item.icon;
                     return (
                       <Card key={item.title} variant="soft" padding="sm" className="bg-surface2/45">
                         <div className="flex items-start gap-3">
                           <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-green/20 bg-green/10 text-green">
-                            <Icon className="h-4 w-4" />
+                            <Pictogram
+                              name={item.icon}
+                              size={20}
+                              decorative
+                              className={item.icon === "check" ? "opacity-85" : "opacity-95"}
+                            />
                           </div>
                           <div>
                             <p className="text-sm font-medium text-text">{item.title}</p>
@@ -600,7 +602,7 @@ export function PremiumLandingPage() {
               </div>
               <Card variant="panel" padding="lg" className="bg-mesh-subtle">
                 <Badge variant="neutral" className="mb-4">
-                  <Landmark className="h-3 w-3" />
+                  <Pictogram name="documento" size={18} decorative className="opacity-85" />
                   Belastingdienst machtiging
                 </Badge>
                 <h3 className="font-heading text-2xl tracking-[-0.03em] text-text">Belastingdienst machtiging explained</h3>
@@ -608,9 +610,9 @@ export function PremiumLandingPage() {
                   A machtiging is a scoped authorization for specific tax matters. It is not unlimited access. We explain when it is needed, what it covers and why.
                 </p>
                 <ul className="mt-5 grid gap-2.5 text-sm text-secondary">
-                  <li className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 text-copper" /><span>Used only when required for the selected service</span></li>
-                  <li className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 text-copper" /><span>Scope and purpose explained before approval</span></li>
-                  <li className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 text-copper" /><span>Secure upload and human review remain separate, explicit steps</span></li>
+                  <li className="flex items-start gap-2"><Pictogram name="check" size={18} decorative className="mt-0.5 opacity-85" /><span>Used only when required for the selected service</span></li>
+                  <li className="flex items-start gap-2"><Pictogram name="check" size={18} decorative className="mt-0.5 opacity-85" /><span>Scope and purpose explained before approval</span></li>
+                  <li className="flex items-start gap-2"><Pictogram name="check" size={18} decorative className="mt-0.5 opacity-85" /><span>Secure upload and human review remain separate, explicit steps</span></li>
                 </ul>
               </Card>
             </div>
@@ -645,9 +647,9 @@ export function PremiumLandingPage() {
                       <div className="editorial-frame rounded-[var(--radius-lg)] bg-surface2/35 p-5">
                         <p className="text-xs uppercase tracking-[0.14em] text-muted">Why this works</p>
                         <ul className="mt-3 grid gap-2 text-sm text-secondary">
-                          <li className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 text-green" /><span>Language-matched social proof</span></li>
-                          <li className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 text-green" /><span>Mentions fixed quote and checklist</span></li>
-                          <li className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 text-green" /><span>Supports higher-intent traffic decisions</span></li>
+                          <li className="flex items-start gap-2"><Pictogram name="check" size={18} decorative className="mt-0.5 opacity-90" /><span>Language-matched social proof</span></li>
+                          <li className="flex items-start gap-2"><Pictogram name="check" size={18} decorative className="mt-0.5 opacity-90" /><span>Mentions fixed quote and checklist</span></li>
+                          <li className="flex items-start gap-2"><Pictogram name="check" size={18} decorative className="mt-0.5 opacity-90" /><span>Supports higher-intent traffic decisions</span></li>
                         </ul>
                       </div>
                     </Card>

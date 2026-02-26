@@ -7,13 +7,7 @@ import {
   Eye,
   EyeOff,
   LoaderCircle,
-  LockKeyhole,
   Mail,
-  ShieldCheck,
-  Clock3,
-  FileCheck2,
-  FileLock2,
-  Landmark,
 } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -24,7 +18,7 @@ import { z } from "zod";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { createClient } from "@/lib/supabase/client";
-import { Badge, Button, Card, Input, Tabs, TabsList, TabsTrigger, Textarea, buttonVariants } from "@/components/ui";
+import { Badge, Button, Card, Input, Pictogram, Tabs, TabsList, TabsTrigger, Textarea, buttonVariants } from "@/components/ui";
 
 type AuthMode = "login" | "register" | "forgot";
 type AppLocale = "en" | "es" | "pl" | "ro" | "nl";
@@ -49,10 +43,10 @@ type RegisterValues = z.infer<typeof registerSchema>;
 type ForgotValues = z.infer<typeof forgotSchema>;
 
 const TRUST_ITEMS = [
-  { icon: ShieldCheck, text: "Fixed pricing and clear scope before work starts" },
-  { icon: FileCheck2, text: "Human-reviewed filings and multilingual guidance" },
-  { icon: FileLock2, text: "Secure upload flow for tax documents and letters" },
-  { icon: Clock3, text: "Fast response expectations and status visibility" },
+  { icon: "escudo", text: "Fixed pricing and clear scope before work starts" },
+  { icon: "documento", text: "Human-reviewed filings and multilingual guidance" },
+  { icon: "candado", text: "Secure upload flow for tax documents and letters" },
+  { icon: "check", text: "Fast response expectations and status visibility" },
 ] as const;
 
 const extraCopy = {
@@ -144,7 +138,7 @@ function ErrorBanner({ message }: { message: string }) {
   return <div className="mb-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-error/35 bg-error/10 px-4 py-3 text-sm text-red-200"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-error" /><p>{message}</p></div>;
 }
 function InfoBanner({ message }: { message: string }) {
-  return <div className="mb-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-copper/35 bg-copper/8 px-4 py-3 text-sm text-secondary"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-copper" /><p>{message}</p></div>;
+  return <div className="mb-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-copper/35 bg-copper/8 px-4 py-3 text-sm text-secondary"><Pictogram name="escudo" size={18} decorative className="mt-0.5 opacity-90" /><p>{message}</p></div>;
 }
 function LoadingLabel({ loading, label }: { loading: boolean; label: string }) {
   return <>{loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}{loading ? `${label}...` : label}</>;
@@ -241,12 +235,11 @@ export function AuthScreen() {
 
             <div className="grid gap-3">
               {TRUST_ITEMS.map((item) => {
-                const Icon = item.icon;
                 return (
                   <div key={item.text} className="editorial-frame rounded-[var(--radius-lg)] bg-surface2/35 p-4">
                     <div className="flex items-start gap-3">
                       <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-green/20 bg-green/10 text-green">
-                        <Icon className="h-4 w-4" />
+                        <Pictogram name={item.icon} size={18} decorative className="opacity-95" />
                       </div>
                       <p className="text-sm leading-6 text-secondary">{item.text}</p>
                     </div>
@@ -272,7 +265,7 @@ export function AuthScreen() {
           <div className="relative z-10 rounded-[var(--radius-lg)] border border-border/40 bg-surface/35 p-4" style={panelAnim(160)}>
             <p className="text-xs uppercase tracking-[0.14em] text-muted">Secure microcopy</p>
             <div className="mt-2 flex items-start gap-2">
-              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-copper" />
+              <Pictogram name="candado" size={18} decorative className="mt-0.5 opacity-90" />
               <p className="text-sm leading-6 text-secondary">{local.secureMicrocopy}</p>
             </div>
           </div>
@@ -432,7 +425,7 @@ export function AuthScreen() {
             <div className="mt-4 grid gap-3 lg:hidden" style={panelAnim(110)}>
               <Card variant="soft" padding="sm" className="bg-surface2/45">
                 <div className="flex items-start gap-3">
-                  <Landmark className="mt-0.5 h-4 w-4 text-copper" />
+                  <Pictogram name="documento" size={18} decorative className="mt-0.5 opacity-90" />
                   <p className="text-sm leading-6 text-secondary">Belastingdienst letters and filing tasks are handled in the same secure workspace after login.</p>
                 </div>
               </Card>
