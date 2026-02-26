@@ -16,9 +16,20 @@ export interface DashboardShellProps {
 export function DashboardShell({ children }: DashboardShellProps) {
   const t = useTranslations("Dashboard.topbar");
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
+  const shellRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    const current = shellRef.current;
+    if (!current) return;
+    const nestedParent = current.parentElement?.closest("[data-dashboard-shell='true']");
+    if (nestedParent) {
+      console.warn("Nested DashboardShell detected. Authenticated routes should render a single shell.");
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-mesh">
+    <div ref={shellRef} data-dashboard-shell="true" className="min-h-screen bg-mesh">
       <div className="flex min-h-screen">
         <div className="hidden lg:block">
           <DashboardSidebar />
