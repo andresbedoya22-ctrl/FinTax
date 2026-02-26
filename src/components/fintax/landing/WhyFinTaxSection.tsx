@@ -42,7 +42,7 @@ export function WhyFinTaxSection() {
           <div className="self-center">
             <div className="overflow-hidden rounded-card border border-border/60 bg-surface/70 p-3 shadow-glass">
               <Image
-                src="/visuals/letter-mock.png"
+                src="/visuals/letter-mock.svg"
                 alt={t("imageAlt")}
                 width={1000}
                 height={760}

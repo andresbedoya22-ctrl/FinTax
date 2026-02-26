@@ -1,0 +1,50 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="115" y1="84" x2="1432" y2="822" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1322"/>
+      <stop offset="0.45" stop-color="#101C30"/>
+      <stop offset="1" stop-color="#0A111D"/>
+    </linearGradient>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(312 208) rotate(24.7) scale(612 378)">
+      <stop stop-color="#B47B58" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#B47B58" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1236 210) rotate(151.8) scale(536 320)">
+      <stop stop-color="#39BB80" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#39BB80" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(905 744) rotate(171.4) scale(694 318)">
+      <stop stop-color="#5C7FA6" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#5C7FA6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.045"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#g1)"/>
+  <rect width="1600" height="900" fill="url(#g2)"/>
+  <rect width="1600" height="900" fill="url(#g3)"/>
+  <g opacity="0.28">
+    <path d="M58 126H1542" stroke="#D9E3F0" stroke-opacity="0.14"/>
+    <path d="M58 774H1542" stroke="#D9E3F0" stroke-opacity="0.12"/>
+    <path d="M124 84V816" stroke="#D9E3F0" stroke-opacity="0.08"/>
+    <path d="M1476 84V816" stroke="#D9E3F0" stroke-opacity="0.08"/>
+  </g>
+  <g opacity="0.22">
+    <path d="M96 254C286 256 338 214 514 214C703 214 736 282 928 282C1116 282 1180 232 1504 236" stroke="#90A4BF" stroke-width="1.2"/>
+    <path d="M94 640C252 642 310 578 478 578C672 578 716 662 904 662C1070 662 1170 592 1508 596" stroke="#B47B58" stroke-opacity="0.42" stroke-width="1.2"/>
+    <path d="M182 360H1420" stroke="#39BB80" stroke-opacity="0.18" stroke-dasharray="4 8"/>
+    <path d="M182 390H1420" stroke="#D9E3F0" stroke-opacity="0.10" stroke-dasharray="2 6"/>
+  </g>
+  <g opacity="0.18">
+    <rect x="182" y="140" width="494" height="214" rx="20" stroke="#D9E3F0"/>
+    <rect x="724" y="184" width="694" height="302" rx="24" stroke="#D9E3F0"/>
+    <rect x="352" y="524" width="864" height="184" rx="24" stroke="#D9E3F0"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)"/>
+</svg>

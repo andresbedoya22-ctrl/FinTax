@@ -374,11 +374,11 @@ export function PremiumLandingPage() {
   const activeTestimonial = testimonials.some((x) => x.locale === locale) ? locale : "en";
 
   return (
-    <div className="min-h-screen bg-mesh texture-noise">
+    <div className="min-h-screen bg-mesh technical-lines texture-noise">
       <Header t={t} />
       <main className="relative z-10 overflow-x-clip pt-16">
         <section id="hero" className="border-b border-border/30">
-          <Container className="py-8 sm:py-12">
+          <Container className="section-rhythm pt-8 sm:pt-12">
             <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr]">
               <div className="space-y-5 pt-4 sm:pt-8" style={stagger(0)}>
                 <Badge variant="copper" className="w-fit">
@@ -416,7 +416,7 @@ export function PremiumLandingPage() {
                 <Card variant="panel" padding="none" className="overflow-hidden">
                   <div className="relative border-b border-border/35">
                     <Image
-                      src="/visuals/hero-bg.png"
+                      src="/visuals/hero-bg.svg"
                       alt="Editorial mesh background"
                       width={1920}
                       height={1080}
@@ -431,7 +431,7 @@ export function PremiumLandingPage() {
                   </div>
                   <div className="grid gap-4 p-4 sm:p-5">
                     <Image
-                      src="/visuals/app-mock.png"
+                      src="/visuals/app-mock.svg"
                       alt="App mockup"
                       width={1600}
                       height={1000}
@@ -445,7 +445,7 @@ export function PremiumLandingPage() {
                       <Card variant="soft" padding="sm" className="bg-surface2/45">
                         <p className="text-xs uppercase tracking-[0.14em] text-muted">Letter support</p>
                         <Image
-                          src="/visuals/letter-mock.png"
+                          src="/visuals/letter-mock.svg"
                           alt="Official letter mock"
                           width={1400}
                           height={1000}
@@ -464,7 +464,7 @@ export function PremiumLandingPage() {
         </section>
 
         <section id="services" className="border-b border-border/30">
-          <Container className="py-14 sm:py-16">
+          <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]" style={stagger(2)}>
               <div>
                 <p className="text-xs uppercase tracking-[0.16em] text-copper">{t.serviceLabel}</p>
@@ -479,7 +479,7 @@ export function PremiumLandingPage() {
         </section>
 
         <section id="how" className="border-b border-border/30">
-          <Container className="py-14 sm:py-16">
+          <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]" style={stagger(3)}>
               <div>
                 <p className="text-xs uppercase tracking-[0.16em] text-copper">{t.howLabel}</p>
@@ -494,7 +494,7 @@ export function PremiumLandingPage() {
         </section>
 
         <section id="pricing" className="border-b border-border/30">
-          <Container className="py-14 sm:py-16">
+          <Container className="section-rhythm">
             <div className="space-y-6" style={stagger(4)}>
               <div>
                 <p className="text-xs uppercase tracking-[0.16em] text-copper">{t.pricingLabel}</p>
@@ -574,7 +574,7 @@ export function PremiumLandingPage() {
         </section>
 
         <section id="trust" className="border-b border-border/30">
-          <Container className="py-14 sm:py-16">
+          <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[1fr_1fr]" style={stagger(5)}>
               <div>
                 <p className="text-xs uppercase tracking-[0.16em] text-copper">{t.trustLabel}</p>
@@ -618,7 +618,7 @@ export function PremiumLandingPage() {
         </section>
 
         <section id="testimonials" className="border-b border-border/30">
-          <Container className="py-14 sm:py-16">
+          <Container className="section-rhythm">
             <div className="space-y-6" style={stagger(6)}>
               <div>
                 <p className="text-xs uppercase tracking-[0.16em] text-copper">{t.testimonialsLabel}</p>
@@ -659,7 +659,7 @@ export function PremiumLandingPage() {
         </section>
 
         <section id="faq" className="border-b border-border/30">
-          <Container className="py-14 sm:py-16">
+          <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]" style={stagger(7)}>
               <div>
                 <p className="text-xs uppercase tracking-[0.16em] text-copper">{t.faqLabel}</p>
@@ -678,7 +678,7 @@ export function PremiumLandingPage() {
         </section>
 
         <footer>
-          <Container className="py-12 sm:py-14">
+          <Container className="section-rhythm">
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]" style={stagger(8)}>
               <Card variant="panel" padding="lg">
                 <Badge variant="outline" className="mb-4">{t.legal}</Badge>

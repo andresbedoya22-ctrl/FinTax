@@ -6,7 +6,7 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  fallback: ["Georgia", "serif"],
+  fallback: ["serif"],
 });
 
 const plexSans = IBM_Plex_Sans({
@@ -14,7 +14,7 @@ const plexSans = IBM_Plex_Sans({
   variable: "--font-sans",
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
-  fallback: ["Segoe UI", "sans-serif"],
+  fallback: ["sans-serif"],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -22,7 +22,7 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-mono",
   display: "swap",
   weight: ["400", "500", "600"],
-  fallback: ["Consolas", "monospace"],
+  fallback: ["monospace"],
 });
 
 export const metadata: Metadata = {

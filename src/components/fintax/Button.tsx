@@ -8,9 +8,9 @@ type ButtonSize = "sm" | "md" | "lg";
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "border-green bg-green text-bg shadow-glass-soft hover:border-green-hover hover:bg-green-hover",
-  secondary: "border-border bg-transparent text-text hover:bg-surface hover:text-text",
-  ghost: "border-transparent bg-transparent text-secondary hover:bg-surface2 hover:text-text",
+    "border-green/40 bg-green text-bg shadow-glass-soft hover:border-green-hover hover:bg-green-hover",
+  secondary: "border-border/45 bg-surface/35 text-text hover:border-copper/25 hover:bg-surface2/55 hover:text-text",
+  ghost: "border-transparent bg-transparent text-secondary hover:bg-surface2/45 hover:text-text",
   danger: "border-error bg-error text-white hover:bg-red-500",
 };
 
@@ -47,8 +47,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const isDisabled = disabled || loading;
     const classes = cn(
-      "inline-flex items-center justify-center gap-2 rounded-md border font-medium transition-colors duration-200",
+      "inline-flex items-center justify-center gap-2 rounded-xl border font-medium transition duration-200",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+      "active:translate-y-px",
       "disabled:pointer-events-none disabled:opacity-60",
       variantClasses[variant],
       sizeClasses[size],

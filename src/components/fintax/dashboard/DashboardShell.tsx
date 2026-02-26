@@ -27,7 +27,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         <div className="flex min-h-screen min-w-0 flex-1 flex-col">
           <DashboardTopbar onOpenSidebar={() => setIsMobileOpen(true)} />
           <main className="relative z-10 flex-1 p-4 sm:p-6 lg:p-8">
-            <div className="mx-auto w-full max-w-[1400px]">{children}</div>
+            <div className="mx-auto w-full max-w-[1440px] rounded-[var(--radius-xl)]">{children}</div>
           </main>
         </div>
       </div>

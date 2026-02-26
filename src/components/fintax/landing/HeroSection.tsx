@@ -116,7 +116,7 @@ export function HeroSection() {
                   {/* Greeting */}
                   <div>
                     <p className="text-xs text-muted">Good morning,</p>
-                    <p className="font-heading font-bold text-lg text-text">Andrés 👋</p>
+                    <p className="font-heading font-bold text-lg text-text">Andres</p>
                   </div>
 
                   {/* Mini stat cards */}
@@ -181,7 +181,7 @@ export function HeroSection() {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="w-2 h-2 bg-green rounded-full" aria-hidden="true" />
-                  <span className="text-xs text-green font-medium">Letter analyzed ✓</span>
+                  <span className="text-xs text-green font-medium">Letter analyzed</span>
                 </div>
                 <p className="text-sm font-semibold text-text leading-snug">
                   Belastingdienst letter
