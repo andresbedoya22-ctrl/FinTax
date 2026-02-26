@@ -56,6 +56,13 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
     setDocs((prev) => [...nextDocs, ...prev]);
   };
 
+  const statusTone =
+    caseItem.status === "pending_payment" || caseItem.status === "pending_documents"
+      ? "amber"
+      : caseItem.status === "completed"
+        ? "green"
+        : "copper";
+
   return (
     <div className="space-y-6">
       <Card>
@@ -63,7 +70,18 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           <div>
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <Badge variant="copper">{caseItem.case_type}</Badge>
-              <Badge variant="neutral">{caseItem.status}</Badge>
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium",
+                  statusTone === "amber"
+                    ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
+                    : statusTone === "green"
+                      ? "border-green/25 bg-green/10 text-green"
+                      : "border-copper/25 bg-copper/10 text-copper",
+                )}
+              >
+                {caseItem.status}
+              </span>
             </div>
             <h2 className="font-heading text-2xl font-semibold text-text">{caseItem.display_name ?? caseItem.id}</h2>
             <p className="mt-1 text-sm text-secondary">{t("status")}: {caseItem.status} · {t("deadline")}: {caseItem.deadline ?? "-"}</p>
