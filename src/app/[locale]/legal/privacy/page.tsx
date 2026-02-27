@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { AppLocale } from "@/i18n/routing";
+import { buildPublicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "FinTax | Privacy",
-  description: "FinTax privacy notice placeholder for pre-launch review.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: AppLocale }> }) {
+  const { locale } = await params;
+  return buildPublicMetadata({
+    locale,
+    pathname: "/legal/privacy",
+    title: "FinTax | Privacy Notice",
+    description: "Pre-launch privacy notice for FinTax services and processing categories.",
+  });
+}
 
 export default function PrivacyPage() {
   return (
@@ -25,4 +31,3 @@ export default function PrivacyPage() {
     </main>
   );
 }
-

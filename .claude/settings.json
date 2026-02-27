@@ -1,0 +1,17 @@
+﻿{
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Write(src/**)",
+      "Write(CLAUDE.md)",
+      "Write(.claude/**)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm build)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(pnpm install *)"
+    ]
+  }
+}

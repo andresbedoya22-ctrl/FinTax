@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { AppLocale } from "@/i18n/routing";
+import { buildPublicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "FinTax | Terms",
-  description: "FinTax terms placeholder for pre-launch review.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: AppLocale }> }) {
+  const { locale } = await params;
+  return buildPublicMetadata({
+    locale,
+    pathname: "/legal/terms",
+    title: "FinTax | Terms of Service",
+    description: "Pre-launch terms of service placeholder for FinTax legal review.",
+  });
+}
 
 export default function TermsPage() {
   return (
@@ -24,4 +30,3 @@ export default function TermsPage() {
     </main>
   );
 }
-

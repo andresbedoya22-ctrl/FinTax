@@ -42,10 +42,8 @@ next-env.d.ts
 
 .tmp-test-build
 
-# Local Claude settings
+# Claude/Codex workspace: commit shared rules/skills, ignore only local secrets
 .claude/settings.local.json
-
-
-# Local Claude/Codex workspace (do not commit)
-.claude/
-
+.claude/**/settings.local.json
+.claude/.env.local
+.claude/**/.env.local
