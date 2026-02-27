@@ -2,6 +2,7 @@
 
 ## Workflow
 - Mandatory sequence: `PLAN -> EXECUTE -> PR -> MERGE`.
+- Before generating or modifying code, read `CLAUDE.md` and relevant `.claude/skills/**` files for this task.
 - PLAN step must include: findings, file-by-file changes, commands, risks, acceptance criteria.
 - EXECUTE starts only after explicit user approval (`EXECUTE`).
 - MERGE only after CI checks pass.
@@ -53,7 +54,7 @@
 
 ## Engineering Constraints
 - No new npm packages without explicit approval.
-- Follow `claude.md` UI and component rules.
+- Follow `CLAUDE.md` UI and component rules.
 - No `any` in TypeScript.
 - No inline styles.
 - No hardcoded colors outside token system.
