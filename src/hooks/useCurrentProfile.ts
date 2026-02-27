@@ -4,7 +4,6 @@ import * as React from "react";
 
 import type { Profile } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
-import { mockProfile } from "@/lib/mock-data";
 
 export function useCurrentProfile() {
   const [profile, setProfile] = React.useState<Profile | null>(null);
@@ -16,7 +15,7 @@ export function useCurrentProfile() {
       try {
         const supabase = createClient();
         if (!supabase) {
-          if (active) setProfile(mockProfile);
+          if (active) setProfile(null);
           return;
         }
         const {
@@ -27,9 +26,9 @@ export function useCurrentProfile() {
           return;
         }
         const { data } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
-        if (active) setProfile((data as Profile | null) ?? mockProfile);
+        if (active) setProfile((data as Profile | null) ?? null);
       } catch {
-        if (active) setProfile(mockProfile);
+        if (active) setProfile(null);
       } finally {
         if (active) setLoading(false);
       }
@@ -42,4 +41,3 @@ export function useCurrentProfile() {
 
   return { profile, loading };
 }
-

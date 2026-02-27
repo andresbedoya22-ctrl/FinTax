@@ -8,28 +8,44 @@ import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, Skeleton, Stepper, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
+import { useCase } from "@/hooks/useCase";
+import { useChecklist } from "@/hooks/useChecklist";
 import { cn } from "@/lib/cn";
-import { getMockCase, mockChecklistByCase, mockDocumentsByCase } from "@/lib/mock-data";
 import type { Document } from "@/types/database";
 
 type TabKey = "overview" | "documents" | "authorization" | "activity";
 
 export function CaseDetailView({ caseId }: { caseId: string }) {
   const t = useTranslations("CaseDetail");
-  const caseItem = getMockCase(caseId);
+  const caseQuery = useCase(caseId);
+  const checklistQuery = useChecklist(caseId);
+  const caseItem = caseQuery.data;
+  const checklist = checklistQuery.data ?? [];
   const [tab, setTab] = React.useState<TabKey>("overview");
   const [machtigingCode, setMachtigingCode] = React.useState("");
-  const [docs, setDocs] = React.useState<Document[]>(mockDocumentsByCase[caseId] ?? []);
+  const [docs, setDocs] = React.useState<Document[]>([]);
 
-  if (!caseItem) {
+  if (caseQuery.isLoading || checklistQuery.isLoading) {
     return (
       <Card>
-        <CardBody className="text-sm text-secondary">{t("notFound")}</CardBody>
+        <CardBody className="space-y-2">
+          <Skeleton className="h-5 w-1/3" />
+          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-4 w-full" />
+        </CardBody>
       </Card>
     );
   }
 
-  const checklist = mockChecklistByCase[caseId] ?? [];
+  if (!caseItem) {
+    return (
+      <Card>
+        <CardBody className="text-sm text-secondary">
+          {caseQuery.isError ? "Unable to load case details." : t("notFound")}
+        </CardBody>
+      </Card>
+    );
+  }
   const tabs: TabKey[] = ["overview", "documents", "authorization", "activity"];
   const completed = checklist.filter((x) => x.is_completed).length;
   const currentStep = mapCaseStatusToStep(caseItem.status);

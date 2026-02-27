@@ -7,8 +7,8 @@ import * as React from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { buttonVariants } from "@/components/ui";
+import { useCases } from "@/hooks/useCases";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
-import { mockCases } from "@/lib/mock-data";
 
 const navItems = [
   { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -28,6 +28,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
   const locale = useLocale();
   const pathname = usePathname();
   const { profile } = useCurrentProfile();
+  const { data: cases } = useCases();
   const rawItems = t.raw("items") as
     | string[]
     | {
@@ -51,8 +52,8 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
       : words.length === 1
         ? (words[0]![0]?.toUpperCase() ?? "FT")
         : ((words[0]![0]?.toUpperCase() ?? "") + (words[words.length - 1]![0]?.toUpperCase() ?? ""));
-  const completedCases = mockCases.filter((c) => c.wizard_completed === true).length;
-  const progressWidth = mockCases.length > 0 ? Math.round((completedCases / mockCases.length) * 100) : 0;
+  const completedCases = (cases ?? []).filter((c) => c.wizard_completed === true).length;
+  const progressWidth = (cases ?? []).length > 0 ? Math.round((completedCases / (cases ?? []).length) * 100) : 0;
 
   return (
     <aside

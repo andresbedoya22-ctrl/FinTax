@@ -5,8 +5,7 @@ import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
-import { createClient } from "@/lib/supabase/client";
-import { mockNotifications } from "@/lib/mock-data";
+import { useNotifications } from "@/hooks/useNotifications";
 import type { Notification } from "@/types/database";
 import { Button, EmptyState } from "@/components/ui";
 
@@ -28,9 +27,19 @@ export function DashboardNotifications() {
   const t = useTranslations("Notifications");
   const [open, setOpen] = React.useState(false);
   const [readIds, setReadIds] = React.useState<string[]>([]);
-  const [items, setItems] = React.useState<NotificationItem[]>([]);
-  const [loaded, setLoaded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const notificationsQuery = useNotifications(8);
+  const items = React.useMemo<NotificationItem[]>(
+    () =>
+      (notificationsQuery.data ?? []).map((n) => ({
+        id: n.id,
+        icon: iconForType(n.type),
+        title: n.title,
+        body: n.message,
+        isRead: n.is_read,
+      })),
+    [notificationsQuery.data],
+  );
 
   React.useEffect(() => {
     const onDocClick = (event: MouseEvent) => {
@@ -43,78 +52,11 @@ export function DashboardNotifications() {
   }, []);
 
   React.useEffect(() => {
-    let active = true;
-    const run = async () => {
-      const useDevMock = process.env.NEXT_PUBLIC_USE_MOCK_NOTIFICATIONS === "1";
-      try {
-        if (useDevMock) {
-          const mapped = mockNotifications.map((n) => ({
-            id: n.id,
-            icon: iconForType(n.type),
-            title: n.title,
-            body: n.message,
-            isRead: n.is_read,
-          }));
-          if (active) {
-            setItems(mapped);
-            setReadIds(mapped.filter((i) => i.isRead).map((i) => i.id));
-          }
-          return;
-        }
-
-        const supabase = createClient();
-        if (!supabase) {
-          if (active) setItems([]);
-          return;
-        }
-
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
-        if (!user) {
-          if (active) setItems([]);
-          return;
-        }
-
-        const { data } = await supabase
-          .from("notifications")
-          .select("id,title,message,type,is_read")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(8);
-
-        const mapped = (data ?? []).map((n) => ({
-          id: n.id,
-          icon: iconForType(n.type as Notification["type"]),
-          title: n.title,
-          body: n.message,
-          isRead: n.is_read,
-        }));
-        if (active) {
-          setItems(mapped);
-          setReadIds(mapped.filter((i) => i.isRead).map((i) => i.id));
-        }
-      } catch {
-        if (active) {
-          const fallback = [
-            { id: "1", icon: FileText, title: t("items.docsReview.title"), body: t("items.docsReview.body") },
-            { id: "2", icon: Clock3, title: t("items.payment.title"), body: t("items.payment.body") },
-            { id: "3", icon: CheckCheck, title: t("items.caseComplete.title"), body: t("items.caseComplete.body") },
-          ];
-          setItems(fallback);
-        }
-      } finally {
-        if (active) setLoaded(true);
-      }
-    };
-    void run();
-    return () => {
-      active = false;
-    };
-  }, [t]);
+    setReadIds(items.filter((item) => item.isRead).map((item) => item.id));
+  }, [items]);
 
   const unreadCount = items.filter((item) => !readIds.includes(item.id)).length;
+  const loaded = notificationsQuery.isSuccess || notificationsQuery.isError;
 
   return (
     <div ref={containerRef} className="relative">
@@ -143,6 +85,8 @@ export function DashboardNotifications() {
               <div className="h-12 rounded-xl border border-border/25 bg-surface2/20" />
               <div className="h-12 rounded-xl border border-border/25 bg-surface2/20" />
             </div>
+          ) : notificationsQuery.isError ? (
+            <EmptyState className="p-4" title={t("title")} description={t("label")} />
           ) : items.length === 0 ? (
             <EmptyState className="p-4" title={t("title")} description={t("label")} />
           ) : (
@@ -183,4 +127,3 @@ export function DashboardNotifications() {
     </div>
   );
 }
-
