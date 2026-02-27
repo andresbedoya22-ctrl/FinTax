@@ -1,14 +1,9 @@
-import { z } from "zod";
-
 import { requireAuthedUser } from "@/lib/api/auth";
+import { parseNotificationsLimit } from "@/lib/api/contracts";
 import { apiError, apiSuccess } from "@/lib/api/response";
 
-const querySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(100).optional(),
-});
-
 export async function GET(request: Request) {
-  const parsedQuery = querySchema.safeParse(Object.fromEntries(new URL(request.url).searchParams));
+  const parsedQuery = parseNotificationsLimit(Object.fromEntries(new URL(request.url).searchParams));
   if (!parsedQuery.success) return apiError("invalid_params");
 
   const authed = await requireAuthedUser();

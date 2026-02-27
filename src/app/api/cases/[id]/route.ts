@@ -1,15 +1,10 @@
-import { z } from "zod";
-
+import { parseIdParam } from "@/lib/api/contracts";
 import { requireAuthedUser } from "@/lib/api/auth";
 import { apiError, apiSuccess } from "@/lib/api/response";
 
-const paramsSchema = z.object({
-  id: z.string().uuid(),
-});
-
 export async function GET(_: Request, context: { params: Promise<{ id: string }> }) {
   const rawParams = await context.params;
-  const parsedParams = paramsSchema.safeParse(rawParams);
+  const parsedParams = parseIdParam(rawParams);
   if (!parsedParams.success) return apiError("invalid_params");
 
   const authed = await requireAuthedUser();
