@@ -8,6 +8,7 @@ import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, Skeleton, Stepper, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
+import { isApiClientError } from "@/hooks/api-client";
 import { useCase } from "@/hooks/useCase";
 import { useChecklist } from "@/hooks/useChecklist";
 import { cn } from "@/lib/cn";
@@ -24,6 +25,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   const [tab, setTab] = React.useState<TabKey>("overview");
   const [machtigingCode, setMachtigingCode] = React.useState("");
   const [docs, setDocs] = React.useState<Document[]>([]);
+  const caseErrorCode = caseQuery.error && isApiClientError(caseQuery.error) ? caseQuery.error.code : null;
 
   if (caseQuery.isLoading || checklistQuery.isLoading) {
     return (
@@ -41,7 +43,9 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
     return (
       <Card>
         <CardBody className="text-sm text-secondary">
-          {caseQuery.isError ? "Unable to load case details." : t("notFound")}
+          {caseQuery.isError
+            ? `Case details konden niet worden geladen${caseErrorCode ? ` (code: ${caseErrorCode})` : ""}.`
+            : t("notFound")}
         </CardBody>
       </Card>
     );

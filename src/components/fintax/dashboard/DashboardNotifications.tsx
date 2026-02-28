@@ -92,11 +92,11 @@ export function DashboardNotifications() {
           ) : notificationsQuery.isError ? (
             <EmptyState
               className="p-4"
-              title={t("title")}
-              description={errorCode ? `${t("label")} (${errorCode})` : t("label")}
+              title="Meldingen zijn tijdelijk niet beschikbaar"
+              description={errorCode ? `API error code: ${errorCode}. Vernieuw de sessie en probeer opnieuw.` : "We konden je meldingen nu niet laden."}
             />
           ) : items.length === 0 ? (
-            <EmptyState className="p-4" title={t("title")} description={t("label")} />
+            <EmptyState className="p-4" title={t("title")} description="Geen nieuwe updates. We tonen hier acties zodra je case verandert." />
           ) : (
             <ul className="space-y-1">
               {items.map((item) => {

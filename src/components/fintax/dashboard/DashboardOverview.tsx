@@ -7,6 +7,7 @@ import * as React from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
 import { Link } from "@/i18n/navigation";
+import { isApiClientError } from "@/hooks/api-client";
 import { useCases } from "@/hooks/useCases";
 import { cn } from "@/lib/cn";
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Stepper } from "@/components/ui";
@@ -18,6 +19,7 @@ export function DashboardOverview() {
   const reduceMotion = useReducedMotion();
   const casesQuery = useCases();
   const cases = casesQuery.data ?? [];
+  const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
   const activeCase = cases[0] ?? null;
   const openCases = cases.length;
   const pendingDocumentsCount = cases.filter((item) => item.status === "pending_documents").length;
@@ -51,6 +53,15 @@ export function DashboardOverview() {
 
   return (
     <section className="space-y-6">
+      {casesQuery.isError ? (
+        <div className="rounded-[var(--radius-lg)] border border-copper/30 bg-copper/10 p-4">
+          <p className="text-xs uppercase tracking-[0.14em] text-copper">Dashboard API</p>
+          <p className="mt-1 text-sm text-secondary">
+            Caseoverzicht kon niet worden ververst.
+            {casesErrorCode ? ` Code: ${casesErrorCode}.` : ""}
+          </p>
+        </div>
+      ) : null}
       <motion.div
         className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
         initial={reduceMotion ? false : "hidden"}
