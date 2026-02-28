@@ -7,6 +7,7 @@ import * as React from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
 import { Link } from "@/i18n/navigation";
+import { useCases } from "@/hooks/useCases";
 import { cn } from "@/lib/cn";
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Stepper } from "@/components/ui";
 
@@ -15,11 +16,28 @@ const estimateProgress = [0.38, 0.52, 0.61, 0.68, 0.74, 0.83, 1];
 export function DashboardOverview() {
   const t = useTranslations("Dashboard.overview");
   const reduceMotion = useReducedMotion();
+  const casesQuery = useCases();
+  const cases = casesQuery.data ?? [];
+  const activeCase = cases[0] ?? null;
+  const openCases = cases.length;
+  const pendingDocumentsCount = cases.filter((item) => item.status === "pending_documents").length;
+  const estimatedRefundTotal = cases.reduce((sum, item) => sum + (item.estimated_refund ?? 0), 0);
+  const deadlineText = activeCase?.deadline ?? t("deadlineValue");
+  const activeStatus = activeCase?.status ?? t("statusValue");
+  const caseTitle = activeCase?.display_name ?? t("caseTitle");
+  const dynamicCaseRows =
+    openCases > 0
+      ? cases.slice(0, 3).map((item) => ({
+          label: item.display_name ?? item.case_type,
+          amount: `EUR ${(item.estimated_refund ?? 0).toFixed(2)}`,
+        }))
+      : (t.raw("caseRows") as Array<{ label: string; amount: string }>);
   const [chartReady, setChartReady] = React.useState(false);
   const checklistItems = t.raw("checklistItems") as Array<{ label: string; done: boolean }>;
-  const caseRows = t.raw("caseRows") as Array<{ label: string; amount: string }>;
+  const caseRows = dynamicCaseRows;
   const checklistProgress = Math.round((checklistItems.filter((i) => i.done).length / checklistItems.length) * 100);
-  const refundEstimateBase = Number.parseInt(String(t("refundAmount")).replace(/[^\d]/g, ""), 10) || 1250;
+  const fallbackEstimate = Number.parseInt(String(t("refundAmount")).replace(/[^\d]/g, ""), 10) || 1250;
+  const refundEstimateBase = estimatedRefundTotal > 0 ? Math.round(estimatedRefundTotal) : fallbackEstimate;
   const estimateSeries = estimateProgress.map((ratio, index) => ({
     stage: ["Intake", "Docs", "Review", "Checks", "Draft", "Confirm", "Estimate"][index] ?? `S${index + 1}`,
     amount: Math.round(refundEstimateBase * ratio),
@@ -39,10 +57,10 @@ export function DashboardOverview() {
         animate={reduceMotion ? undefined : "show"}
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
       >
-        <KpiCard title="Open cases" value="3" note="Across tax + benefits" tone="neutral" />
-        <KpiCard title="Pending docs" value={`${checklistItems.filter((i) => !i.done).length}`} note="Checklist items missing" tone="copper" />
-        <KpiCard title="Estimated refund" value={`EUR ${t("refundAmount")}`} note="Current active case" tone="success" />
-        <KpiCard title="Next deadline" value={t("deadlineValue")} note="Tax return submission" tone="neutral" />
+        <KpiCard title="Open cases" value={`${openCases}`} note="Across tax + benefits" tone="neutral" />
+        <KpiCard title="Pending docs" value={`${pendingDocumentsCount}`} note="Checklist items missing" tone="copper" />
+        <KpiCard title="Estimated refund" value={`EUR ${refundEstimateBase.toFixed(2)}`} note="Current active case" tone="success" />
+        <KpiCard title="Next deadline" value={deadlineText} note="Tax return submission" tone="neutral" />
       </motion.div>
 
       <div className="grid gap-5 xl:grid-cols-3">
@@ -51,10 +69,10 @@ export function DashboardOverview() {
             <div>
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <Badge variant="copper">Active case</Badge>
-                <Badge variant="success">{t("statusValue")}</Badge>
+                <Badge variant="success">{activeStatus}</Badge>
               </div>
-              <CardTitle className="text-2xl">{t("caseTitle")}</CardTitle>
-              <CardDescription>{t("statusLabel")}: {t("statusValue")} | {t("deadlineLabel")}: {t("deadlineValue")}</CardDescription>
+              <CardTitle className="text-2xl">{caseTitle}</CardTitle>
+              <CardDescription>{t("statusLabel")}: {activeStatus} | {t("deadlineLabel")}: {deadlineText}</CardDescription>
             </div>
             <Link href="/tax-return" className="inline-flex items-center gap-1 text-sm font-medium text-copper hover:text-text">
               {t("openCase")}

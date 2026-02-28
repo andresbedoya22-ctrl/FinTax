@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
+import { isApiClientError } from "@/hooks/api-client";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { Notification } from "@/types/database";
 import { Button, EmptyState } from "@/components/ui";
@@ -57,6 +58,9 @@ export function DashboardNotifications() {
 
   const unreadCount = items.filter((item) => !readIds.includes(item.id)).length;
   const loaded = notificationsQuery.isSuccess || notificationsQuery.isError;
+  const errorCode = notificationsQuery.error && isApiClientError(notificationsQuery.error)
+    ? notificationsQuery.error.code
+    : null;
 
   return (
     <div ref={containerRef} className="relative">
@@ -86,7 +90,11 @@ export function DashboardNotifications() {
               <div className="h-12 rounded-xl border border-border/25 bg-surface2/20" />
             </div>
           ) : notificationsQuery.isError ? (
-            <EmptyState className="p-4" title={t("title")} description={t("label")} />
+            <EmptyState
+              className="p-4"
+              title={t("title")}
+              description={errorCode ? `${t("label")} (${errorCode})` : t("label")}
+            />
           ) : items.length === 0 ? (
             <EmptyState className="p-4" title={t("title")} description={t("label")} />
           ) : (
