@@ -396,5 +396,18 @@
         }
       ]
     }
+  },
+  "PaymentSuccess": {
+    "eyebrow": "Platnosc",
+    "title": "Przetwarzanie potwierdzenia",
+    "subtitle": "Sprawdzamy status platnosci. Ta strona tylko odczytuje status sprawy.",
+    "loading": "Sprawdzanie platnosci...",
+    "pending": "Platnosc oczekuje, odswiezanie statusu...",
+    "confirmed": "Platnosc potwierdzona. Twoja sprawa ma status oplacona.",
+    "error": "Nie udalo sie teraz zweryfikowac statusu platnosci.",
+    "caseId": "ID sprawy",
+    "status": "Aktualny status",
+    "dashboardCta": "Przejdz do dashboardu",
+    "caseCta": "Otworz sprawe"
   }
 }

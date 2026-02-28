@@ -742,5 +742,18 @@
     "placeholders": {
       "internalNote": "Internal notes"
     }
+  },
+  "PaymentSuccess": {
+    "eyebrow": "Payment",
+    "title": "Processing confirmation",
+    "subtitle": "We are verifying your payment status. This page only reads status from your case record.",
+    "loading": "Checking payment...",
+    "pending": "Payment still pending, refreshing status...",
+    "confirmed": "Payment confirmed. Your case is marked as paid.",
+    "error": "Could not verify payment status right now.",
+    "caseId": "Case ID",
+    "status": "Current status",
+    "dashboardCta": "Go to dashboard",
+    "caseCta": "Open case"
   }
 }

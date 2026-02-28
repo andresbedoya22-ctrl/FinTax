@@ -77,5 +77,18 @@
     "topbar": {
       "currentCase": "Huidige zaak"
     }
+  },
+  "PaymentSuccess": {
+    "eyebrow": "Betaling",
+    "title": "Bevestiging wordt verwerkt",
+    "subtitle": "We controleren de betalingsstatus. Deze pagina leest alleen de status van je zaak.",
+    "loading": "Betaling controleren...",
+    "pending": "Betaling nog in behandeling, status wordt ververst...",
+    "confirmed": "Betaling bevestigd. Je zaak is gemarkeerd als betaald.",
+    "error": "Kon de betalingsstatus nu niet verifiëren.",
+    "caseId": "Zaak-ID",
+    "status": "Huidige status",
+    "dashboardCta": "Naar dashboard",
+    "caseCta": "Zaak openen"
   }
 }
