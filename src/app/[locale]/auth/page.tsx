@@ -13,6 +13,7 @@ export default async function AuthPage({
         intent: pick(resolved.intent),
         service: pick(resolved.service),
         next: pick(resolved.next),
+        reason: pick(resolved.reason),
       }}
     />
   );

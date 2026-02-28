@@ -32,6 +32,7 @@ type AuthScreenSearchParams = {
   intent?: string;
   service?: string;
   next?: string;
+  reason?: string;
 };
 const AUTH_INTENT_SESSION_KEY = "fintax.pending_intent";
 
@@ -223,6 +224,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const [forgotInfo, setForgotInfo] = React.useState<string | null>(null);
   const [isAppleLoading, setIsAppleLoading] = React.useState(false);
   const pendingIntent = readPendingIntent(initialSearchParams);
+  const mfaRequired = initialSearchParams.reason === "mfa_required";
 
   React.useEffect(() => {
     storePendingIntent(pendingIntent);
@@ -378,6 +380,9 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                 </Tabs>
 
                 {serverError ? <ErrorBanner message={serverError} /> : null}
+                {mfaRequired ? (
+                  <InfoBanner message="Multi-factor authentication is required for admin access. Sign in and complete MFA enrollment in your account settings, then continue." />
+                ) : null}
                 {forgotInfo && mode === "forgot" ? <InfoBanner message={forgotInfo} /> : null}
 
                 {mode !== "forgot" ? (

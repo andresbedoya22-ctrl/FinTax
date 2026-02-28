@@ -7,7 +7,9 @@ if (fs.existsSync(outDir)) {
 }
 
 execSync(`pnpm exec tsc --module commonjs --target es2020 --skipLibCheck --esModuleInterop --moduleResolution node --outDir ${outDir} src/lib/constants/toeslagen-rules.ts src/lib/utils/eligibility-calculator.ts`, { stdio: "inherit" });
-execSync("node --test tests/eligibility-calculator.test.cjs", { stdio: "inherit" });
+execSync("node -e \"require('node:test'); require('./tests/eligibility-calculator.test.cjs')\"", {
+  stdio: "inherit",
+});
 if (fs.existsSync(outDir)) {
   fs.rmSync(outDir, { recursive: true, force: true });
 }
