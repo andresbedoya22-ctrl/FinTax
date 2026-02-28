@@ -31,3 +31,27 @@ export async function requireAuthedUser() {
 
   return { supabase, user } as const;
 }
+
+export async function requireAdminUser() {
+  const authed = await requireAuthedUser();
+  if ("errorResponse" in authed) {
+    return authed;
+  }
+
+  const { data, error } = await authed.supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", authed.user.id)
+    .eq("role", "admin")
+    .maybeSingle();
+
+  if (error) {
+    return { errorResponse: apiError("internal") } as const;
+  }
+
+  if (!data) {
+    return { errorResponse: apiError("forbidden") } as const;
+  }
+
+  return authed;
+}
