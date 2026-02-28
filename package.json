@@ -11,7 +11,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node scripts/test-eligibility.mjs && node --experimental-strip-types tests/case-status-stepper.test.mjs && node --experimental-strip-types tests/encryption-roundtrip.test.mjs && node --experimental-strip-types tests/stripe-webhook-mapper.test.mjs && node --experimental-strip-types tests/stripe-webhook-idempotency.test.mjs",
     "precommit": "pnpm lint && pnpm typecheck",
-    "qa": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "qa": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "audit:prod": "pnpm audit --prod --audit-level=high",
+    "license:check": "node scripts/license-check.mjs",
+    "security:gate": "pnpm audit:prod && pnpm license:check"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -42,6 +45,7 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "eslint-plugin-import": "^2.32.0",
     "postcss": "^8.5.6",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
