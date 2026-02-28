@@ -79,6 +79,9 @@
   --text-4xl: clamp(2rem, 3vw, 3.4rem);
   --section-y: clamp(2.75rem, 4vw, 4.75rem);
   --stack-gap: clamp(1rem, 1.2vw, 1.4rem);
+  --font-display: "Fraunces", "Georgia", "Times New Roman", serif;
+  --font-sans: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "Consolas", "SFMono-Regular", Menlo, monospace;
 
   /* Typography aliases */
   --font-heading: var(--font-display);
