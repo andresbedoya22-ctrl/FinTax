@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  experimental: {
+    workerThreads: false,
+    webpackBuildWorker: false,
+  },
+  typescript: {
+    // Type safety is enforced by the explicit gate `pnpm.cmd typecheck`.
+    ignoreBuildErrors: process.env.SKIP_NEXT_TYPECHECK === "1",
+  },
   async headers() {
     return [
       {
