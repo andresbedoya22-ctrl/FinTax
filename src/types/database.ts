@@ -66,6 +66,7 @@ export interface Case {
   deadline: string | null;
   estimated_refund: number | null;
   actual_refund: number | null;
+  paid_at?: string | null;
   wizard_data: Record<string, unknown>;
   wizard_completed: boolean;
   machtiging_status: MachtigingStatus;

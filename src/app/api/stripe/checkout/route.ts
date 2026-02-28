@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         },
       },
     ],
-    success_url: `${appUrl}/${parsed.data.locale}/dashboard?payment=success&caseId=${parsed.data.caseId}`,
+    success_url: `${appUrl}/${parsed.data.locale}/success?caseId=${parsed.data.caseId}`,
     cancel_url: `${appUrl}/${parsed.data.locale}/dashboard?payment=cancelled&caseId=${parsed.data.caseId}`,
     metadata: {
       case_id: parsed.data.caseId,

@@ -20,6 +20,12 @@ export function isCheckoutSessionAlreadyProcessed(input: {
   return input.insertErrorMessage.toLowerCase().includes("duplicate");
 }
 
+export function isStripeEventAlreadyProcessed(insertErrorMessage?: string | null) {
+  if (!insertErrorMessage) return false;
+  const lowered = insertErrorMessage.toLowerCase();
+  return lowered.includes("duplicate") || lowered.includes("unique");
+}
+
 export function extractCheckoutCompletedPayload(session: Stripe.Checkout.Session): CheckoutCompletedPayload | null {
   const caseId = session.metadata?.case_id;
   const userId = session.metadata?.user_id;
