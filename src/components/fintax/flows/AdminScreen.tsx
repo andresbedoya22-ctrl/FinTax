@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useTranslations } from "next-intl";
 import * as React from "react";
@@ -8,12 +8,15 @@ import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, EmptyState, Skeleton } from "@/components/ui";
 import { isApiClientError } from "@/hooks/api-client";
 import { useCases } from "@/hooks/useCases";
+import { useServicePricing } from "@/hooks/useServicePricing";
 import type { CaseStatus } from "@/types/database";
 
 export function AdminScreen() {
   const t = useTranslations("Admin");
   const casesQuery = useCases();
+  const pricingQuery = useServicePricing();
   const cases = casesQuery.data ?? [];
+  const pricingItems = pricingQuery.data ?? [];
   const [notes, setNotes] = React.useState<Record<string, string>>({});
   const [statusOverrides, setStatusOverrides] = React.useState<Record<string, CaseStatus>>({});
 
@@ -22,7 +25,8 @@ export function AdminScreen() {
     setStatusOverrides((prev) => ({ ...prev, [id]: status }));
   };
 
-  const errorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
+  const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
+  const pricingErrorCode = pricingQuery.error && isApiClientError(pricingQuery.error) ? pricingQuery.error.code : null;
 
   return (
     <div className="space-y-6">
@@ -43,14 +47,14 @@ export function AdminScreen() {
         <CardHeader><h3 className="text-base font-semibold text-text">{t("sections.caseManagement")}</h3></CardHeader>
         <CardBody className="space-y-3">
           {casesQuery.isLoading ? (
-            <div className="space-y-2 rounded-xl border border-border/35 bg-surface2/15 p-3">
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-2/3" />
-            </div>
+            <>
+              <Skeleton className="h-20 w-full rounded-xl" />
+              <Skeleton className="h-20 w-full rounded-xl" />
+            </>
           ) : casesQuery.isError ? (
             <EmptyState
               title="Admin cases tijdelijk niet beschikbaar"
-              description={errorCode ? `API error code: ${errorCode}` : "Controleer je sessie en probeer opnieuw."}
+              description={casesErrorCode ? `API error code: ${casesErrorCode}` : "Controleer je sessie en probeer opnieuw."}
             />
           ) : cases.length === 0 ? (
             <EmptyState
@@ -121,10 +125,29 @@ export function AdminScreen() {
         <Card>
           <CardHeader><h3 className="text-base font-semibold text-text">{t("sections.pricing")}</h3></CardHeader>
           <CardBody className="space-y-2">
-            <EmptyState
-              title="Prijsbeheer via billing-config"
-              description="Prijsregels worden uit de centrale service_pricing tabel gelezen. Geen lokale mock-fallback actief."
-            />
+            {pricingQuery.isLoading ? (
+              <>
+                <Skeleton className="h-10 w-full rounded-xl" />
+                <Skeleton className="h-10 w-full rounded-xl" />
+              </>
+            ) : pricingQuery.isError ? (
+              <EmptyState
+                title="Pricing tijdelijk niet beschikbaar"
+                description={pricingErrorCode ? `API error code: ${pricingErrorCode}` : "Kon service_pricing niet laden."}
+              />
+            ) : pricingItems.length === 0 ? (
+              <EmptyState
+                title="Geen prijsregels gevonden"
+                description="Configureer minimaal een actieve service_pricing regel."
+              />
+            ) : (
+              pricingItems.map((price) => (
+                <div key={price.id} className="flex items-center justify-between rounded-xl border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
+                  <span>{price.name}</span>
+                  <span className="font-heading tracking-[-0.02em] text-green">EUR {price.price.toFixed(2)}</span>
+                </div>
+              ))
+            )}
           </CardBody>
         </Card>
       </div>
@@ -143,4 +166,3 @@ function Kpi({ title, value, tone }: { title: string; value: string; tone: "neut
     </Card>
   );
 }
-
