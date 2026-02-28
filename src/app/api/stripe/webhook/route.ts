@@ -4,7 +4,11 @@ import Stripe from "stripe";
 
 import { createAdminClient } from "@/lib/supabase/server";
 import { getStripeServerClient } from "@/lib/stripe/server";
-import { extractCheckoutCompletedPayload, isCheckoutSessionAlreadyProcessed } from "@/lib/stripe/webhook";
+import {
+  extractCheckoutCompletedPayload,
+  isCheckoutSessionAlreadyProcessed,
+  isStripeEventAlreadyProcessed,
+} from "@/lib/stripe/webhook";
 
 async function handleCheckoutCompleted(event: Stripe.Event) {
   const stripe = getStripeServerClient();
@@ -49,6 +53,7 @@ async function handleCheckoutCompleted(event: Stripe.Event) {
     .from("cases")
     .update({
       status: "paid",
+      paid_at: new Date().toISOString(),
       stripe_payment_id: payload.paymentIntentId ?? payload.checkoutSessionId,
       updated_at: new Date().toISOString(),
     })
@@ -57,6 +62,24 @@ async function handleCheckoutCompleted(event: Stripe.Event) {
     .in("status", ["pending_payment", "draft"]);
 
   return { processed: true, paymentId: insertedPayment?.id ?? null };
+}
+
+async function registerStripeEvent(event: Stripe.Event) {
+  const admin = await createAdminClient().catch(() => null);
+  if (!admin) return { ok: false, reason: "admin_client_unavailable" as const };
+
+  const { error } = await admin.from("stripe_events").insert({
+    stripe_event_id: event.id,
+    type: event.type,
+    payload: event,
+  });
+
+  if (!error) return { ok: true, idempotent: false as const };
+  if (isStripeEventAlreadyProcessed(error.message)) {
+    return { ok: true, idempotent: true as const };
+  }
+
+  return { ok: false, reason: "stripe_event_insert_failed" as const };
 }
 
 export async function POST(request: Request) {
@@ -82,6 +105,17 @@ export async function POST(request: Request) {
 
   switch (event.type) {
     case "checkout.session.completed": {
+      const registration = await registerStripeEvent(event);
+      if (!registration.ok) {
+        return NextResponse.json(
+          { received: false, reason: registration.reason, type: event.type },
+          { status: 500 }
+        );
+      }
+      if (registration.idempotent) {
+        return NextResponse.json({ received: true, type: event.type, processed: true, idempotent: true });
+      }
+
       const result = await handleCheckoutCompleted(event);
       return NextResponse.json({ received: true, type: event.type, ...result });
     }

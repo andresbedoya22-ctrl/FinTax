@@ -742,5 +742,18 @@
     "placeholders": {
       "internalNote": "Notas internas"
     }
+  },
+  "PaymentSuccess": {
+    "eyebrow": "Pago",
+    "title": "Procesando confirmación",
+    "subtitle": "Estamos verificando el estado del pago. Esta página solo lee el estado del caso.",
+    "loading": "Verificando pago...",
+    "pending": "Pago pendiente, actualizando estado...",
+    "confirmed": "Pago confirmado. Tu caso está marcado como pagado.",
+    "error": "No se pudo verificar el estado del pago ahora.",
+    "caseId": "ID del caso",
+    "status": "Estado actual",
+    "dashboardCta": "Ir al dashboard",
+    "caseCta": "Abrir caso"
   }
 }

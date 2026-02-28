@@ -396,5 +396,18 @@
         }
       ]
     }
+  },
+  "PaymentSuccess": {
+    "eyebrow": "Plata",
+    "title": "Confirmare in procesare",
+    "subtitle": "Verificam statusul platii. Aceasta pagina doar citeste statusul cazului.",
+    "loading": "Verificare plata...",
+    "pending": "Plata este in asteptare, actualizam statusul...",
+    "confirmed": "Plata confirmata. Cazul tau este marcat ca platit.",
+    "error": "Nu am putut verifica acum statusul platii.",
+    "caseId": "ID caz",
+    "status": "Status curent",
+    "dashboardCta": "Mergi la dashboard",
+    "caseCta": "Deschide cazul"
   }
 }
