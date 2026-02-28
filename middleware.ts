@@ -7,6 +7,8 @@ import { routing } from "@/i18n/routing";
 const handleI18n = createIntlMiddleware(routing);
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const WEBHOOK_PATHS = new Set(["/api/stripe/webhook"]);
+const ORIGIN_EXEMPT_PATHS = new Set(["/api/health"]);
+const ORIGIN_EXEMPT_PREFIXES = ["/api/auth/callback", "/api/auth/"];
 
 type AALLevel = "aal1" | "aal2" | null;
 
@@ -88,6 +90,8 @@ async function handleApiOriginPolicy(request: NextRequest): Promise<NextResponse
   if (!pathname.startsWith("/api/")) return null;
   if (!WRITE_METHODS.has(request.method)) return null;
   if (WEBHOOK_PATHS.has(pathname)) return null;
+  if (ORIGIN_EXEMPT_PATHS.has(pathname)) return null;
+  if (ORIGIN_EXEMPT_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return null;
 
   const requestOrigin = extractRequestOrigin(request);
   const allowedOrigins = collectAllowedOrigins(request);
