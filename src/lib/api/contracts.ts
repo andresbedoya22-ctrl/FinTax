@@ -20,6 +20,11 @@ const notificationsLimitSchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).optional(),
 });
 
+const dsarCreateSchema = z.object({
+  requestType: z.enum(["export", "rectify", "delete"]),
+  details: z.record(z.string(), z.unknown()).optional(),
+});
+
 export function buildApiSuccess<T>(data: T, meta?: ApiMeta): ApiSuccess<T> {
   return {
     data,
@@ -45,4 +50,8 @@ export function parseIdParam(params: { id: string }) {
 
 export function parseNotificationsLimit(query: Record<string, string | undefined>) {
   return notificationsLimitSchema.safeParse(query);
+}
+
+export function parseDsarCreatePayload(payload: unknown) {
+  return dsarCreateSchema.safeParse(payload);
 }

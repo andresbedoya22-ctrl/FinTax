@@ -53,3 +53,18 @@ export async function apiGet<T>(url: string): Promise<T> {
 
   return parseEnvelope<T>(response);
 }
+
+export async function apiPost<T, B>(url: string, body: B): Promise<T> {
+  const response = await fetch(url, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  return parseEnvelope<T>(response);
+}

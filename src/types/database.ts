@@ -76,6 +76,9 @@ export interface Case {
   stripe_payment_id: string | null;
   assigned_admin: string | null;
   notes_internal: string | null;
+  legal_hold?: boolean;
+  legal_hold_reason?: string | null;
+  legal_hold_set_at?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -108,6 +111,9 @@ export interface Document {
   review_notes: string | null;
   reviewed_by: string | null;
   reviewed_at: string | null;
+  legal_hold?: boolean;
+  legal_hold_reason?: string | null;
+  legal_hold_set_at?: string | null;
   created_at: string;
 }
 
@@ -133,6 +139,34 @@ export interface Payment {
   currency: string;
   status: "pending" | "succeeded" | "failed" | "refunded";
   payment_method: string | null;
+  legal_hold?: boolean;
+  legal_hold_reason?: string | null;
+  legal_hold_set_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type DsarRequestType = "export" | "rectify" | "delete";
+export type DsarRequestStatus = "open" | "in_progress" | "completed" | "rejected" | "cancelled";
+
+export interface DsarRequest {
+  id: string;
+  user_id: string;
+  request_type: DsarRequestType;
+  status: DsarRequestStatus;
+  requested_payload: Record<string, unknown>;
+  resolution_notes: string | null;
+  due_at: string;
+  resolved_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RetentionPolicy {
+  entity_name: string;
+  retention_days: number;
+  enabled: boolean;
+  notes: string | null;
   created_at: string;
   updated_at: string;
 }

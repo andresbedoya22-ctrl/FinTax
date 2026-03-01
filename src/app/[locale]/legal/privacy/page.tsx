@@ -27,6 +27,20 @@ export default function PrivacyPage() {
           <li className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">Authenticated users can access their profile, cases, documents, payments and notifications only.</li>
           <li className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">Sensitive identifiers are encrypted server-side before database storage.</li>
         </ul>
+        <h2 className="mt-8 font-heading text-xl tracking-[-0.02em] text-text">Retention Policy (MVP)</h2>
+        <ul className="mt-4 grid gap-3 text-sm text-secondary">
+          <li className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">Cases and payments: retained for 2555 days unless legal hold is active.</li>
+          <li className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">Documents and notifications: retained for 365 days unless legal hold is active.</li>
+          <li className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">Purge jobs must skip rows marked with legal hold.</li>
+        </ul>
+        <h2 className="mt-8 font-heading text-xl tracking-[-0.02em] text-text">DSAR Channel</h2>
+        <p className="mt-3 text-sm leading-7 text-secondary">
+          You can submit export, rectification and deletion requests from account settings or by email at{" "}
+          <a className="text-copper underline underline-offset-4" href="mailto:privacy@fintax.nl">
+            privacy@fintax.nl
+          </a>
+          . Each request is tracked with a due date and resolution status.
+        </p>
       </div>
     </main>
   );
