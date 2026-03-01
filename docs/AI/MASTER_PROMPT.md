@@ -1,132 +1,91 @@
-# FinTax — Master Prompt (Canon)
+﻿# FinTax Master Prompt (Canon)
 
-## 0) Canon / Source of Truth (MUST READ FIRST)
-Before taking any action, always read these files in this order:
+## Mandatory Read Order (before any code change)
+Read these files first, in this exact order:
+1. `docs/AI/MASTER_PROMPT.md`
+2. `docs/ROADMAP/v9_CHECKLIST.md`
 
-1) `docs/AI/MASTER_PROMPT.md` (this file)
-2) `docs/ROADMAP/FinTax_Roadmap_v9.md` (Roadmap v9 source of truth)
-3) `docs/ROADMAP/v9_CHECKLIST.md` (execution state: PR log + gate checklist)
+If either file is missing, create it with a minimal scaffold and stop.
 
-If any of these files are missing, you MUST create them first (minimal scaffold), then STOP and ask for the missing content (do not start new PR work).
+## Mission
+Execute Roadmap v9 in strict sequence, one PR at a time, with deterministic gates and persistent tracking.
 
----
+## Core Rules
+1. Single active PR branch only.
+2. Do not start PR #N+1 until PR #N is merged.
+3. Keep diffs minimal and scoped to the current PR objective.
+4. Keep working tree clean at every checkpoint.
+5. Never assume GitHub connectivity.
 
-## 1) Primary Goal
-Execute **Roadmap v9** strictly and deterministically.
-- No improvisation.
-- No skipping steps.
-- No parallel PRs.
-- No “nice to have” refactors outside the current PR scope unless required to pass gates.
+## Local Gates vs Publish (separate phases)
 
----
+### Local Gates (must pass before publish)
+Run in this order:
+1. `pnpm.cmd lint`
+2. `pnpm.cmd typecheck`
+3. `pnpm.cmd test -- --runInBand`
+4. `pnpm.cmd build`
 
-## 2) Execution Model (PLAN → EXECUTE → GATES → PUBLISH → MERGE → UPDATE CHECKLIST)
-For every PR:
+Preferred umbrella check is `pnpm.cmd qa` when stable in the environment.
 
-### A) PLAN
-- Identify the next PR number and scope from `docs/ROADMAP/FinTax_Roadmap_v9.md`.
-- Confirm what gates (from 1..25) this PR satisfies.
-- List files to touch.
-- List local commands to run.
+### Build Gate (Windows)
+If `pnpm.cmd build` fails with `EPERM` or `DataCloneError`:
+- Run build through `scripts/build-gate.mjs` (already wired via `pnpm.cmd build` in this repo).
+- Do not change `next.config.ts` experiments unless the failure reproduces and the change is documented in PR log and checklist.
 
-### B) EXECUTE
-- Implement only what is needed for the PR scope.
-- Keep changes minimal, clean, and consistent with existing patterns.
+## Publish Policy (PUSH-FIRST, no fetch gate)
+Publishing sequence:
+1. `git push -u origin <branch>`
+2. `gh pr create --base main --head <branch> --title "..." --body-file .github/pull_request_template.md`
+3. `gh pr merge --squash --delete-branch --auto`
+4. `git switch main`
+5. `git pull --ff-only`
+6. `pnpm.cmd qa`
 
-### C) GATES (local)
-Run gates locally and capture results:
+`git fetch` is optional and never a blocker for publish.
 
-- `pnpm.cmd lint`
-- `pnpm.cmd typecheck`
-- `pnpm.cmd test -- --runInBand`
-- `pnpm.cmd build` (uses build-gate if configured)
+## Retry Ladder for Network Instability
+For `git push` and `git pull --ff-only` remote failures:
+- Retry up to 3 times with backoff: 2s, 5s, 10s.
+- For `git push`, if still failing, run one traced attempt with:
+  - `GIT_TRACE=1`
+  - `GIT_TRACE_CURL=1`
 
-If any gate fails, fix and re-run until PASS.
+If `git push` still fails after ladder:
+- Mark `OFFLINE PARK` in `docs/ROADMAP/v9_CHECKLIST.md`.
+- Record exact pending publish commands.
+- Stop execution (do not advance to the next PR).
 
-### D) PUBLISH (PUSH-FIRST policy)
-Publishing is *strictly*:
+## PR Loop (when executing a PR)
+1. `git switch main`
+2. `git pull --ff-only` (retry ladder if network unstable)
+3. Create branch: `chore/roadmap-v9-prXX-<slug>` or `feat/...` per roadmap.
+4. Implement scoped changes only.
+5. Run local gates.
+6. Commit.
+7. Publish using PUSH-FIRST policy.
+8. Return to `main`, pull, and rerun `pnpm.cmd qa`.
+9. Update `docs/ROADMAP/v9_CHECKLIST.md` (state + PR log + gates impacted).
 
-1) `git push -u origin <branch>`
-2) `gh pr create ...`
-3) `gh pr merge --squash --delete-branch --auto`
-4) `git switch main`
-5) `git pull --ff-only`
-6) `pnpm.cmd qa`
+## Checklist Rule C (Persistence)
+For every PR entry in `docs/ROADMAP/v9_CHECKLIST.md` include:
+- Branch
+- Commit hash
+- Scope summary
+- Gates impacted
+- Evidence commands and outcome
+- Publish state (`MERGED` or `OFFLINE PARK`)
 
-**Do NOT require `git fetch` as a prerequisite.**  
-If fetch fails but push works, proceed.
+PR log is append-only.
+If publish completes, reflect it; never keep stale `OFFLINE PARK` state.
 
-### E) OFFLINE PARK policy (when network fails)
-If `git push` fails due to GitHub connectivity:
-- Write an OFFLINE PARK entry into `docs/ROADMAP/v9_CHECKLIST.md`:
-  - branch
-  - HEAD commit
-  - working tree status (must be clean)
-  - which gates passed (lint/typecheck/test/build)
-  - the exact pending publish commands
-- STOP. Do not start next PR.
+## PowerShell Safety
+- Never use `&&`.
+- Use `pnpm.cmd` instead of `pnpm`.
+- Use `-LiteralPath` for paths containing brackets.
 
-### F) UPDATE CHECKLIST (always)
-After a PR is merged:
-- Append a PR log line to `docs/ROADMAP/v9_CHECKLIST.md` (append-only).
-- Update “Estado actual” (branch/main, HEAD, último PR, próximo PR).
-- Mark any gates that are fully satisfied **only if** you can map them to the exact Roadmap gate text.
-
----
-
-## 3) Determinism Rules (non-negotiable)
-- One PR at a time.
-- PR numbering is sequential and must match Roadmap v9.
-- No PR #N+1 until PR #N is merged.
-- Avoid manual steps for the user: prefer scripts, repeatable commands, and doc-driven workflow.
-- Do not invent gates, rename gates, or re-order gates. Gates are verbatim from Roadmap v9.
-
----
-
-## 4) Git Rules
-- Default branch: `main`
-- Branch naming: use Roadmap v9 convention: `chore/roadmap-v9-prXX-...` or `feat/...` as specified by v9.
-- Always keep working tree clean at checkpoints.
-- Squash merge PRs unless Roadmap explicitly says otherwise.
-
----
-
-## 5) Documentation Rules
-- `docs/ROADMAP/FinTax_Roadmap_v9.md` is the source of truth.
-- `docs/ROADMAP/v9_CHECKLIST.md` is the living execution state (PR log + gate status).
-- Any decision taken due to environment flakiness (Windows spawn EPERM, transient network) must be logged in `v9_CHECKLIST.md` with exact error snippets.
-
----
-
-## 6) Build / Windows Stability Guardrails
-This repo may run on Windows with intermittent build issues.
-- Prefer deterministic build gates (e.g., a build-gate script) over ad-hoc retries in chat.
-- If a Next.js/Node build fails intermittently, isolate it, document it, and implement the smallest stable workaround that preserves correctness and CI parity.
-
----
-
-## 7) Security / Secrets Handling
-- Never commit secrets.
-- Use `.env.local` for local development only.
-- For CI, use GitHub Actions secrets.
-- For production, use the chosen hosting provider secret store (document steps in runbooks).
-
----
-
-## 8) STOP Conditions (must stop immediately)
-Stop and ask for input if:
-- Roadmap v9 file missing or does not include gates 1..25.
-- Checklist file missing.
-- Any required secret/config values are unknown and needed to proceed.
-- A publish step fails and OFFLINE PARK is required.
-
----
-
-## 9) Output Format Requirements (for the assistant)
-When implementing PR work:
-- Provide a short plan.
-- Provide exact PowerShell commands to execute.
-- When asked to create/edit files, output **full file contents** (not diffs).
-- Always include gate results and next action.
-
-End.
+## Stop Conditions
+Stop only for:
+- Failing local gates that cannot be resolved safely within scope.
+- Data-loss risk.
+- Missing canonical inputs that block deterministic execution.
