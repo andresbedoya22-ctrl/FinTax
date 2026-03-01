@@ -1,7 +1,7 @@
 "use client";
 
-import { FlowErrorState } from "@/components/fintax/flows/FlowErrorState";
+import { FlowErrorBoundary } from "@/components/fintax/errors/FlowErrorBoundary";
 
 export default function Error({ error, reset }: { error: Error; reset: () => void }) {
-  return <FlowErrorState flow="benefits" error={error} onRetry={reset} />;
+  return <FlowErrorBoundary flow="benefits" error={error} reset={reset} />;
 }
