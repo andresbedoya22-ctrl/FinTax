@@ -203,3 +203,13 @@
 - Scope corto: BSN key versioning (bsn_key_id + bsn_ciphertext), key rotation safe decrypt, reencrypt routine.
 - Evidencia gates: pnpm.cmd qa PASS en main.
 - Referencia detalle: docs/ROADMAP/logs/pr-07.md
+
+## PR #08 closeout (append-only)
+- 2026-03-01 16:53:14 UTC
+- Estado: MERGED
+- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/23
+- Merge commit real en main: b449ae10214b0430a464d277ea0a848558b1e52a
+- Scope corto: /api/health + smoke:staging parity checks (keys contamination, headers, health, anon RLS, migrations parity when creds exist).
+- Gates impactados: Gate #13 y Gate #14
+- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
+- Referencia detalle: docs/ROADMAP/logs/pr-08.md
