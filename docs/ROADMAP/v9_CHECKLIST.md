@@ -150,3 +150,31 @@
 
 ## OFFLINE PARK log (append-only)
 - Sin entradas activas para PR #02/#03/#04 (todos MERGED).
+
+## Estado update (append-only)
+- 2026-03-01 11:04:11 UTC: PR #05 en OFFLINE PARK por fallo de conectividad GitHub:443 durante PUSH-FIRST.
+- Branch: eat/roadmap-v9-pr05-stripe-integrity
+- HEAD local: $head
+- Scope PR #05: Stripe integrity hardening (webhook signature, stripe_events idempotency, payment integrity constraint, success polling-only, reconciliation script).
+- Gates locales (PASS):
+  - pnpm.cmd lint
+  - pnpm.cmd typecheck
+  - pnpm.cmd test -- --runInBand
+  - pnpm.cmd build
+- Publish attempt (FAIL por red):
+  - git push -u origin feat/roadmap-v9-pr05-stripe-integrity x3 (backoff 2s/5s/10s)
+  - traced retry: GIT_TRACE=1, GIT_TRACE_CURL=1, git push -u origin feat/roadmap-v9-pr05-stripe-integrity
+  - error: Failed to connect to github.com port 443
+- Pending publish commands when network recovers:
+  - git push -u origin feat/roadmap-v9-pr05-stripe-integrity
+  - gh pr create --base main --head feat/roadmap-v9-pr05-stripe-integrity --title "PR #05: Stripe integrity hardening" --body-file .github/pull_request_template.md
+  - gh pr merge --squash --delete-branch --auto
+  - git switch main
+  - git pull --ff-only
+  - pnpm.cmd qa
+
+## OFFLINE PARK log (append-only)
+- PR #05 -> READY_TO_PUBLISH
+  - Branch: eat/roadmap-v9-pr05-stripe-integrity
+  - Head: $head
+  - Reason: GitHub 443 connectivity failure after retry ladder.
