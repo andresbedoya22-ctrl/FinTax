@@ -4,6 +4,7 @@ import {
   STATUS_BY_ERROR_CODE,
   buildApiFailure,
   buildApiSuccess,
+  parseDsarCreatePayload,
   parseIdParam,
   parseNotificationsLimit,
 } from "../src/lib/api/contracts.ts";
@@ -71,4 +72,17 @@ test("notifications limit parser enforces 1..100", () => {
 
   const tooHigh = parseNotificationsLimit({ limit: "101" });
   assert.equal(tooHigh.success, false);
+});
+
+test("dsar create payload parser enforces request type", () => {
+  const valid = parseDsarCreatePayload({
+    requestType: "export",
+    details: { source: "settings_screen" },
+  });
+  assert.equal(valid.success, true);
+
+  const invalid = parseDsarCreatePayload({
+    requestType: "archive",
+  });
+  assert.equal(invalid.success, false);
 });

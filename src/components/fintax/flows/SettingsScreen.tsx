@@ -6,11 +6,11 @@ import * as React from "react";
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, Skeleton } from "@/components/ui";
+import { apiPost } from "@/hooks/api-client";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 import { createClient } from "@/lib/supabase/client";
-import type { Payment, Profile } from "@/types/database";
+import type { DsarRequest, DsarRequestType, Payment, Profile } from "@/types/database";
 
-const ENABLE_DATA_REQUEST_ACTIONS = false;
 const supportedLocales = ["en", "nl", "es", "pl", "ro"] as const;
 
 export function SettingsScreen() {
@@ -28,6 +28,7 @@ export function SettingsScreen() {
   const [settingsMessage, setSettingsMessage] = React.useState<string | null>(null);
   const [settingsError, setSettingsError] = React.useState<string | null>(null);
   const [resettingPassword, setResettingPassword] = React.useState(false);
+  const [privacyActionLoading, setPrivacyActionLoading] = React.useState<DsarRequestType | null>(null);
 
   React.useEffect(() => {
     if (!profile) return;
@@ -127,6 +128,29 @@ export function SettingsScreen() {
     }
 
     setSettingsMessage("Settings saved.");
+  };
+
+  const submitDsarRequest = async (requestType: DsarRequestType) => {
+    setSettingsMessage(null);
+    setSettingsError(null);
+    setPrivacyActionLoading(requestType);
+
+    try {
+      const created = await apiPost<DsarRequest, { requestType: DsarRequestType; details: Record<string, string> }>(
+        "/api/dsar",
+        {
+          requestType,
+          details: { source: "settings_screen" },
+        },
+      );
+      setSettingsMessage(
+        `Request received (${created.request_type}). Response target date: ${new Date(created.due_at).toLocaleDateString()}.`,
+      );
+    } catch {
+      setSettingsError("We could not submit your privacy request right now. Please retry in a minute.");
+    } finally {
+      setPrivacyActionLoading(null);
+    }
   };
 
   return (
@@ -236,14 +260,35 @@ export function SettingsScreen() {
           <CardBody className="space-y-3 text-sm text-secondary">
             <p>{t("privacy.copy")}</p>
             <div className="flex flex-wrap items-center gap-2">
-              <Button type="button" variant="secondary" disabled={!ENABLE_DATA_REQUEST_ACTIONS}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => void submitDsarRequest("export")}
+                disabled={privacyActionLoading !== null}
+              >
                 {t("privacy.exportData")}
               </Button>
-              <Button type="button" variant="danger" disabled={!ENABLE_DATA_REQUEST_ACTIONS}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => void submitDsarRequest("rectify")}
+                disabled={privacyActionLoading !== null}
+              >
+                Request rectification
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                onClick={() => void submitDsarRequest("delete")}
+                disabled={privacyActionLoading !== null}
+              >
                 {t("privacy.deleteRequest")}
               </Button>
-              {!ENABLE_DATA_REQUEST_ACTIONS ? <Badge variant="neutral">Coming soon</Badge> : null}
+              {privacyActionLoading ? <Badge variant="neutral">Submitting {privacyActionLoading}...</Badge> : null}
             </div>
+            <p className="text-xs text-muted">
+              Data-subject requests are logged with a 30-day due date and reviewed by the privacy team.
+            </p>
           </CardBody>
         </Card>
       </div>
