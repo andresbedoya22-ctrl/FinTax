@@ -9,6 +9,8 @@ export const mockProfile: Profile = {
   phone: "+31 6 87654321",
   date_of_birth: "1993-04-18",
   bsn_encrypted: null,
+  bsn_key_id: null,
+  bsn_ciphertext: null,
   nationality: "Colombian",
   country_of_origin: "CO",
   address_street: "Demo Straat 10",

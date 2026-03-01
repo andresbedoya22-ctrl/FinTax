@@ -39,6 +39,8 @@ export interface Profile {
   phone: string | null;
   date_of_birth: string | null;
   bsn_encrypted: string | null;
+  bsn_key_id: string | null;
+  bsn_ciphertext: string | null;
   nationality: string | null;
   country_of_origin: string | null;
   address_street: string | null;
