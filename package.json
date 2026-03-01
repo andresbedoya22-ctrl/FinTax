@@ -18,7 +18,8 @@
     "security:gate": "pnpm audit:prod && pnpm license:check",
     "stripe:reconcile": "node scripts/stripe-reconcile.mjs",
     "bsn:reencrypt": "node --experimental-strip-types scripts/bsn-reencrypt.mjs",
-    "smoke:staging": "node scripts/verify-staging-parity.mjs"
+    "smoke:staging": "node scripts/verify-staging-parity.mjs",
+    "smoke:postdeploy": "node scripts/smoke-postdeploy.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
