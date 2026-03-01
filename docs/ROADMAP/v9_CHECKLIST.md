@@ -233,3 +233,13 @@
 - Gates impactados: Gate #15, Gate #16
 - Evidencia gates: pnpm.cmd qa PASS en main post-merge.
 - Referencia detalle: docs/ROADMAP/logs/pr-10.md
+
+## PR #11 closeout (append-only)
+- 2026-03-01 18:38:17 UTC
+- Estado: MERGED
+- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/26
+- Merge commit real en main: cdad11a3ca4684a4c753f2f5d4e89b26412f98de
+- Scope corto: pre-launch docs pack (BetterUptime monitors, break-glass, pentest checklist, go-live playbook).
+- Gates impactados: Gate #20, Gate #21, Gate #23, Gate #24
+- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
+- Referencia detalle: docs/ROADMAP/logs/pr-11.md
