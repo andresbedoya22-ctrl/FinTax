@@ -223,3 +223,13 @@
 - Gates impactados: Gate #17, Gate #18, Gate #19, Gate #25
 - Evidencia gates: pnpm.cmd qa PASS en main post-merge.
 - Referencia detalle: docs/ROADMAP/logs/pr-09.md
+
+## PR #10 closeout (append-only)
+- 2026-03-01 17:47:11 UTC
+- Estado: MERGED
+- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/25
+- Merge commit real en main: 4e696205e588b16c94abbd052503417d1b53c365
+- Scope corto: smoke post-deploy (5 checks) + rollback/comms runbook.
+- Gates impactados: Gate #15, Gate #16
+- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
+- Referencia detalle: docs/ROADMAP/logs/pr-10.md
