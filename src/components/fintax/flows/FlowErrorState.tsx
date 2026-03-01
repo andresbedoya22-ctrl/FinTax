@@ -4,7 +4,7 @@ import { AlertTriangle } from "lucide-react";
 
 import { isApiClientError } from "@/hooks/api-client";
 
-type FlowKind = "dashboard" | "benefits" | "tax-return" | "admin";
+type FlowKind = "dashboard" | "benefits" | "tax-return" | "admin" | "settings";
 
 const flowCopy: Record<FlowKind, { title: string; descriptions: Record<string, string>; fallback: string }> = {
   dashboard: {
@@ -45,6 +45,15 @@ const flowCopy: Record<FlowKind, { title: string; descriptions: Record<string, s
       internal: "De admin API geeft nu geen geldige response. Probeer opnieuw.",
     },
     fallback: "Admingegevens konden nu niet worden opgehaald.",
+  },
+  settings: {
+    title: "Instellingen konden niet worden geladen",
+    descriptions: {
+      unauthorized: "Je sessie is verlopen. Log opnieuw in om je instellingen te bekijken.",
+      invalid_payload: "Een instellingenwaarde is ongeldig. Controleer de invoer en probeer opnieuw.",
+      internal: "De instellingenservice reageert nu niet. Probeer het over enkele seconden opnieuw.",
+    },
+    fallback: "Je instellingen zijn nu tijdelijk niet beschikbaar.",
   },
 };
 
