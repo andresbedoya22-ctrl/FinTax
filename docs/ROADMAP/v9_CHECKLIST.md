@@ -178,3 +178,9 @@
   - Branch: eat/roadmap-v9-pr05-stripe-integrity
   - Head: $head
   - Reason: GitHub 443 connectivity failure after retry ladder.
+- 2026-03-01 12:03:07 UTC: reintento publish PR #05 fallido (PUBLISH-ONLY).
+  - Branch: eat/roadmap-v9-pr05-stripe-integrity
+  - Head: $head
+  - Comando fallido: git push -u origin feat/roadmap-v9-pr05-stripe-integrity
+  - Error exacto (ultimo intento): Failed to connect to github.com port 443 after 70 ms: Could not connect to server
+  - Estado: OFFLINE PARK se mantiene (READY_TO_PUBLISH).
