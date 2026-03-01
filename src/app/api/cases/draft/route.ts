@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { encryptString } from "@/lib/security/encryption";
+import { encryptBsn } from "@/lib/security/encryption";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 
 const schema = z.object({
@@ -26,11 +26,17 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const encryptedBsn = encryptString(parsed.data.bsn);
+  const encryptedBsn = encryptBsn(parsed.data.bsn);
 
   await admin
     .from("profiles")
-    .update({ full_name: parsed.data.fullName, bsn_encrypted: encryptedBsn, updated_at: new Date().toISOString() })
+    .update({
+      full_name: parsed.data.fullName,
+      bsn_key_id: encryptedBsn.keyId,
+      bsn_ciphertext: encryptedBsn.ciphertext,
+      bsn_encrypted: `${encryptedBsn.keyId}:${encryptedBsn.ciphertext}`,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", user.id);
 
   const { data: existing } = await admin
@@ -62,4 +68,3 @@ export async function POST(request: Request) {
   if (error) return NextResponse.json({ error: "draft_create_failed" }, { status: 500 });
   return NextResponse.json({ caseId: created.id, mock: false });
 }
-

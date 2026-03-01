@@ -184,3 +184,13 @@
   - Comando fallido: git push -u origin feat/roadmap-v9-pr05-stripe-integrity
   - Error exacto (ultimo intento): Failed to connect to github.com port 443 after 70 ms: Could not connect to server
   - Estado: OFFLINE PARK se mantiene (READY_TO_PUBLISH).
+
+## PR #06 closeout (append-only)
+- 2026-03-01 15:34:44 UTC
+- Estado: MERGED
+- Merge commit real en main: 7de6f0c (GitHub PR #21)
+- HEAD canon actual del repo: c7c066e
+- Scope corto: ErrorBoundary por flow + observability context sanitizado sin PII (BSN/email redacted).
+- Gates impactados: Gate #11 (ErrorBoundary por flow + Sentry PII policy)
+- Evidencia: pnpm.cmd qa PASS en main.
+- Referencia de ejecución detallada: docs/ROADMAP/logs/pr-06.md
