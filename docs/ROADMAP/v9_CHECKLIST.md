@@ -194,3 +194,12 @@
 - Gates impactados: Gate #11 (ErrorBoundary por flow + Sentry PII policy)
 - Evidencia: pnpm.cmd qa PASS en main.
 - Referencia de ejecución detallada: docs/ROADMAP/logs/pr-06.md
+
+## PR #07 closeout (append-only)
+- 2026-03-01 16:35:10 UTC
+- Estado: MERGED
+- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/22
+- Merge commit real en main: caa67bcd6a3eddb6f1144089b2c6958bb074f4a2
+- Scope corto: BSN key versioning (bsn_key_id + bsn_ciphertext), key rotation safe decrypt, reencrypt routine.
+- Evidencia gates: pnpm.cmd qa PASS en main.
+- Referencia detalle: docs/ROADMAP/logs/pr-07.md
