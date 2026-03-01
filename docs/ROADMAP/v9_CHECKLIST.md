@@ -213,3 +213,13 @@
 - Gates impactados: Gate #13 y Gate #14
 - Evidencia gates: pnpm.cmd qa PASS en main post-merge.
 - Referencia detalle: docs/ROADMAP/logs/pr-08.md
+
+## PR #09 closeout (append-only)
+- 2026-03-01 17:11:17 UTC
+- Estado: MERGED
+- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/24
+- Merge commit real en main: 33db10cebe5eba92906663b2bc4e74774f0ba54b
+- Scope corto: GDPR DSAR endpoint + retention_policies + legal_hold columns + privacy policy DSAR channel.
+- Gates impactados: Gate #17, Gate #18, Gate #19, Gate #25
+- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
+- Referencia detalle: docs/ROADMAP/logs/pr-09.md
