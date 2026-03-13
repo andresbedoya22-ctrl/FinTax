@@ -1,90 +1,255 @@
 <svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="shell" x1="146" y1="98" x2="1456" y2="934" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#142236"/>
-      <stop offset="1" stop-color="#0C1524"/>
+    <linearGradient id="shell-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0D1B2E"/>
+      <stop offset="100%" stop-color="#091422"/>
     </linearGradient>
-    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#1A2A42"/>
-      <stop offset="1" stop-color="#111D2F"/>
+    <linearGradient id="sidebar-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0A1525"/>
+      <stop offset="100%" stop-color="#0D1B2E"/>
     </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#39BB80"/>
-      <stop offset="1" stop-color="#B47B58"/>
+    <linearGradient id="card-green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#122B1C"/>
+      <stop offset="100%" stop-color="#0D2016"/>
     </linearGradient>
-    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
-      <feComponentTransfer>
-        <feFuncA type="table" tableValues="0 0.03"/>
-      </feComponentTransfer>
+    <linearGradient id="card-copper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A1E12"/>
+      <stop offset="100%" stop-color="#1F160D"/>
+    </linearGradient>
+    <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#36B677" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#36B677" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="progress-bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#36B677"/>
+      <stop offset="100%" stop-color="#B47B58"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 0.025"/></feComponentTransfer>
+    </filter>
+    <filter id="glow-green">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <rect width="1600" height="1000" rx="30" fill="#09111D"/>
-  <rect x="86" y="68" width="1428" height="864" rx="28" fill="url(#shell)"/>
-  <rect x="86" y="68" width="1428" height="864" rx="28" stroke="#D9E3F0" stroke-opacity="0.12"/>
-  <rect x="86" y="68" width="1428" height="56" rx="28" fill="#101C2D"/>
-  <path d="M112 96H130" stroke="#FF7368" stroke-width="12" stroke-linecap="round"/>
-  <path d="M146 96H164" stroke="#F4C24B" stroke-width="12" stroke-linecap="round"/>
-  <path d="M180 96H198" stroke="#47CC78" stroke-width="12" stroke-linecap="round"/>
-  <path d="M240 96H426" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="4" stroke-linecap="round"/>
-  <rect x="120" y="150" width="266" height="740" rx="20" fill="#101B2C" stroke="#D9E3F0" stroke-opacity="0.08"/>
-  <rect x="424" y="150" width="1056" height="740" rx="20" fill="#0F1A2A" stroke="#D9E3F0" stroke-opacity="0.07"/>
-  <rect x="150" y="194" width="206" height="58" rx="14" fill="#15253A" stroke="#D9E3F0" stroke-opacity="0.09"/>
-  <rect x="166" y="212" width="32" height="22" rx="8" fill="#1E344E"/>
-  <path d="M212 223H312" stroke="#D9E3F0" stroke-opacity="0.52" stroke-width="3" stroke-linecap="round"/>
-  <g opacity="0.9">
-    <rect x="150" y="290" width="206" height="44" rx="12" fill="#122136"/>
-    <rect x="150" y="346" width="206" height="44" rx="12" fill="#122136"/>
-    <rect x="150" y="402" width="206" height="44" rx="12" fill="#17293E"/>
-    <rect x="150" y="458" width="206" height="44" rx="12" fill="#122136"/>
-    <rect x="150" y="514" width="206" height="44" rx="12" fill="#122136"/>
-  </g>
-  <path d="M176 424H212" stroke="#39BB80" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M228 424H320" stroke="#D9E3F0" stroke-opacity="0.65" stroke-width="3.5" stroke-linecap="round"/>
-  <rect x="460" y="178" width="984" height="76" rx="16" fill="#132237" stroke="#D9E3F0" stroke-opacity="0.08"/>
-  <path d="M492 208H634" stroke="#D9E3F0" stroke-opacity="0.68" stroke-width="4" stroke-linecap="round"/>
-  <path d="M492 230H736" stroke="#D9E3F0" stroke-opacity="0.3" stroke-width="4" stroke-linecap="round"/>
-  <rect x="1242" y="194" width="172" height="44" rx="12" fill="#16293D" stroke="#D9E3F0" stroke-opacity="0.08"/>
-  <path d="M1276 216H1380" stroke="#B47B58" stroke-opacity="0.9" stroke-width="3.5" stroke-linecap="round"/>
-  <rect x="460" y="282" width="656" height="356" rx="18" fill="url(#panel)" stroke="#D9E3F0" stroke-opacity="0.09"/>
-  <rect x="1160" y="282" width="284" height="170" rx="18" fill="#13243A" stroke="#D9E3F0" stroke-opacity="0.09"/>
-  <rect x="1160" y="468" width="284" height="170" rx="18" fill="#122238" stroke="#D9E3F0" stroke-opacity="0.09"/>
-  <rect x="460" y="662" width="984" height="192" rx="18" fill="#111E31" stroke="#D9E3F0" stroke-opacity="0.07"/>
-  <g opacity="0.95">
-    <rect x="492" y="320" width="164" height="92" rx="14" fill="#15263D"/>
-    <rect x="674" y="320" width="164" height="92" rx="14" fill="#15263D"/>
-    <rect x="856" y="320" width="228" height="92" rx="14" fill="#15263D"/>
-    <path d="M520 350H612" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>
-    <path d="M520 378H594" stroke="#D9E3F0" stroke-opacity="0.6" stroke-width="4" stroke-linecap="round"/>
-    <path d="M702 350H794" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>
-    <path d="M702 378H772" stroke="#39BB80" stroke-width="4" stroke-linecap="round"/>
-    <path d="M884 350H1002" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>
-    <path d="M884 378H1048" stroke="#B47B58" stroke-width="4" stroke-linecap="round"/>
-  </g>
-  <g opacity="0.9">
-    <path d="M512 480H1068" stroke="#D9E3F0" stroke-opacity="0.22" stroke-width="3" stroke-linecap="round"/>
-    <path d="M512 514H1026" stroke="#D9E3F0" stroke-opacity="0.55" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M512 548H974" stroke="#D9E3F0" stroke-opacity="0.35" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M512 582H914" stroke="#D9E3F0" stroke-opacity="0.25" stroke-width="3.5" stroke-linecap="round"/>
-  </g>
-  <g opacity="0.95">
-    <rect x="1192" y="314" width="220" height="18" rx="9" fill="#1A314A"/>
-    <rect x="1192" y="346" width="164" height="18" rx="9" fill="#233B57"/>
-    <rect x="1192" y="378" width="186" height="18" rx="9" fill="url(#accent)"/>
-    <rect x="1192" y="500" width="220" height="14" rx="7" fill="#203651"/>
-    <rect x="1192" y="530" width="176" height="14" rx="7" fill="#203651"/>
-    <rect x="1192" y="560" width="196" height="14" rx="7" fill="#2A425D"/>
-  </g>
-  <g opacity="0.8">
-    <rect x="492" y="702" width="304" height="120" rx="14" fill="#14253A"/>
-    <rect x="814" y="702" width="304" height="120" rx="14" fill="#14253A"/>
-    <rect x="1136" y="702" width="276" height="120" rx="14" fill="#14253A"/>
-    <path d="M520 734H692" stroke="#D9E3F0" stroke-opacity="0.28" stroke-width="3"/>
-    <path d="M520 766H660" stroke="#D9E3F0" stroke-opacity="0.58" stroke-width="3.5"/>
-    <path d="M842 734H1014" stroke="#D9E3F0" stroke-opacity="0.28" stroke-width="3"/>
-    <path d="M842 766H984" stroke="#39BB80" stroke-width="3.5"/>
-    <path d="M1164 734H1336" stroke="#D9E3F0" stroke-opacity="0.28" stroke-width="3"/>
-    <path d="M1164 766H1298" stroke="#B47B58" stroke-width="3.5"/>
-  </g>
-  <rect width="1600" height="1000" rx="30" filter="url(#grain)"/>
+
+  <!-- Outer shell -->
+  <rect width="1600" height="1000" rx="24" fill="#080E1A"/>
+  <rect x="1" y="1" width="1598" height="998" rx="24" fill="none" stroke="#D9E3F0" stroke-opacity="0.08"/>
+
+  <!-- Top bar -->
+  <rect width="1600" height="52" rx="0" fill="#091220"/>
+  <rect y="52" width="1600" height="1" fill="#D9E3F0" fill-opacity="0.07"/>
+
+  <!-- Window dots -->
+  <circle cx="28" cy="26" r="6" fill="#FF5F57"/>
+  <circle cx="52" cy="26" r="6" fill="#FFBD2E"/>
+  <circle cx="76" cy="26" r="6" fill="#28C840"/>
+
+  <!-- URL bar -->
+  <rect x="560" y="12" width="480" height="28" rx="8" fill="#0D1B2E" stroke="#D9E3F0" stroke-opacity="0.10"/>
+  <circle cx="583" cy="26" r="5" fill="none" stroke="#36B677" stroke-width="1.5" stroke-opacity="0.7"/>
+  <text x="596" y="31" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8494AB">fintax.nl/dashboard</text>
+
+  <!-- Sidebar -->
+  <rect x="0" y="52" width="220" height="948" fill="url(#sidebar-bg)"/>
+  <rect x="220" y="52" width="1" height="948" fill="#D9E3F0" fill-opacity="0.06"/>
+
+  <!-- Sidebar logo -->
+  <rect x="20" y="78" width="32" height="32" rx="8" fill="#1A2B1A" stroke="#36B677" stroke-opacity="0.35"/>
+  <text x="36" y="99" font-family="Georgia, serif" font-size="14" font-weight="600" fill="#36B677" text-anchor="middle">F</text>
+  <text x="64" y="99" font-family="Georgia, serif" font-size="15" fill="#E4EBF5" font-weight="500">FinTax</text>
+
+  <!-- Sidebar nav items -->
+  <rect x="12" y="134" width="196" height="36" rx="8" fill="#36B677" fill-opacity="0.12" stroke="#36B677" stroke-opacity="0.2"/>
+  <rect x="26" y="144" width="16" height="16" rx="3" fill="#36B677" fill-opacity="0.5"/>
+  <text x="52" y="156" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#36B677" font-weight="500">Dashboard</text>
+
+  <rect x="26" y="192" width="16" height="16" rx="3" fill="#8494AB" fill-opacity="0.3"/>
+  <text x="52" y="204" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#8494AB">Tax Returns</text>
+  <rect x="26" y="236" width="16" height="16" rx="3" fill="#8494AB" fill-opacity="0.3"/>
+  <text x="52" y="248" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#8494AB">Benefits</text>
+  <rect x="26" y="280" width="16" height="16" rx="3" fill="#8494AB" fill-opacity="0.3"/>
+  <text x="52" y="292" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#8494AB">Documents</text>
+  <rect x="26" y="324" width="16" height="16" rx="3" fill="#8494AB" fill-opacity="0.3"/>
+  <text x="52" y="336" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#8494AB">Settings</text>
+
+  <!-- Sidebar user card -->
+  <rect x="12" y="880" width="196" height="64" rx="10" fill="#0D1B2E" stroke="#D9E3F0" stroke-opacity="0.08"/>
+  <circle cx="42" cy="912" r="16" fill="#1A2B40"/>
+  <text x="42" y="917" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#8494AB" text-anchor="middle">MR</text>
+  <text x="70" y="907" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#E4EBF5" font-weight="500">Maria R.</text>
+  <text x="70" y="922" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB">m.rodriguez@...</text>
+
+  <!-- Main content area -->
+  <!-- Page title row -->
+  <text x="248" y="100" font-family="Georgia, serif" font-size="22" fill="#E4EBF5" font-weight="600" letter-spacing="-0.5">Dashboard</text>
+  <text x="248" y="118" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#8494AB">Good morning, Maria — 2 active cases</text>
+
+  <!-- Notification badge -->
+  <rect x="1480" y="72" width="96" height="30" rx="15" fill="#B47B58" fill-opacity="0.15" stroke="#B47B58" stroke-opacity="0.3"/>
+  <circle cx="1495" cy="87" r="4" fill="#B47B58"/>
+  <text x="1504" y="91" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#B47B58" font-weight="500">1 action</text>
+
+  <!-- KPI cards row -->
+  <!-- Card 1: Open cases -->
+  <rect x="248" y="134" width="226" height="88" rx="12" fill="#0F1B2C" stroke="#D9E3F0" stroke-opacity="0.08"/>
+  <text x="268" y="162" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="1">OPEN CASES</text>
+  <text x="268" y="196" font-family="Georgia, serif" font-size="28" fill="#E4EBF5" font-weight="600">2</text>
+  <text x="310" y="196" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#8494AB">active</text>
+
+  <!-- Card 2: Refund estimate -->
+  <rect x="490" y="134" width="226" height="88" rx="12" fill="url(#card-green)" stroke="#36B677" stroke-opacity="0.2"/>
+  <text x="510" y="162" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#36B677" fill-opacity="0.7" letter-spacing="1">EST. REFUND</text>
+  <text x="510" y="196" font-family="IBM Plex Mono, monospace" font-size="24" fill="#36B677" font-weight="600">€1,286</text>
+
+  <!-- Card 3: Deadline -->
+  <rect x="732" y="134" width="226" height="88" rx="12" fill="#0F1B2C" stroke="#D9E3F0" stroke-opacity="0.08"/>
+  <text x="752" y="162" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="1">NEXT DEADLINE</text>
+  <text x="752" y="192" font-family="Georgia, serif" font-size="20" fill="#E4EBF5" font-weight="600">April 30</text>
+  <text x="752" y="210" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB">IB Aangifte 2024</text>
+
+  <!-- Card 4: Pending docs -->
+  <rect x="974" y="134" width="226" height="88" rx="12" fill="url(#card-copper)" stroke="#B47B58" stroke-opacity="0.2"/>
+  <text x="994" y="162" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#B47B58" fill-opacity="0.7" letter-spacing="1">PENDING DOCS</text>
+  <text x="994" y="196" font-family="Georgia, serif" font-size="28" fill="#B47B58" font-weight="600">3</text>
+  <text x="1036" y="196" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#8494AB">missing</text>
+
+  <!-- Active case card (large) -->
+  <rect x="248" y="244" width="760" height="360" rx="14" fill="#0D1825" stroke="#D9E3F0" stroke-opacity="0.07"/>
+
+  <!-- Case card header -->
+  <rect x="268" y="266" width="68" height="20" rx="10" fill="#B47B58" fill-opacity="0.15" stroke="#B47B58" stroke-opacity="0.3"/>
+  <text x="302" y="280" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#B47B58" text-anchor="middle" font-weight="500">Active case</text>
+  <rect x="348" y="266" width="78" height="20" rx="10" fill="#36B677" fill-opacity="0.12" stroke="#36B677" stroke-opacity="0.25"/>
+  <text x="387" y="280" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#36B677" text-anchor="middle" font-weight="500">In review</text>
+
+  <text x="268" y="310" font-family="Georgia, serif" font-size="18" fill="#E4EBF5" font-weight="600">IB Aangifte 2024 — P Return</text>
+  <text x="268" y="328" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#8494AB">Status: In review · Deadline: April 30, 2025</text>
+
+  <!-- Progress stepper -->
+  <circle cx="290" cy="365" r="10" fill="#36B677"/>
+  <text x="290" y="369" font-family="IBM Plex Mono, monospace" font-size="10" fill="#07130E" text-anchor="middle" font-weight="700">1</text>
+  <text x="290" y="385" font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#36B677" text-anchor="middle">Intake</text>
+
+  <line x1="300" y1="365" x2="380" y2="365" stroke="#36B677" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <circle cx="390" cy="365" r="10" fill="#36B677"/>
+  <text x="390" y="369" font-family="IBM Plex Mono, monospace" font-size="10" fill="#07130E" text-anchor="middle" font-weight="700">2</text>
+  <text x="390" y="385" font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#36B677" text-anchor="middle">Docs</text>
+
+  <line x1="400" y1="365" x2="480" y2="365" stroke="#D9E3F0" stroke-opacity="0.2" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <circle cx="490" cy="365" r="10" fill="#36B677" fill-opacity="0.2" stroke="#36B677" stroke-opacity="0.5" stroke-width="1"/>
+  <text x="490" y="369" font-family="IBM Plex Mono, monospace" font-size="10" fill="#36B677" text-anchor="middle">3</text>
+  <text x="490" y="385" font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#8494AB" text-anchor="middle">Review</text>
+
+  <line x1="500" y1="365" x2="580" y2="365" stroke="#D9E3F0" stroke-opacity="0.12" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <circle cx="590" cy="365" r="10" fill="#0D1825" stroke="#D9E3F0" stroke-opacity="0.2" stroke-width="1"/>
+  <text x="590" y="369" font-family="IBM Plex Mono, monospace" font-size="10" fill="#8494AB" text-anchor="middle">4</text>
+  <text x="590" y="385" font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#8494AB" text-anchor="middle">Filed</text>
+
+  <!-- Data rows inside case card -->
+  <rect x="268" y="404" width="340" height="52" rx="8" fill="#0A1320" stroke="#D9E3F0" stroke-opacity="0.06"/>
+  <text x="288" y="426" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="0.5">ESTIMATED REFUND</text>
+  <text x="288" y="446" font-family="IBM Plex Mono, monospace" font-size="16" fill="#36B677" font-weight="600">€ 1,286.00</text>
+
+  <rect x="622" y="404" width="340" height="52" rx="8" fill="#0A1320" stroke="#D9E3F0" stroke-opacity="0.06"/>
+  <text x="642" y="426" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="0.5">SERVICE TYPE</text>
+  <text x="642" y="446" font-family="IBM Plex Sans, sans-serif" font-size="14" fill="#E4EBF5" font-weight="500">P Return — Resident</text>
+
+  <!-- Timeline -->
+  <rect x="268" y="474" width="348" height="20" rx="4" fill="#D9E3F0" fill-opacity="0.05"/>
+  <text x="288" y="488" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB">Case created and intake saved</text>
+
+  <rect x="268" y="502" width="348" height="20" rx="4" fill="#D9E3F0" fill-opacity="0.05"/>
+  <text x="288" y="516" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB">Payment confirmed — service active</text>
+
+  <rect x="268" y="530" width="348" height="20" rx="4" fill="#B47B58" fill-opacity="0.08" stroke="#B47B58" stroke-opacity="0.15"/>
+  <text x="288" y="544" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#B47B58">Upload missing documents to continue</text>
+
+  <!-- CTA button -->
+  <rect x="622" y="474" width="180" height="38" rx="19" fill="#36B677"/>
+  <text x="712" y="498" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#07130E" text-anchor="middle" font-weight="600">Continue →</text>
+
+  <rect x="622" y="524" width="180" height="34" rx="17" fill="none" stroke="#D9E3F0" stroke-opacity="0.2"/>
+  <text x="712" y="546" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#8494AB" text-anchor="middle">Review benefits</text>
+
+  <!-- Checklist card -->
+  <rect x="1028" y="244" width="340" height="360" rx="14" fill="#0D1825" stroke="#D9E3F0" stroke-opacity="0.07"/>
+  <text x="1048" y="282" font-family="Georgia, serif" font-size="15" fill="#E4EBF5" font-weight="600">Document checklist</text>
+
+  <!-- Progress bar -->
+  <rect x="1048" y="296" width="280" height="6" rx="3" fill="#D9E3F0" fill-opacity="0.08"/>
+  <rect x="1048" y="296" width="168" height="6" rx="3" fill="url(#progress-bar)"/>
+  <text x="1328" y="304" font-family="IBM Plex Mono, monospace" font-size="11" fill="#36B677" text-anchor="end" font-weight="600">60%</text>
+
+  <!-- Checklist items -->
+  <circle cx="1062" cy="334" r="7" fill="#36B677"/>
+  <text x="1062" y="338" font-family="IBM Plex Mono, monospace" font-size="9" fill="#07130E" text-anchor="middle">✓</text>
+  <text x="1080" y="338" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#8494AB">Jaaropgave 2024</text>
+
+  <circle cx="1062" cy="366" r="7" fill="#36B677"/>
+  <text x="1062" y="370" font-family="IBM Plex Mono, monospace" font-size="9" fill="#07130E" text-anchor="middle">✓</text>
+  <text x="1080" y="370" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#8494AB">BSN document</text>
+
+  <circle cx="1062" cy="398" r="7" fill="#36B677"/>
+  <text x="1062" y="402" font-family="IBM Plex Mono, monospace" font-size="9" fill="#07130E" text-anchor="middle">✓</text>
+  <text x="1080" y="402" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#8494AB">Bank statements</text>
+
+  <circle cx="1062" cy="430" r="7" fill="none" stroke="#D9E3F0" stroke-opacity="0.25"/>
+  <text x="1080" y="434" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#5A6A80">Huurcontract 2024</text>
+
+  <circle cx="1062" cy="462" r="7" fill="none" stroke="#D9E3F0" stroke-opacity="0.25"/>
+  <text x="1080" y="466" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#5A6A80">Zorgtoeslag declaration</text>
+
+  <circle cx="1062" cy="494" r="7" fill="none" stroke="#B47B58" stroke-opacity="0.5"/>
+  <text x="1080" y="498" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#B47B58">DigiD authorization</text>
+
+  <!-- Refund estimate card -->
+  <rect x="248" y="628" width="1120" height="220" rx="14" fill="#0C1824" stroke="#D9E3F0" stroke-opacity="0.06"/>
+  <text x="268" y="666" font-family="Georgia, serif" font-size="15" fill="#E4EBF5" font-weight="600">Refund projection</text>
+  <text x="268" y="684" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB">Deterministic estimate from current case state</text>
+
+  <!-- Chart area -->
+  <rect x="268" y="700" width="760" height="120" rx="8" fill="#D9E3F0" fill-opacity="0.02" stroke="#D9E3F0" stroke-opacity="0.05"/>
+
+  <!-- Chart grid lines -->
+  <line x1="268" y1="735" x2="1028" y2="735" stroke="#D9E3F0" stroke-opacity="0.05" stroke-width="1"/>
+  <line x1="268" y1="760" x2="1028" y2="760" stroke="#D9E3F0" stroke-opacity="0.05" stroke-width="1"/>
+  <line x1="268" y1="785" x2="1028" y2="785" stroke="#D9E3F0" stroke-opacity="0.05" stroke-width="1"/>
+
+  <!-- Chart path (area + line) -->
+  <path d="M280 810 L388 795 L497 775 L605 755 L714 735 L822 718 L930 704 L1016 704 L1016 820 L280 820 Z" fill="url(#chart-fill)"/>
+  <path d="M280 810 L388 795 L497 775 L605 755 L714 735 L822 718 L930 704 L1016 704" fill="none" stroke="#B47B58" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Chart dots -->
+  <circle cx="1016" cy="704" r="4" fill="#36B677"/>
+  <circle cx="930" cy="714" r="3" fill="#36B677" fill-opacity="0.7"/>
+  <circle cx="822" cy="718" r="3" fill="#36B677" fill-opacity="0.5"/>
+
+  <!-- Chart x-axis labels -->
+  <text x="280" y="832" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8494AB" text-anchor="middle">Intake</text>
+  <text x="388" y="832" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8494AB" text-anchor="middle">Docs</text>
+  <text x="497" y="832" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8494AB" text-anchor="middle">Review</text>
+  <text x="605" y="832" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8494AB" text-anchor="middle">Checks</text>
+  <text x="714" y="832" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8494AB" text-anchor="middle">Draft</text>
+  <text x="822" y="832" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8494AB" text-anchor="middle">Confirm</text>
+  <text x="1016" y="832" font-family="IBM Plex Mono, monospace" font-size="9" fill="#36B677" text-anchor="middle" font-weight="600">Estimate</text>
+
+  <!-- Right side refund summary -->
+  <text x="1060" y="680" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="1">ESTIMATED REFUND</text>
+  <text x="1060" y="720" font-family="Georgia, serif" font-size="36" fill="#36B677" font-weight="600" letter-spacing="-1">€ 1,286</text>
+  <rect x="1060" y="734" width="84" height="20" rx="10" fill="#B47B58" fill-opacity="0.12" stroke="#B47B58" stroke-opacity="0.3"/>
+  <text x="1102" y="748" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#B47B58" text-anchor="middle" font-weight="500">Estimate</text>
+  <text x="1060" y="780" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB">Projection from current</text>
+  <text x="1060" y="794" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB">case summary</text>
+
+  <rect x="1060" y="808" width="264" height="32" rx="16" fill="#36B677"/>
+  <text x="1192" y="829" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#07130E" text-anchor="middle" font-weight="600">Review benefits →</text>
+
+  <!-- Grain overlay -->
+  <rect width="1600" height="1000" rx="24" filter="url(#grain)" opacity="0.4"/>
 </svg>
