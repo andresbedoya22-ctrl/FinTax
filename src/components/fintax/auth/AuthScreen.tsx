@@ -291,7 +291,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   return (
     <div className="relative min-h-screen bg-mesh">
       <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[1.05fr_0.95fr]">
-        <aside className="relative hidden overflow-hidden border-r border-border/35 p-8 lg:flex lg:flex-col lg:justify-between xl:p-10">
+        <aside className="hero-glow relative hidden overflow-hidden border-r border-border/35 p-8 lg:flex lg:flex-col lg:justify-between xl:p-10">
           <div className="absolute inset-0">
             <Image src="/visuals/hero-bg.svg" alt="" width={1920} height={1080} className="h-full w-full object-cover opacity-30" aria-hidden="true" />
             <div className="absolute inset-0 bg-gradient-to-br from-bg via-bg/85 to-surface/85" />
