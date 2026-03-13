@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -46,8 +46,9 @@ export function HeroSection() {
     <Section id="hero">
       <Container>
         <div className="grid min-h-screen items-center gap-16 pt-24 pb-20 lg:grid-cols-2">
+          {/* LEFT — copy + CTAs */}
           <div style={{ animation: "fadeUp 0.8s ease 0.2s both" }}>
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-green/25 bg-green/10 px-3 py-1.5 text-sm text-green">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-green/25 bg-green/10 px-3 py-1.5 text-xs text-green">
               <span
                 className="h-2 w-2 rounded-full bg-green"
                 style={{ animation: "pulseDot 2s ease-in-out infinite" }}
@@ -56,7 +57,7 @@ export function HeroSection() {
               {t("eyebrow")}
             </div>
 
-            <h1 className="mb-5 font-heading text-5xl font-bold leading-[1.05] tracking-[-0.05em] lg:text-7xl">
+            <h1 className="mb-5 font-heading text-5xl leading-[1.05] tracking-[-0.05em] lg:text-7xl">
               <HighlightedTitle markedTitle={t("titleRich")} />
             </h1>
 
@@ -64,9 +65,9 @@ export function HeroSection() {
 
             <div className="flex flex-wrap items-center gap-3">
               <Button asChild size="lg">
-                <Link href="/auth?intent=tax-return">{t("primaryCta")} -&gt;</Link>
+                <Link href="/auth?intent=tax-return">{t("primaryCta")} →</Link>
               </Button>
-              <Button asChild variant="secondary" size="lg">
+              <Button asChild variant="secondary" size="lg" className="hover:border-copper/35 hover:text-text transition-colors">
                 <Link href="/tax-return?service=form_p">{t("secondaryCta")}</Link>
               </Button>
             </div>
@@ -75,19 +76,30 @@ export function HeroSection() {
               {heroStats.map((stat, index) => (
                 <div key={`${stat.value}-${index}`} className="contents">
                   <div>
-                    <p className="font-heading text-3xl font-bold tracking-[-0.03em] text-text">{stat.value}</p>
+                    <p className="font-heading text-3xl tracking-[-0.03em] text-text">{stat.value}</p>
                     <p className="mt-1 text-xs text-muted">{stat.label}</p>
                   </div>
                   {index < heroStats.length - 1 ? (
-                    <div className="w-px self-stretch bg-border" aria-hidden="true" />
+                    <div className="w-px self-stretch bg-border/30" aria-hidden="true" />
                   ) : null}
                 </div>
               ))}
             </div>
           </div>
 
+          {/* RIGHT — floating app mockup */}
           <div className="relative" style={{ animation: "fadeUp 0.8s ease 0.4s both" }}>
-            <div className="relative [perspective:1200px]">
+            {/* Radial glow behind card */}
+            <div
+              className="pointer-events-none absolute inset-0 z-0"
+              style={{
+                background:
+                  "radial-gradient(circle at 60% 40%, rgb(54 182 119 / 0.08), transparent 55%)",
+              }}
+              aria-hidden="true"
+            />
+
+            <div className="relative z-10 [perspective:1200px]">
               <div
                 className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#112236] shadow-[0_40px_80px_rgba(0,0,0,0.5)]"
                 style={{
@@ -95,35 +107,39 @@ export function HeroSection() {
                   transform: "rotateY(-8deg) rotateX(4deg)",
                 }}
               >
+                {/* macOS-style top bar */}
                 <div className="flex items-center gap-2 border-b border-white/[0.06] bg-[#0d1b2a]/60 px-4 py-3">
                   <span className="h-3 w-3 rounded-full bg-[#FF5F57]" aria-hidden="true" />
                   <span className="h-3 w-3 rounded-full bg-[#FFBD2E]" aria-hidden="true" />
                   <span className="h-3 w-3 rounded-full bg-[#28C840]" aria-hidden="true" />
-                  <span className="ml-3 text-xs font-medium text-muted">fintax.nl - Dashboard</span>
+                  <span className="ml-3 text-xs font-medium text-muted">fintax.nl – Dashboard</span>
                 </div>
 
                 <div className="space-y-5 p-5">
                   <div>
                     <p className="text-xs text-muted">{t("sampleGreeting")}</p>
-                    <p className="font-heading text-lg font-bold text-text">{t("sampleMockName")}</p>
+                    <p className="font-heading text-lg font-semibold text-text">{t("sampleMockName")}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
                       <p className="mb-1 text-xs text-muted">{t("sampleRefundLabel")}</p>
-                      <p className="font-heading text-xl font-bold text-green">{t("sampleRefundValue")}</p>
+                      <p className="font-mono text-xl font-semibold text-green">{t("sampleRefundValue")}</p>
                     </div>
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
                       <p className="mb-1 text-xs text-muted">{t("sampleCasesLabel")}</p>
-                      <p className="font-heading text-xl font-bold text-text">{t("sampleCasesValue")}</p>
+                      <p className="font-heading text-xl font-semibold text-text">{t("sampleCasesValue")}</p>
                     </div>
                   </div>
 
                   <div className="space-y-3">
+                    {/* Case row 1 */}
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
                       <div className="mb-2 flex items-center justify-between">
                         <span className="text-sm font-medium text-text">IB Aangifte 2024</span>
-                        <span className="rounded-full bg-green/15 px-2 py-0.5 text-xs font-medium text-green">In review</span>
+                        <span className="rounded-full bg-green/15 px-2 py-0.5 text-xs font-medium text-green">
+                          In review
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
@@ -133,14 +149,29 @@ export function HeroSection() {
                       </div>
                     </div>
 
+                    {/* Case row 2 */}
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
                       <div className="mb-2 flex items-center justify-between">
                         <span className="text-sm font-medium text-text">Huurtoeslag 2025</span>
-                        <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">Needs input</span>
+                        <span
+                          className="rounded-full px-2 py-0.5 text-xs font-medium"
+                          style={{
+                            background: "rgb(var(--warning) / 0.15)",
+                            color: "rgb(var(--warning))",
+                          }}
+                        >
+                          Needs input
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
-                          <div className="h-full rounded-full bg-amber-300" style={{ width: "40%" }} />
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: "40%",
+                              background: "rgb(var(--warning))",
+                            }}
+                          />
                         </div>
                         <span className="text-xs text-muted">40%</span>
                       </div>
@@ -149,16 +180,21 @@ export function HeroSection() {
                 </div>
               </div>
 
+              {/* Floating notification card */}
               <div
                 className="absolute right-[-30px] bottom-[-20px] z-10 w-56 rounded-2xl border border-white/[0.08] bg-[#0D1B2A] p-4 shadow-xl"
                 style={{ animation: "floatCard 6s ease-in-out 1s infinite" }}
               >
                 <div className="mb-2 flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-green" aria-hidden="true" />
+                  <span
+                    className="h-2 w-2 rounded-full bg-green"
+                    style={{ animation: "pulseDot 2s ease-in-out infinite" }}
+                    aria-hidden="true"
+                  />
                   <span className="text-xs font-medium text-green">Letter analyzed</span>
                 </div>
                 <p className="text-sm font-semibold leading-snug text-text">Belastingdienst letter</p>
-                <p className="mt-0.5 text-xs text-muted">Voorlopige aanslag - deadline April 30</p>
+                <p className="mt-0.5 text-xs text-muted">Voorlopige aanslag – deadline April 30</p>
               </div>
             </div>
           </div>
