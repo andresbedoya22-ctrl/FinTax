@@ -82,7 +82,7 @@ function TabsTrigger({ className, value, ...props }: TabsTriggerProps) {
       className={cn(
         "rounded-[var(--radius-pill)] px-3.5 py-2 text-xs font-medium tracking-[0.08em] uppercase transition focus-ring",
         isActive
-          ? "border border-copper/30 bg-gradient-to-b from-copper/14 to-copper/6 text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
+          ? "border border-copper/30 bg-gradient-to-b from-copper/14 to-copper/6 text-copper shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
           : "border border-transparent text-muted hover:text-secondary",
         className,
       )}
