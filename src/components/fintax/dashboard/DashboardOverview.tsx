@@ -93,8 +93,14 @@ export function DashboardOverview() {
 
           <CardContent className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="grid gap-3 sm:grid-cols-2">
-              {caseRows.map((row) => (
-                <div key={row.label} className="editorial-frame rounded-[var(--radius-lg)] bg-surface2/35 p-4">
+              {caseRows.map((row, index) => (
+                <div
+                  key={row.label}
+                  className={cn(
+                    "editorial-frame rounded-[var(--radius-lg)] p-4",
+                    index === 0 ? "hairline-copper bg-copper/5" : "bg-surface2/35",
+                  )}
+                >
                   <p className="text-xs uppercase tracking-[0.12em] text-muted">{row.label}</p>
                   <p className="mt-2 font-heading text-2xl tracking-[-0.02em] text-text">{row.amount}</p>
                 </div>
@@ -123,12 +129,12 @@ export function DashboardOverview() {
                   <p className="text-sm font-medium">Timeline / updates</p>
                 </div>
                 <ul className="space-y-2 text-sm text-secondary">
-                  <li className="rounded-lg border border-border/25 bg-white/5 px-3 py-2">Case created and intake saved</li>
-                  <li className="rounded-lg border border-border/25 bg-white/5 px-3 py-2">Payment confirmed for selected service</li>
-                  <li className="rounded-lg border border-border/25 bg-white/5 px-3 py-2">Document review pending uploads</li>
+                  <li className="rounded-lg border border-border/25 border-l-2 border-l-copper/30 bg-white/5 py-2 pl-3 pr-3">Case created and intake saved</li>
+                  <li className="rounded-lg border border-border/25 border-l-2 border-l-copper/30 bg-white/5 py-2 pl-3 pr-3">Payment confirmed for selected service</li>
+                  <li className="rounded-lg border border-border/25 border-l-2 border-l-copper/30 bg-white/5 py-2 pl-3 pr-3">Document review pending uploads</li>
                 </ul>
               </div>
-              <div className="rounded-[var(--radius-lg)] border border-copper/25 bg-copper/8 p-4">
+              <div className="rounded-[var(--radius-lg)] border border-copper/30 bg-copper/6 p-4">
                 <div className="mb-2 flex items-center gap-2 text-text">
                   <Sparkles className="h-4 w-4 text-copper" />
                   <p className="text-sm font-medium">Next action CTA</p>
@@ -168,7 +174,7 @@ export function DashboardOverview() {
                 {checklistItems.map((item) => (
                   <motion.li key={item.label} variants={listItemVariants} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface2/25 px-3 py-2.5">
                     {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
-                    <span className={cn("text-sm", item.done ? "text-text" : "text-secondary")}>{item.label}</span>
+                    <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
                   </motion.li>
                 ))}
               </motion.ul>
@@ -179,13 +185,15 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="soft" padding="md" className="bg-surface2/35">
+          <Card variant="soft" padding="md" className="bg-mesh-subtle">
             <CardHeader className="mb-3">
               <CardTitle className="text-xl">{t("refundTitle")}</CardTitle>
               <CardDescription>{t("chartTitle")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 font-heading text-4xl tracking-[-0.03em] text-green">EUR {t("refundAmount")}</p>
+              <p className={cn("mb-4 font-heading text-4xl tracking-[-0.03em]", casesQuery.isLoading ? "animate-pulse text-green/60" : "text-green")}>
+                EUR {t("refundAmount")}
+              </p>
               <div className="rounded-xl border border-border/30 bg-surface/35 p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <Badge variant="copper">Estimate</Badge>
@@ -279,7 +287,7 @@ function KpiCard({
   const toneClass = tone === "success" ? "border-green/25 bg-green/7" : tone === "copper" ? "border-copper/25 bg-copper/7" : "border-border/35 bg-surface/35";
   return (
     <motion.div variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}>
-      <Card variant="soft" padding="sm" className={toneClass}>
+      <Card variant="soft" padding="sm" className={cn("editorial-frame", toneClass)}>
         <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{title}</p>
         <p className="mt-2 font-heading text-2xl tracking-[-0.03em] text-text">{value}</p>
         <p className="mt-1 text-xs text-secondary">{note}</p>
