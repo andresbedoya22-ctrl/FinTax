@@ -163,7 +163,7 @@ export function DashboardOverview() {
         </div>
       </header>
 
-      <Card variant="panel" padding="lg" className="border-green/20 bg-white">
+      <Card variant="panel" padding="lg" className="border-green/20 bg-white shadow-[0_8px_20px_rgba(12,24,16,0.05)]">
         <CardHeader className="mb-4">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <Badge variant="copper">Case status</Badge>
@@ -188,7 +188,7 @@ export function DashboardOverview() {
 
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1.58fr)_minmax(330px,1fr)]">
         <div className="space-y-4">
-          <Card variant="panel" padding="md" className="bg-white">
+          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Uploaded documents</CardTitle>
               <CardDescription>Documents attached to your active checklist and review stage.</CardDescription>
@@ -206,7 +206,7 @@ export function DashboardOverview() {
 
               <ul className="space-y-2.5">
                 {checklistItems.slice(0, 5).map((item) => (
-                  <li key={item.label} className="flex items-center gap-3 rounded-lg border border-border/30 bg-white px-3.5 py-2.5">
+                  <li key={item.label} className="flex items-center gap-3 rounded-lg border border-border/30 bg-white px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
                     {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
                     <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
                   </li>
@@ -215,7 +215,7 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-white">
+          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Fiscal history</CardTitle>
               <CardDescription>Recent filing records and status checkpoints, ordered by last updates.</CardDescription>
@@ -226,7 +226,7 @@ export function DashboardOverview() {
                   <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No case history yet.</li>
                 ) : (
                   taxHistory.map((item) => (
-                    <li key={item.id} className="rounded-lg border border-border/28 bg-white px-3.5 py-2.5">
+                    <li key={item.id} className="rounded-lg border border-border/28 bg-white px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
                       <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3">
                         <p className="truncate text-sm font-medium text-text">{item.label}</p>
                         <span className="font-mono text-xs text-muted">{item.year ?? "Year n/a"}</span>
@@ -242,7 +242,7 @@ export function DashboardOverview() {
         </div>
 
         <div className="space-y-6 xl:pl-6 2xl:pl-10">
-          <Card variant="panel" padding="md" className="bg-white">
+          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Breakdown del reembolso</CardTitle>
               <CardDescription>Current estimate by fiscal module, aligned to active case records.</CardDescription>
@@ -255,7 +255,7 @@ export function DashboardOverview() {
                   <span className="font-mono">Amount</span>
                 </div>
                 {breakdownRows.map((row) => (
-                  <div key={row.label} className="grid grid-cols-[1fr_auto] items-center border-b border-border/20 px-4 py-2.5 last:border-b-0">
+                  <div key={row.label} className="grid grid-cols-[1fr_auto] items-center border-b border-border/20 px-4 py-2.5 transition hover:bg-green/5 last:border-b-0">
                     <span className="text-sm text-secondary">{row.label}</span>
                     <span className="font-mono text-sm font-semibold text-text">{formatMoney(row.amount, locale)}</span>
                   </div>
@@ -271,7 +271,7 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-white">
+          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-xl">Personal advisor</CardTitle>
               <CardDescription>Assignment and contact status for your case.</CardDescription>
@@ -288,10 +288,10 @@ export function DashboardOverview() {
                     : "Advisor assignment starts automatically once documents and payment checks are complete."}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <button type="button" className="rounded-lg border border-green/35 bg-white px-3 py-1.5 text-sm font-medium text-green hover:bg-green/5">
+                  <button type="button" className="rounded-lg border border-green/35 bg-white px-3 py-1.5 text-sm font-medium text-green transition duration-200 hover:-translate-y-0.5 hover:bg-green/5">
                     Message advisor
                   </button>
-                  <button type="button" className="rounded-lg border border-border/45 bg-white px-3 py-1.5 text-sm font-medium text-text hover:bg-surface2/45">
+                  <button type="button" className="rounded-lg border border-border/45 bg-white px-3 py-1.5 text-sm font-medium text-text transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:bg-surface2/45">
                     Request call
                   </button>
                 </div>
@@ -299,7 +299,7 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-white">
+          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-xl">Recent activity</CardTitle>
               <CardDescription>Latest operational updates from your active records.</CardDescription>
@@ -310,7 +310,7 @@ export function DashboardOverview() {
                   <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No updates yet.</li>
                 ) : (
                   recentActivity.map((activity) => (
-                    <li key={activity.id} className="rounded-lg border border-border/28 bg-white px-3.5 py-2.5">
+                    <li key={activity.id} className="rounded-lg border border-border/28 bg-white px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
                       <div className="flex items-start gap-2.5">
                         <Clock3 className="mt-0.5 h-4 w-4 text-copper" />
                         <div className="min-w-0">
@@ -322,7 +322,7 @@ export function DashboardOverview() {
                   ))
                 )}
               </ul>
-              <Link href="/tax-return" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-copper hover:text-text">
+              <Link href="/tax-return" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-copper transition hover:text-text">
                 View complete timeline
                 <ArrowRight className="h-4 w-4" />
               </Link>

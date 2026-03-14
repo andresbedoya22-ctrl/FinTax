@@ -287,24 +287,26 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <Section className="border-b border-border/75 py-12 sm:py-14">
-          <Container>
-            <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
-              <div id="how">
-                <p className="text-xs uppercase tracking-[0.12em] text-secondary">How it works</p>
-                <h2 className="mt-2 font-heading text-4xl tracking-[-0.02em] text-text">{t.stepsTitle}</h2>
-                <ol className="mt-6 grid gap-4 md:grid-cols-3">
-                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6">
+        <Section className="border-b border-border/75 py-10 sm:py-12">
+          <Container className="space-y-8">
+            <div className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
+              <div id="how" className="space-y-5">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.12em] text-secondary">How it works</p>
+                  <h2 className="mt-2 font-heading text-4xl tracking-[-0.02em] text-text">{t.stepsTitle}</h2>
+                </div>
+                <ol className="grid gap-4 md:grid-cols-3 xl:grid-cols-1">
+                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
                     <p className="font-mono text-4xl leading-none text-muted">01</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">Upload your documents</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">Provide tax letters, salary files and context docs in secure intake.</p>
                   </li>
-                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6">
+                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
                     <p className="font-mono text-4xl leading-none text-muted">02</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">Specialist review</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">A tax specialist validates your case and clarifies missing points.</p>
                   </li>
-                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6">
+                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
                     <p className="font-mono text-4xl leading-none text-muted">03</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">File and monitor</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">Track the status in dashboard until the case reaches completion.</p>
@@ -312,13 +314,13 @@ export function PremiumLandingPage() {
                 </ol>
               </div>
 
-              <div className="space-y-7">
+              <div className="space-y-6">
                 <section id="services">
                   <p className="text-xs uppercase tracking-[0.12em] text-secondary">Services</p>
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.servicesTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     {services.map((service) => (
-                      <Card key={service.title} variant="soft" padding="sm" className="border-border/65 bg-white">
+                      <Card key={service.title} variant="soft" padding="sm" className="border-border/65 bg-white transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_28px_rgba(14,40,24,0.1)]">
                         <CardHeader>
                           <CardTitle className="text-base">{service.title}</CardTitle>
                         </CardHeader>
@@ -335,7 +337,15 @@ export function PremiumLandingPage() {
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.pricingTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     {plans.map((plan, idx) => (
-                      <Card key={plan.name} variant="panel" padding="sm" className={cn("bg-white", idx === 1 ? "border-green/45 bg-green/5" : "border-border/65")}>
+                      <Card
+                        key={plan.name}
+                        variant="panel"
+                        padding="sm"
+                        className={cn(
+                          "bg-white transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(14,40,24,0.1)]",
+                          idx === 1 ? "border-green/45 bg-green/5 shadow-[0_10px_24px_rgba(20,67,41,0.12)]" : "border-border/65 hover:border-green/30"
+                        )}
+                      >
                         <p className="text-sm font-semibold text-text">{plan.name}</p>
                         <p className="mt-2 font-mono text-4xl font-semibold text-text">{plan.price}</p>
                         <ul className="mt-3 space-y-1.5">
@@ -350,23 +360,27 @@ export function PremiumLandingPage() {
                     ))}
                   </div>
                 </section>
+              </div>
+            </div>
 
-                <section>
-                  <Card variant="soft" padding="sm" className="border-border/65 bg-white">
-                    <p className="text-xs uppercase tracking-[0.12em] text-muted">Trust content (verified capabilities)</p>
-                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">No guaranteed fiscal outcomes.</p>
-                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">Scope confirmed before execution.</p>
-                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">Secure auth and route protection active.</p>
-                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">Case status tracking in dashboard.</p>
-                    </div>
-                  </Card>
-                </section>
+            <div className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
+              <section>
+                <Card variant="soft" padding="md" className="border-border/65 bg-white">
+                  <p className="text-xs uppercase tracking-[0.12em] text-muted">Trust content (verified capabilities)</p>
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">No guaranteed fiscal outcomes.</p>
+                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Scope confirmed before execution.</p>
+                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Secure auth and route protection active.</p>
+                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Case status tracking in dashboard.</p>
+                  </div>
+                </Card>
+              </section>
 
+              <div className="space-y-6">
                 <section id="faq">
                   <p className="text-xs uppercase tracking-[0.12em] text-secondary">FAQ</p>
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.faqTitle}</h2>
-                  <div className="mt-4">
+                  <div className="mt-4 rounded-[var(--radius-xl)] border border-border/65 bg-white p-2 shadow-[0_8px_20px_rgba(10,18,13,0.06)]">
                     <Accordion type="single" defaultValue="faq-0">
                       {faqItems.map((item, index) => (
                         <AccordionItem key={item.q} value={`faq-${index}`}>
@@ -383,7 +397,7 @@ export function PremiumLandingPage() {
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.blogTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     {blogPreview.map((item) => (
-                      <article key={item.title} className="rounded-[var(--radius-lg)] border border-border/70 bg-white p-3.5">
+                      <article key={item.title} className="rounded-[var(--radius-lg)] border border-border/70 bg-white p-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_12px_24px_rgba(14,40,24,0.1)]">
                         <div className="h-24 rounded-lg border border-border/40 bg-surface2/75" aria-hidden="true" />
                         <p className="mt-2 text-xs uppercase tracking-[0.1em] text-muted">{item.tag}</p>
                         <h3 className="mt-1 text-sm font-semibold leading-5 text-text">{item.title}</h3>
