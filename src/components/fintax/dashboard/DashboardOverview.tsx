@@ -1,269 +1,309 @@
-﻿"use client";
+"use client";
 
-import { ArrowRight, CheckCircle2, ChevronRight, Circle, Clock3, FolderCheck, Sparkles } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import * as React from "react";
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import { ArrowRight, CheckCircle2, Circle, Clock3, FolderCheck, ReceiptText, ShieldCheck } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 import { isApiClientError } from "@/hooks/api-client";
 import { useCases } from "@/hooks/useCases";
+import { useChecklist } from "@/hooks/useChecklist";
 import { cn } from "@/lib/cn";
+import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Stepper } from "@/components/ui";
 
-const estimateProgress = [0.38, 0.52, 0.61, 0.68, 0.74, 0.83, 1];
+type CaseStatusTone = "neutral" | "success" | "warning";
+
+function caseStatusLabel(status: string) {
+  switch (status) {
+    case "pending_documents":
+      return "Pending documents";
+    case "in_review":
+      return "Under review";
+    case "pending_payment":
+      return "Pending payment";
+    case "pending_authorization":
+      return "Pending authorization";
+    case "authorized":
+      return "Authorized";
+    case "submitted":
+      return "Submitted";
+    case "completed":
+      return "Completed";
+    case "rejected":
+      return "Needs update";
+    default:
+      return "Draft";
+  }
+}
+
+function caseStatusTone(status: string): CaseStatusTone {
+  if (status === "completed" || status === "authorized" || status === "submitted") return "success";
+  if (status === "pending_documents" || status === "pending_payment") return "warning";
+  return "neutral";
+}
+
+function stepDescription(stepId: string) {
+  switch (stepId) {
+    case "draft":
+      return "Case scope and intake confirmed.";
+    case "docs":
+      return "Required files are uploaded and validated.";
+    case "review":
+      return "Tax specialist checks your case details.";
+    case "payment":
+      return "Service payment and authorization are finalized.";
+    case "done":
+      return "Case is submitted and tracked to closure.";
+    default:
+      return "";
+  }
+}
+
+function formatDate(value: string | null | undefined, locale: string) {
+  if (!value) return "No date yet";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return new Intl.DateTimeFormat(locale, { year: "numeric", month: "short", day: "2-digit" }).format(parsed);
+}
 
 export function DashboardOverview() {
   const t = useTranslations("Dashboard.overview");
-  const reduceMotion = useReducedMotion();
+  const locale = useLocale();
   const casesQuery = useCases();
   const cases = casesQuery.data ?? [];
   const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
+
   const activeCase = cases[0] ?? null;
+  const checklistQuery = useChecklist(activeCase?.id ?? "");
+  const checklist = checklistQuery.data ?? [];
+  const fallbackChecklist = t.raw("checklistItems") as Array<{ label: string; done: boolean }>;
+  const checklistItems =
+    checklist.length > 0
+      ? checklist.map((item) => ({ label: item.label, done: item.is_completed }))
+      : fallbackChecklist;
+
   const openCases = cases.length;
   const pendingDocumentsCount = cases.filter((item) => item.status === "pending_documents").length;
   const estimatedRefundTotal = cases.reduce((sum, item) => sum + (item.estimated_refund ?? 0), 0);
-  const deadlineText = activeCase?.deadline ?? t("deadlineValue");
-  const activeStatus = activeCase?.status ?? t("statusValue");
-  const caseTitle = activeCase?.display_name ?? t("caseTitle");
-  const dynamicCaseRows =
-    openCases > 0
-      ? cases.slice(0, 3).map((item) => ({
-          label: item.display_name ?? item.case_type,
-          amount: `EUR ${(item.estimated_refund ?? 0).toFixed(2)}`,
-        }))
-      : (t.raw("caseRows") as Array<{ label: string; amount: string }>);
-  const [chartReady, setChartReady] = React.useState(false);
-  const checklistItems = t.raw("checklistItems") as Array<{ label: string; done: boolean }>;
-  const caseRows = dynamicCaseRows;
-  const checklistProgress = Math.round((checklistItems.filter((i) => i.done).length / checklistItems.length) * 100);
   const fallbackEstimate = Number.parseInt(String(t("refundAmount")).replace(/[^\d]/g, ""), 10) || 1250;
   const refundEstimateBase = estimatedRefundTotal > 0 ? Math.round(estimatedRefundTotal) : fallbackEstimate;
-  const estimateSeries = estimateProgress.map((ratio, index) => ({
-    stage: ["Intake", "Docs", "Review", "Checks", "Draft", "Confirm", "Estimate"][index] ?? `S${index + 1}`,
-    amount: Math.round(refundEstimateBase * ratio),
-  }));
-  const listContainerVariants = reduceMotion ? undefined : { hidden: {}, show: { transition: { staggerChildren: 0.04 } } };
-  const listItemVariants = reduceMotion ? undefined : { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
 
-  React.useEffect(() => {
-    setChartReady(true);
-  }, []);
+  const currentStatus = activeCase?.status ?? "draft";
+  const currentStep = mapCaseStatusToStep(currentStatus);
+  const stepperSteps = CASE_STEPPER_STEPS.map((step) => ({ id: step.id, label: step.label, description: stepDescription(step.id) }));
+  const checklistProgress = checklistItems.length > 0 ? Math.round((checklistItems.filter((i) => i.done).length / checklistItems.length) * 100) : 0;
+
+  const activeStatusLabel = caseStatusLabel(currentStatus);
+  const activeStatusTone = caseStatusTone(currentStatus);
+  const activeCaseTitle = activeCase?.display_name ?? t("caseTitle");
+  const deadlineText = formatDate(activeCase?.deadline, locale);
+
+  const documentChecklist = checklist.filter((item) => item.is_document_upload);
+  const uploadedDocuments = documentChecklist.filter((item) => item.is_completed).length;
+  const requiredDocuments = documentChecklist.length;
+
+  const fallbackRows = t.raw("caseRows") as Array<{ label: string; amount: string }>;
+  const breakdownRows =
+    cases.filter((item) => (item.estimated_refund ?? 0) > 0).length > 0
+      ? cases
+          .filter((item) => (item.estimated_refund ?? 0) > 0)
+          .slice(0, 4)
+          .map((item) => ({
+            label: item.display_name ?? item.case_type,
+            amount: item.estimated_refund ?? 0,
+          }))
+      : fallbackRows.map((row) => ({ label: row.label, amount: Number.parseFloat(row.amount.replace(/[^\d.]/g, "")) || 0 }));
+
+  const taxHistory = cases.slice(0, 5).map((item) => ({
+    id: item.id,
+    label: item.display_name ?? item.case_type,
+    year: item.tax_year ?? null,
+    status: caseStatusLabel(item.status),
+    updated: formatDate(item.updated_at, locale),
+  }));
+
+  const recentActivity = cases.slice(0, 4).map((item) => ({
+    id: item.id,
+    title: `${item.display_name ?? item.case_type} moved to ${caseStatusLabel(item.status).toLowerCase()}`,
+    date: formatDate(item.updated_at, locale),
+  }));
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-7">
       {casesQuery.isError ? (
         <div className="rounded-[var(--radius-lg)] border border-copper/30 bg-copper/10 p-4">
           <p className="text-xs uppercase tracking-[0.14em] text-copper">Dashboard API</p>
           <p className="mt-1 text-sm text-secondary">
-            Caseoverzicht kon niet worden ververst.
+            Case overview could not be refreshed.
             {casesErrorCode ? ` Code: ${casesErrorCode}.` : ""}
           </p>
         </div>
       ) : null}
-      <motion.div
-        className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
-        initial={reduceMotion ? false : "hidden"}
-        animate={reduceMotion ? undefined : "show"}
-        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
-      >
-        <KpiCard title="Open cases" value={`${openCases}`} note="Across tax + benefits" tone="neutral" />
-        <KpiCard title="Pending docs" value={`${pendingDocumentsCount}`} note="Checklist items missing" tone="copper" />
-        <KpiCard title="Estimated refund" value={`EUR ${refundEstimateBase.toFixed(2)}`} note="Current active case" tone="success" />
-        <KpiCard title="Next deadline" value={deadlineText} note="Tax return submission" tone="neutral" />
-      </motion.div>
 
-      <div className="grid gap-5 xl:grid-cols-3">
-        <Card variant="panel" padding="md" className="xl:col-span-2">
-          <CardHeader className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-            <div>
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <Badge variant="copper">Active case</Badge>
-                <Badge variant="success">{activeStatus}</Badge>
-              </div>
-              <CardTitle className="text-2xl">{caseTitle}</CardTitle>
-              <CardDescription>{t("statusLabel")}: {activeStatus} | {t("deadlineLabel")}: {deadlineText}</CardDescription>
-            </div>
-            <Link href="/tax-return" className="inline-flex items-center gap-1 text-sm font-medium text-copper hover:text-text">
-              {t("openCase")}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </CardHeader>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard title="Open cases" value={`${openCases}`} note="Across tax and benefits flows" tone="neutral" />
+        <KpiCard title="Pending documents" value={`${pendingDocumentsCount}`} note="Cases waiting for upload completion" tone="warning" />
+        <KpiCard title="Estimated refund" value={`EUR ${refundEstimateBase.toFixed(2)}`} note="Current projected total" tone="success" />
+        <KpiCard title="Checklist completion" value={`${checklistProgress}%`} note="Current active case" tone="neutral" />
+      </div>
 
-          <CardContent className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {caseRows.map((row, index) => (
-                <div
-                  key={row.label}
-                  className={cn(
-                    "editorial-frame rounded-[var(--radius-lg)] p-4",
-                    index === 0 ? "hairline-copper bg-copper/5" : "bg-surface2/35",
-                  )}
-                >
-                  <p className="text-xs uppercase tracking-[0.12em] text-muted">{row.label}</p>
-                  <p className="mt-2 font-heading text-2xl tracking-[-0.02em] text-text">{row.amount}</p>
-                </div>
-              ))}
-              <div className="sm:col-span-2 rounded-[var(--radius-lg)] border border-border/35 bg-surface2/25 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-sm font-medium text-text">Progress timeline</p>
-                  <span className="text-xs text-muted">{checklistProgress}% complete</span>
-                </div>
-                <Stepper
-                  steps={[
-                    { id: "1", label: "Intake complete", description: "Service selected and quote confirmed" },
-                    { id: "2", label: "Documents", description: "Checklist upload in progress" },
-                    { id: "3", label: "Review", description: "Human review and clarifications" },
-                    { id: "4", label: "Submission", description: "Final filing and confirmation" },
-                  ]}
-                  currentStep={2}
-                />
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1.62fr)_minmax(320px,1fr)]">
+        <div className="space-y-6">
+          <Card variant="panel" padding="lg">
+            <CardHeader className="mb-5">
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <Badge variant="copper">Declaration header</Badge>
+                <Badge variant={activeStatusTone === "success" ? "success" : "neutral"}>{activeStatusLabel}</Badge>
               </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/25 p-4">
-                <div className="mb-2 flex items-center gap-2 text-text">
-                  <Clock3 className="h-4 w-4 text-copper" />
-                  <p className="text-sm font-medium">Timeline / updates</p>
-                </div>
-                <ul className="space-y-2 text-sm text-secondary">
-                  <li className="rounded-lg border border-border/25 border-l-2 border-l-copper/30 bg-white/5 py-2 pl-3 pr-3">Case created and intake saved</li>
-                  <li className="rounded-lg border border-border/25 border-l-2 border-l-copper/30 bg-white/5 py-2 pl-3 pr-3">Payment confirmed for selected service</li>
-                  <li className="rounded-lg border border-border/25 border-l-2 border-l-copper/30 bg-white/5 py-2 pl-3 pr-3">Document review pending uploads</li>
-                </ul>
-              </div>
-              <div className="rounded-[var(--radius-lg)] border border-copper/30 bg-copper/6 p-4">
-                <div className="mb-2 flex items-center gap-2 text-text">
-                  <Sparkles className="h-4 w-4 text-copper" />
-                  <p className="text-sm font-medium">Next action CTA</p>
-                </div>
-                <p className="text-sm leading-6 text-secondary">Upload missing documents to move your case to human review and avoid deadline delays.</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Link href="/tax-return" className="inline-flex items-center gap-2 rounded-full border border-green/35 bg-green/90 px-4 py-2 text-sm font-medium text-[#07130e]">
-                    Continue tax return
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                  <Link href="/benefits" className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-surface/60 px-4 py-2 text-sm font-medium text-text">
-                    {t("reviewBenefits")}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex flex-col gap-5">
-          <Card variant="panel" padding="md">
-            <CardHeader className="mb-4">
-              <CardTitle className="text-xl">{t("checklistTitle")}</CardTitle>
-              <CardDescription>Documents checklist card</CardDescription>
+              <CardTitle className="text-3xl">{activeCaseTitle}</CardTitle>
+              <CardDescription className="text-sm">
+                Deadline: <span className="font-medium text-text">{deadlineText}</span>
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-gradient-to-r from-green to-copper" style={{ width: `${checklistProgress}%` }} />
+
+            <CardContent className="space-y-5">
+              <div className="rounded-[var(--radius-lg)] border border-green/25 bg-green/5 p-5">
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <p className="text-sm font-medium text-text">Case stepper</p>
+                  <span className="font-mono text-xs text-secondary">Step {currentStep} / {stepperSteps.length}</span>
+                </div>
+                <Stepper steps={stepperSteps} currentStep={currentStep} className="gap-4" />
               </div>
-              <p className="mt-2 text-right text-sm font-semibold text-text">{checklistProgress}%</p>
-              <motion.ul
-                className="mt-4 space-y-2"
-                initial={reduceMotion ? false : "hidden"}
-                animate={reduceMotion ? undefined : "show"}
-                variants={listContainerVariants}
-              >
-                {checklistItems.map((item) => (
-                  <motion.li key={item.label} variants={listItemVariants} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface2/25 px-3 py-2.5">
-                    {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
-                    <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
-                  </motion.li>
-                ))}
-              </motion.ul>
-              <Link href="/tax-return" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-copper hover:text-text">
-                {t("progressLabel")}
-                <ChevronRight className="h-4 w-4" />
-              </Link>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Link href="/tax-return" className="inline-flex items-center gap-2 rounded-full border border-green/45 bg-green px-4 py-2 text-sm font-semibold text-white">
+                  {t("openCase")}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/benefits" className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface2/60 px-4 py-2 text-sm font-medium text-text">
+                  {t("reviewBenefits")}
+                </Link>
+              </div>
             </CardContent>
           </Card>
 
-          <Card variant="soft" padding="md" className="bg-mesh-subtle">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card variant="panel" padding="md">
+              <CardHeader className="mb-3">
+                <CardTitle className="text-xl">Uploaded documents</CardTitle>
+                <CardDescription>Files mapped to your active checklist.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4 rounded-[var(--radius-lg)] border border-border/40 bg-surface2/35 p-4">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm text-secondary">Upload progress</span>
+                    <span className="font-mono text-sm text-text">{uploadedDocuments}/{requiredDocuments || checklistItems.length}</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-surface">
+                    <div className="h-full rounded-full bg-green transition-all" style={{ width: `${requiredDocuments > 0 ? Math.round((uploadedDocuments / requiredDocuments) * 100) : checklistProgress}%` }} />
+                  </div>
+                </div>
+                <ul className="space-y-2.5">
+                  {checklistItems.slice(0, 5).map((item) => (
+                    <li key={item.label} className="flex items-center gap-3 rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5">
+                      {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
+                      <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card variant="panel" padding="md">
+              <CardHeader className="mb-3">
+                <CardTitle className="text-xl">Refund breakdown</CardTitle>
+                <CardDescription>Estimated amounts by active case segment.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="rounded-[var(--radius-lg)] border border-border/40 bg-surface2/25">
+                  <div className="grid grid-cols-[1fr_auto] border-b border-border/35 px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-muted">
+                    <span>Item</span>
+                    <span className="font-mono">Amount</span>
+                  </div>
+                  {breakdownRows.map((row) => (
+                    <div key={row.label} className="grid grid-cols-[1fr_auto] items-center border-b border-border/20 px-4 py-3 last:border-b-0">
+                      <span className="text-sm text-secondary">{row.label}</span>
+                      <span className="font-mono text-sm font-semibold text-text">EUR {row.amount.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs text-muted">This estimate is indicative and validated during specialist review.</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <div className="space-y-6 xl:pl-6 2xl:pl-10">
+          <Card variant="panel" padding="md">
             <CardHeader className="mb-3">
-              <CardTitle className="text-xl">{t("refundTitle")}</CardTitle>
-              <CardDescription>{t("chartTitle")}</CardDescription>
+              <CardTitle className="text-xl">Personal advisor</CardTitle>
+              <CardDescription>Who handles your case at this stage.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className={cn("mb-4 font-heading text-4xl tracking-[-0.03em]", casesQuery.isLoading ? "animate-pulse text-green/60" : "text-green")}>
-                EUR {t("refundAmount")}
-              </p>
-              <div className="rounded-xl border border-border/30 bg-surface/35 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <Badge variant="copper">Estimate</Badge>
-                  <span className="text-xs text-muted">Deterministic projection from current case summary</span>
+              <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/30 p-4">
+                <div className="mb-2 flex items-center gap-2 text-text">
+                  <ShieldCheck className="h-4 w-4 text-green" />
+                  <p className="text-sm font-medium">Advisor assignment status</p>
                 </div>
-                <div className="h-32">
-                  {chartReady ? (
-                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={128}>
-                      <AreaChart data={estimateSeries} margin={{ top: 6, right: 4, left: -18, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="refundArea" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="rgba(195,145,91,0.55)" />
-                            <stop offset="55%" stopColor="rgba(109,210,149,0.22)" />
-                            <stop offset="100%" stopColor="rgba(109,210,149,0.02)" />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
-                        <XAxis
-                          dataKey="stage"
-                          tick={{ fill: "rgba(228,235,244,0.72)", fontSize: 11 }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <Tooltip
-                          cursor={{ stroke: "rgba(195,145,91,0.3)" }}
-                          contentStyle={{
-                            background: "rgba(8,13,22,0.92)",
-                            border: "1px solid rgba(255,255,255,0.1)",
-                            borderRadius: 12,
-                            color: "#e8edf4",
-                          }}
-                          formatter={(value: number | string | undefined) => [`EUR ${typeof value === "number" ? value : Number(value ?? 0)}`, "Estimate"]}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="amount"
-                          stroke="rgba(195,145,91,0.92)"
-                          strokeWidth={2}
-                          fill="url(#refundArea)"
-                          dot={{ r: 2.5, fill: "rgba(109,210,149,0.95)", strokeWidth: 0 }}
-                          activeDot={{ r: 4, fill: "rgba(195,145,91,1)" }}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="grid h-full grid-cols-7 items-end gap-1.5" aria-hidden="true">
-                      {estimateSeries.map((point, index) => (
-                        <div key={point.stage} className="flex h-full items-end">
-                          <div
-                            className={cn("w-full rounded-t-sm", index === estimateSeries.length - 1 ? "bg-copper/70" : "bg-white/12")}
-                            style={{ height: `${Math.max(12, Math.round((point.amount / refundEstimateBase) * 100))}%` }}
-                          />
+                <p className="text-sm leading-6 text-secondary">
+                  {currentStatus === "in_review" || currentStatus === "submitted" || currentStatus === "completed"
+                    ? "A tax specialist is assigned and your case is currently being reviewed."
+                    : "Advisor assignment starts automatically once documents and payment checks are complete."}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card variant="panel" padding="md">
+            <CardHeader className="mb-3">
+              <CardTitle className="text-xl">Fiscal history</CardTitle>
+              <CardDescription>Recent filing records and status changes.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2.5">
+                {taxHistory.length === 0 ? (
+                  <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No case history yet.</li>
+                ) : (
+                  taxHistory.map((item) => (
+                    <li key={item.id} className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm font-medium text-text">{item.label}</p>
+                        <span className="font-mono text-xs text-muted">{item.year ?? "Year n/a"}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-secondary">{item.status} • {item.updated}</p>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card variant="panel" padding="md">
+            <CardHeader className="mb-3">
+              <CardTitle className="text-xl">Recent activity</CardTitle>
+              <CardDescription>Latest operational updates from your cases.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2.5">
+                {recentActivity.length === 0 ? (
+                  <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No updates yet.</li>
+                ) : (
+                  recentActivity.map((activity) => (
+                    <li key={activity.id} className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5">
+                      <div className="flex items-start gap-2">
+                        <Clock3 className="mt-0.5 h-4 w-4 text-copper" />
+                        <div>
+                          <p className="text-sm text-text">{activity.title}</p>
+                          <p className="mt-1 text-xs text-secondary">{activity.date}</p>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <p className="mt-3 text-xs text-muted">{t("chartNote")}</p>
-              </div>
-              <div className="mt-4 grid gap-2">
-                {caseRows.map((row) => (
-                  <div key={`refund-${row.label}`} className="flex items-center justify-between rounded-lg border border-border/25 bg-white/5 px-3 py-2 text-sm">
-                    <span className="text-secondary">{row.label}</span>
-                    <span className="text-text">{row.amount}</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/benefits" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-green/35 bg-green/90 px-4 py-2.5 text-sm font-semibold text-[#07130e]">
-                <FolderCheck className="h-4 w-4" />
-                {t("cta")}
+                      </div>
+                    </li>
+                  ))
+                )}
+              </ul>
+              <Link href="/tax-return" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-copper hover:text-text">
+                Continue workflow
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </CardContent>
           </Card>
@@ -282,17 +322,26 @@ function KpiCard({
   title: string;
   value: string;
   note: string;
-  tone: "neutral" | "success" | "copper";
+  tone: "neutral" | "success" | "warning";
 }) {
-  const toneClass = tone === "success" ? "border-green/25 bg-green/7" : tone === "copper" ? "border-copper/25 bg-copper/7" : "border-border/35 bg-surface/35";
+  const toneClass =
+    tone === "success"
+      ? "border-green/25 bg-green/7"
+      : tone === "warning"
+        ? "border-copper/25 bg-copper/7"
+        : "border-border/35 bg-surface/35";
+
+  const icon =
+    tone === "success" ? <FolderCheck className="h-4 w-4 text-green" /> : tone === "warning" ? <Clock3 className="h-4 w-4 text-copper" /> : <ReceiptText className="h-4 w-4 text-muted" />;
+
   return (
-    <motion.div variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}>
-      <Card variant="soft" padding="sm" className={cn("editorial-frame", toneClass)}>
+    <Card variant="soft" padding="sm" className={cn("editorial-frame", toneClass)}>
+      <div className="mb-2 flex items-center justify-between">
         <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{title}</p>
-        <p className="mt-2 font-heading text-2xl tracking-[-0.03em] text-text">{value}</p>
-        <p className="mt-1 text-xs text-secondary">{note}</p>
-      </Card>
-    </motion.div>
+        {icon}
+      </div>
+      <p className="font-mono text-2xl font-semibold tracking-[-0.02em] text-text">{value}</p>
+      <p className="mt-1 text-xs text-secondary">{note}</p>
+    </Card>
   );
 }
-
