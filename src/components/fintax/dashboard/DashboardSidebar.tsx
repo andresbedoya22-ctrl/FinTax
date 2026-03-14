@@ -58,19 +58,19 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
   return (
     <aside
       className={cn(
-        "flex h-full w-72 flex-col border-r border-border/35 bg-surface/70 backdrop-blur-xl",
+        "flex h-full w-72 flex-col border-r border-border/80 bg-surface",
         className
       )}
     >
       <div className="px-5 py-5">
         <Link href="/" className="focus-ring flex items-center gap-2.5 rounded-md">
-          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-copper/30 bg-copper/10 text-xs font-black text-copper">
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-green/30 bg-green/10 text-xs font-black text-green">
             F
           </div>
-          <span className="font-heading text-lg font-bold text-text">{t("brand")}</span>
+          <span className="font-body text-lg font-bold text-text">{t("brand")}</span>
         </Link>
 
-        <div className="editorial-frame mt-4 rounded-[var(--radius-lg)] bg-surface2/35 px-4 py-3">
+        <div className="mt-4 rounded-[var(--radius-lg)] border border-border/80 bg-surface2/65 px-4 py-3">
           <div className="mb-2.5 flex items-center gap-2.5">
             <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-green/20 bg-green/10 text-[10px] font-bold text-green">
               {initials}
@@ -113,13 +113,13 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  "group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-sm transition-all",
+                  "group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-sm transition-colors",
                   isActive
-                    ? "border-copper/25 bg-copper/[0.08] text-text shadow-glass-soft before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-copper before:content-['']"
-                    : "border-transparent text-secondary hover:border-border/35 hover:bg-white/5 hover:text-text"
+                    ? "border-green/30 bg-green/10 text-text before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-green before:content-['']"
+                    : "border-transparent text-secondary hover:border-border/65 hover:bg-surface2/85 hover:text-text"
                 )}
               >
-                <Icon className={cn("size-4 shrink-0", isActive ? "text-copper" : "text-muted group-hover:text-green")} aria-hidden="true" />
+                <Icon className={cn("size-4 shrink-0", isActive ? "text-green" : "text-muted group-hover:text-green")} aria-hidden="true" />
                 <span>{getLabel(item.key, index)}</span>
               </Link>
             );

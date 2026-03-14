@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 import { DashboardNotifications } from "@/components/fintax/dashboard/DashboardNotifications";
-import { Badge, Button, Skeleton } from "@/components/ui";
+import { Badge, Button, PageHeader, Skeleton } from "@/components/ui";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 
 export interface DashboardTopbarProps {
@@ -27,8 +27,10 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
         : ((words[0]![0]?.toUpperCase() ?? "") + (words[words.length - 1]![0]?.toUpperCase() ?? ""));
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border/35 bg-bg/70 px-4 py-3 backdrop-blur-xl sm:px-6 lg:px-8">
-      <div className="flex items-center gap-3">
+    <PageHeader
+      title={t("title")}
+      subtitle="Authenticated workspace"
+      leftSlot={
         <Button
           type="button"
           size="icon"
@@ -39,13 +41,9 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
         >
           <Menu className="size-5" aria-hidden="true" />
         </Button>
-
-        <div className="min-w-0">
-          <h1 className="font-heading text-xl font-semibold text-text sm:text-2xl">{t("title")}</h1>
-          <p className="hidden text-xs uppercase tracking-[0.14em] text-muted sm:block">Authenticated workspace</p>
-        </div>
-
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+      }
+      actions={
+        <>
           <DashboardNotifications />
 
           <LanguageSwitcher compact />
@@ -72,8 +70,8 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
           <Badge variant="neutral" className="sm:hidden">
             {initials}
           </Badge>
-        </div>
-      </div>
-    </header>
+        </>
+      }
+    />
   );
 }

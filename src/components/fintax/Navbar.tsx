@@ -5,8 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
-import { Button } from "@/components/fintax/Button";
-import { Container } from "@/components/fintax/Container";
+import { Button, Navbar as UiNavbar } from "@/components/ui";
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 
 const defaultLinks = [
@@ -24,51 +23,37 @@ export function Navbar({ className, links = defaultLinks, ...props }: NavbarProp
   const t = useTranslations("Navbar");
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 z-50 w-full border-b border-border/60 bg-bg/80 backdrop-blur-xl",
-        className
-      )}
-      {...props}
-    >
-      <Container className="flex h-16 items-center gap-4">
-        <Link
-          href="/"
-          className="font-heading text-lg font-semibold tracking-tight text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg flex items-center"
-        >
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-green to-teal flex items-center justify-center text-xs font-black text-bg mr-2">
+    <UiNavbar
+      className={cn("border-border/75 bg-surface/95", className)}
+      brand={
+        <Link href="/" className="focus-ring inline-flex items-center rounded-md text-text">
+          <span className="mr-2 grid h-7 w-7 place-items-center rounded-lg border border-green/35 bg-green/10 text-xs font-black text-green">
             F
-          </div>
-          {t("brand")}
+          </span>
+          <span className="font-heading text-lg font-semibold tracking-tight">{t("brand")}</span>
         </Link>
-
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+      }
+      nav={
+        <>
           {links.map((link) => (
-            <Link
-              key={link.key}
-              href={link.href}
-              className="rounded-md px-3 py-2 text-sm text-secondary transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-            >
+            <Link key={link.key} href={link.href} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">
               {t(`links.${link.key}`)}
             </Link>
           ))}
-        </nav>
-
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+        </>
+      }
+      actions={
+        <>
           <LanguageSwitcher />
-
-          <Link
-            href="/auth"
-            className="rounded-md px-2 py-2 text-sm text-secondary transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-          >
+          <Link href="/auth" className="focus-ring rounded-md px-2 py-2 text-sm text-secondary hover:text-text">
             {t("signIn")}
           </Link>
-
           <Button asChild size="sm">
             <Link href="/auth?intent=tax-return">{t("freePrecheck")}</Link>
           </Button>
-        </div>
-      </Container>
-    </header>
+        </>
+      }
+      {...props}
+    />
   );
 }
