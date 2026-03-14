@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 import { DashboardNotifications } from "@/components/fintax/dashboard/DashboardNotifications";
-import { Badge, Button, PageHeader, Skeleton } from "@/components/ui";
+import { Badge, Button, Skeleton } from "@/components/ui";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 
 export interface DashboardTopbarProps {
@@ -27,10 +27,8 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
         : ((words[0]![0]?.toUpperCase() ?? "") + (words[words.length - 1]![0]?.toUpperCase() ?? ""));
 
   return (
-    <PageHeader
-      title={t("title")}
-      subtitle="Case operations workspace"
-      leftSlot={
+    <header className="border-b border-border/65 bg-surface/95 px-4 py-2.5 sm:px-6 lg:px-8">
+      <div className="flex items-center gap-3">
         <Button
           type="button"
           size="icon"
@@ -41,11 +39,11 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
         >
           <Menu className="size-5" aria-hidden="true" />
         </Button>
-      }
-      actions={
-        <>
-          <DashboardNotifications />
 
+        <p className="hidden text-xs font-semibold uppercase tracking-[0.14em] text-muted md:block">{t("title")}</p>
+
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <DashboardNotifications />
           <LanguageSwitcher compact />
 
           <button
@@ -70,8 +68,8 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
           <Badge variant="neutral" className="sm:hidden">
             {initials}
           </Badge>
-        </>
-      }
-    />
+        </div>
+      </div>
+    </header>
   );
 }
