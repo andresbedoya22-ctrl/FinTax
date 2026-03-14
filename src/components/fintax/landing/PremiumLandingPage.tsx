@@ -63,7 +63,7 @@ const localeCopy: Record<AppLocale, Copy> = {
     servicesTitle: "Services",
     pricingTitle: "Pricing",
     faqTitle: "Frequently asked questions",
-    insightsTitle: "Latest guidance previews",
+    insightsTitle: "Guidance previews",
     finalCtaTitle: "Start with structure, not uncertainty.",
     finalCtaBody: "Continue in the existing secure flow and receive a scoped quote before full submission.",
     footerLegalTitle: "Legal and operational clarity",
@@ -84,7 +84,7 @@ const localeCopy: Record<AppLocale, Copy> = {
     servicesTitle: "Diensten",
     pricingTitle: "Prijzen",
     faqTitle: "Veelgestelde vragen",
-    insightsTitle: "Recente guidance previews",
+    insightsTitle: "Guidance previews",
     finalCtaTitle: "Start met structuur, niet met onzekerheid.",
     finalCtaBody: "Ga naar de bestaande veilige flow en ontvang eerst een afgebakende offerte.",
     footerLegalTitle: "Juridische en operationele duidelijkheid",
@@ -105,7 +105,7 @@ const localeCopy: Record<AppLocale, Copy> = {
     servicesTitle: "Servicios",
     pricingTitle: "Precios",
     faqTitle: "Preguntas frecuentes",
-    insightsTitle: "Previews editoriales",
+    insightsTitle: "Guias destacadas",
     finalCtaTitle: "Empieza con estructura, no con incertidumbre.",
     finalCtaBody: "Continua en el flujo seguro existente y recibe presupuesto delimitado antes del envio.",
     footerLegalTitle: "Claridad legal y operativa",
@@ -125,7 +125,7 @@ const localeCopy: Record<AppLocale, Copy> = {
     servicesTitle: "Uslugi",
     pricingTitle: "Cennik",
     faqTitle: "Najczestsze pytania",
-    insightsTitle: "Preview poradnikow",
+    insightsTitle: "Poradniki",
     finalCtaTitle: "Zacznij od struktury, nie od niepewnosci.",
     finalCtaBody: "Przejdz do istniejacego bezpiecznego flow i otrzymaj zakres przed rozpoczeciem pracy.",
     footerLegalTitle: "Jasnosc prawna i operacyjna",
@@ -145,7 +145,7 @@ const localeCopy: Record<AppLocale, Copy> = {
     servicesTitle: "Servicii",
     pricingTitle: "Preturi",
     faqTitle: "Intrebari frecvente",
-    insightsTitle: "Preview ghiduri",
+    insightsTitle: "Ghiduri",
     finalCtaTitle: "Incepe cu structura, nu cu incertitudine.",
     finalCtaBody: "Continua in fluxul securizat existent si primesti oferta delimitata inainte de depunere.",
     footerLegalTitle: "Claritate legala si operationala",
@@ -155,9 +155,9 @@ const localeCopy: Record<AppLocale, Copy> = {
 
 const trustItems = [
   "Locale-aware routes and legal pages available before signup",
-  "Secure authentication and case tracking in one workspace",
-  "Stripe checkout with webhook-based payment confirmation",
-  "Authorization steps explained only when a case requires machtiging",
+  "Authentication, onboarding and route protection handled in middleware and Supabase",
+  "Stripe checkout and webhook confirmation connected to case records",
+  "Authorization steps are explained only when a case requires machtiging",
 ] as const;
 
 const services = [
@@ -185,10 +185,23 @@ const faqItems = [
 ] as const;
 
 const insights = [
-  { title: "Choosing between P, M and C returns", date: "2026-03-01", excerpt: "A practical comparison to pick the right filing route.", href: "/legal/terms" },
+  { title: "Choosing between P, M and C returns", date: "2026-03-01", excerpt: "A practical comparison to pick the right filing route.", href: "/tax-return" },
   { title: "Understanding machtiging in plain language", date: "2026-02-20", excerpt: "When authorization is needed and what it covers.", href: "/legal/privacy" },
-  { title: "Preparing documents for faster review", date: "2026-02-08", excerpt: "Checklist quality rules that reduce avoidable delays.", href: "/legal/terms" },
+  { title: "Preparing documents for faster review", date: "2026-02-08", excerpt: "Checklist quality rules that reduce avoidable delays.", href: "/auth?intent=tax-return" },
 ] as const;
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.a,
+    },
+  })),
+};
 
 function smoothAnchorNavigate(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
   const id = href.replace("#", "");
@@ -223,6 +236,7 @@ export function PremiumLandingPage() {
 
   return (
     <div className="min-h-screen bg-bg text-text">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <header className={cn("sticky top-0 z-40 border-b border-border/80 transition-colors", scrolled ? "bg-surface/95" : "bg-surface/88")}>
         <Container className="flex h-16 items-center gap-4">
           <Link href="/" className="focus-ring inline-flex items-center rounded-md text-text">
@@ -247,10 +261,10 @@ export function PremiumLandingPage() {
       <main>
         <Section className="border-b border-border/75 pt-10 sm:pt-14">
           <Container>
-            <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr]">
+            <div className="grid gap-10 lg:grid-cols-[1.02fr_0.98fr]">
               <div>
                 <p className="text-xs uppercase tracking-[0.14em] text-secondary">{t.heroEyebrow}</p>
-                <h1 className="mt-4 font-heading text-4xl leading-[1.02] tracking-[-0.03em] text-text sm:text-5xl">{t.heroTitle}</h1>
+                <h1 className="mt-4 max-w-[16ch] font-heading text-4xl leading-[1.02] tracking-[-0.03em] text-text sm:text-5xl">{t.heroTitle}</h1>
                 <p className="mt-5 max-w-[62ch] text-base leading-7 text-secondary">{t.heroBody}</p>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "lg" })}>{t.ctaPrimary}<ArrowRight className="h-4 w-4" /></Link>
@@ -259,7 +273,14 @@ export function PremiumLandingPage() {
                 <p className="mt-4 text-xs uppercase tracking-[0.1em] text-muted">{t.heroNote}</p>
               </div>
               <Card variant="panel" padding="none" className="overflow-hidden">
-                <Image src="/visuals/hero-dashboard.png" alt="FinTax dashboard preview" width={1680} height={1080} priority className="h-full w-full object-cover" />
+                <Image
+                  src="/visuals/hero-dashboard.png"
+                  alt="Screenshot of FinTax case dashboard with stepper status and document checklist"
+                  width={1680}
+                  height={1080}
+                  priority
+                  className="h-full w-full object-cover"
+                />
               </Card>
             </div>
           </Container>
@@ -298,14 +319,16 @@ export function PremiumLandingPage() {
           <Container>
             <h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.pricingTitle}</h2>
             <Card variant="panel" padding="none" className="mt-6 overflow-hidden">
-              <table className="w-full text-left">
-                <thead className="bg-surface2/75">
-                  <tr><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">Service</th><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">From</th><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">Scope</th></tr>
-                </thead>
-                <tbody>
-                  {pricingRows.map((row) => <tr key={row.service} className="border-t border-border/75"><td className="px-5 py-4 text-sm text-text">{row.service}</td><td className="px-5 py-4"><Badge variant="success">{row.from}</Badge></td><td className="px-5 py-4 text-sm text-secondary">{row.scope}</td></tr>)}
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[680px] text-left">
+                  <thead className="bg-surface2/75">
+                    <tr><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">Service</th><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">From</th><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">Scope</th></tr>
+                  </thead>
+                  <tbody>
+                    {pricingRows.map((row) => <tr key={row.service} className="border-t border-border/75"><td className="px-5 py-4 text-sm text-text">{row.service}</td><td className="px-5 py-4"><Badge variant="success">{row.from}</Badge></td><td className="px-5 py-4 text-sm text-secondary">{row.scope}</td></tr>)}
+                  </tbody>
+                </table>
+              </div>
             </Card>
           </Container>
         </Section>
@@ -321,7 +344,7 @@ export function PremiumLandingPage() {
           <Container>
             <h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.insightsTitle}</h2>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {insights.map((post) => <article key={post.title} className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5"><p className="font-mono text-xs tracking-[0.06em] text-muted"><time dateTime={post.date}>{post.date}</time></p><h3 className="mt-2 font-body text-lg font-semibold text-text">{post.title}</h3><p className="mt-2 text-sm leading-6 text-secondary">{post.excerpt}</p><Link href={post.href} className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-green hover:text-green-hover">Read preview<ArrowRight className="h-4 w-4" /></Link></article>)}
+              {insights.map((post) => <article key={post.title} className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5"><p className="font-mono text-xs tracking-[0.06em] text-muted"><time dateTime={post.date}>{post.date}</time></p><h3 className="mt-2 font-body text-lg font-semibold text-text">{post.title}</h3><p className="mt-2 text-sm leading-6 text-secondary">{post.excerpt}</p><Link href={post.href} className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-green hover:text-green-hover">Open resource<ArrowRight className="h-4 w-4" /></Link></article>)}
             </div>
           </Container>
         </Section>
@@ -344,8 +367,8 @@ export function PremiumLandingPage() {
                 <div className="mt-5 flex flex-wrap gap-2"><Link href="/legal/privacy" className={buttonVariants({ variant: "secondary", size: "sm" })}>Privacy</Link><Link href="/legal/terms" className={buttonVariants({ variant: "secondary", size: "sm" })}>Terms</Link></div>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[var(--radius-lg)] border border-border/75 bg-surface p-4"><p className="text-xs uppercase tracking-[0.12em] text-muted">Contact</p><a href="mailto:support@fintax.example" className="mt-2 block text-sm text-text hover:text-green">support@fintax.example</a></div>
-                <div className="rounded-[var(--radius-lg)] border border-border/75 bg-surface p-4"><p className="text-xs uppercase tracking-[0.12em] text-muted">KvK</p><p className="mt-2 text-sm text-text">Pending registration</p></div>
+                <div className="rounded-[var(--radius-lg)] border border-border/75 bg-surface p-4"><p className="text-xs uppercase tracking-[0.12em] text-muted">Support</p><p className="mt-2 text-sm text-text">Client support is routed from your authenticated workspace after intake.</p></div>
+                <div className="rounded-[var(--radius-lg)] border border-border/75 bg-surface p-4"><p className="text-xs uppercase tracking-[0.12em] text-muted">Company details</p><p className="mt-2 text-sm text-text">Legal identifiers are published on this site once verified by legal operations.</p></div>
               </div>
             </div>
             <div className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-muted"><Globe2 className="h-3.5 w-3.5" />EN / NL / ES / PL / RO</div>

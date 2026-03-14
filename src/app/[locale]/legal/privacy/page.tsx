@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: A
     locale,
     pathname: "/legal/privacy",
     title: "FinTax | Privacy Notice",
-    description: "Pre-launch privacy notice for FinTax services and processing categories.",
+    description: "Privacy notice describing account, case, payment and document processing in FinTax.",
   });
 }
 
@@ -18,9 +18,8 @@ export default function PrivacyPage() {
         <p className="text-xs uppercase tracking-[0.14em] text-copper">Legal</p>
         <h1 className="mt-3 font-heading text-3xl tracking-[-0.03em] text-text sm:text-4xl">Privacy Notice</h1>
         <p className="mt-4 text-sm leading-7 text-secondary">
-          This pre-launch privacy page describes the intended processing categories for account access, case
-          management, tax filing support, document uploads, payments and notifications. Final legal text will be
-          reviewed before production release.
+          This privacy page describes processing categories for account access, case management, tax filing support,
+          document uploads, payments and notifications. Legal wording is periodically reviewed before production updates.
         </p>
         <ul className="mt-6 grid gap-3 text-sm text-secondary">
           <li className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">Public visitors can access landing content and pricing summaries.</li>
