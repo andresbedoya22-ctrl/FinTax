@@ -6,9 +6,9 @@ import { cn } from "@/lib/cn";
 const cardVariants = cva("rounded-[var(--radius-xl)] border text-text", {
   variants: {
     variant: {
-      panel: "surface-panel hairline-copper",
+      panel: "surface-panel",
       soft: "surface-panel-soft",
-      outline: "bg-transparent border-border/60",
+      outline: "bg-transparent border-border/85",
     },
     padding: {
       none: "p-0",
@@ -31,19 +31,19 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, variant, 
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn("mb-5 flex flex-col gap-1.5", className)} {...props} />,
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("mb-4 flex flex-col gap-1.5", className)} {...props} />,
 );
 CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("font-heading text-xl tracking-[-0.02em] text-text", className)} {...props} />
+    <h3 ref={ref} className={cn("font-body text-xl font-semibold tracking-[-0.01em] text-text", className)} {...props} />
   ),
 );
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, ...props }, ref) => <p ref={ref} className={cn("text-sm text-muted", className)} {...props} />,
+  ({ className, ...props }, ref) => <p ref={ref} className={cn("text-sm leading-6 text-secondary", className)} {...props} />,
 );
 CardDescription.displayName = "CardDescription";
 

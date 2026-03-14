@@ -1,16 +1,16 @@
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
+import { Card as UiCard, CardContent } from "@/components/ui";
 
 export type CardProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, ...props }, ref) => {
   return (
-    <div
+    <UiCard
       ref={ref}
       className={cn(
-        "rounded-[var(--radius-xl)] border border-border/45 bg-surface/72 backdrop-blur-xl shadow-panel",
-        "hairline-copper",
+        "rounded-[var(--radius-xl)]",
         className
       )}
       {...props}
@@ -36,7 +36,7 @@ export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const CardBody = React.forwardRef<HTMLDivElement, CardBodyProps>(
       ({ className, ...props }, ref) => {
-    return <div ref={ref} className={cn("px-5 py-4 sm:px-6 sm:py-5", className)} {...props} />;
+    return <CardContent ref={ref} className={cn("px-5 py-4 sm:px-6 sm:py-5", className)} {...props} />;
   }
 );
 
