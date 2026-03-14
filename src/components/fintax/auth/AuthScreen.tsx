@@ -42,7 +42,7 @@ const registerSchema = z
     email: z.string().email(),
     password: z.string().min(8),
     confirmPassword: z.string().min(8),
-    terms: z.boolean().refine((v) => v === true, { message: "You must accept the terms" }),
+    terms: z.boolean().refine((v) => v === true, { message: "You must accept terms and privacy notice." }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -327,8 +327,8 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
             <div className="grid gap-4">
               <Card variant="panel" padding="sm" className="bg-surface/45">
-                <p className="text-xs uppercase tracking-[0.14em] text-muted">Workspace preview</p>
-                <Image src="/visuals/app-mock.svg" alt="FinTax app mockup" width={1600} height={1000} className="mt-3 h-[170px] w-full rounded-xl border border-border/40 object-cover" />
+                <p className="text-xs uppercase tracking-[0.14em] text-muted">Operations preview</p>
+                <Image src="/visuals/hero-dashboard.png" alt="FinTax operations dashboard showing checklist and case progress" width={1600} height={1000} className="mt-3 h-[170px] w-full rounded-xl border border-border/40 object-cover" />
                 <p className="mt-3 text-xs leading-5 text-secondary">
                   Access remains controlled by the existing Supabase auth flow, middleware route guards and onboarding checks.
                 </p>
@@ -528,7 +528,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                 </div>
               </Card>
               <Card variant="soft" padding="sm" className="bg-surface2/45">
-                <Image src="/visuals/app-mock.svg" alt="App mockup" width={1600} height={1000} className="h-[120px] w-full rounded-lg border border-border/40 object-cover" />
+                <Image src="/visuals/hero-dashboard.png" alt="FinTax dashboard screenshot" width={1600} height={1000} className="h-[120px] w-full rounded-lg border border-border/40 object-cover" />
               </Card>
             </div>
           </div>

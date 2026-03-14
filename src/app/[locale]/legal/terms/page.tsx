@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: A
     locale,
     pathname: "/legal/terms",
     title: "FinTax | Terms of Service",
-    description: "Pre-launch terms of service placeholder for FinTax legal review.",
+    description: "Terms of service describing FinTax scope, payments and operational constraints.",
   });
 }
 
@@ -18,8 +18,8 @@ export default function TermsPage() {
         <p className="text-xs uppercase tracking-[0.14em] text-copper">Legal</p>
         <h1 className="mt-3 font-heading text-3xl tracking-[-0.03em] text-text sm:text-4xl">Terms of Service</h1>
         <p className="mt-4 text-sm leading-7 text-secondary">
-          This pre-launch terms page provides a route-safe placeholder for legal review and content integration.
-          Commercial terms, service scope and filing limitations will be finalized before production deployment.
+          This terms page describes service scope, payment handling and filing limitations.
+          Commercial wording and legal references are reviewed before production revisions.
         </p>
         <ul className="mt-6 grid gap-3 text-sm text-secondary">
           <li className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">Scope is defined per selected service and confirmed before work starts.</li>

@@ -1,4 +1,16 @@
 import { AuthScreen } from "@/components/fintax/auth";
+import type { AppLocale } from "@/i18n/routing";
+import { buildNoIndexMetadata } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: AppLocale }> }) {
+  const { locale } = await params;
+  return buildNoIndexMetadata({
+    locale,
+    pathname: "/auth",
+    title: "FinTax | Secure account access",
+    description: "Sign in or create an account to access your FinTax case workspace.",
+  });
+}
 
 export default async function AuthPage({
   searchParams,

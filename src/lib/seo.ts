@@ -34,13 +34,13 @@ function localizedUrl(locale: AppLocale, pathname: string) {
   return `/${locale}${normalizePathname(pathname)}`;
 }
 
-export function buildLocaleAlternates(pathname: string) {
+export function buildLocaleAlternates(pathname: string, locale: AppLocale) {
   const languages = Object.fromEntries(
     routing.locales.map((locale) => [locale, localizedUrl(locale, pathname)]),
   );
 
   return {
-    canonical: localizedUrl(routing.defaultLocale, pathname),
+    canonical: localizedUrl(locale, pathname),
     languages: {
       ...languages,
       "x-default": localizedUrl(routing.defaultLocale, pathname),
@@ -68,7 +68,7 @@ export function buildPublicMetadata({
   description,
   ogImage = DEFAULT_OG_IMAGE,
 }: BuildPublicMetadataOptions): Metadata {
-  const alternates = buildLocaleAlternates(pathname);
+  const alternates = buildLocaleAlternates(pathname, locale);
   const metadataBase = getConfiguredBaseUrl();
   const pagePath = localizedUrl(locale, pathname);
 

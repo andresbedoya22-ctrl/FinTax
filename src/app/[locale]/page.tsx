@@ -7,14 +7,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: A
   return buildPublicMetadata({
     locale,
     pathname: "/",
-    title: "FinTax | Dutch taxes and benefits explained in your language",
+    title: "FinTax | Dutch tax and benefits guidance for international households",
     description:
-      "File your tax return, manage ZZP and VAT, apply for toeslagen, and track progress with human-reviewed support.",
+      "Structured support for Dutch tax returns, ZZP and VAT obligations, and benefits applications with human-reviewed delivery.",
     ogImage: {
-      url: "/visuals/app-mock.png",
+      url: "/visuals/hero-dashboard.png",
       width: 1600,
       height: 1000,
-      alt: "FinTax dashboard and filing workflow preview",
+      alt: "FinTax case operations dashboard showing status, checklist and filing workflow",
     },
   });
 }

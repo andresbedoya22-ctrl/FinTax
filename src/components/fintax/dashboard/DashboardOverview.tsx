@@ -129,7 +129,7 @@ export function DashboardOverview() {
   }));
 
   return (
-    <section className="space-y-7">
+    <section className="space-y-8">
       {casesQuery.isError ? (
         <div className="rounded-[var(--radius-lg)] border border-copper/30 bg-copper/10 p-4">
           <p className="text-xs uppercase tracking-[0.14em] text-copper">Dashboard API</p>
@@ -147,12 +147,12 @@ export function DashboardOverview() {
         <KpiCard title="Checklist completion" value={`${checklistProgress}%`} note="Current active case" tone="neutral" />
       </div>
 
-      <div className="grid gap-8 xl:grid-cols-[minmax(0,1.62fr)_minmax(320px,1fr)]">
+      <div className="grid gap-9 xl:grid-cols-[minmax(0,1.62fr)_minmax(320px,1fr)]">
         <div className="space-y-6">
           <Card variant="panel" padding="lg">
             <CardHeader className="mb-5">
               <div className="mb-3 flex flex-wrap items-center gap-2">
-                <Badge variant="copper">Declaration header</Badge>
+                <Badge variant="copper">Active declaration</Badge>
                 <Badge variant={activeStatusTone === "success" ? "success" : "neutral"}>{activeStatusLabel}</Badge>
               </div>
               <CardTitle className="text-3xl">{activeCaseTitle}</CardTitle>
@@ -233,14 +233,14 @@ export function DashboardOverview() {
           </div>
         </div>
 
-        <div className="space-y-6 xl:pl-6 2xl:pl-10">
+        <div className="space-y-7 xl:pl-8 2xl:pl-12">
           <Card variant="panel" padding="md">
             <CardHeader className="mb-3">
               <CardTitle className="text-xl">Personal advisor</CardTitle>
               <CardDescription>Who handles your case at this stage.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/30 p-4">
+              <div className="rounded-[var(--radius-lg)] border border-border/30 bg-surface2/20 p-4">
                 <div className="mb-2 flex items-center gap-2 text-text">
                   <ShieldCheck className="h-4 w-4 text-green" />
                   <p className="text-sm font-medium">Advisor assignment status</p>
@@ -265,12 +265,12 @@ export function DashboardOverview() {
                   <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No case history yet.</li>
                 ) : (
                   taxHistory.map((item) => (
-                    <li key={item.id} className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5">
+                    <li key={item.id} className="rounded-lg border border-border/28 bg-surface2/20 px-3 py-2.5">
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-sm font-medium text-text">{item.label}</p>
                         <span className="font-mono text-xs text-muted">{item.year ?? "Year n/a"}</span>
                       </div>
-                      <p className="mt-1 text-xs text-secondary">{item.status} • {item.updated}</p>
+                      <p className="mt-1 text-xs text-secondary">{item.status} | {item.updated}</p>
                     </li>
                   ))
                 )}
@@ -289,7 +289,7 @@ export function DashboardOverview() {
                   <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No updates yet.</li>
                 ) : (
                   recentActivity.map((activity) => (
-                    <li key={activity.id} className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5">
+                    <li key={activity.id} className="rounded-lg border border-border/28 bg-surface2/20 px-3 py-2.5">
                       <div className="flex items-start gap-2">
                         <Clock3 className="mt-0.5 h-4 w-4 text-copper" />
                         <div>

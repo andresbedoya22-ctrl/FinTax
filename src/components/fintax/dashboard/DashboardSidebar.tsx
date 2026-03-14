@@ -113,7 +113,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  "group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-sm transition-colors",
+                  "focus-ring group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-sm transition-colors",
                   isActive
                     ? "border-[#2f5e45] bg-[#173426] text-[#ecf6f0] before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-[#80d4a2] before:content-['']"
                     : "border-transparent text-[#b8c9bf] hover:border-[#304638] hover:bg-[#162820] hover:text-[#f0f7f3]"
