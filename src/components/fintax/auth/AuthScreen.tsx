@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-  Globe2,
   LoaderCircle,
   Lock,
   Mail,
@@ -22,7 +21,7 @@ import { z } from "zod";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { createClient } from "@/lib/supabase/client";
-import { Badge, Button, Card, Input, Pictogram, Tabs, TabsList, TabsTrigger, Textarea, buttonVariants } from "@/components/ui";
+import { Badge, Button, Card, Input, Pictogram, Tabs, TabsList, TabsTrigger, buttonVariants } from "@/components/ui";
 
 type AuthMode = "login" | "register" | "forgot";
 type AppLocale = "en" | "es" | "pl" | "ro" | "nl";
@@ -49,7 +48,7 @@ const registerSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-const forgotSchema = z.object({ email: z.string().email(), note: z.string().optional() });
+const forgotSchema = z.object({ email: z.string().email() });
 
 type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
@@ -57,79 +56,71 @@ type ForgotValues = z.infer<typeof forgotSchema>;
 
 type TrustItem = { Icon: React.ComponentType<{ className?: string }>; text: string };
 const TRUST_ITEMS: TrustItem[] = [
-  { Icon: ShieldCheck, text: "BSN encrypted with AES-256" },
-  { Icon: Lock, text: "Your data never sold" },
-  { Icon: Globe2, text: "Available in 4 languages" },
+  { Icon: ShieldCheck, text: "Authentication is managed through Supabase and protected routes." },
+  { Icon: Lock, text: "Session checks and redirects run in middleware before dashboard access." },
+  { Icon: ShieldCheck, text: "Onboarding state is verified before users enter protected workflows." },
 ];
 
 const extraCopy = {
   en: {
-    authTitle: "Premium account access",
-    authSubtitle: "Access your secure workspace for tax returns, letters and benefits. The underlying auth flow remains unchanged in this UI refactor.",
+    authTitle: "Secure account access",
+    authSubtitle: "Sign in to continue with filings, letters and case tracking.",
     forgotTitle: "Forgot password",
-    forgotSubtitle: "Enter your email to continue. Password reset delivery is a UI placeholder in this phase.",
+    forgotSubtitle: "Enter your account email and we will send a secure reset link.",
     rememberMe: "Remember me on this device",
     forgotLink: "Forgot password?",
-    secureMicrocopy: "Secure sign-in. Your credentials are handled through the existing authentication flow.",
-    forgotSubmit: "Continue",
+    secureMicrocopy: "Your credentials are processed through the current FinTax authentication flow.",
+    forgotSubmit: "Send reset link",
     forgotBack: "Back to login",
-    forgotBanner: "Password reset flow placeholder. Auth backend behavior was intentionally left unchanged in this phase.",
-    leftEyebrow: "Editorial fintech authentication",
-    leftTitle: "Serious access for serious tax work",
-    leftBody: "One workspace for filings, government letters and multilingual guidance. Designed to reduce confusion at the first authenticated step.",
-    quote: "The process felt secure and clear from the first login screen.",
-    quoteRole: "Client - Rotterdam",
+    forgotBanner: "If this email is registered, a reset link has been sent.",
+    leftEyebrow: "Account security",
+    leftTitle: "Professional access, clear process",
+    leftBody: "The auth flow keeps your locale, intended destination and onboarding status aligned before entering the workspace.",
   },
   es: {
-    authTitle: "Acceso premium a la cuenta",
-    authSubtitle: "Accede a tu espacio seguro para declaraciones, cartas y beneficios. El flujo de autenticacion no cambia en este refactor UI.",
+    authTitle: "Acceso seguro a tu cuenta",
+    authSubtitle: "Inicia sesion para continuar con declaraciones, cartas y seguimiento del caso.",
     forgotTitle: "Olvide mi contrasena",
-    forgotSubtitle: "Introduce tu correo para continuar. El envio de reset es un placeholder UI en esta fase.",
+    forgotSubtitle: "Introduce el correo de tu cuenta y enviaremos un enlace seguro.",
     rememberMe: "Recordarme en este dispositivo",
     forgotLink: "Olvidaste tu contrasena?",
-    secureMicrocopy: "Inicio de sesion seguro. Tus credenciales usan el flujo de autenticacion existente.",
-    forgotSubmit: "Continuar",
+    secureMicrocopy: "Tus credenciales se procesan con el flujo de autenticacion actual de FinTax.",
+    forgotSubmit: "Enviar enlace",
     forgotBack: "Volver a iniciar sesion",
-    forgotBanner: "Placeholder de reset de contrasena. La logica backend de auth no se modifico en esta fase.",
-    leftEyebrow: "Autenticacion fintech editorial",
-    leftTitle: "Acceso serio para trabajo fiscal serio",
-    leftBody: "Un solo espacio para declaraciones, cartas oficiales y soporte multilingue.",
-    quote: "El proceso se sintio seguro y claro desde la primera pantalla.",
-    quoteRole: "Cliente - Rotterdam",
+    forgotBanner: "Si este correo esta registrado, enviamos un enlace de recuperacion.",
+    leftEyebrow: "Seguridad de cuenta",
+    leftTitle: "Acceso profesional y claro",
+    leftBody: "El flujo de acceso conserva locale, destino de trabajo y estado de onboarding antes de entrar al producto.",
   },
   pl: {
     authTitle: "Premium dostep do konta",
     authSubtitle: "Bezpieczny workspace dla deklaracji, pism i benefitow. Logika auth pozostaje bez zmian w tym refaktorze UI.",
     forgotTitle: "Nie pamietam hasla",
-    forgotSubtitle: "Podaj email, aby kontynuowac. Reset hasla to placeholder UI w tej fazie.",
+    forgotSubtitle: "Podaj email konta, a wyslemy bezpieczny link resetu hasla.",
     rememberMe: "Zapamietaj mnie na tym urzadzeniu",
     forgotLink: "Zapomniales hasla?",
     secureMicrocopy: "Bezpieczne logowanie. Dane logowania sa obslugiwane przez istniejacy flow auth.",
-    forgotSubmit: "Kontynuuj",
+    forgotSubmit: "Wyslij link",
     forgotBack: "Wroc do logowania",
-    forgotBanner: "Placeholder resetu hasla. Logika backend auth pozostala bez zmian w tej fazie.",
-    leftEyebrow: "Autoryzacja fintech editorial",
-    leftTitle: "Powazny dostep do powaznej pracy podatkowej",
-    leftBody: "Jeden workspace dla deklaracji, pism urzedowych i wsparcia wielojezycznego.",
-    quote: "Ekran logowania od razu budowal zaufanie i porzadek procesu.",
-    quoteRole: "Klient - Rotterdam",
+    forgotBanner: "Jesli ten email istnieje, wyslalismy link do resetu hasla.",
+    leftEyebrow: "Bezpieczenstwo konta",
+    leftTitle: "Profesjonalny i jasny dostep",
+    leftBody: "Logowanie utrzymuje locale, cel przejscia i status onboardingu przed wejsciem do panelu.",
   },
   ro: {
     authTitle: "Acces premium la cont",
     authSubtitle: "Acces la workspace securizat pentru declaratii, scrisori si beneficii. Fluxul auth existent ramane neschimbat.",
     forgotTitle: "Am uitat parola",
-    forgotSubtitle: "Introdu emailul pentru a continua. Resetarea parolei este placeholder UI in aceasta faza.",
+    forgotSubtitle: "Introdu emailul contului si vom trimite un link securizat de resetare.",
     rememberMe: "Tine-ma minte pe acest dispozitiv",
     forgotLink: "Ai uitat parola?",
     secureMicrocopy: "Autentificare securizata. Credentialele folosesc fluxul existent de autentificare.",
-    forgotSubmit: "Continua",
+    forgotSubmit: "Trimite link",
     forgotBack: "Inapoi la login",
-    forgotBanner: "Placeholder pentru reset parola. Logica backend auth nu a fost modificata in aceasta faza.",
-    leftEyebrow: "Autentificare fintech editoriala",
-    leftTitle: "Acces serios pentru munca fiscala serioasa",
-    leftBody: "Un singur workspace pentru declaratii, scrisori oficiale si suport multilingv.",
-    quote: "Prima impresie a fost de siguranta si claritate, exact ce aveam nevoie.",
-    quoteRole: "Client - Rotterdam",
+    forgotBanner: "Daca emailul exista, am trimis linkul de resetare.",
+    leftEyebrow: "Securitatea contului",
+    leftTitle: "Acces profesional si clar",
+    leftBody: "Autentificarea pastreaza locale-ul, destinatia si statusul onboarding-ului inainte de dashboard.",
   },
 } as const;
 
@@ -204,9 +195,6 @@ function ErrorBanner({ message }: { message: string }) {
 function InfoBanner({ message }: { message: string }) {
   return <div className="mb-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-copper/35 bg-copper/8 px-4 py-3 text-sm text-secondary"><Pictogram name="escudo" size={18} decorative className="mt-0.5 opacity-90" /><p>{message}</p></div>;
 }
-function LoadingLabel({ loading, label }: { loading: boolean; label: string }) {
-  return <>{loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}{loading ? `${label}...` : label}</>;
-}
 
 export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?: AuthScreenSearchParams }) {
   const router = useRouter();
@@ -215,6 +203,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const t = useTranslations("Auth");
   const tA11y = useTranslations("Auth.a11y");
   const supabase = createClient();
+  const isAppleEnabled = process.env.NEXT_PUBLIC_AUTH_APPLE_ENABLED === "true";
 
   const [mode, setMode] = React.useState<AuthMode>("login");
   const [showPassword, setShowPassword] = React.useState(false);
@@ -235,7 +224,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
     resolver: zodResolver(registerSchema),
     defaultValues: { email: "", password: "", confirmPassword: "", fullName: "", terms: false },
   });
-  const forgotForm = useForm<ForgotValues>({ resolver: zodResolver(forgotSchema), defaultValues: { email: "", note: "" } });
+  const forgotForm = useForm<ForgotValues>({ resolver: zodResolver(forgotSchema), defaultValues: { email: "" } });
 
   const isSubmitting = mode === "login" ? loginForm.formState.isSubmitting : mode === "register" ? registerForm.formState.isSubmitting : forgotForm.formState.isSubmitting;
 
@@ -269,29 +258,41 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
     setServerError(null);
     if (!supabase) return setServerError("Supabase is not configured in this environment.");
     const nextPath = resolveAuthSuccessPath(initialSearchParams);
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(withLocalePrefix(nextPath, locale))}` },
     });
+    if (error) setServerError(error.message);
   };
 
   const onAppleClick = async () => {
+    setServerError(null);
+    if (!supabase) return setServerError("Supabase is not configured in this environment.");
+    if (!isAppleEnabled) return setServerError("Apple sign-in is not enabled in this environment.");
     setIsAppleLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 450));
+    const nextPath = resolveAuthSuccessPath(initialSearchParams);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: { redirectTo: `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(withLocalePrefix(nextPath, locale))}` },
+    });
     setIsAppleLoading(false);
-    setServerError("Apple sign-in is not configured in this environment.");
+    if (error) setServerError(error.message);
   };
 
-  const onForgotSubmit = async () => {
+  const onForgotSubmit = async (values: ForgotValues) => {
+    setServerError(null);
     setForgotInfo(null);
-    await new Promise((resolve) => setTimeout(resolve, 450));
+    if (!supabase) return setServerError("Supabase is not configured in this environment.");
+    const redirectTo = `${window.location.origin}/${locale}/auth`;
+    const { error } = await supabase.auth.resetPasswordForEmail(values.email, { redirectTo });
+    if (error) return setServerError(error.message);
     setForgotInfo(local.forgotBanner);
   };
 
   return (
     <div className="relative min-h-screen bg-mesh">
       <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[1.05fr_0.95fr]">
-        <aside className="hero-glow relative hidden overflow-hidden border-r border-border/35 p-8 lg:flex lg:flex-col lg:justify-between xl:p-10">
+        <aside className="hero-glow relative hidden overflow-hidden border-l border-border/35 p-8 lg:order-2 lg:flex lg:flex-col lg:justify-between xl:p-10">
           <div className="absolute inset-0">
             <Image src="/visuals/hero-bg.svg" alt="" width={1920} height={1080} className="h-full w-full object-cover opacity-30" aria-hidden="true" />
             <div className="absolute inset-0 bg-gradient-to-br from-bg via-bg/85 to-surface/85" />
@@ -324,25 +325,20 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
               ))}
             </div>
 
-            <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+            <div className="grid gap-4">
               <Card variant="panel" padding="sm" className="bg-surface/45">
                 <p className="text-xs uppercase tracking-[0.14em] text-muted">Workspace preview</p>
                 <Image src="/visuals/app-mock.svg" alt="FinTax app mockup" width={1600} height={1000} className="mt-3 h-[170px] w-full rounded-xl border border-border/40 object-cover" />
-              </Card>
-              <Card variant="soft" padding="sm" className="bg-surface2/45">
-                <p className="text-xs uppercase tracking-[0.14em] text-muted">Trust signal</p>
-                <p className="mt-3 font-heading text-xl leading-tight text-text">&ldquo;{local.quote}&rdquo;</p>
-                <p className="mt-3 text-xs uppercase tracking-[0.12em] text-muted">{local.quoteRole}</p>
-                <Image src="/visuals/letter-mock.svg" alt="Letter mock preview" width={1400} height={1000} className="mt-4 h-[96px] w-full rounded-lg border border-border/40 object-cover" />
+                <p className="mt-3 text-xs leading-5 text-secondary">
+                  Access remains controlled by the existing Supabase auth flow, middleware route guards and onboarding checks.
+                </p>
               </Card>
             </div>
           </div>
 
           <div className="relative z-10 space-y-3" style={panelAnim(160)}>
             <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/25 px-4 py-3">
-              <p className="font-mono text-xs text-secondary">
-                EUR 847 avg refund · 4 languages · Fixed pricing
-              </p>
+              <p className="font-mono text-xs text-secondary">Enabled providers: Google{isAppleEnabled ? " + Apple" : ""}</p>
             </div>
             <div className="rounded-[var(--radius-lg)] border border-border/40 bg-surface/35 p-4">
               <p className="text-xs uppercase tracking-[0.14em] text-muted">Secure microcopy</p>
@@ -354,7 +350,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
           </div>
         </aside>
 
-        <section className="flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+        <section className="flex items-center justify-center px-4 py-8 sm:px-6 lg:order-1 lg:px-8">
           <div className="w-full max-w-[620px]">
             <div className="mb-6 flex items-center justify-between lg:hidden" style={panelAnim(0)}>
               <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-text">
@@ -389,7 +385,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                   <>
                     <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <Button type="button" variant="secondary" className="w-full justify-center" onClick={onGoogleLogin}>{t("social.google")}</Button>
-                      <Button type="button" variant="secondary" className="w-full justify-center" disabled={isAppleLoading} onClick={onAppleClick}>
+                      <Button type="button" variant="secondary" className="w-full justify-center" disabled={isAppleLoading || !isAppleEnabled} onClick={onAppleClick}>
                         {isAppleLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Apple className="h-4 w-4" />} {t("social.apple")}
                       </Button>
                     </div>
@@ -502,18 +498,23 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                       </div>
                       <FieldMessage error={forgotForm.formState.errors.email?.message} touched={Boolean(forgotForm.formState.touchedFields.email) && !forgotForm.formState.errors.email} successText="Email format looks valid." />
                     </div>
-                    <div>
-                      <FieldLabel htmlFor="forgot-note">Context</FieldLabel>
-                      <Textarea id="forgot-note" resize="vertical" className="min-h-[90px]" placeholder="Access issue or callback problem (optional)" {...forgotForm.register("note")} />
-                    </div>
                     <div className="flex flex-wrap gap-3">
-                      <Button type="submit" disabled={isSubmitting}><LoadingLabel loading={isSubmitting} label={local.forgotSubmit} /></Button>
+                      <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
+                        {isSubmitting ? `${local.forgotSubmit}...` : local.forgotSubmit}
+                      </Button>
                       <Button type="button" variant="ghost" onClick={() => onModeChange("login")}>{local.forgotBack}</Button>
                     </div>
                   </form>
                 )}
 
                 <div className="mt-6 border-t border-border/35 pt-5 text-center">
+                  <p className="mb-3 text-xs text-muted">By continuing, you agree to the legal terms and privacy notice.</p>
+                  <div className="mb-4 flex items-center justify-center gap-3 text-xs">
+                    <Link href="/legal/terms" className="text-secondary hover:text-text">Terms</Link>
+                    <span className="text-muted">•</span>
+                    <Link href="/legal/privacy" className="text-secondary hover:text-text">Privacy</Link>
+                  </div>
                   <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "border-transparent")}>{t("form.backToLanding")}</Link>
                 </div>
               </div>
