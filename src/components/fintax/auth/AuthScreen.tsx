@@ -305,7 +305,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
               ) : null}
             </div>
 
-            <div className="mt-8 rounded-[var(--radius-xl)] border border-border/45 bg-surface p-7 shadow-[0_8px_24px_rgba(10,22,14,0.06)]">
+            <div className="mt-8 rounded-[var(--radius-xl)] border border-border/45 bg-surface p-7 shadow-[0_10px_28px_rgba(10,22,14,0.08)]">
               <Tabs value={mode === "forgot" ? "login" : mode} defaultValue="login" onValueChange={(value) => onModeChange(value as AuthMode)} className="mb-5">
                 <TabsList className="w-full">
                   <TabsTrigger value="login" className="flex-1">{t("tabs.login")}</TabsTrigger>
@@ -323,11 +323,11 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
               {mode !== "forgot" ? (
                 <>
                   <div className="mb-4 space-y-2.5">
-                    <Button type="button" variant="secondary" className="h-12 w-full justify-center border-border/60 bg-white text-base" onClick={onGoogleLogin}>
+                    <Button type="button" variant="secondary" className="h-12 w-full justify-center border-border/60 bg-white text-base transition duration-200 hover:-translate-y-0.5 hover:border-green/35 hover:shadow-[0_10px_20px_rgba(12,40,24,0.08)]" onClick={onGoogleLogin}>
                       {t("social.google")}
                     </Button>
                     {isAppleEnabled ? (
-                      <Button type="button" variant="secondary" className="h-12 w-full justify-center border-border/60 bg-white text-base" disabled={isAppleLoading} onClick={onAppleClick}>
+                      <Button type="button" variant="secondary" className="h-12 w-full justify-center border-border/60 bg-white text-base transition duration-200 hover:-translate-y-0.5 hover:border-green/35 hover:shadow-[0_10px_20px_rgba(12,40,24,0.08)]" disabled={isAppleLoading} onClick={onAppleClick}>
                         {isAppleLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Apple className="h-4 w-4" />}
                         {t("social.apple")}
                       </Button>
@@ -353,7 +353,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         autoComplete="email"
                         placeholder="name@email.com"
                         {...loginForm.register("email")}
-                        className={cn("h-12 border-border/65 bg-white pl-10 text-base", loginForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 text-base transition duration-200 hover:border-green/35", loginForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
                       />
                     </div>
                     <FieldMessage error={loginForm.formState.errors.email?.message} />
@@ -374,7 +374,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         autoComplete="current-password"
                         placeholder="Your password"
                         {...loginForm.register("password")}
-                        className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base", loginForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base transition duration-200 hover:border-green/35", loginForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
                       />
                       <button
                         type="button"
@@ -405,7 +405,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                       autoComplete="name"
                       placeholder="Your full name"
                       {...registerForm.register("fullName")}
-                      className={cn("h-12 border-border/65 bg-white text-base", registerForm.formState.errors.fullName && "border-error/60 focus-visible:border-error")}
+                      className={cn("h-12 border-border/65 bg-white text-base transition duration-200 hover:border-green/35", registerForm.formState.errors.fullName && "border-error/60 focus-visible:border-error")}
                     />
                     <FieldMessage error={registerForm.formState.errors.fullName?.message} />
                   </div>
@@ -420,7 +420,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         autoComplete="email"
                         placeholder="name@email.com"
                         {...registerForm.register("email")}
-                        className={cn("h-12 border-border/65 bg-white pl-10 text-base", registerForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 text-base transition duration-200 hover:border-green/35", registerForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
                       />
                     </div>
                     <FieldMessage error={registerForm.formState.errors.email?.message} />
@@ -437,7 +437,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                           autoComplete="new-password"
                           placeholder="At least 8 characters"
                           {...registerForm.register("password")}
-                          className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base", registerForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
+                          className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base transition duration-200 hover:border-green/35", registerForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
                         />
                         <button
                           type="button"
@@ -460,7 +460,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                           autoComplete="new-password"
                           placeholder="Repeat password"
                           {...registerForm.register("confirmPassword")}
-                          className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base", registerForm.formState.errors.confirmPassword && "border-error/60 focus-visible:border-error")}
+                          className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base transition duration-200 hover:border-green/35", registerForm.formState.errors.confirmPassword && "border-error/60 focus-visible:border-error")}
                         />
                         <button
                           type="button"
@@ -512,7 +512,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         autoComplete="email"
                         placeholder="name@email.com"
                         {...forgotForm.register("email")}
-                        className={cn("h-12 border-border/65 bg-white pl-10 text-base", forgotForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 text-base transition duration-200 hover:border-green/35", forgotForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
                       />
                     </div>
                     <FieldMessage error={forgotForm.formState.errors.email?.message} />

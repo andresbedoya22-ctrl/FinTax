@@ -112,10 +112,10 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  "focus-ring group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-[0.94rem] transition-colors",
+                  "focus-ring group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-[0.94rem] transition duration-200",
                   isActive
                     ? "border-[#3f7155] bg-[#1a3b2a] text-[#ecf6f0] before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-[#8ad4aa] before:content-['']"
-                    : "border-transparent text-[#b8c9bf] hover:border-[#304638] hover:bg-[#162820] hover:text-[#f0f7f3]"
+                    : "border-transparent text-[#b8c9bf] hover:border-[#3a644b] hover:bg-[#1b3025] hover:text-[#f0f7f3]"
                 )}
               >
                 <Icon className={cn("size-4 shrink-0", isActive ? "text-[#84d9a6]" : "text-[#89a090] group-hover:text-[#9be5b8]")} aria-hidden="true" />
