@@ -29,7 +29,7 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
   return (
     <PageHeader
       title={t("title")}
-      subtitle="Authenticated workspace"
+      subtitle="Case operations workspace"
       leftSlot={
         <Button
           type="button"

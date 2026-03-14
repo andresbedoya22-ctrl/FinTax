@@ -107,8 +107,8 @@ export function DashboardShell({ children }: DashboardShellProps) {
       }
       mobileSidebar={
         <div className={cn("lg:hidden", isMobileOpen ? "block" : "hidden")}>
-          <div className="fixed inset-y-0 left-0 z-50 flex w-[84%] max-w-80 flex-col bg-surface shadow-floating">
-            <div className="flex items-center justify-end border-b border-border/80 p-3">
+          <div className="fixed inset-y-0 left-0 z-50 flex w-[84%] max-w-80 flex-col bg-[#0f1914] shadow-floating">
+            <div className="flex items-center justify-end border-b border-[#23362a] p-3">
               <Button type="button" size="icon" variant="ghost" onClick={() => setIsMobileOpen(false)} aria-label={t("closeSidebar")}>
                 <X className="size-4" />
               </Button>
