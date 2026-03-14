@@ -120,7 +120,7 @@ export function DashboardOverview() {
   }));
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-5">
       {casesQuery.isError ? (
         <div className="rounded-[var(--radius-lg)] border border-copper/30 bg-copper/10 p-4">
           <p className="text-xs uppercase tracking-[0.14em] text-copper">Dashboard API</p>
@@ -131,7 +131,7 @@ export function DashboardOverview() {
         </div>
       ) : null}
 
-      <header className="space-y-3 rounded-[var(--radius-xl)] border border-border/65 bg-white px-5 py-5 sm:px-6">
+      <header className="space-y-3 rounded-[var(--radius-xl)] border border-border/60 bg-white px-5 py-5 shadow-[0_8px_20px_rgba(12,24,16,0.05)] sm:px-6">
         <div className="flex items-center gap-2 text-sm text-muted">
           <span>Home</span>
           <ChevronRight className="h-4 w-4" />
@@ -139,7 +139,7 @@ export function DashboardOverview() {
         </div>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-[-0.02em] text-text sm:text-[2.1rem]">Tax declaration {taxYear}</h1>
+            <h1 className="text-[2.05rem] font-semibold tracking-[-0.03em] text-text sm:text-[2.35rem]">Tax declaration {taxYear}</h1>
             <p className="text-sm text-secondary">
               Updated: {updatedText} | Deadline: {deadlineText}
             </p>
@@ -147,14 +147,14 @@ export function DashboardOverview() {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/tax-return"
-              className="inline-flex items-center gap-2 rounded-xl border border-green/45 bg-white px-4 py-2.5 text-sm font-semibold text-green hover:bg-green/5"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-green/45 bg-white px-4 text-sm font-semibold text-green hover:bg-green/5"
             >
               <Upload className="h-4 w-4" />
               Upload document
             </Link>
             <Link
               href="/tax-return"
-              className="inline-flex items-center gap-2 rounded-xl border border-green/40 bg-green px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-hover"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-green/40 bg-green px-4 text-sm font-semibold text-white hover:bg-green-hover"
             >
               View full status
               <ArrowRight className="h-4 w-4" />
@@ -169,7 +169,7 @@ export function DashboardOverview() {
             <Badge variant="copper">Case status</Badge>
             <Badge variant={activeStatusTone === "success" ? "success" : "neutral"}>{activeStatusLabel}</Badge>
           </div>
-          <CardTitle className="text-2xl">Declaration progress</CardTitle>
+          <CardTitle className="text-[1.9rem]">Declaration progress</CardTitle>
           <CardDescription>
             Step {currentStep} of {CASE_STEPPER_STEPS.length}. Your case follows the current fiscal status mapping.
           </CardDescription>
@@ -179,7 +179,7 @@ export function DashboardOverview() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard title="Open cases" value={`${openCases}`} note="Across tax and benefits flows" tone="neutral" />
         <KpiCard title="Pending documents" value={`${pendingDocumentsCount}`} note="Cases waiting for upload completion" tone="warning" />
         <KpiCard title="Estimated refund" value={formatMoney(refundEstimateBase, locale)} note="Current projected total" tone="success" />
@@ -187,7 +187,7 @@ export function DashboardOverview() {
       </div>
 
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1.58fr)_minmax(330px,1fr)]">
-        <div className="space-y-5">
+        <div className="space-y-4">
           <Card variant="panel" padding="md" className="bg-white">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Uploaded documents</CardTitle>
@@ -241,14 +241,14 @@ export function DashboardOverview() {
           </Card>
         </div>
 
-        <div className="space-y-5 xl:pl-5 2xl:pl-8">
+        <div className="space-y-6 xl:pl-6 2xl:pl-10">
           <Card variant="panel" padding="md" className="bg-white">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Breakdown del reembolso</CardTitle>
               <CardDescription>Current estimate by fiscal module, aligned to active case records.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="font-mono text-[2.6rem] font-semibold leading-none tracking-[-0.04em] text-text">{formatMoney(refundBreakdownTotal || refundEstimateBase, locale)}</p>
+              <p className="font-mono text-[2.75rem] font-semibold leading-none tracking-[-0.045em] text-text">{formatMoney(refundBreakdownTotal || refundEstimateBase, locale)}</p>
               <div className="mt-4 rounded-[var(--radius-lg)] border border-border/40 bg-surface2/20">
                 <div className="grid grid-cols-[1fr_auto] border-b border-border/35 px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-muted">
                   <span>Item</span>
@@ -264,7 +264,7 @@ export function DashboardOverview() {
               <p className="mt-3 text-xs text-muted">Estimate based on current case data and checklist evidence.</p>
               <Link
                 href="/tax-return"
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-green/45 bg-white px-4 py-2.5 text-sm font-semibold text-green hover:bg-green/5"
+                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-green/45 bg-white px-4 text-sm font-semibold text-green hover:bg-green/5"
               >
                 Continue declaration
               </Link>
@@ -391,7 +391,7 @@ function KpiCard({
   const icon = tone === "success" ? <FolderCheck className="h-4 w-4 text-green" /> : tone === "warning" ? <Clock3 className="h-4 w-4 text-copper" /> : <ReceiptText className="h-4 w-4 text-muted" />;
 
   return (
-    <Card variant="soft" padding="sm" className={cn("editorial-frame", toneClass)}>
+    <Card variant="soft" padding="sm" className={cn("editorial-frame min-h-[132px]", toneClass)}>
       <div className="mb-2 flex items-center justify-between">
         <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{title}</p>
         {icon}

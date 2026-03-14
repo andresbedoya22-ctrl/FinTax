@@ -84,7 +84,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
   return (
     <aside
       className={cn(
-        "flex h-full w-72 flex-col border-r border-[#1e3227] bg-gradient-to-b from-[#102117] via-[#0f1a14] to-[#0c1510] text-[#e4ede7]",
+        "flex h-full w-72 flex-col border-r border-[#1f3529] bg-gradient-to-b from-[#102318] via-[#0f1a14] to-[#0b140f] text-[#e4ede7]",
         className
       )}
     >
@@ -97,7 +97,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
         </Link>
       </div>
 
-      <div className="mt-3 overflow-y-auto px-3">
+      <div className="mt-2 overflow-y-auto px-3">
         <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-[#91a899]">
           {t("sections.main")}
         </p>
@@ -112,7 +112,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  "focus-ring group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-sm transition-colors",
+                  "focus-ring group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl border px-4 py-2.5 text-[0.94rem] transition-colors",
                   isActive
                     ? "border-[#3f7155] bg-[#1a3b2a] text-[#ecf6f0] before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-[#8ad4aa] before:content-['']"
                     : "border-transparent text-[#b8c9bf] hover:border-[#304638] hover:bg-[#162820] hover:text-[#f0f7f3]"

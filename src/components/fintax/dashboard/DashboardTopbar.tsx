@@ -27,7 +27,7 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
         : ((words[0]![0]?.toUpperCase() ?? "") + (words[words.length - 1]![0]?.toUpperCase() ?? ""));
 
   return (
-    <header className="border-b border-border/65 bg-surface/95 px-4 py-2.5 sm:px-6 lg:px-8">
+    <header className="border-b border-border/65 bg-white px-4 py-2.5 sm:px-6 lg:px-8">
       <div className="flex items-center gap-3">
         <Button
           type="button"
@@ -48,7 +48,7 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
 
           <button
             type="button"
-            className="focus-ring hidden items-center gap-2 rounded-xl border border-border/40 bg-surface/45 px-2.5 py-2 text-left sm:flex"
+            className="focus-ring hidden items-center gap-2 rounded-xl border border-border/45 bg-surface/35 px-2.5 py-2 text-left sm:flex"
             aria-label="Open profile menu"
           >
             <div className="grid h-7 w-7 place-items-center rounded-lg border border-green/20 bg-green/10 text-xs font-bold text-green">{initials}</div>
