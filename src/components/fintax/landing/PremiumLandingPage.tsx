@@ -219,8 +219,8 @@ export function PremiumLandingPage() {
 
   return (
     <div className="min-h-screen bg-bg text-text">
-      <header className={cn("sticky top-0 z-40 border-b border-border/80 transition-colors", scrolled ? "bg-surface/95" : "bg-surface/88")}>
-        <Container className="flex h-16 items-center gap-4">
+      <header className={cn("sticky top-0 z-40 border-b border-border/75 transition-colors", scrolled ? "bg-surface/97 backdrop-blur" : "bg-surface/92")}>
+        <Container className="flex h-[4.35rem] items-center gap-4">
           <Link href="/" className="focus-ring inline-flex items-center rounded-md text-text">
             <span className="mr-2 grid h-7 w-7 place-items-center rounded-lg border border-green/35 bg-green/10 text-xs font-black text-green">F</span>
             <span className="font-heading text-2xl font-semibold tracking-tight">FinTax</span>
@@ -234,35 +234,35 @@ export function PremiumLandingPage() {
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher />
             <Link href="/auth" className="focus-ring rounded-md px-2 py-2 text-sm text-secondary hover:text-text">{t.signIn}</Link>
-            <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "sm" })}>{t.start} <ArrowRight className="h-4 w-4" /></Link>
+            <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "sm" }), "px-4")}>{t.start} <ArrowRight className="h-4 w-4" /></Link>
           </div>
         </Container>
       </header>
 
       <main>
-        <Section className="border-b border-border/75 py-10 sm:py-12">
+        <Section className="border-b border-border/75 bg-gradient-to-b from-[#f8fbf9] to-bg py-12 sm:py-14">
           <Container>
             <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
               <div>
                 <Badge variant="success">{t.heroEyebrow}</Badge>
-                <h1 className="mt-4 max-w-[13ch] font-heading text-5xl leading-[0.95] tracking-[-0.03em] text-text sm:text-6xl">
+                <h1 className="mt-4 max-w-[12.5ch] font-heading text-5xl leading-[0.93] tracking-[-0.035em] text-text sm:text-[4.2rem]">
                   {t.heroTitle}
                 </h1>
-                <p className="mt-5 max-w-[56ch] text-base leading-7 text-secondary">{t.heroBody}</p>
+                <p className="mt-6 max-w-[57ch] text-[1.0625rem] leading-8 text-secondary">{t.heroBody}</p>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "lg" })}>
+                  <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "lg" }), "h-12 px-6 text-[0.97rem]")}>
                     {t.heroPrimary}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
-                  <a href="#how" onClick={(e) => smoothAnchorNavigate(e, "#how")} className={buttonVariants({ variant: "ghost", size: "lg" })}>
+                  <a href="#how" onClick={(e) => smoothAnchorNavigate(e, "#how")} className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "h-12 px-5")}>
                     {t.heroSecondary}
                   </a>
                 </div>
                 <p className="mt-4 text-sm text-secondary">{t.heroPrice}</p>
               </div>
-              <Card variant="panel" padding="none" className="relative overflow-hidden">
-                <div className="absolute right-5 top-5 h-20 w-20 rounded-full bg-green/15" aria-hidden="true" />
-                <div className="absolute bottom-8 left-8 h-16 w-16 rounded-full bg-green/10" aria-hidden="true" />
+              <Card variant="panel" padding="none" className="relative overflow-hidden border-border/65 bg-white shadow-[0_18px_40px_rgba(9,22,14,0.08)]">
+                <div className="absolute right-5 top-5 h-20 w-20 rounded-full bg-green/12" aria-hidden="true" />
+                <div className="absolute bottom-8 left-8 h-16 w-16 rounded-full bg-green/8" aria-hidden="true" />
                 <Image
                   src="/visuals/hero-dashboard.png"
                   alt="FinTax product screenshot with case stepper, checklist and filing status"
@@ -276,10 +276,10 @@ export function PremiumLandingPage() {
           </Container>
         </Section>
 
-        <section className="border-b border-border/70 bg-green px-4 py-3 text-white">
-          <Container className="flex flex-wrap items-center gap-3 text-sm">
+        <section className="border-b border-border/70 bg-gradient-to-r from-[#164c35] via-[#14593d] to-[#174f37] px-4 py-3 text-white">
+          <Container className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             {t.trustBar.map((item) => (
-              <span key={item} className="inline-flex items-center gap-1.5">
+              <span key={item} className="inline-flex items-center gap-1.5 whitespace-nowrap">
                 <Star className="h-3.5 w-3.5 fill-current" />
                 {item}
               </span>
@@ -287,24 +287,24 @@ export function PremiumLandingPage() {
           </Container>
         </section>
 
-        <Section className="border-b border-border/75 py-10 sm:py-12">
+        <Section className="border-b border-border/75 py-12 sm:py-14">
           <Container>
             <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
               <div id="how">
                 <p className="text-xs uppercase tracking-[0.12em] text-secondary">How it works</p>
                 <h2 className="mt-2 font-heading text-4xl tracking-[-0.02em] text-text">{t.stepsTitle}</h2>
                 <ol className="mt-6 grid gap-4 md:grid-cols-3">
-                  <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5">
+                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6">
                     <p className="font-mono text-4xl leading-none text-muted">01</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">Upload your documents</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">Provide tax letters, salary files and context docs in secure intake.</p>
                   </li>
-                  <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5">
+                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6">
                     <p className="font-mono text-4xl leading-none text-muted">02</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">Specialist review</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">A tax specialist validates your case and clarifies missing points.</p>
                   </li>
-                  <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5">
+                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6">
                     <p className="font-mono text-4xl leading-none text-muted">03</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">File and monitor</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">Track the status in dashboard until the case reaches completion.</p>
@@ -312,13 +312,13 @@ export function PremiumLandingPage() {
                 </ol>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-7">
                 <section id="services">
                   <p className="text-xs uppercase tracking-[0.12em] text-secondary">Services</p>
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.servicesTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     {services.map((service) => (
-                      <Card key={service.title} variant="soft" padding="sm">
+                      <Card key={service.title} variant="soft" padding="sm" className="border-border/65 bg-white">
                         <CardHeader>
                           <CardTitle className="text-base">{service.title}</CardTitle>
                         </CardHeader>
@@ -335,7 +335,7 @@ export function PremiumLandingPage() {
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.pricingTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     {plans.map((plan, idx) => (
-                      <Card key={plan.name} variant="panel" padding="sm" className={cn(idx === 1 ? "border-green/45 bg-green/5" : "")}>
+                      <Card key={plan.name} variant="panel" padding="sm" className={cn("bg-white", idx === 1 ? "border-green/45 bg-green/5" : "border-border/65")}>
                         <p className="text-sm font-semibold text-text">{plan.name}</p>
                         <p className="mt-2 font-mono text-4xl font-semibold text-text">{plan.price}</p>
                         <ul className="mt-3 space-y-1.5">
@@ -352,13 +352,13 @@ export function PremiumLandingPage() {
                 </section>
 
                 <section>
-                  <Card variant="soft" padding="sm">
+                  <Card variant="soft" padding="sm" className="border-border/65 bg-white">
                     <p className="text-xs uppercase tracking-[0.12em] text-muted">Trust content (verified capabilities)</p>
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">No guaranteed fiscal outcomes.</p>
-                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">Scope confirmed before execution.</p>
-                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">Secure auth and route protection active.</p>
-                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">Case status tracking in dashboard.</p>
+                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">No guaranteed fiscal outcomes.</p>
+                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">Scope confirmed before execution.</p>
+                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">Secure auth and route protection active.</p>
+                      <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary">Case status tracking in dashboard.</p>
                     </div>
                   </Card>
                 </section>
@@ -383,8 +383,8 @@ export function PremiumLandingPage() {
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.blogTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     {blogPreview.map((item) => (
-                      <article key={item.title} className="rounded-[var(--radius-lg)] border border-border/70 bg-surface p-3">
-                        <div className="h-24 rounded-lg border border-border/40 bg-surface2/80" aria-hidden="true" />
+                      <article key={item.title} className="rounded-[var(--radius-lg)] border border-border/70 bg-white p-3.5">
+                        <div className="h-24 rounded-lg border border-border/40 bg-surface2/75" aria-hidden="true" />
                         <p className="mt-2 text-xs uppercase tracking-[0.1em] text-muted">{item.tag}</p>
                         <h3 className="mt-1 text-sm font-semibold leading-5 text-text">{item.title}</h3>
                         <Link href={item.href} className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-green hover:text-green-hover">
@@ -400,16 +400,16 @@ export function PremiumLandingPage() {
           </Container>
         </Section>
 
-        <Section className="border-b border-border/75 py-10 sm:py-12">
+        <Section className="border-b border-border/75 py-12 sm:py-14">
           <Container>
-            <Card variant="panel" padding="lg" className="bg-gradient-to-r from-[#123525] to-[#174631] text-white">
+            <Card variant="panel" padding="lg" className="border-[#1a4a34] bg-gradient-to-r from-[#113425] to-[#184e36] text-white">
               <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
                 <div>
                   <h2 className="font-heading text-4xl tracking-[-0.02em] text-white">{t.finalTitle}</h2>
                   <p className="mt-3 max-w-[56ch] text-sm leading-7 text-white/85">{t.finalBody}</p>
                 </div>
                 <div className="flex lg:justify-end">
-                  <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "lg" }), "bg-surface text-[#123525] hover:bg-surface/90")}>
+                  <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "lg" }), "h-12 bg-surface text-[#123525] hover:bg-surface/90")}>
                     {t.heroPrimary}
                     <ArrowRight className="h-4 w-4" />
                   </Link>

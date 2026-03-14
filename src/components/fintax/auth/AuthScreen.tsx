@@ -284,19 +284,19 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   };
 
   return (
-    <div className="min-h-screen bg-[#f7faf7]">
+    <div className="min-h-screen bg-[#f6faf7]">
       <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-2">
-        <section className="flex items-center justify-center bg-white px-6 py-10 lg:px-12">
-          <div className="w-full max-w-[500px]">
+        <section className="flex items-center justify-center bg-white px-6 py-10 lg:px-14">
+          <div className="w-full max-w-[520px]">
             <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-text">
               <span className="grid h-8 w-8 place-items-center rounded-lg border border-green/35 bg-green/10 text-xs font-black text-green">F</span>
               <span className="font-heading text-xl tracking-tight">FinTax</span>
             </Link>
 
             <div className="mt-10">
-              <h1 className="font-heading text-6xl leading-[0.95] tracking-[-0.03em] text-text">{local.title}</h1>
+              <h1 className="font-heading text-6xl leading-[0.92] tracking-[-0.035em] text-text">{local.title}</h1>
               {mode !== "forgot" ? (
-                <p className="mt-3 text-2xl text-secondary">
+                <p className="mt-3 text-[1.75rem] leading-tight text-secondary">
                   {local.registerHint}{" "}
                   <button type="button" className="focus-ring underline underline-offset-4 hover:text-text" onClick={() => onModeChange("register")}>
                     {local.registerHintLink}
@@ -305,7 +305,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
               ) : null}
             </div>
 
-            <div className="mt-8 rounded-[var(--radius-xl)] border border-border/55 bg-surface p-6">
+            <div className="mt-8 rounded-[var(--radius-xl)] border border-border/45 bg-surface p-7 shadow-[0_8px_24px_rgba(10,22,14,0.06)]">
               <Tabs value={mode === "forgot" ? "login" : mode} defaultValue="login" onValueChange={(value) => onModeChange(value as AuthMode)} className="mb-5">
                 <TabsList className="w-full">
                   <TabsTrigger value="login" className="flex-1">{t("tabs.login")}</TabsTrigger>
@@ -322,12 +322,12 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
               {mode !== "forgot" ? (
                 <>
-                  <div className="mb-4 space-y-2">
-                    <Button type="button" variant="secondary" className="h-12 w-full justify-center text-base" onClick={onGoogleLogin}>
+                  <div className="mb-4 space-y-2.5">
+                    <Button type="button" variant="secondary" className="h-12 w-full justify-center border-border/60 bg-white text-base" onClick={onGoogleLogin}>
                       {t("social.google")}
                     </Button>
                     {isAppleEnabled ? (
-                      <Button type="button" variant="secondary" className="h-12 w-full justify-center text-base" disabled={isAppleLoading} onClick={onAppleClick}>
+                      <Button type="button" variant="secondary" className="h-12 w-full justify-center border-border/60 bg-white text-base" disabled={isAppleLoading} onClick={onAppleClick}>
                         {isAppleLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Apple className="h-4 w-4" />}
                         {t("social.apple")}
                       </Button>
@@ -353,7 +353,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         autoComplete="email"
                         placeholder="name@email.com"
                         {...loginForm.register("email")}
-                        className={cn("h-12 pl-10 text-base", loginForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 text-base", loginForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
                       />
                     </div>
                     <FieldMessage error={loginForm.formState.errors.email?.message} />
@@ -372,9 +372,9 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         id="login-password"
                         type={showPassword ? "text" : "password"}
                         autoComplete="current-password"
-                        placeholder="Enter your password"
+                        placeholder="Your password"
                         {...loginForm.register("password")}
-                        className={cn("h-12 pl-10 pr-10 text-base", loginForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base", loginForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
                       />
                       <button
                         type="button"
@@ -388,7 +388,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                     <FieldMessage error={loginForm.formState.errors.password?.message} />
                   </div>
 
-                  <Button type="submit" size="lg" className="h-12 w-full justify-center text-base" disabled={isSubmitting}>
+                  <Button type="submit" size="lg" className="h-12 w-full justify-center bg-gradient-to-r from-[#17553a] to-[#124a32] text-base font-semibold hover:from-[#134a32] hover:to-[#113f2c]" disabled={isSubmitting}>
                     {isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
                     {t("form.submitLogin")}
                   </Button>
@@ -405,7 +405,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                       autoComplete="name"
                       placeholder="Your full name"
                       {...registerForm.register("fullName")}
-                      className={cn("h-12 text-base", registerForm.formState.errors.fullName && "border-error/60 focus-visible:border-error")}
+                      className={cn("h-12 border-border/65 bg-white text-base", registerForm.formState.errors.fullName && "border-error/60 focus-visible:border-error")}
                     />
                     <FieldMessage error={registerForm.formState.errors.fullName?.message} />
                   </div>
@@ -420,7 +420,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         autoComplete="email"
                         placeholder="name@email.com"
                         {...registerForm.register("email")}
-                        className={cn("h-12 pl-10 text-base", registerForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 text-base", registerForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
                       />
                     </div>
                     <FieldMessage error={registerForm.formState.errors.email?.message} />
@@ -437,7 +437,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                           autoComplete="new-password"
                           placeholder="At least 8 characters"
                           {...registerForm.register("password")}
-                          className={cn("h-12 pl-10 pr-10 text-base", registerForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
+                          className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base", registerForm.formState.errors.password && "border-error/60 focus-visible:border-error")}
                         />
                         <button
                           type="button"
@@ -460,7 +460,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                           autoComplete="new-password"
                           placeholder="Repeat password"
                           {...registerForm.register("confirmPassword")}
-                          className={cn("h-12 pl-10 pr-10 text-base", registerForm.formState.errors.confirmPassword && "border-error/60 focus-visible:border-error")}
+                          className={cn("h-12 border-border/65 bg-white pl-10 pr-10 text-base", registerForm.formState.errors.confirmPassword && "border-error/60 focus-visible:border-error")}
                         />
                         <button
                           type="button"
@@ -489,7 +489,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                   </label>
                   {registerForm.formState.errors.terms ? <p className="text-xs text-error">{String(registerForm.formState.errors.terms.message)}</p> : null}
 
-                  <Button type="submit" size="lg" className="h-12 w-full justify-center text-base" disabled={isSubmitting}>
+                  <Button type="submit" size="lg" className="h-12 w-full justify-center bg-gradient-to-r from-[#17553a] to-[#124a32] text-base font-semibold hover:from-[#134a32] hover:to-[#113f2c]" disabled={isSubmitting}>
                     {isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
                     {t("form.submitRegister")}
                   </Button>
@@ -512,7 +512,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                         autoComplete="email"
                         placeholder="name@email.com"
                         {...forgotForm.register("email")}
-                        className={cn("h-12 pl-10 text-base", forgotForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
+                        className={cn("h-12 border-border/65 bg-white pl-10 text-base", forgotForm.formState.errors.email && "border-error/60 focus-visible:border-error")}
                       />
                     </div>
                     <FieldMessage error={forgotForm.formState.errors.email?.message} />
@@ -541,18 +541,18 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
         </section>
 
         <aside className="relative hidden overflow-hidden bg-[#123525] lg:flex lg:flex-col lg:justify-between lg:px-14 lg:py-12">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#184f38] via-[#123525] to-[#0f2e22]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1a5a3f] via-[#123626] to-[#0d281d]" />
           <div className="absolute right-[-40px] top-[35%] h-[260px] w-[260px] rounded-full bg-green/20 blur-3xl" aria-hidden="true" />
           <div className="absolute bottom-[-120px] left-[-80px] h-[280px] w-[280px] rounded-full bg-green/15 blur-3xl" aria-hidden="true" />
 
           <div className="relative z-10">
             <Badge variant="success">{local.trustEyebrow}</Badge>
-            <h2 className="mt-6 max-w-[12ch] font-heading text-6xl leading-[0.92] tracking-[-0.04em] text-white">{local.trustTitle}</h2>
-            <p className="mt-6 max-w-[48ch] text-2xl leading-tight text-white/85">{local.trustBody}</p>
+            <h2 className="mt-6 max-w-[11ch] font-heading text-[4.2rem] leading-[0.9] tracking-[-0.045em] text-white">{local.trustTitle}</h2>
+            <p className="mt-6 max-w-[48ch] text-[2rem] leading-tight text-white/88">{local.trustBody}</p>
             <div className="mt-8 h-px w-full bg-white/25" />
             <ul className="mt-7 space-y-3">
               {local.trustList.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-2xl leading-tight text-white/90">
+                <li key={item} className="flex items-start gap-3 text-[1.45rem] leading-tight text-white/90">
                   <ShieldCheck className="mt-1 h-6 w-6 text-green-200" />
                   <span>{item}</span>
                 </li>
@@ -560,9 +560,9 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             </ul>
           </div>
 
-          <div className="relative z-10 mt-10 rounded-[var(--radius-xl)] border border-white/25 bg-white p-6 text-[#102217]">
+          <div className="relative z-10 mt-10 rounded-[var(--radius-xl)] border border-white/25 bg-white p-6 text-[#102217] shadow-[0_14px_30px_rgba(6,16,11,0.22)]">
             <p className="text-xs uppercase tracking-[0.12em] text-[#2f5b46]">{local.quoteLabel}</p>
-            <p className="mt-2 text-2xl leading-snug">{local.quoteText}</p>
+            <p className="mt-2 text-[1.72rem] leading-snug">{local.quoteText}</p>
             <p className="mt-3 text-lg text-[#244233]">{local.quoteAuthor}</p>
           </div>
         </aside>
