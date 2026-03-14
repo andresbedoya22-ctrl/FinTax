@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import * as React from "react";
-import { ArrowRight, Globe2 } from "lucide-react";
+import { ArrowRight, Check, Globe2, Star } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
@@ -27,181 +27,169 @@ type AppLocale = "en" | "nl" | "es" | "pl" | "ro";
 type LandingIntent = "tax-return" | "benefits";
 
 type Copy = {
-  nav: { services: string; how: string; pricing: string; faq: string; insights: string };
+  nav: { how: string; pricing: string; faq: string; blog: string };
   signIn: string;
+  start: string;
   heroEyebrow: string;
   heroTitle: string;
   heroBody: string;
-  heroNote: string;
-  ctaPrimary: string;
-  ctaSecondary: string;
-  trustTitle: string;
-  howTitle: string;
+  heroPrimary: string;
+  heroSecondary: string;
+  heroPrice: string;
+  trustBar: string[];
+  stepsTitle: string;
   servicesTitle: string;
   pricingTitle: string;
   faqTitle: string;
-  insightsTitle: string;
-  finalCtaTitle: string;
-  finalCtaBody: string;
-  footerLegalTitle: string;
-  footerLegalBody: string;
+  blogTitle: string;
+  finalTitle: string;
+  finalBody: string;
+  legalTitle: string;
+  legalBody: string;
 };
 
-const localeCopy: Record<AppLocale, Copy> = {
+const copyByLocale: Record<AppLocale, Copy> = {
   en: {
-    nav: { services: "Services", how: "How it works", pricing: "Pricing", faq: "FAQ", insights: "Insights" },
+    nav: { how: "How it works", pricing: "Pricing", faq: "FAQ", blog: "Blog" },
     signIn: "Sign in",
-    heroEyebrow: "Dutch tax and benefits guidance for international households",
-    heroTitle: "A clear Dutch tax process, with human review before filing.",
+    start: "Get started",
+    heroEyebrow: "For international households in the Netherlands",
+    heroTitle: "Your Dutch tax return, handled with structure.",
     heroBody:
-      "FinTax supports P, M and C returns, ZZP workflows and toeslagen guidance with structured intake, document checklists and status tracking.",
-    heroNote: "No guaranteed outcomes. Scope and pricing are confirmed before work starts.",
-    ctaPrimary: "Start secure intake",
-    ctaSecondary: "See pricing",
-    trustTitle: "Operational trust signals",
-    howTitle: "How it works in 3 steps",
-    servicesTitle: "Services",
-    pricingTitle: "Pricing",
+      "Complete intake online, upload your documents, and track each milestone in one workspace with specialist review before filing.",
+    heroPrimary: "Start my declaration",
+    heroSecondary: "See how it works",
+    heroPrice: "Fixed-fee plans from EUR 99 depending on case scope.",
+    trustBar: ["Operational support", "Multi-locale routes", "Case workflow tracking", "Response in business hours"],
+    stepsTitle: "Three steps to move your case forward",
+    servicesTitle: "What is included",
+    pricingTitle: "Transparent pricing",
     faqTitle: "Frequently asked questions",
-    insightsTitle: "Guidance previews",
-    finalCtaTitle: "Start with structure, not uncertainty.",
-    finalCtaBody: "Continue in the existing secure flow and receive a scoped quote before full submission.",
-    footerLegalTitle: "Legal and operational clarity",
-    footerLegalBody: "Public legal pages are available. Registration identifiers are shown only when verified.",
+    blogTitle: "Blog preview",
+    finalTitle: "Ready to start with clarity?",
+    finalBody: "Open secure intake and receive scope confirmation before full case execution.",
+    legalTitle: "Legal and operational information",
+    legalBody: "Privacy, terms and workflow scope are published and updated in this public area.",
   },
   nl: {
-    nav: { services: "Diensten", how: "Werkwijze", pricing: "Prijzen", faq: "FAQ", insights: "Inzichten" },
+    nav: { how: "Werkwijze", pricing: "Prijzen", faq: "FAQ", blog: "Blog" },
     signIn: "Inloggen",
-    heroEyebrow: "Nederlandse belasting- en toeslaghulp voor internationale huishoudens",
-    heroTitle: "Een helder Nederlands belastingproces, met menselijke review voor indiening.",
+    start: "Start",
+    heroEyebrow: "Voor internationale huishoudens in Nederland",
+    heroTitle: "Jouw Nederlandse aangifte, met duidelijke structuur.",
     heroBody:
-      "FinTax ondersteunt P-, M- en C-aangiften, ZZP-workflows en toeslagenhulp met gestructureerde intake, checklist en statusoverzicht.",
-    heroNote: "Geen gegarandeerde uitkomsten. Scope en prijs worden vooraf bevestigd.",
-    ctaPrimary: "Start beveiligde intake",
-    ctaSecondary: "Bekijk prijzen",
-    trustTitle: "Operationele betrouwbaarheid",
-    howTitle: "Werkwijze in 3 stappen",
-    servicesTitle: "Diensten",
-    pricingTitle: "Prijzen",
+      "Doe intake online, upload documenten en volg elke stap in een workspace met specialistische review voor indiening.",
+    heroPrimary: "Start mijn aangifte",
+    heroSecondary: "Bekijk werkwijze",
+    heroPrice: "Vaste tarieven vanaf EUR 99, afhankelijk van case-scope.",
+    trustBar: ["Operationele support", "Multi-locale routes", "Case workflow tracking", "Reactie binnen kantooruren"],
+    stepsTitle: "Drie stappen om je case vooruit te brengen",
+    servicesTitle: "Wat is inbegrepen",
+    pricingTitle: "Transparante prijzen",
     faqTitle: "Veelgestelde vragen",
-    insightsTitle: "Guidance previews",
-    finalCtaTitle: "Start met structuur, niet met onzekerheid.",
-    finalCtaBody: "Ga naar de bestaande veilige flow en ontvang eerst een afgebakende offerte.",
-    footerLegalTitle: "Juridische en operationele duidelijkheid",
-    footerLegalBody: "Publieke juridische pagina's zijn beschikbaar. Registratiegegevens tonen we alleen na verificatie.",
+    blogTitle: "Blog preview",
+    finalTitle: "Klaar om met duidelijkheid te starten?",
+    finalBody: "Open secure intake en ontvang scopebevestiging voor volledige uitvoering.",
+    legalTitle: "Juridische en operationele informatie",
+    legalBody: "Privacy, voorwaarden en workflowscope staan in dit publieke domein.",
   },
   es: {
-    nav: { services: "Servicios", how: "Como funciona", pricing: "Precios", faq: "FAQ", insights: "Guias" },
+    nav: { how: "Como funciona", pricing: "Precios", faq: "FAQ", blog: "Blog" },
     signIn: "Iniciar sesion",
-    heroEyebrow: "Soporte fiscal neerlandes para hogares internacionales",
-    heroTitle: "Un proceso fiscal claro, con revision humana antes de presentar.",
+    start: "Comienza",
+    heroEyebrow: "Para hogares internacionales en los Paises Bajos",
+    heroTitle: "Tu declaracion en Holanda, con estructura clara.",
     heroBody:
-      "FinTax cubre formularios P, M y C, flujos ZZP y apoyo en toeslagen con intake estructurado, checklist y seguimiento.",
-    heroNote: "Sin resultados garantizados. Alcance y precio se confirman antes de empezar.",
-    ctaPrimary: "Empezar intake seguro",
-    ctaSecondary: "Ver precios",
-    trustTitle: "Prueba operativa sobria",
-    howTitle: "Como funciona en 3 pasos",
-    servicesTitle: "Servicios",
-    pricingTitle: "Precios",
+      "Completa intake online, sube documentos y sigue cada hito en un solo workspace con revision profesional antes del envio.",
+    heroPrimary: "Empezar mi declaracion",
+    heroSecondary: "Ver como funciona",
+    heroPrice: "Planes de tarifa fija desde EUR 99 segun alcance del caso.",
+    trustBar: ["Soporte operativo", "Rutas multi-locale", "Seguimiento de workflow", "Respuesta en horario laboral"],
+    stepsTitle: "Tres pasos para avanzar tu caso",
+    servicesTitle: "Que incluye",
+    pricingTitle: "Precios transparentes",
     faqTitle: "Preguntas frecuentes",
-    insightsTitle: "Guias destacadas",
-    finalCtaTitle: "Empieza con estructura, no con incertidumbre.",
-    finalCtaBody: "Continua en el flujo seguro existente y recibe presupuesto delimitado antes del envio.",
-    footerLegalTitle: "Claridad legal y operativa",
-    footerLegalBody: "Las paginas legales publicas estan disponibles. Los identificadores legales se muestran al verificarse.",
+    blogTitle: "Blog preview",
+    finalTitle: "Listo para empezar con claridad?",
+    finalBody: "Abre intake seguro y recibe confirmacion de alcance antes de ejecutar el caso.",
+    legalTitle: "Informacion legal y operativa",
+    legalBody: "Privacidad, terminos y alcance operativo publicados en este espacio publico.",
   },
   pl: {
-    nav: { services: "Uslugi", how: "Jak dziala", pricing: "Cennik", faq: "FAQ", insights: "Poradniki" },
+    nav: { how: "Jak dziala", pricing: "Cennik", faq: "FAQ", blog: "Blog" },
     signIn: "Zaloguj",
-    heroEyebrow: "Wsparcie podatkowe NL dla miedzynarodowych gospodarstw",
-    heroTitle: "Jasny proces podatkowy, z weryfikacja specjalisty przed zlozeniem.",
-    heroBody: "FinTax obsluguje P/M/C, ZZP i toeslagen z uporzadkowanym intake, checklista i monitoringiem statusu.",
-    heroNote: "Bez gwarantowanych wynikow. Zakres i cena sa potwierdzane przed startem.",
-    ctaPrimary: "Rozpocznij bezpieczny intake",
-    ctaSecondary: "Zobacz ceny",
-    trustTitle: "Rzetelne sygnaly zaufania",
-    howTitle: "Jak to dziala w 3 krokach",
-    servicesTitle: "Uslugi",
-    pricingTitle: "Cennik",
+    start: "Start",
+    heroEyebrow: "Dla miedzynarodowych gospodarstw w Niderlandach",
+    heroTitle: "Rozliczenie NL prowadzone w uporzadkowany sposob.",
+    heroBody:
+      "Wypelnij intake online, przeslij dokumenty i sledz etapy w jednym workspace z review specjalisty przed zlozeniem.",
+    heroPrimary: "Rozpocznij deklaracje",
+    heroSecondary: "Zobacz proces",
+    heroPrice: "Stale pakiety od EUR 99 zalezne od zakresu sprawy.",
+    trustBar: ["Wsparcie operacyjne", "Routingi multi-locale", "Tracking workflow", "Odpowiedz w godzinach pracy"],
+    stepsTitle: "Trzy kroki do postepu sprawy",
+    servicesTitle: "Zakres uslug",
+    pricingTitle: "Przejrzysty cennik",
     faqTitle: "Najczestsze pytania",
-    insightsTitle: "Poradniki",
-    finalCtaTitle: "Zacznij od struktury, nie od niepewnosci.",
-    finalCtaBody: "Przejdz do istniejacego bezpiecznego flow i otrzymaj zakres przed rozpoczeciem pracy.",
-    footerLegalTitle: "Jasnosc prawna i operacyjna",
-    footerLegalBody: "Publiczne strony prawne sa dostepne. Identyfikatory rejestrowe pokazujemy po weryfikacji.",
+    blogTitle: "Blog preview",
+    finalTitle: "Gotowy na start z jasnym planem?",
+    finalBody: "Uruchom secure intake i potwierdz zakres przed pelna realizacja.",
+    legalTitle: "Informacje prawne i operacyjne",
+    legalBody: "Prywatnosc, warunki i zakres operacyjny dostepne publicznie.",
   },
   ro: {
-    nav: { services: "Servicii", how: "Cum functioneaza", pricing: "Preturi", faq: "FAQ", insights: "Ghiduri" },
+    nav: { how: "Cum functioneaza", pricing: "Preturi", faq: "FAQ", blog: "Blog" },
     signIn: "Autentificare",
-    heroEyebrow: "Suport fiscal NL pentru gospodarii internationale",
-    heroTitle: "Un proces fiscal clar, cu revizuire umana inainte de depunere.",
-    heroBody: "FinTax acopera P/M/C, ZZP si toeslagen cu intake structurat, checklist de documente si urmarire status.",
-    heroNote: "Fara rezultate garantate. Scopul si pretul sunt confirmate inainte de lucru.",
-    ctaPrimary: "Incepe intake securizat",
-    ctaSecondary: "Vezi preturile",
-    trustTitle: "Semnale operationale de incredere",
-    howTitle: "Cum functioneaza in 3 pasi",
-    servicesTitle: "Servicii",
-    pricingTitle: "Preturi",
+    start: "Incepe",
+    heroEyebrow: "Pentru gospodarii internationale in Olanda",
+    heroTitle: "Declaratia ta in Olanda, cu un proces clar.",
+    heroBody:
+      "Finalizezi intake online, incarci documentele si urmaresti fiecare etapa intr-un workspace cu review uman inainte de depunere.",
+    heroPrimary: "Incepe declaratia",
+    heroSecondary: "Vezi procesul",
+    heroPrice: "Planuri cu tarif fix de la EUR 99 in functie de complexitate.",
+    trustBar: ["Suport operational", "Rute multi-locale", "Case workflow tracking", "Raspuns in ore de program"],
+    stepsTitle: "Trei pasi pentru progresul cazului",
+    servicesTitle: "Ce include",
+    pricingTitle: "Preturi transparente",
     faqTitle: "Intrebari frecvente",
-    insightsTitle: "Ghiduri",
-    finalCtaTitle: "Incepe cu structura, nu cu incertitudine.",
-    finalCtaBody: "Continua in fluxul securizat existent si primesti oferta delimitata inainte de depunere.",
-    footerLegalTitle: "Claritate legala si operationala",
-    footerLegalBody: "Paginile legale publice sunt disponibile. Identificatorii legali apar dupa verificare.",
+    blogTitle: "Blog preview",
+    finalTitle: "Pregatit sa incepi cu claritate?",
+    finalBody: "Deschide secure intake si primesti confirmarea scope-ului inainte de executie.",
+    legalTitle: "Informatii legale si operationale",
+    legalBody: "Privacy, terms si scope operational publicate in aceasta zona.",
   },
 };
 
-const trustItems = [
-  "Locale-aware routes and legal pages available before signup",
-  "Authentication, onboarding and route protection handled in middleware and Supabase",
-  "Stripe checkout and webhook confirmation connected to case records",
-  "Authorization steps are explained only when a case requires machtiging",
-] as const;
-
 const services = [
-  { title: "P / M / C returns", body: "Resident, migration-year and non-resident filing support." },
-  { title: "ZZP and VAT", body: "Freelancer workflows with quarterly VAT context." },
-  { title: "Toeslagen support", body: "Eligibility checks and guided application preparation." },
-  { title: "Letter review", body: "Belastingdienst letter interpretation with next actions." },
-  { title: "Case tracking", body: "Status visibility for documents, review and milestones." },
-  { title: "Multilingual guidance", body: "Support in EN, ES, PL, RO and Dutch route support." },
+  { title: "Income tax declaration", body: "P, M and C filing workflows with checklist and review." },
+  { title: "Box and deductions", body: "Context review for deductions and supporting evidence." },
+  { title: "Toeslagen support", body: "Eligibility and application guidance in the same case workspace." },
+  { title: "ZZP and VAT", body: "Quarterly and annual workflows for self-employed obligations." },
 ] as const;
 
-const pricingRows = [
-  { service: "P return", from: "from EUR 95", scope: "Standard annual filing with deductions review." },
-  { service: "M return", from: "from EUR 185", scope: "Migration-year filing with split-residency checks." },
-  { service: "C return", from: "from EUR 165", scope: "Non-resident filing support for Dutch-source income." },
-  { service: "30% support", from: "from EUR 145", scope: "Eligibility and documentation support." },
-  { service: "ZZP filing", from: "from EUR 195", scope: "Self-employed filing with optional VAT add-ons." },
+const plans = [
+  { name: "Basic", price: "EUR 149", items: ["Standard filing", "Checklist", "Status tracking"] },
+  { name: "Complete", price: "EUR 199", items: ["Filing + review", "Priority handling", "Email support"] },
+  { name: "Premium", price: "EUR 299", items: ["Complex scenarios", "Extended guidance", "Priority SLA"] },
 ] as const;
 
 const faqItems = [
-  { q: "Can I start without DigiD?", a: "In many cases, yes. We confirm if DigiD or machtiging is required after intake." },
-  { q: "Do you guarantee refund outcomes?", a: "No. We support preparation and filing, but official outcomes depend on the tax authority." },
-  { q: "Can I review pricing before upload?", a: "Yes. Base ranges are visible early and complexity is confirmed before filing work starts." },
-  { q: "Is this only for expats?", a: "No. International workers, families and ZZP clients can all use the workflow." },
+  { q: "Can I start before collecting all documents?", a: "Yes. Intake can start first, and missing files can be uploaded later in your checklist." },
+  { q: "Do you guarantee refund amounts?", a: "No. Outcomes depend on tax authority assessment and validated document context." },
+  { q: "Is DigiD always required?", a: "Not always. Authorization requirements depend on case type and stage." },
+  { q: "How do I track progress?", a: "Each case step is visible in the authenticated dashboard with status and next actions." },
 ] as const;
 
-const insights = [
-  { title: "Choosing between P, M and C returns", date: "2026-03-01", excerpt: "A practical comparison to pick the right filing route.", href: "/tax-return" },
-  { title: "Understanding machtiging in plain language", date: "2026-02-20", excerpt: "When authorization is needed and what it covers.", href: "/legal/privacy" },
-  { title: "Preparing documents for faster review", date: "2026-02-08", excerpt: "Checklist quality rules that reduce avoidable delays.", href: "/auth?intent=tax-return" },
+const blogPreview = [
+  { title: "How to choose between P, M and C forms", href: "/tax-return", tag: "Taxes" },
+  { title: "Document checklist quality rules", href: "/auth?intent=tax-return", tag: "Operations" },
+  { title: "Authorization stages explained simply", href: "/legal/privacy", tag: "Compliance" },
 ] as const;
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqItems.map((item) => ({
-    "@type": "Question",
-    name: item.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.a,
-    },
-  })),
-};
+function getCopy(locale: string): Copy {
+  return copyByLocale[(["en", "nl", "es", "pl", "ro"].includes(locale) ? locale : "en") as AppLocale];
+}
 
 function smoothAnchorNavigate(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
   const id = href.replace("#", "");
@@ -215,11 +203,6 @@ function buildAuthIntentHref(intent: LandingIntent, service?: string) {
   const params = new URLSearchParams({ intent });
   if (service) params.set("service", service);
   return `/auth?${params.toString()}`;
-}
-
-function getCopy(locale: string): Copy {
-  const normalized = (["en", "nl", "es", "pl", "ro"].includes(locale) ? locale : "en") as AppLocale;
-  return localeCopy[normalized];
 }
 
 export function PremiumLandingPage() {
@@ -236,46 +219,53 @@ export function PremiumLandingPage() {
 
   return (
     <div className="min-h-screen bg-bg text-text">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <header className={cn("sticky top-0 z-40 border-b border-border/80 transition-colors", scrolled ? "bg-surface/95" : "bg-surface/88")}>
         <Container className="flex h-16 items-center gap-4">
           <Link href="/" className="focus-ring inline-flex items-center rounded-md text-text">
             <span className="mr-2 grid h-7 w-7 place-items-center rounded-lg border border-green/35 bg-green/10 text-xs font-black text-green">F</span>
-            <span className="font-heading text-lg font-semibold tracking-tight">FinTax</span>
+            <span className="font-heading text-2xl font-semibold tracking-tight">FinTax</span>
           </Link>
-          <nav className="ml-3 hidden items-center gap-1 md:flex" aria-label="Landing sections">
-            <a href="#services" onClick={(e) => smoothAnchorNavigate(e, "#services")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.services}</a>
+          <nav className="ml-4 hidden items-center gap-1 md:flex" aria-label="Landing sections">
             <a href="#how" onClick={(e) => smoothAnchorNavigate(e, "#how")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.how}</a>
             <a href="#pricing" onClick={(e) => smoothAnchorNavigate(e, "#pricing")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.pricing}</a>
             <a href="#faq" onClick={(e) => smoothAnchorNavigate(e, "#faq")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.faq}</a>
-            <a href="#insights" onClick={(e) => smoothAnchorNavigate(e, "#insights")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.insights}</a>
+            <a href="#blog" onClick={(e) => smoothAnchorNavigate(e, "#blog")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.blog}</a>
           </nav>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher />
             <Link href="/auth" className="focus-ring rounded-md px-2 py-2 text-sm text-secondary hover:text-text">{t.signIn}</Link>
-            <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "sm" })}>{t.ctaPrimary}</Link>
+            <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "sm" })}>{t.start} <ArrowRight className="h-4 w-4" /></Link>
           </div>
         </Container>
       </header>
 
       <main>
-        <Section className="border-b border-border/75 pt-10 sm:pt-14">
+        <Section className="border-b border-border/75 py-10 sm:py-12">
           <Container>
-            <div className="grid gap-10 lg:grid-cols-[1.02fr_0.98fr]">
+            <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
               <div>
-                <p className="text-xs uppercase tracking-[0.14em] text-secondary">{t.heroEyebrow}</p>
-                <h1 className="mt-4 max-w-[16ch] font-heading text-4xl leading-[1.02] tracking-[-0.03em] text-text sm:text-5xl">{t.heroTitle}</h1>
-                <p className="mt-5 max-w-[62ch] text-base leading-7 text-secondary">{t.heroBody}</p>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "lg" })}>{t.ctaPrimary}<ArrowRight className="h-4 w-4" /></Link>
-                  <a href="#pricing" onClick={(e) => smoothAnchorNavigate(e, "#pricing")} className={buttonVariants({ variant: "secondary", size: "lg" })}>{t.ctaSecondary}</a>
+                <Badge variant="success">{t.heroEyebrow}</Badge>
+                <h1 className="mt-4 max-w-[13ch] font-heading text-5xl leading-[0.95] tracking-[-0.03em] text-text sm:text-6xl">
+                  {t.heroTitle}
+                </h1>
+                <p className="mt-5 max-w-[56ch] text-base leading-7 text-secondary">{t.heroBody}</p>
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "lg" })}>
+                    {t.heroPrimary}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <a href="#how" onClick={(e) => smoothAnchorNavigate(e, "#how")} className={buttonVariants({ variant: "ghost", size: "lg" })}>
+                    {t.heroSecondary}
+                  </a>
                 </div>
-                <p className="mt-4 text-xs uppercase tracking-[0.1em] text-muted">{t.heroNote}</p>
+                <p className="mt-4 text-sm text-secondary">{t.heroPrice}</p>
               </div>
-              <Card variant="panel" padding="none" className="overflow-hidden">
+              <Card variant="panel" padding="none" className="relative overflow-hidden">
+                <div className="absolute right-5 top-5 h-20 w-20 rounded-full bg-green/15" aria-hidden="true" />
+                <div className="absolute bottom-8 left-8 h-16 w-16 rounded-full bg-green/10" aria-hidden="true" />
                 <Image
                   src="/visuals/hero-dashboard.png"
-                  alt="Screenshot of FinTax case dashboard with stepper status and document checklist"
+                  alt="FinTax product screenshot with case stepper, checklist and filing status"
                   width={1680}
                   height={1080}
                   priority
@@ -286,92 +276,171 @@ export function PremiumLandingPage() {
           </Container>
         </Section>
 
-        <Section className="border-b border-border/75">
-          <Container>
-            <h2 className="font-body text-2xl font-semibold text-text">{t.trustTitle}</h2>
-            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-              {trustItems.map((item) => <li key={item} className="rounded-[var(--radius-lg)] border border-border/75 bg-surface2/65 p-4 text-sm leading-6 text-secondary">{item}</li>)}
-            </ul>
+        <section className="border-b border-border/70 bg-green px-4 py-3 text-white">
+          <Container className="flex flex-wrap items-center gap-3 text-sm">
+            {t.trustBar.map((item) => (
+              <span key={item} className="inline-flex items-center gap-1.5">
+                <Star className="h-3.5 w-3.5 fill-current" />
+                {item}
+              </span>
+            ))}
           </Container>
-        </Section>
+        </section>
 
-        <Section id="how" className="border-b border-border/75">
+        <Section className="border-b border-border/75 py-10 sm:py-12">
           <Container>
-            <h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.howTitle}</h2>
-            <ol className="mt-6 grid gap-4 md:grid-cols-3">
-              <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5"><h3 className="font-body text-lg font-semibold text-text">1. Select your case</h3><p className="mt-2 text-sm leading-6 text-secondary">Choose tax return or benefits flow and share baseline context.</p></li>
-              <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5"><h3 className="font-body text-lg font-semibold text-text">2. Confirm scope and documents</h3><p className="mt-2 text-sm leading-6 text-secondary">Review checklist, upload documents and confirm service scope.</p></li>
-              <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5"><h3 className="font-body text-lg font-semibold text-text">3. Human-reviewed delivery</h3><p className="mt-2 text-sm leading-6 text-secondary">A specialist reviews your case before submission and follow-up.</p></li>
-            </ol>
-          </Container>
-        </Section>
+            <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
+              <div id="how">
+                <p className="text-xs uppercase tracking-[0.12em] text-secondary">How it works</p>
+                <h2 className="mt-2 font-heading text-4xl tracking-[-0.02em] text-text">{t.stepsTitle}</h2>
+                <ol className="mt-6 grid gap-4 md:grid-cols-3">
+                  <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5">
+                    <p className="font-mono text-4xl leading-none text-muted">01</p>
+                    <h3 className="mt-4 text-lg font-semibold text-text">Upload your documents</h3>
+                    <p className="mt-2 text-sm leading-6 text-secondary">Provide tax letters, salary files and context docs in secure intake.</p>
+                  </li>
+                  <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5">
+                    <p className="font-mono text-4xl leading-none text-muted">02</p>
+                    <h3 className="mt-4 text-lg font-semibold text-text">Specialist review</h3>
+                    <p className="mt-2 text-sm leading-6 text-secondary">A tax specialist validates your case and clarifies missing points.</p>
+                  </li>
+                  <li className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5">
+                    <p className="font-mono text-4xl leading-none text-muted">03</p>
+                    <h3 className="mt-4 text-lg font-semibold text-text">File and monitor</h3>
+                    <p className="mt-2 text-sm leading-6 text-secondary">Track the status in dashboard until the case reaches completion.</p>
+                  </li>
+                </ol>
+              </div>
 
-        <Section id="services" className="border-b border-border/75">
-          <Container>
-            <h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.servicesTitle}</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service) => <Card key={service.title} variant="soft" padding="md"><CardHeader><CardTitle className="text-lg">{service.title}</CardTitle></CardHeader><CardContent><p className="text-sm leading-6 text-secondary">{service.body}</p></CardContent></Card>)}
+              <div className="space-y-6">
+                <section id="services">
+                  <p className="text-xs uppercase tracking-[0.12em] text-secondary">Services</p>
+                  <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.servicesTitle}</h2>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {services.map((service) => (
+                      <Card key={service.title} variant="soft" padding="sm">
+                        <CardHeader>
+                          <CardTitle className="text-base">{service.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm leading-6 text-secondary">{service.body}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                <section id="pricing">
+                  <p className="text-xs uppercase tracking-[0.12em] text-secondary">Pricing</p>
+                  <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.pricingTitle}</h2>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                    {plans.map((plan, idx) => (
+                      <Card key={plan.name} variant="panel" padding="sm" className={cn(idx === 1 ? "border-green/45 bg-green/5" : "")}>
+                        <p className="text-sm font-semibold text-text">{plan.name}</p>
+                        <p className="mt-2 font-mono text-4xl font-semibold text-text">{plan.price}</p>
+                        <ul className="mt-3 space-y-1.5">
+                          {plan.items.map((item) => (
+                            <li key={item} className="flex items-start gap-2 text-sm text-secondary">
+                              <Check className="mt-0.5 h-4 w-4 text-green" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                <section>
+                  <Card variant="soft" padding="sm">
+                    <p className="text-xs uppercase tracking-[0.12em] text-muted">Trust content (verified capabilities)</p>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">No guaranteed fiscal outcomes.</p>
+                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">Scope confirmed before execution.</p>
+                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">Secure auth and route protection active.</p>
+                      <p className="rounded-lg border border-border/40 bg-surface/70 px-3 py-2 text-sm text-secondary">Case status tracking in dashboard.</p>
+                    </div>
+                  </Card>
+                </section>
+
+                <section id="faq">
+                  <p className="text-xs uppercase tracking-[0.12em] text-secondary">FAQ</p>
+                  <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.faqTitle}</h2>
+                  <div className="mt-4">
+                    <Accordion type="single" defaultValue="faq-0">
+                      {faqItems.map((item, index) => (
+                        <AccordionItem key={item.q} value={`faq-${index}`}>
+                          <AccordionTrigger>{item.q}</AccordionTrigger>
+                          <AccordionContent>{item.a}</AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </div>
+                </section>
+
+                <section id="blog">
+                  <p className="text-xs uppercase tracking-[0.12em] text-secondary">Blog preview</p>
+                  <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.blogTitle}</h2>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                    {blogPreview.map((item) => (
+                      <article key={item.title} className="rounded-[var(--radius-lg)] border border-border/70 bg-surface p-3">
+                        <div className="h-24 rounded-lg border border-border/40 bg-surface2/80" aria-hidden="true" />
+                        <p className="mt-2 text-xs uppercase tracking-[0.1em] text-muted">{item.tag}</p>
+                        <h3 className="mt-1 text-sm font-semibold leading-5 text-text">{item.title}</h3>
+                        <Link href={item.href} className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-green hover:text-green-hover">
+                          Open
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </div>
             </div>
           </Container>
         </Section>
 
-        <Section id="pricing" className="border-b border-border/75">
+        <Section className="border-b border-border/75 py-10 sm:py-12">
           <Container>
-            <h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.pricingTitle}</h2>
-            <Card variant="panel" padding="none" className="mt-6 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[680px] text-left">
-                  <thead className="bg-surface2/75">
-                    <tr><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">Service</th><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">From</th><th className="px-5 py-4 text-xs uppercase tracking-[0.12em] text-muted">Scope</th></tr>
-                  </thead>
-                  <tbody>
-                    {pricingRows.map((row) => <tr key={row.service} className="border-t border-border/75"><td className="px-5 py-4 text-sm text-text">{row.service}</td><td className="px-5 py-4"><Badge variant="success">{row.from}</Badge></td><td className="px-5 py-4 text-sm text-secondary">{row.scope}</td></tr>)}
-                  </tbody>
-                </table>
+            <Card variant="panel" padding="lg" className="bg-gradient-to-r from-[#123525] to-[#174631] text-white">
+              <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                <div>
+                  <h2 className="font-heading text-4xl tracking-[-0.02em] text-white">{t.finalTitle}</h2>
+                  <p className="mt-3 max-w-[56ch] text-sm leading-7 text-white/85">{t.finalBody}</p>
+                </div>
+                <div className="flex lg:justify-end">
+                  <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "lg" }), "bg-surface text-[#123525] hover:bg-surface/90")}>
+                    {t.heroPrimary}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
               </div>
             </Card>
           </Container>
         </Section>
 
-        <Section id="faq" className="border-b border-border/75">
+        <footer className="bg-surface2/70 py-10">
           <Container>
-            <h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.faqTitle}</h2>
-            <div className="mt-6"><Accordion type="single" defaultValue="faq-0">{faqItems.map((item, index) => <AccordionItem key={item.q} value={`faq-${index}`}><AccordionTrigger>{item.q}</AccordionTrigger><AccordionContent>{item.a}</AccordionContent></AccordionItem>)}</Accordion></div>
-          </Container>
-        </Section>
-
-        <Section id="insights" className="border-b border-border/75">
-          <Container>
-            <h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.insightsTitle}</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {insights.map((post) => <article key={post.title} className="rounded-[var(--radius-xl)] border border-border/75 bg-surface p-5"><p className="font-mono text-xs tracking-[0.06em] text-muted"><time dateTime={post.date}>{post.date}</time></p><h3 className="mt-2 font-body text-lg font-semibold text-text">{post.title}</h3><p className="mt-2 text-sm leading-6 text-secondary">{post.excerpt}</p><Link href={post.href} className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-green hover:text-green-hover">Open resource<ArrowRight className="h-4 w-4" /></Link></article>)}
-            </div>
-          </Container>
-        </Section>
-
-        <Section className="border-b border-border/75">
-          <Container>
-            <Card variant="panel" padding="lg" className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-              <div><h2 className="font-heading text-3xl tracking-[-0.02em] text-text sm:text-4xl">{t.finalCtaTitle}</h2><p className="mt-3 text-sm leading-7 text-secondary">{t.finalCtaBody}</p></div>
-              <div className="flex items-center lg:justify-end"><Link href={buildAuthIntentHref("tax-return")} className={buttonVariants({ size: "lg" })}>{t.ctaPrimary}<ArrowRight className="h-4 w-4" /></Link></div>
-            </Card>
-          </Container>
-        </Section>
-
-        <footer className="bg-surface2/70">
-          <Container className="py-14">
-            <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="grid gap-6 lg:grid-cols-[1fr_1fr_1fr]">
               <div>
-                <h2 className="font-body text-xl font-semibold text-text">{t.footerLegalTitle}</h2>
-                <p className="mt-3 text-sm leading-7 text-secondary">{t.footerLegalBody}</p>
-                <div className="mt-5 flex flex-wrap gap-2"><Link href="/legal/privacy" className={buttonVariants({ variant: "secondary", size: "sm" })}>Privacy</Link><Link href="/legal/terms" className={buttonVariants({ variant: "secondary", size: "sm" })}>Terms</Link></div>
+                <h2 className="font-body text-xl font-semibold text-text">{t.legalTitle}</h2>
+                <p className="mt-3 text-sm leading-7 text-secondary">{t.legalBody}</p>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[var(--radius-lg)] border border-border/75 bg-surface p-4"><p className="text-xs uppercase tracking-[0.12em] text-muted">Support</p><p className="mt-2 text-sm text-text">Client support is routed from your authenticated workspace after intake.</p></div>
-                <div className="rounded-[var(--radius-lg)] border border-border/75 bg-surface p-4"><p className="text-xs uppercase tracking-[0.12em] text-muted">Company details</p><p className="mt-2 text-sm text-text">Legal identifiers are published on this site once verified by legal operations.</p></div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.12em] text-muted">Legal</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link href="/legal/privacy" className={buttonVariants({ variant: "secondary", size: "sm" })}>Privacy</Link>
+                  <Link href="/legal/terms" className={buttonVariants({ variant: "secondary", size: "sm" })}>Terms</Link>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.12em] text-muted">Locales</p>
+                <p className="mt-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-secondary">
+                  <Globe2 className="h-3.5 w-3.5" />
+                  EN / NL / ES / PL / RO
+                </p>
               </div>
             </div>
-            <div className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-muted"><Globe2 className="h-3.5 w-3.5" />EN / NL / ES / PL / RO</div>
           </Container>
         </footer>
       </main>
