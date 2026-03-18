@@ -48,6 +48,7 @@ function buildAuthIntentHref(intent: LandingIntent, service?: string) {
 export function PremiumLandingPage() {
   const tLanding = useTranslations("Landing");
   const tNavbar = useTranslations("Navbar");
+  const [mounted, setMounted] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
 
   const services = (tLanding.raw("services.items") as Array<{title: string, copy: string}>).slice(0, 4);
@@ -56,6 +57,7 @@ export function PremiumLandingPage() {
   const trustBar = (tLanding.raw("hero.trustBadges") as Array<string>).slice(0, 4);
 
   React.useEffect(() => {
+    setMounted(true);
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -64,7 +66,7 @@ export function PremiumLandingPage() {
 
   return (
     <div className="min-h-screen bg-bg text-text">
-      <header className={cn("sticky top-0 z-40 border-b border-border/75 transition-colors", scrolled ? "bg-surface/97 backdrop-blur" : "bg-surface/92")}>
+      <header className={cn("sticky top-0 z-40 border-b border-border/75 transition-colors", mounted && scrolled ? "bg-surface/97 backdrop-blur" : "bg-surface/92")}>
         <Container className="flex h-[4.35rem] items-center gap-4">
           <Link href="/" className="focus-ring inline-flex items-center rounded-lg text-text">
             <span className="mr-2 grid h-7 w-7 place-items-center rounded-xl border border-green/35 bg-green/10 text-xs font-black text-green">F</span>
@@ -294,10 +296,10 @@ export function PremiumLandingPage() {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.12em] text-muted">Locales</p>
-                <p className="mt-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-secondary">
+                <div className="mt-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-secondary">
                   <Globe2 className="h-3.5 w-3.5" />
                   EN / NL / ES / PL / RO
-                </p>
+                </div>
               </div>
             </div>
           </Container>

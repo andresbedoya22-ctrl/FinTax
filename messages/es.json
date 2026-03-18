@@ -294,6 +294,16 @@
           "a": "Monitoreamos actualizaciones, ayudamos a interpretar respuestas y podemos apoyar en los siguientes pasos si las autoridades holandesas solicitan seguimiento."
         }
       ]
+    },
+    "premium": {
+      "navHow": "Cómo funciona",
+      "navBlog": "Blog",
+      "heroPrice": "Planes de tarifa fija desde EUR 99 según alcance del caso.",
+      "blogTitle": "Blog preview",
+      "finalCtaTitle": "¿Listo para empezar con claridad?",
+      "finalCtaBody": "Abre intake seguro y recibe confirmación de alcance antes de ejecutar el caso.",
+      "legalTitle": "Información legal y operativa",
+      "legalBody": "Privacidad, términos y alcance operativo publicados en este espacio público."
     }
   },
   "Auth": {

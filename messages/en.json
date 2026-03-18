@@ -294,6 +294,16 @@
           "a": "We monitor updates, help interpret responses and can support next actions if Dutch authorities request follow-up."
         }
       ]
+    },
+    "premium": {
+      "navHow": "How it works",
+      "navBlog": "Blog",
+      "heroPrice": "Fixed-fee plans from EUR 99 depending on case scope.",
+      "blogTitle": "Blog preview",
+      "finalCtaTitle": "Ready to start with clarity?",
+      "finalCtaBody": "Open secure intake and receive scope confirmation before full case execution.",
+      "legalTitle": "Legal and operational information",
+      "legalBody": "Privacy, terms and workflow scope are published and updated in this public area."
     }
   },
   "Auth": {
