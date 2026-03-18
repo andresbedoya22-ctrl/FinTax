@@ -108,8 +108,8 @@ export function LanguageSwitcher({ className, compact = false }: LanguageSwitche
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "focus-ring inline-flex items-center gap-2 rounded-full border border-border/45 bg-white/88 text-text transition duration-200",
-          "hover:border-green/45 hover:bg-white",
+          "focus-ring inline-flex items-center gap-2 rounded-full border border-border/45 bg-surface/88 text-text transition duration-200",
+          "hover:border-green/45 hover:bg-surface",
           compact ? "h-9 px-2.5 text-xs" : "h-10 px-3 text-sm"
         )}
         aria-expanded={isOpen}
@@ -126,7 +126,7 @@ export function LanguageSwitcher({ className, compact = false }: LanguageSwitche
         <div
           role="listbox"
           aria-label="Select language"
-          className="absolute right-0 top-full z-50 mt-2 min-w-[238px] overflow-hidden rounded-2xl border border-border/50 bg-white p-1.5 shadow-[0_16px_38px_rgba(10,20,14,0.12)]"
+          className="absolute right-0 top-full z-50 mt-2 min-w-[238px] overflow-hidden rounded-2xl border border-border/50 bg-surface p-1.5 shadow-[0_16px_38px_rgba(10,20,14,0.12)]"
         >
           <div className="mb-1 px-2 py-1 text-[11px] uppercase tracking-[0.14em] text-muted">Languages</div>
           <div className="grid gap-1">

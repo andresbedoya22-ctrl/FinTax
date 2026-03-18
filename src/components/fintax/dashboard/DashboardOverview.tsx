@@ -122,7 +122,7 @@ export function DashboardOverview() {
   return (
     <section className="space-y-5">
       {casesQuery.isError ? (
-        <div className="rounded-[var(--radius-lg)] border border-copper/30 bg-copper/10 p-4">
+        <div className="rounded-lg border border-copper/30 bg-copper/10 p-4">
           <p className="text-xs uppercase tracking-[0.14em] text-copper">Dashboard API</p>
           <p className="mt-1 text-sm text-secondary">
             Case overview could not be refreshed.
@@ -131,7 +131,7 @@ export function DashboardOverview() {
         </div>
       ) : null}
 
-      <header className="space-y-3 rounded-[var(--radius-xl)] border border-border/60 bg-white px-5 py-5 shadow-[0_8px_20px_rgba(12,24,16,0.05)] sm:px-6">
+      <header className="space-y-3 rounded-xl border border-border/60 bg-surface px-5 py-5 shadow-[0_8px_20px_rgba(12,24,16,0.05)] sm:px-6">
         <div className="flex items-center gap-2 text-sm text-muted">
           <span>Home</span>
           <ChevronRight className="h-4 w-4" />
@@ -147,7 +147,7 @@ export function DashboardOverview() {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/tax-return"
-              className="inline-flex h-11 items-center gap-2 rounded-xl border border-green/45 bg-white px-4 text-sm font-semibold text-green hover:bg-green/5"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-green/45 bg-surface px-4 text-sm font-semibold text-green hover:bg-green/5"
             >
               <Upload className="h-4 w-4" />
               Upload document
@@ -163,7 +163,7 @@ export function DashboardOverview() {
         </div>
       </header>
 
-      <Card variant="panel" padding="lg" className="border-green/20 bg-white shadow-[0_8px_20px_rgba(12,24,16,0.05)]">
+      <Card variant="panel" padding="lg" className="border-green/20 bg-surface shadow-[0_8px_20px_rgba(12,24,16,0.05)]">
         <CardHeader className="mb-4">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <Badge variant="copper">Case status</Badge>
@@ -188,13 +188,13 @@ export function DashboardOverview() {
 
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1.58fr)_minmax(330px,1fr)]">
         <div className="space-y-4">
-          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
+          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Uploaded documents</CardTitle>
               <CardDescription>Documents attached to your active checklist and review stage.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 rounded-[var(--radius-lg)] border border-border/35 bg-surface2/18 p-4">
+              <div className="mb-4 rounded-lg border border-border/35 bg-surface2/18 p-4">
                 <div className="mb-2 flex items-center justify-between">
                   <span className="text-sm text-secondary">Upload progress</span>
                   <span className="font-mono text-sm font-semibold text-text">{uploadedDocuments}/{totalDocumentItems}</span>
@@ -206,7 +206,7 @@ export function DashboardOverview() {
 
               <ul className="space-y-2.5">
                 {checklistItems.slice(0, 5).map((item) => (
-                  <li key={item.label} className="flex items-center gap-3 rounded-lg border border-border/30 bg-white px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
+                  <li key={item.label} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
                     {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
                     <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
                   </li>
@@ -215,7 +215,7 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
+          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Fiscal history</CardTitle>
               <CardDescription>Recent filing records and status checkpoints, ordered by last updates.</CardDescription>
@@ -223,10 +223,10 @@ export function DashboardOverview() {
             <CardContent>
               <ul className="space-y-2.5">
                 {taxHistory.length === 0 ? (
-                  <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No case history yet.</li>
+                  <li className="rounded-xl border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No case history yet.</li>
                 ) : (
                   taxHistory.map((item) => (
-                    <li key={item.id} className="rounded-lg border border-border/28 bg-white px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
+                    <li key={item.id} className="rounded-xl border border-border/28 bg-surface px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
                       <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3">
                         <p className="truncate text-sm font-medium text-text">{item.label}</p>
                         <span className="font-mono text-xs text-muted">{item.year ?? "Year n/a"}</span>
@@ -242,14 +242,14 @@ export function DashboardOverview() {
         </div>
 
         <div className="space-y-6 xl:pl-6 2xl:pl-10">
-          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
+          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-2xl">Breakdown del reembolso</CardTitle>
               <CardDescription>Current estimate by fiscal module, aligned to active case records.</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="font-mono text-[2.75rem] font-semibold leading-none tracking-[-0.045em] text-text">{formatMoney(refundBreakdownTotal || refundEstimateBase, locale)}</p>
-              <div className="mt-4 rounded-[var(--radius-lg)] border border-border/40 bg-surface2/20">
+              <div className="mt-4 rounded-lg border border-border/40 bg-surface2/20">
                 <div className="grid grid-cols-[1fr_auto] border-b border-border/35 px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-muted">
                   <span>Item</span>
                   <span className="font-mono">Amount</span>
@@ -264,20 +264,20 @@ export function DashboardOverview() {
               <p className="mt-3 text-xs text-muted">Estimate based on current case data and checklist evidence.</p>
               <Link
                 href="/tax-return"
-                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-green/45 bg-white px-4 text-sm font-semibold text-green hover:bg-green/5"
+                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-green/45 bg-surface px-4 text-sm font-semibold text-green hover:bg-green/5"
               >
                 Continue declaration
               </Link>
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
+          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-xl">Personal advisor</CardTitle>
               <CardDescription>Assignment and contact status for your case.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3 rounded-[var(--radius-lg)] border border-border/30 bg-surface2/18 p-4">
+              <div className="space-y-3 rounded-lg border border-border/30 bg-surface2/18 p-4">
                 <div className="flex items-center gap-2 text-text">
                   <ShieldCheck className="h-4 w-4 text-green" />
                   <p className="text-sm font-medium">Advisor assignment status</p>
@@ -288,10 +288,10 @@ export function DashboardOverview() {
                     : "Advisor assignment starts automatically once documents and payment checks are complete."}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <button type="button" className="rounded-lg border border-green/35 bg-white px-3 py-1.5 text-sm font-medium text-green transition duration-200 hover:-translate-y-0.5 hover:bg-green/5">
+                  <button type="button" className="rounded-xl border border-green/35 bg-surface px-3 py-1.5 text-sm font-medium text-green transition duration-200 hover:-translate-y-0.5 hover:bg-green/5">
                     Message advisor
                   </button>
-                  <button type="button" className="rounded-lg border border-border/45 bg-white px-3 py-1.5 text-sm font-medium text-text transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:bg-surface2/45">
+                  <button type="button" className="rounded-xl border border-border/45 bg-surface px-3 py-1.5 text-sm font-medium text-text transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:bg-surface2/45">
                     Request call
                   </button>
                 </div>
@@ -299,7 +299,7 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-white shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
+          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
             <CardHeader className="mb-3">
               <CardTitle className="text-xl">Recent activity</CardTitle>
               <CardDescription>Latest operational updates from your active records.</CardDescription>
@@ -307,10 +307,10 @@ export function DashboardOverview() {
             <CardContent>
               <ul className="space-y-2.5">
                 {recentActivity.length === 0 ? (
-                  <li className="rounded-lg border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No updates yet.</li>
+                  <li className="rounded-xl border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No updates yet.</li>
                 ) : (
                   recentActivity.map((activity) => (
-                    <li key={activity.id} className="rounded-lg border border-border/28 bg-white px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
+                    <li key={activity.id} className="rounded-xl border border-border/28 bg-surface px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
                       <div className="flex items-start gap-2.5">
                         <Clock3 className="mt-0.5 h-4 w-4 text-copper" />
                         <div className="min-w-0">
@@ -349,7 +349,7 @@ function StatusTimeline({ currentStep }: { currentStep: number }) {
                   className={cn(
                     "grid h-8 w-8 shrink-0 place-items-center rounded-full border text-xs font-semibold",
                     isComplete && "border-green/45 bg-green text-white",
-                    isCurrent && "border-green bg-white text-green ring-4 ring-green/15",
+                    isCurrent && "border-green bg-surface text-green ring-4 ring-green/15",
                     !isComplete && !isCurrent && "border-border/70 bg-surface text-muted",
                   )}
                 >
@@ -387,7 +387,7 @@ function KpiCard({
   note: string;
   tone: "neutral" | "success" | "warning";
 }) {
-  const toneClass = tone === "success" ? "border-green/25 bg-green/7" : tone === "warning" ? "border-copper/25 bg-copper/7" : "border-border/30 bg-white";
+  const toneClass = tone === "success" ? "border-green/25 bg-green/7" : tone === "warning" ? "border-copper/25 bg-copper/7" : "border-border/30 bg-surface";
   const icon = tone === "success" ? <FolderCheck className="h-4 w-4 text-green" /> : tone === "warning" ? <Clock3 className="h-4 w-4 text-copper" /> : <ReceiptText className="h-4 w-4 text-muted" />;
 
   return (

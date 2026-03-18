@@ -221,19 +221,19 @@ export function PremiumLandingPage() {
     <div className="min-h-screen bg-bg text-text">
       <header className={cn("sticky top-0 z-40 border-b border-border/75 transition-colors", scrolled ? "bg-surface/97 backdrop-blur" : "bg-surface/92")}>
         <Container className="flex h-[4.35rem] items-center gap-4">
-          <Link href="/" className="focus-ring inline-flex items-center rounded-md text-text">
-            <span className="mr-2 grid h-7 w-7 place-items-center rounded-lg border border-green/35 bg-green/10 text-xs font-black text-green">F</span>
+          <Link href="/" className="focus-ring inline-flex items-center rounded-lg text-text">
+            <span className="mr-2 grid h-7 w-7 place-items-center rounded-xl border border-green/35 bg-green/10 text-xs font-black text-green">F</span>
             <span className="font-heading text-2xl font-semibold tracking-tight">FinTax</span>
           </Link>
           <nav className="ml-4 hidden items-center gap-1 md:flex" aria-label="Landing sections">
-            <a href="#how" onClick={(e) => smoothAnchorNavigate(e, "#how")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.how}</a>
-            <a href="#pricing" onClick={(e) => smoothAnchorNavigate(e, "#pricing")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.pricing}</a>
-            <a href="#faq" onClick={(e) => smoothAnchorNavigate(e, "#faq")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.faq}</a>
-            <a href="#blog" onClick={(e) => smoothAnchorNavigate(e, "#blog")} className="focus-ring rounded-md px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.blog}</a>
+            <a href="#how" onClick={(e) => smoothAnchorNavigate(e, "#how")} className="focus-ring rounded-lg px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.how}</a>
+            <a href="#pricing" onClick={(e) => smoothAnchorNavigate(e, "#pricing")} className="focus-ring rounded-lg px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.pricing}</a>
+            <a href="#faq" onClick={(e) => smoothAnchorNavigate(e, "#faq")} className="focus-ring rounded-lg px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.faq}</a>
+            <a href="#blog" onClick={(e) => smoothAnchorNavigate(e, "#blog")} className="focus-ring rounded-lg px-3 py-2 text-sm text-secondary hover:text-text">{t.nav.blog}</a>
           </nav>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher />
-            <Link href="/auth" className="focus-ring rounded-md px-2 py-2 text-sm text-secondary hover:text-text">{t.signIn}</Link>
+            <Link href="/auth" className="focus-ring rounded-lg px-2 py-2 text-sm text-secondary hover:text-text">{t.signIn}</Link>
             <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "sm" }), "px-4")}>{t.start} <ArrowRight className="h-4 w-4" /></Link>
           </div>
         </Container>
@@ -260,7 +260,7 @@ export function PremiumLandingPage() {
                 </div>
                 <p className="mt-4 text-sm text-secondary">{t.heroPrice}</p>
               </div>
-              <Card variant="panel" padding="none" className="relative overflow-hidden border-border/65 bg-white shadow-[0_18px_40px_rgba(9,22,14,0.08)]">
+              <Card variant="panel" padding="none" className="relative overflow-hidden border-border/65 bg-surface shadow-[0_18px_40px_rgba(9,22,14,0.08)]">
                 <div className="absolute right-5 top-5 h-20 w-20 rounded-full bg-green/12" aria-hidden="true" />
                 <div className="absolute bottom-8 left-8 h-16 w-16 rounded-full bg-green/8" aria-hidden="true" />
                 <Image
@@ -296,17 +296,17 @@ export function PremiumLandingPage() {
                   <h2 className="mt-2 font-heading text-4xl tracking-[-0.02em] text-text">{t.stepsTitle}</h2>
                 </div>
                 <ol className="grid gap-4 md:grid-cols-3 xl:grid-cols-1">
-                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
+                  <li className="rounded-xl border border-border/70 bg-surface p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
                     <p className="font-mono text-4xl leading-none text-muted">01</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">Upload your documents</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">Provide tax letters, salary files and context docs in secure intake.</p>
                   </li>
-                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
+                  <li className="rounded-xl border border-border/70 bg-surface p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
                     <p className="font-mono text-4xl leading-none text-muted">02</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">Specialist review</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">A tax specialist validates your case and clarifies missing points.</p>
                   </li>
-                  <li className="rounded-[var(--radius-xl)] border border-border/70 bg-white p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
+                  <li className="rounded-xl border border-border/70 bg-surface p-6 shadow-[0_10px_26px_rgba(10,18,13,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_30px_rgba(14,40,24,0.12)]">
                     <p className="font-mono text-4xl leading-none text-muted">03</p>
                     <h3 className="mt-4 text-lg font-semibold text-text">File and monitor</h3>
                     <p className="mt-2 text-sm leading-6 text-secondary">Track the status in dashboard until the case reaches completion.</p>
@@ -320,7 +320,7 @@ export function PremiumLandingPage() {
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.servicesTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     {services.map((service) => (
-                      <Card key={service.title} variant="soft" padding="sm" className="border-border/65 bg-white transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_28px_rgba(14,40,24,0.1)]">
+                      <Card key={service.title} variant="soft" padding="sm" className="border-border/65 bg-surface transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_14px_28px_rgba(14,40,24,0.1)]">
                         <CardHeader>
                           <CardTitle className="text-base">{service.title}</CardTitle>
                         </CardHeader>
@@ -342,7 +342,7 @@ export function PremiumLandingPage() {
                         variant="panel"
                         padding="sm"
                         className={cn(
-                          "bg-white transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(14,40,24,0.1)]",
+                          "bg-surface transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(14,40,24,0.1)]",
                           idx === 1 ? "border-green/45 bg-green/5 shadow-[0_10px_24px_rgba(20,67,41,0.12)]" : "border-border/65 hover:border-green/30"
                         )}
                       >
@@ -365,13 +365,13 @@ export function PremiumLandingPage() {
 
             <div className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
               <section>
-                <Card variant="soft" padding="md" className="border-border/65 bg-white">
+                <Card variant="soft" padding="md" className="border-border/65 bg-surface">
                   <p className="text-xs uppercase tracking-[0.12em] text-muted">Trust content (verified capabilities)</p>
                   <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">No guaranteed fiscal outcomes.</p>
-                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Scope confirmed before execution.</p>
-                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Secure auth and route protection active.</p>
-                    <p className="rounded-lg border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Case status tracking in dashboard.</p>
+                    <p className="rounded-xl border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">No guaranteed fiscal outcomes.</p>
+                    <p className="rounded-xl border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Scope confirmed before execution.</p>
+                    <p className="rounded-xl border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Secure auth and route protection active.</p>
+                    <p className="rounded-xl border border-border/40 bg-surface/55 px-3 py-2.5 text-sm text-secondary transition hover:border-green/30 hover:bg-green/5">Case status tracking in dashboard.</p>
                   </div>
                 </Card>
               </section>
@@ -380,7 +380,7 @@ export function PremiumLandingPage() {
                 <section id="faq">
                   <p className="text-xs uppercase tracking-[0.12em] text-secondary">FAQ</p>
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.faqTitle}</h2>
-                  <div className="mt-4 rounded-[var(--radius-xl)] border border-border/65 bg-white p-2 shadow-[0_8px_20px_rgba(10,18,13,0.06)]">
+                  <div className="mt-4 rounded-xl border border-border/65 bg-surface p-2 shadow-[0_8px_20px_rgba(10,18,13,0.06)]">
                     <Accordion type="single" defaultValue="faq-0">
                       {faqItems.map((item, index) => (
                         <AccordionItem key={item.q} value={`faq-${index}`}>
@@ -397,8 +397,8 @@ export function PremiumLandingPage() {
                   <h2 className="mt-2 font-heading text-3xl tracking-[-0.02em] text-text">{t.blogTitle}</h2>
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     {blogPreview.map((item) => (
-                      <article key={item.title} className="rounded-[var(--radius-lg)] border border-border/70 bg-white p-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_12px_24px_rgba(14,40,24,0.1)]">
-                        <div className="h-24 rounded-lg border border-border/40 bg-surface2/75" aria-hidden="true" />
+                      <article key={item.title} className="rounded-lg border border-border/70 bg-surface p-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:shadow-[0_12px_24px_rgba(14,40,24,0.1)]">
+                        <div className="h-24 rounded-xl border border-border/40 bg-surface2/75" aria-hidden="true" />
                         <p className="mt-2 text-xs uppercase tracking-[0.1em] text-muted">{item.tag}</p>
                         <h3 className="mt-1 text-sm font-semibold leading-5 text-text">{item.title}</h3>
                         <Link href={item.href} className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-green hover:text-green-hover">
@@ -417,7 +417,7 @@ export function PremiumLandingPage() {
         <Section className="border-b border-border/75 py-12 sm:py-14">
           <Container>
             <Card variant="panel" padding="lg" className="border-[#1a4a34] bg-gradient-to-r from-[#113425] to-[#184e36] text-white">
-              <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              <div className="grid gap-5 lg:grid-cols-[11fr_9fr] lg:items-center">
                 <div>
                   <h2 className="font-heading text-4xl tracking-[-0.02em] text-white">{t.finalTitle}</h2>
                   <p className="mt-3 max-w-[56ch] text-sm leading-7 text-white/85">{t.finalBody}</p>
