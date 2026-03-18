@@ -89,8 +89,8 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
       )}
     >
       <div className="px-5 py-5">
-        <Link href="/" className="focus-ring flex items-center gap-2.5 rounded-md">
-          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-[#345442] bg-[#163626] text-xs font-black text-[#94dfb3]">
+        <Link href="/" className="focus-ring flex items-center gap-2.5 rounded-lg">
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-[#345442] bg-[#163626] text-xs font-black text-[#94dfb3]">
             F
           </div>
           <span className="font-body text-lg font-bold text-[#f3f8f5]">{t("brand")}</span>
@@ -127,7 +127,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
       </div>
 
       <div className="mt-auto space-y-3 px-3 pb-4">
-        <div className="rounded-[var(--radius-lg)] border border-[#2c4a38] bg-[#163526] px-4 py-3">
+        <div className="rounded-lg border border-[#2c4a38] bg-[#163526] px-4 py-3">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-semibold text-[#f1f8f4]">Tax year {activeYear}</p>
             <span className="font-mono text-xs text-[#d7ebdf]">{progressWidth}%</span>

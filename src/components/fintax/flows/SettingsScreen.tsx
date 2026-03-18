@@ -164,7 +164,7 @@ export function SettingsScreen() {
       {settingsMessage ? <div className="rounded-xl border border-green/25 bg-green/10 px-4 py-3 text-sm text-green">{settingsMessage}</div> : null}
       {settingsError ? <div className="rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error">{settingsError}</div> : null}
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 xl:grid-cols-[11fr_9fr]">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between gap-2">
@@ -305,7 +305,7 @@ function ToggleRow({ label, checked, onChange }: { label: string; checked: boole
   return (
     <button type="button" onClick={() => onChange(!checked)} className={`flex items-center justify-between rounded-xl border px-4 py-3 text-sm ${checked ? "border-green/35 bg-green/8 text-text" : "border-border/35 bg-surface2/20 text-secondary"}`}>
       <span>{label}</span>
-      <span className={`inline-block h-2.5 w-2.5 rounded-full ${checked ? "bg-green" : "bg-white/30"}`} />
+      <span className={`inline-block h-2.5 w-2.5 rounded-full ${checked ? "bg-green" : "bg-surface/30"}`} />
     </button>
   );
 }

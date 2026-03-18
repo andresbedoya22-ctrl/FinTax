@@ -167,7 +167,7 @@ export function TaxReturnFlow() {
           const isActive = selectedService === service.id;
           const hasSavedProgress = hasLocalWizardProgress(`fintax-tax-${service.id}`);
           return (
-            <Card key={service.id} className={cn("rounded-[var(--radius-lg)] border border-border/35 bg-surface/55", isActive ? "border-copper/35 bg-copper/6" : "")}>
+            <Card key={service.id} className={cn("rounded-lg border border-border/35 bg-surface/55", isActive ? "border-copper/35 bg-copper/6" : "")}>
               <CardHeader className="space-y-1">
                 <div className="mb-1 flex items-center justify-between gap-2">
                   <Badge variant={isActive ? "copper" : "neutral"}>{service.id.replaceAll("_", " ")}</Badge>
@@ -214,7 +214,7 @@ export function TaxReturnFlow() {
           <div className="mb-5 grid gap-3 md:grid-cols-[1fr_auto]">
             <div className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">
               <p className="text-xs uppercase tracking-[0.14em] text-muted">Progress</p>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface/10">
                 <div className="h-full rounded-full bg-gradient-to-r from-green to-copper" style={{ width: `${Math.round(((currentStep + 1) / stepKeys.length) * 100)}%` }} />
               </div>
               <p className="mt-2 text-xs text-secondary">{Math.round(((currentStep + 1) / stepKeys.length) * 100)}% complete | {stepKeys.length - currentStep - 1} steps left</p>
@@ -367,7 +367,7 @@ function Field(props: { label: string; error?: string; children: React.ReactNode
 function SummaryTile({ icon: Icon, title, value }: { icon: React.ComponentType<{ className?: string }>; title: string; value: string }) {
   return (
     <div className="rounded-xl border border-border/35 bg-surface2/25 p-4">
-      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/30 bg-surface/35 text-copper">
+      <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-border/30 bg-surface/35 text-copper">
         <Icon className="size-4" />
       </div>
       <p className="text-xs uppercase tracking-[0.12em] text-muted">{title}</p>
