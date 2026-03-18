@@ -1,49 +1,39 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# --- Estándar ---
+node_modules
 .DS_Store
 *.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
+*.log
 .env*
-
-# vercel
 .vercel
 
-# typescript
+# --- Next.js 16 & Build ---
+/.next/
+/out/
+/build
 *.tsbuildinfo
 next-env.d.ts
+.turbo/
+.cache/
 
+# --- Supabase (Crítico para tokens) ---
+supabase/.temp/
+supabase/storage/
+supabase/debug/
+# No ignores supabase/migrations ni supabase/config.toml, Jules los necesita.
+
+# --- Testing & Debug ---
+/coverage
 .tmp-test-build
+npm-debug.log*
+yarn-debug.log*
 
-# Claude/Codex workspace: commit shared rules/skills, ignore only local secrets
+# --- Agentes (Protección de identidad) ---
 .claude/settings.local.json
 .claude/**/settings.local.json
 .claude/.env.local
-.claude/**/.env.local
+.antigravity/local_state.json
+
+# --- Multimedia (Evitar lectura de binarios) ---
+*.pdf
+*.zip
+*.mp4
