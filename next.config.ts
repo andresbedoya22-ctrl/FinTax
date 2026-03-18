@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
     root: process.cwd(),
   },
   experimental: {
+    // @ts-expect-error React Compiler types might not be present in this canary
+    reactCompiler: true,
     workerThreads: false,
     webpackBuildWorker: false,
   },
