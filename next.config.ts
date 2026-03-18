@@ -16,12 +16,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
-  experimental: {
-    // @ts-expect-error React Compiler types might not be present in this canary
-    reactCompiler: true,
-    workerThreads: false,
-    webpackBuildWorker: false,
-  },
+  reactCompiler: true,
+  experimental: {},
   typescript: {
     // Type safety is enforced by the explicit gate `pnpm.cmd typecheck`.
     ignoreBuildErrors: process.env.SKIP_NEXT_TYPECHECK === "1",
