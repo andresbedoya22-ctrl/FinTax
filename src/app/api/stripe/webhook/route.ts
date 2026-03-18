@@ -72,14 +72,38 @@ async function registerStripeEvent(event: Stripe.Event) {
     stripe_event_id: event.id,
     type: event.type,
     payload: event,
+    status: "processing"
   });
 
   if (!error) return { ok: true, idempotent: false as const };
+  
   if (isStripeEventAlreadyProcessed(error.message)) {
+    // Check if it's stuck in processing for more than 15 mins (stale lock timeout)
+    const { data: existingEvent } = await admin.from("stripe_events").select("status,created_at").eq("stripe_event_id", event.id).maybeSingle();
+    if (existingEvent?.status === "processing") {
+      const createdAt = new Date(existingEvent.created_at).getTime();
+      const ageInMinutes = (Date.now() - createdAt) / 1000 / 60;
+      if (ageInMinutes > 15) {
+        // Lock expired. Overwrite it so we can retry.
+        return { ok: true, idempotent: false as const };
+      }
+    }
     return { ok: true, idempotent: true as const };
   }
 
   return { ok: false, reason: "stripe_event_insert_failed" as const };
+}
+
+async function markStripeEventStatus(eventId: string, status: "completed" | "failed") {
+  const admin = await createAdminClient().catch(() => null);
+  if (!admin) return;
+  await admin.from("stripe_events").update({ status, processed_at: new Date().toISOString() }).eq("stripe_event_id", eventId);
+}
+
+async function deleteStripeEventLock(eventId: string) {
+  const admin = await createAdminClient().catch(() => null);
+  if (!admin) return;
+  await admin.from("stripe_events").delete().eq("stripe_event_id", eventId);
 }
 
 export async function POST(request: Request) {
@@ -117,7 +141,17 @@ export async function POST(request: Request) {
       }
 
       const result = await handleCheckoutCompleted(event);
-      return NextResponse.json({ received: true, type: event.type, ...result });
+      if (result.processed || result.idempotent) {
+         await markStripeEventStatus(event.id, "completed");
+         return NextResponse.json({ received: true, type: event.type, ...result });
+      } else {
+         // Release the lock so Stripe can retry
+         await deleteStripeEventLock(event.id);
+         return NextResponse.json(
+           { received: false, type: event.type, reason: result.reason ?? "processing_failed_lock_released" },
+           { status: 500 }
+         );
+      }
     }
     case "payment_intent.payment_failed": {
       return NextResponse.json({ received: true, type: event.type, processed: true });
