@@ -1,7 +1,36 @@
+@import "tailwindcss";
 @import "../styles/tokens.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+@theme {
+  --color-bg: rgb(var(--bg));
+  --color-surface: rgb(var(--surface));
+  --color-surface2: rgb(var(--surface-2));
+  --color-border: rgb(var(--border));
+  --color-text: rgb(var(--text));
+  --color-secondary: rgb(var(--text-secondary));
+  --color-muted: rgb(var(--text-muted));
+  --color-green: rgb(var(--accent-green));
+  --color-green-hover: rgb(var(--accent-green-strong));
+  --color-teal: rgb(var(--accent-teal));
+  --color-warning: rgb(var(--warning));
+  --color-error: rgb(var(--error));
+  --color-copper: rgb(var(--accent-copper));
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-card: var(--radius-xl);
+
+  --shadow-glass: var(--shadow-glass);
+  --shadow-glass-soft: var(--shadow-glass-soft);
+  --shadow-panel: var(--shadow-panel);
+  --shadow-floating: var(--shadow-floating);
+
+  --font-heading: var(--font-display), Georgia, serif;
+  --font-body: var(--font-sans), Segoe UI, sans-serif;
+  --font-mono: var(--font-mono), Consolas, monospace;
+}
 
 * {
   border-color: rgb(var(--border));
