@@ -1,13 +1,15 @@
 import type { AppLocale } from "@/i18n/routing";
+import { getPageMetadataCopy } from "@/lib/page-metadata";
 import { buildPublicMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: AppLocale }> }) {
   const { locale } = await params;
+  const copy = getPageMetadataCopy(locale);
   return buildPublicMetadata({
     locale,
     pathname: "/legal/privacy",
-    title: "FinTax | Privacy Notice",
-    description: "Privacy notice describing account, case, payment and document processing in FinTax.",
+    title: copy.privacy.title,
+    description: copy.privacy.description,
   });
 }
 
