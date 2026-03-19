@@ -1,13 +1,15 @@
 import type { AppLocale } from "@/i18n/routing";
+import { getPageMetadataCopy } from "@/lib/page-metadata";
 import { buildPublicMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: AppLocale }> }) {
   const { locale } = await params;
+  const copy = getPageMetadataCopy(locale);
   return buildPublicMetadata({
     locale,
     pathname: "/legal/terms",
-    title: "FinTax | Terms of Service",
-    description: "Terms of service describing FinTax scope, payments and operational constraints.",
+    title: copy.terms.title,
+    description: copy.terms.description,
   });
 }
 

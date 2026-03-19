@@ -1,27 +1,3 @@
-import createNextIntlPlugin from "next-intl/plugin";
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
-
-const nextConfig = {
-  reactCompiler: true,
-  experimental: {
-    workerThreads: false,
-    webpackBuildWorker: false,
-  },
-  typescript: {
-    ignoreBuildErrors: process.env.SKIP_NEXT_TYPECHECK === "1",
-  },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" }
-        ],
-      },
-    ];
-  },
-};
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -37,17 +13,15 @@ const SECURITY_HEADERS: Array<{ key: string; value: string }> = [
 ];
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   turbopack: {
     root: process.cwd(),
   },
   experimental: {
-    // @ts-expect-error React Compiler types might not be present in this canary
-    reactCompiler: true,
     workerThreads: false,
     webpackBuildWorker: false,
   },
   typescript: {
-    // Type safety is enforced by the explicit gate `pnpm.cmd typecheck`.
     ignoreBuildErrors: process.env.SKIP_NEXT_TYPECHECK === "1",
   },
   async headers() {

@@ -1,15 +1,17 @@
 import { PremiumLandingPage } from "@/components/fintax/landing";
 import type { AppLocale } from "@/i18n/routing";
+import { getPageMetadataCopy } from "@/lib/page-metadata";
 import { buildPublicMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: AppLocale }> }) {
   const { locale } = await params;
+  const copy = getPageMetadataCopy(locale);
   return buildPublicMetadata({
     locale,
     pathname: "/",
-    title: "FinTax | Dutch tax and benefits guidance for international households",
-    description:
-      "Structured support for Dutch tax returns, ZZP and VAT obligations, and benefits applications with human-reviewed delivery.",
+    title: copy.home.title,
+    description: copy.home.description,
+    keywords: ["Dutch tax return", "Netherlands benefits", "international households", "FinTax"],
     ogImage: {
       url: "/visuals/hero-dashboard.png",
       width: 1600,

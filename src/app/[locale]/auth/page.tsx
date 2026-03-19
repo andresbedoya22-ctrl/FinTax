@@ -1,14 +1,16 @@
 import { AuthScreen } from "@/components/fintax/auth";
 import type { AppLocale } from "@/i18n/routing";
+import { getPageMetadataCopy } from "@/lib/page-metadata";
 import { buildNoIndexMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: AppLocale }> }) {
   const { locale } = await params;
+  const copy = getPageMetadataCopy(locale);
   return buildNoIndexMetadata({
     locale,
     pathname: "/auth",
-    title: "FinTax | Secure account access",
-    description: "Sign in or create an account to access your FinTax case workspace.",
+    title: copy.auth.title,
+    description: copy.auth.description,
   });
 }
 

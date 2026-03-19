@@ -1,15 +1,26 @@
 import type { MetadataRoute } from "next";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+import { routing } from "@/i18n/routing";
+import { buildAbsoluteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
+  const disallowedPaths = routing.locales.flatMap((locale) => [
+    `/${locale}/dashboard`,
+    `/${locale}/tax-return`,
+    `/${locale}/benefits`,
+    `/${locale}/settings`,
+    `/${locale}/admin`,
+    `/${locale}/app`,
+  ]);
+
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
+        disallow: ["/api/", ...disallowedPaths],
       },
     ],
-    sitemap: appUrl ? [`${appUrl}/sitemap.xml`] : ["/sitemap.xml"],
+    sitemap: buildAbsoluteUrl("/sitemap.xml"),
   };
 }
