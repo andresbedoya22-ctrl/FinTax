@@ -203,8 +203,8 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
           <div className="absolute inset-0 bg-gradient-to-br from-bg via-bg/85 to-surface/80" />
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-lg border border-copper/25 bg-copper/8 px-3 py-2">
-              <div className="grid h-7 w-7 place-items-center rounded-md border border-copper/25 bg-copper/10 text-copper">F</div>
+            <div className="inline-flex items-center gap-2 rounded-xl border border-copper/25 bg-copper/8 px-3 py-2">
+              <div className="grid h-7 w-7 place-items-center rounded-lg border border-copper/25 bg-copper/10 text-copper">F</div>
               <span className="font-heading text-lg tracking-tight text-text">FinTax</span>
             </div>
           </div>
@@ -228,7 +228,7 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
             <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
               <Card variant="soft" padding="sm" className="bg-surface2/45">
                 <p className="text-xs uppercase tracking-[0.14em] text-muted">Letter routing</p>
-                <Image src="/visuals/letter-mock.svg" alt="Official letter mock" width={1400} height={900} className="mt-3 h-[108px] w-full rounded-lg border border-border/40 object-cover" />
+                <Image src="/visuals/letter-mock.svg" alt="Official letter mock" width={1400} height={900} className="mt-3 h-[108px] w-full rounded-xl border border-border/40 object-cover" />
                 <p className="mt-3 text-xs leading-5 text-secondary">Letters and filings continue into the same secure workflow after setup.</p>
               </Card>
               <Card variant="soft" padding="sm" className="bg-surface2/45">
@@ -245,7 +245,7 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
             </div>
           </div>
 
-          <div className="relative z-10 rounded-[var(--radius-lg)] border border-border/35 bg-surface/35 p-4">
+          <div className="relative z-10 rounded-lg border border-border/35 bg-surface/35 p-4">
             <p className="text-xs uppercase tracking-[0.14em] text-muted">Supported locales</p>
             <p className="mt-2 text-sm text-secondary">EN, NL, ES, PL and RO are available in the UI and onboarding preference selector.</p>
           </div>
@@ -268,7 +268,7 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
 
               <div className="grid gap-5 border-b border-border/35 p-5 sm:p-6 lg:grid-cols-[0.9fr_1.1fr]">
                 <Stepper steps={steps} currentStep={currentStep} className="self-start" />
-                <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/20 p-4">
+                <div className="rounded-lg border border-border/35 bg-surface2/20 p-4">
                   <p className="text-xs uppercase tracking-[0.14em] text-muted">Account email</p>
                   <p className="mt-2 text-sm text-text">{authEmail || "Loading account..."}</p>
                   <p className="mt-2 text-xs leading-5 text-secondary">
@@ -293,12 +293,12 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
                             type="button"
                             onClick={() => form.setValue("language", lang.code, { shouldValidate: true, shouldTouch: true })}
                             className={cn(
-                              "focus-ring editorial-frame flex items-center gap-3 rounded-[var(--radius-lg)] border px-4 py-3 text-left transition",
+                              "focus-ring editorial-frame flex items-center gap-3 rounded-lg border px-4 py-3 text-left transition",
                               active ? "border-green/30 bg-green/8 text-text" : "border-border/35 bg-surface2/28 text-secondary hover:border-copper/20 hover:bg-surface2/38 hover:text-text"
                             )}
                             aria-pressed={active}
                           >
-                            <span className={cn("inline-flex min-w-11 items-center justify-center rounded-md border px-2 py-1 text-[11px] font-semibold tracking-[0.12em]", active ? "border-green/25 bg-green/10 text-green" : "border-border/35 bg-surface/45 text-muted")}>
+                            <span className={cn("inline-flex min-w-11 items-center justify-center rounded-lg border px-2 py-1 text-[11px] font-semibold tracking-[0.12em]", active ? "border-green/25 bg-green/10 text-green" : "border-border/35 bg-surface/45 text-muted")}>
                               {lang.short}
                             </span>
                             <span className="flex-1 text-sm font-medium">{lang.label}</span>
@@ -345,7 +345,7 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
                             type="button"
                             onClick={() => form.setValue("taxContext", value, { shouldValidate: true, shouldTouch: true })}
                             className={cn(
-                              "focus-ring editorial-frame flex items-center gap-3 rounded-[var(--radius-lg)] border px-4 py-3 text-left transition",
+                              "focus-ring editorial-frame flex items-center gap-3 rounded-lg border px-4 py-3 text-left transition",
                               active ? "border-green/28 bg-green/8 text-text" : "border-border/35 bg-surface2/25 text-secondary hover:border-border/55 hover:bg-surface2/35 hover:text-text"
                             )}
                             aria-pressed={active}
@@ -368,18 +368,18 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
 
                 {currentStep === 4 ? (
                   <section className="grid gap-4" style={{ animation: "fadeUp 280ms ease both" }}>
-                    <div className="rounded-[var(--radius-lg)] border border-border/35 bg-surface2/25 p-4">
+                    <div className="rounded-lg border border-border/35 bg-surface2/25 p-4">
                       <p className="text-sm font-medium text-text">Before continuing</p>
                       <p className="mt-2 text-sm leading-6 text-secondary">
                         We save your language preference and profile basics, then route you to the intended service flow or dashboard.
                       </p>
                     </div>
-                    <label className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
+                    <label className="flex items-start gap-3 rounded-lg border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
                       <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-border/70 accent-[rgb(var(--accent-green))]" {...form.register("consentPrivacy")} />
                       <span>I acknowledge the privacy policy for profile and case processing.</span>
                     </label>
                     {form.formState.errors.consentPrivacy ? <p className="text-xs text-error">{form.formState.errors.consentPrivacy.message}</p> : null}
-                    <label className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
+                    <label className="flex items-start gap-3 rounded-lg border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">
                       <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-border/70 accent-[rgb(var(--accent-green))]" {...form.register("consentTerms")} />
                       <span>I accept the terms for using the FinTax workspace and case flows.</span>
                     </label>
@@ -387,7 +387,7 @@ export function OnboardingScreen({ initialNextPath }: { initialNextPath?: string
                   </section>
                 ) : null}
 
-                {serverError ? <div className="rounded-[var(--radius-lg)] border border-error/30 bg-error/10 px-4 py-3 text-sm text-error">{serverError}</div> : null}
+                {serverError ? <div className="rounded-lg border border-error/30 bg-error/10 px-4 py-3 text-sm text-error">{serverError}</div> : null}
 
                 <div className="grid gap-3 border-t border-border/35 pt-4 sm:grid-cols-[1fr_auto_auto] sm:items-center">
                   <p className="text-xs leading-5 text-muted">

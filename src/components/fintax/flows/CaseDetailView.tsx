@@ -224,7 +224,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           <ul className="space-y-2">
             {checklist.map((item, idx) => (
               <li key={item.id} className="flex items-center gap-3 rounded-xl border border-border/35 bg-surface2/20 px-4 py-3 text-sm">
-                {item.is_completed ? <CheckCircle2 className="size-4 text-green" /> : <span className="inline-block h-2.5 w-2.5 rounded-full bg-white/30" />}
+                {item.is_completed ? <CheckCircle2 className="size-4 text-green" /> : <span className="inline-block h-2.5 w-2.5 rounded-full bg-surface/30" />}
                 <span className="text-secondary">{item.label}</span>
                 <span className="ml-auto text-xs text-muted">{idx + 1}</span>
               </li>

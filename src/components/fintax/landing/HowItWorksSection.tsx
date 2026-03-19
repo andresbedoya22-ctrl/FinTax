@@ -28,7 +28,7 @@ export function HowItWorksSection() {
                   <span className="mb-4 inline-flex size-10 items-center justify-center rounded-full border border-border/70 bg-surface2 text-sm font-semibold text-text">
                     {index + 1}
                   </span>
-                  <div className="mb-3 inline-flex size-10 items-center justify-center rounded-md bg-surface2 text-teal">
+                  <div className="mb-3 inline-flex size-10 items-center justify-center rounded-lg bg-surface2 text-teal">
                     <Icon className="size-5" aria-hidden="true" />
                   </div>
                   <h3 className="text-lg font-medium text-text">{step.title}</h3>

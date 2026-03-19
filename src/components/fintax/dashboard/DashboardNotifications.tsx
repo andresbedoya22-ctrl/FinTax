@@ -113,7 +113,7 @@ export function DashboardNotifications() {
                       )}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/30 bg-surface2/40 text-copper">
+                        <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-border/30 bg-surface2/40 text-copper">
                           <Icon className="size-4" aria-hidden="true" />
                         </span>
                         <span className="min-w-0 flex-1">

@@ -45,7 +45,7 @@ export function HeroSection() {
   return (
     <Section id="hero">
       <Container>
-        <div className="grid min-h-screen items-center gap-16 pt-24 pb-20 lg:grid-cols-2">
+        <div className="grid min-h-screen items-center gap-16 pt-24 pb-20 lg:grid-cols-[11fr_9fr]">
           {/* LEFT — copy + CTAs */}
           <div style={{ animation: "fadeUp 0.8s ease 0.2s both" }}>
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-green/25 bg-green/10 px-3 py-1.5 text-xs text-green">
@@ -122,11 +122,11 @@ export function HeroSection() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
+                    <div className="rounded-xl border border-white/[0.06] bg-surface/[0.04] p-3">
                       <p className="mb-1 text-xs text-muted">{t("sampleRefundLabel")}</p>
                       <p className="font-mono text-xl font-semibold text-green">{t("sampleRefundValue")}</p>
                     </div>
-                    <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
+                    <div className="rounded-xl border border-white/[0.06] bg-surface/[0.04] p-3">
                       <p className="mb-1 text-xs text-muted">{t("sampleCasesLabel")}</p>
                       <p className="font-heading text-xl font-semibold text-text">{t("sampleCasesValue")}</p>
                     </div>
@@ -134,7 +134,7 @@ export function HeroSection() {
 
                   <div className="space-y-3">
                     {/* Case row 1 */}
-                    <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
+                    <div className="rounded-xl border border-white/[0.06] bg-surface/[0.04] p-3">
                       <div className="mb-2 flex items-center justify-between">
                         <span className="text-sm font-medium text-text">IB Aangifte 2024</span>
                         <span className="rounded-full bg-green/15 px-2 py-0.5 text-xs font-medium text-green">
@@ -142,7 +142,7 @@ export function HeroSection() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface/10">
                           <div className="h-full rounded-full bg-green" style={{ width: "75%" }} />
                         </div>
                         <span className="text-xs text-muted">75%</span>
@@ -150,7 +150,7 @@ export function HeroSection() {
                     </div>
 
                     {/* Case row 2 */}
-                    <div className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3">
+                    <div className="rounded-xl border border-white/[0.06] bg-surface/[0.04] p-3">
                       <div className="mb-2 flex items-center justify-between">
                         <span className="text-sm font-medium text-text">Huurtoeslag 2025</span>
                         <span
@@ -164,7 +164,7 @@ export function HeroSection() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface/10">
                           <div
                             className="h-full rounded-full"
                             style={{

@@ -66,7 +66,7 @@ export function ServicesSection() {
             return (
               <Card key={service.title} className="h-full">
                 <CardHeader className="flex items-center gap-3 border-b-0 pb-1">
-                  <span className="inline-flex size-10 items-center justify-center rounded-md bg-surface2 text-teal">
+                  <span className="inline-flex size-10 items-center justify-center rounded-lg bg-surface2 text-teal">
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
                   <h3 className="text-base font-medium text-text">{service.title}</h3>

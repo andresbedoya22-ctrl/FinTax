@@ -10,7 +10,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, ..
     <UiCard
       ref={ref}
       className={cn(
-        "rounded-[var(--radius-xl)]",
+        "rounded-xl",
         className
       )}
       {...props}
