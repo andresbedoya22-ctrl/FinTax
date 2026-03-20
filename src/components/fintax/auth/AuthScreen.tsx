@@ -795,7 +795,7 @@ function FieldLabel({ htmlFor, children, hint }: { htmlFor: string; children: Re
       <label htmlFor={htmlFor} className="block text-xs uppercase tracking-[0.12em] text-muted">{children}</label>
       {hint ? (
         <Tooltip content={hint}>
-          <button type="button" className="focus-ring rounded-full text-muted transition-colors hover:text-text" aria-label={String(children)}>
+          <button type="button" className="focus-ring rounded-full text-muted transition-colors hover:text-text" aria-label={`${String(children)} hint`}>
             <Info className="h-3.5 w-3.5" />
           </button>
         </Tooltip>
@@ -844,6 +844,47 @@ function PasswordMeter({ label, scoreLabels, value }: { label: string; scoreLabe
   );
 }
 
+function GoogleMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      <path fill="#EA4335" d="M12.24 10.285v3.95h5.49c-.24 1.54-1.84 4.52-5.49 4.52-3.3 0-5.99-2.73-5.99-6.1s2.69-6.1 5.99-6.1c1.88 0 3.13.8 3.85 1.49l2.62-2.53C17.08 3.99 14.86 3 12.24 3 7.56 3 3.75 6.81 3.75 11.5S7.56 20 12.24 20c6.21 0 8.25-4.37 8.25-6.62 0-.44-.05-.75-.11-1.08z" />
+      <path fill="#34A853" d="M3.75 11.5c0 1.47.35 2.86.98 4.08l3.22-2.5a5.16 5.16 0 0 1-.29-1.58c0-.55.1-1.08.29-1.58l-3.22-2.5a8.48 8.48 0 0 0-.98 4.08z" />
+      <path fill="#FBBC05" d="M12.24 20c2.43 0 4.46-.8 5.95-2.18l-2.9-2.25c-.78.53-1.77.9-3.05.9-2.54 0-4.69-1.71-5.46-4.02l-3.22 2.49C5.04 18.03 8.37 20 12.24 20z" />
+      <path fill="#4285F4" d="M18.19 17.82c1.72-1.58 2.3-3.92 2.3-5.9 0-.63-.06-1.22-.17-1.78h-8.08v3.95h4.64c-.22 1.18-.92 2.18-1.95 2.88z" />
+    </svg>
+  );
+}
+
+function SocialButton({
+  icon,
+  label,
+  loading,
+  onClick,
+  disabled,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  loading?: boolean;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="secondary"
+      size="lg"
+      className="justify-start gap-3 rounded-[var(--radius-lg)] border-border/70 bg-surface shadow-none hover:border-green/30 hover:bg-surface2/90"
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border/60 bg-white shadow-[0_8px_18px_rgba(15,23,42,0.06)]">
+        {loading ? <LoaderCircle className="h-4 w-4 animate-spin text-text" /> : icon}
+      </span>
+      <span className="text-left text-[0.95rem] font-semibold text-text">{label}</span>
+    </Button>
+  );
+}
+
 function buildSchemas(ui: AuthUiCopy) {
   const loginSchema = z.object({
     email: z.string().email(ui.validation.invalidEmail),
@@ -880,7 +921,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const defaultMode: AuthMode = mfaRequired ? "login" : pendingIntent ? "register" : "login";
   const { loginSchema, registerSchema, forgotSchema } = React.useMemo(() => buildSchemas(ui), [ui]);
 
-  const [mode, setMode] = React.useState<AuthMode>(defaultMode);
+  const [mode, setMode] = React.useState<AuthMode>(() => defaultMode);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
@@ -898,7 +939,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const [mfaSecret, setMfaSecret] = React.useState<string | null>(null);
   const [mfaReady, setMfaReady] = React.useState(false);
   const [mfaVerified, setMfaVerified] = React.useState(false);
-  const [postAuthDestination, setPostAuthDestination] = React.useState(resolveAuthSuccessPath(initialSearchParams));
+  const [postAuthDestination, setPostAuthDestination] = React.useState(() => resolveAuthSuccessPath(initialSearchParams));
 
   const loginForm = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: "", password: "" }, mode: "onTouched" });
   const registerForm = useForm<RegisterValues>({
@@ -913,15 +954,34 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const forgotEmail = useWatch({ control: forgotForm.control, name: "email" }) ?? "";
   const registerPassword = useWatch({ control: registerForm.control, name: "password" }) ?? "";
 
-  useEncryptedFormDraft({ storageKey: LOGIN_DRAFT_KEY, value: { email: loginEmail }, onRestore: (value) => loginForm.reset({ email: value.email ?? "", password: "" }) });
+  const restoreLoginDraft = React.useCallback(
+    (value: Partial<{ email: string }>) => loginForm.reset({ email: value.email ?? "", password: "" }),
+    [loginForm],
+  );
+  const restoreRegisterDraft = React.useCallback(
+    (value: Partial<Pick<RegisterValues, "fullName" | "nationality" | "email" | "terms">>) =>
+      registerForm.reset({
+        fullName: value.fullName ?? "",
+        nationality: value.nationality ?? "",
+        email: value.email ?? "",
+        password: "",
+        confirmPassword: "",
+        terms: value.terms ?? false,
+      }),
+    [registerForm],
+  );
+  const restoreForgotDraft = React.useCallback(
+    (value: Partial<{ email: string }>) => forgotForm.reset({ email: value.email ?? "" }),
+    [forgotForm],
+  );
+
+  useEncryptedFormDraft({ storageKey: LOGIN_DRAFT_KEY, value: { email: loginEmail }, onRestore: restoreLoginDraft });
   useEncryptedFormDraft({
     storageKey: REGISTER_DRAFT_KEY,
     value: { fullName: registerDraftValues.fullName ?? "", nationality: registerDraftValues.nationality ?? "", email: registerDraftValues.email ?? "", terms: registerDraftValues.terms ?? false },
-    onRestore: (value) => registerForm.reset({ fullName: value.fullName ?? "", nationality: value.nationality ?? "", email: value.email ?? "", password: "", confirmPassword: "", terms: value.terms ?? false }),
+    onRestore: restoreRegisterDraft,
   });
-  useEncryptedFormDraft({ storageKey: FORGOT_DRAFT_KEY, value: { email: forgotEmail }, onRestore: (value) => forgotForm.reset({ email: value.email ?? "" }) });
-
-  React.useEffect(() => { setMode(defaultMode); }, [defaultMode]);
+  useEncryptedFormDraft({ storageKey: FORGOT_DRAFT_KEY, value: { email: forgotEmail }, onRestore: restoreForgotDraft });
   React.useEffect(() => { storePendingIntent(pendingIntent); }, [pendingIntent]);
 
   const clearSafeDrafts = React.useCallback(() => {
@@ -1160,23 +1220,27 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
             <Card variant="panel" padding="none" className="overflow-hidden border-border/70 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
               <div className="border-b border-border/35 bg-surface/70 px-5 py-5 sm:px-7 sm:py-6">
-                <p className="text-xs uppercase tracking-[0.16em] text-copper">{ui.eyebrow}</p>
-                <h1 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text sm:text-[2.35rem]">{copy.title}</h1>
-                <p className="mt-3 max-w-[58ch] text-sm leading-6 text-secondary">{mode === "register" ? copy.registerSubtitle : mode === "forgot" ? copy.forgotSubtitle : copy.loginSubtitle}</p>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.16em] text-copper">{ui.eyebrow}</p>
+                    <h1 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text sm:text-[2.25rem]">{copy.title}</h1>
+                  </div>
+                  <Link href="/" className="hidden text-sm font-medium text-muted transition-colors hover:text-text sm:inline-flex">
+                    {ui.form.backToLanding}
+                  </Link>
+                </div>
+                <p className="mt-3 max-w-[56ch] text-sm leading-6 text-secondary">
+                  {mode === "register" ? copy.registerSubtitle : mode === "forgot" ? copy.forgotSubtitle : copy.loginSubtitle}
+                </p>
               </div>
               <div className="px-5 py-5 sm:px-7 sm:py-6">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                <div className="mb-5">
                   <Tabs value={mode === "forgot" ? "login" : mode} defaultValue={defaultMode} onValueChange={(value) => handleModeChange(value as AuthMode)} className="flex-1">
                     <TabsList className="w-full">
                       <TabsTrigger value="login" className="flex-1">{ui.tabs.login}</TabsTrigger>
                       <TabsTrigger value="register" className="flex-1">{ui.tabs.register}</TabsTrigger>
                     </TabsList>
                   </Tabs>
-                  {mode !== "register" ? (
-                    <button type="button" className="text-sm font-medium text-copper transition-colors hover:text-text" onClick={() => handleModeChange("register")}>
-                      {copy.registerHint} {copy.registerHintLink}
-                    </button>
-                  ) : null}
                 </div>
 
                 {serverError ? <ErrorBanner message={serverError} /> : null}
@@ -1186,14 +1250,20 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                 {mode !== "forgot" ? (
                   <>
                     <div className="mb-5 grid gap-3 sm:grid-cols-2">
-                      <Button type="button" variant="secondary" size="lg" className="justify-center" onClick={() => void handleOAuth("google")} disabled={oauthLoading !== null}>
-                        {oauthLoading === "google" ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-                        {ui.social.google}
-                      </Button>
-                      <Button type="button" variant="secondary" size="lg" className="justify-center" onClick={() => void handleOAuth("apple")} disabled={oauthLoading !== null}>
-                        {oauthLoading === "apple" ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Apple className="h-4 w-4" />}
-                        {ui.social.apple}
-                      </Button>
+                      <SocialButton
+                        icon={<GoogleMark className="h-4 w-4" />}
+                        label={ui.social.google}
+                        loading={oauthLoading === "google"}
+                        onClick={() => void handleOAuth("google")}
+                        disabled={oauthLoading !== null}
+                      />
+                      <SocialButton
+                        icon={<Apple className="h-[18px] w-[18px] text-text" />}
+                        label={ui.social.apple}
+                        loading={oauthLoading === "apple"}
+                        onClick={() => void handleOAuth("apple")}
+                        disabled={oauthLoading !== null}
+                      />
                     </div>
                     <div className="mb-5 flex items-center gap-3 text-xs text-muted">
                       <span className="h-px flex-1 bg-border/50" />
@@ -1226,8 +1296,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                       <FieldMessage error={loginForm.formState.errors.password?.message} />
                     </div>
 
-                    <div className="flex items-center justify-between gap-3 text-sm">
-                      <span className="text-muted">{ui.form.continueAccount}</span>
+                    <div className="flex items-center justify-end gap-3 text-sm">
                       <button type="button" className="font-medium text-copper transition-colors hover:text-text" onClick={() => handleModeChange("forgot")}>{copy.forgotLink}</button>
                     </div>
 
@@ -1341,7 +1410,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                   </form>
                 ) : null}
 
-                <div className="mt-6 border-t border-border/35 pt-5">
+                <div className="mt-6 border-t border-border/35 pt-5 sm:hidden">
                   <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "border-transparent px-0")}>{ui.form.backToLanding}</Link>
                 </div>
               </div>
@@ -1349,7 +1418,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
           </div>
         </section>
 
-        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(53,83,68,0.3),transparent_42%),linear-gradient(180deg,#0d1712_0%,#121d17_48%,#18241d_100%)] px-8 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-12">
+        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(63,107,84,0.32),transparent_38%),linear-gradient(180deg,#0c1611_0%,#101913_45%,#152119_100%)] px-8 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-12">
           <div>
             <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-white">
               <span className="grid h-8 w-8 place-items-center rounded-lg border border-white/15 bg-white/10 font-heading text-sm text-white">F</span>
@@ -1357,49 +1426,40 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             </Link>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-7">
             <div>
-              <Badge variant="neutral" className="border-white/15 bg-white/8 text-white">{copy.trust.eyebrow}</Badge>
+              <Badge variant="neutral" className="border-white/15 bg-white/10 text-white">{copy.trust.eyebrow}</Badge>
               <h2 className="mt-4 max-w-[14ch] font-heading text-[2.4rem] leading-[0.96] tracking-[-0.04em] text-white">{ui.panel.title}</h2>
-              <p className="mt-4 max-w-[46ch] text-sm leading-7 text-white/78">{copy.trust.body}</p>
+              <p className="mt-4 max-w-[44ch] text-sm leading-7 text-white/84">{copy.trust.body}</p>
             </div>
 
-            <Card variant="panel" padding="md" className="border-white/10 bg-white/6 text-white shadow-[0_24px_60px_rgba(3,8,6,0.35)] motion-safe:transition motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-white/15">
-              <p className="text-xs uppercase tracking-[0.14em] text-white/55">{ui.panel.caseLabel}</p>
+            <Card variant="panel" padding="md" className="border-white/12 bg-white/[0.065] text-white shadow-[0_24px_60px_rgba(3,8,6,0.35)]">
+              <p className="text-xs uppercase tracking-[0.14em] text-white/60">{ui.panel.caseLabel}</p>
               <p className="mt-3 font-heading text-2xl leading-tight">{ui.panel.caseTitle}</p>
-              <p className="mt-3 text-sm leading-6 text-white/72">{ui.panel.caseCopy}</p>
+              <p className="mt-3 text-sm leading-6 text-white/80">{ui.panel.caseCopy}</p>
               <div className="mt-6 grid gap-3">
                 {copy.trust.points.map((point) => (
-                  <div key={point} className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/10 bg-white/6 px-4 py-3">
+                  <div key={point} className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/10 bg-black/10 px-4 py-3">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-300" />
-                    <p className="text-sm leading-6 text-white/82">{point}</p>
+                    <p className="text-sm leading-6 text-white/88">{point}</p>
                   </div>
                 ))}
               </div>
-            </Card>
-
-            <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-              <Card variant="panel" padding="md" className="border-white/10 bg-white/6 text-white motion-safe:transition motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-white/15">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/55">{copy.trust.methods}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-xs">Email</span>
-                  <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-xs">Google</span>
-                  <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-xs">Apple</span>
+              <div className="mt-6 rounded-[var(--radius-lg)] border border-white/10 bg-black/10 px-4 py-3">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/60">{copy.trust.methods}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-xs text-white/90">Email</span>
+                  <span className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-xs text-white/90">Google</span>
+                  <span className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-xs text-white/90">Apple</span>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-white/72">{copy.trust.digid}</p>
-              </Card>
-
-              <Card variant="panel" padding="md" className="border-white/10 bg-white/6 text-white motion-safe:transition motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-white/15">
-                <p className="font-heading text-xl leading-tight">{ui.panel.quote}</p>
-                <p className="mt-3 text-xs uppercase tracking-[0.14em] text-white/55">{ui.panel.quoteRole}</p>
-                <div className="mt-4 rounded-[var(--radius-lg)] border border-white/10 bg-white/6 px-4 py-3 text-sm leading-6 text-white/72">{ui.panel.note}</div>
-              </Card>
-            </div>
+              </div>
+            </Card>
           </div>
 
-          <div className="rounded-[var(--radius-lg)] border border-white/10 bg-white/6 px-4 py-4 text-sm leading-6 text-white/76">
-            <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/55">{copy.trust.noteTitle}</div>
-            {copy.trust.noteBody}
+          <div className="rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.065] px-4 py-4 text-sm leading-6 text-white/84">
+            <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/60">{copy.trust.noteTitle}</div>
+            <p>{copy.trust.digid}</p>
+            <p className="mt-2 text-white/78">{copy.trust.noteBody}</p>
           </div>
         </aside>
 
@@ -1421,7 +1481,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             ) : null}
 
             {mfaReady ? (
-              <div className="grid gap-6 lg:grid-cols-[1fr_0.92fr]">
+              <div className="grid gap-5 lg:grid-cols-[1fr_0.88fr]">
                 <Card variant="soft" padding="md" className="border-border/65 bg-surface2/60">
                   <p className="text-xs uppercase tracking-[0.14em] text-muted">{copy.mfa.qrTitle}</p>
                   <p className="mt-2 text-sm leading-6 text-secondary">{copy.mfa.qrBody}</p>
@@ -1437,7 +1497,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                 </Card>
 
                 <div className="space-y-4">
-                  <Card variant="outline" padding="md" className="motion-safe:transition motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-green/35">
+                  <Card variant="outline" padding="md" className="border-border/70 bg-surface">
                     <div className="flex items-start gap-3">
                       <ShieldCheck className="mt-1 h-5 w-5 text-green" />
                       <div>
@@ -1450,7 +1510,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                     </div>
                   </Card>
 
-                  <Card variant="soft" padding="md" className="border-border/65 bg-surface2/45">
+                  <Card variant="soft" padding="sm" className="border-border/65 bg-surface2/45">
                     <p className="font-medium text-text">{copy.trust.noteTitle}</p>
                     <p className="mt-2 text-sm leading-6 text-secondary">{copy.trust.noteBody}</p>
                   </Card>

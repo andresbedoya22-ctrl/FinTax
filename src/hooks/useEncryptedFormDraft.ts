@@ -74,6 +74,11 @@ export function useEncryptedFormDraft<T>({
   onRestore,
 }: UseEncryptedFormDraftOptions<T>) {
   const [hydrated, setHydrated] = React.useState(false);
+  const onRestoreRef = React.useRef(onRestore);
+
+  React.useEffect(() => {
+    onRestoreRef.current = onRestore;
+  }, [onRestore]);
 
   React.useEffect(() => {
     let active = true;
@@ -93,7 +98,7 @@ export function useEncryptedFormDraft<T>({
       try {
         const parsed = JSON.parse(raw) as StoredEncryptedDraft;
         const draft = await decryptDraftPayload<Partial<T>>(storageKey, parsed);
-        if (active) onRestore?.(draft);
+        if (active) onRestoreRef.current?.(draft);
       } catch {
         window.sessionStorage.removeItem(storageKey);
       } finally {
@@ -106,7 +111,7 @@ export function useEncryptedFormDraft<T>({
     return () => {
       active = false;
     };
-  }, [enabled, onRestore, storageKey]);
+  }, [enabled, storageKey]);
 
   React.useEffect(() => {
     let active = true;
