@@ -179,6 +179,12 @@ type AuthUiCopy = {
   };
 };
 
+type AuthLegalRailCopy = {
+  terms: string;
+  privacy: string;
+  help: string;
+};
+
 const AUTH_INTENT_SESSION_KEY = "fintax.pending_intent";
 const AUTH_MFA_AFTER_LOGIN_KEY = "fintax.auth.mfa_after_login";
 const LOGIN_DRAFT_KEY = "fintax.auth.login-draft";
@@ -706,12 +712,24 @@ const uiCopy: Record<AppLocale, AuthUiCopy> = {
   },
 };
 
+const legalRailCopy: Record<AppLocale, AuthLegalRailCopy> = {
+  en: { terms: "Terms", privacy: "Privacy", help: "Help / Contact" },
+  es: { terms: "Terminos", privacy: "Privacidad", help: "Ayuda / Contacto" },
+  nl: { terms: "Voorwaarden", privacy: "Privacy", help: "Hulp / Contact" },
+  pl: { terms: "Warunki", privacy: "Prywatnosc", help: "Pomoc / Kontakt" },
+  ro: { terms: "Termeni", privacy: "Confidentialitate", help: "Ajutor / Contact" },
+};
+
 function getCopy(locale: string) {
   return extraCopy[(locale in extraCopy ? locale : "en") as AppLocale];
 }
 
 function getUiCopy(locale: string) {
   return uiCopy[(locale in uiCopy ? locale : "en") as AppLocale];
+}
+
+function getLegalRailCopy(locale: string) {
+  return legalRailCopy[(locale in legalRailCopy ? locale : "en") as AppLocale];
 }
 
 function normalizeIntentPath(intent?: string | null, service?: string | null) {
@@ -915,6 +933,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const locale = useLocale() as AppLocale;
   const copy = getCopy(locale);
   const ui = getUiCopy(locale);
+  const legal = getLegalRailCopy(locale);
   const supabase = createClient();
   const pendingIntent = React.useMemo(() => readPendingIntent(initialSearchParams), [initialSearchParams]);
   const mfaRequired = initialSearchParams.reason === "mfa_required";
@@ -1207,8 +1226,8 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
   return (
     <div className="min-h-screen bg-mesh">
-      <div className="mx-auto grid min-h-screen max-w-[1440px] lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,0.88fr)]">
-        <section className="flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
+      <div className="mx-auto grid min-h-screen max-w-[1460px] lg:grid-cols-[minmax(0,1.02fr)_minmax(360px,0.82fr)]">
+        <section className="flex justify-center px-4 pb-8 pt-5 sm:px-6 sm:pt-7 lg:px-8 lg:pt-10 xl:px-12 xl:pt-12">
           <div className="w-full max-w-[640px]">
             <div className="mb-6 flex items-center justify-between lg:hidden">
               <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-text">
@@ -1220,14 +1239,9 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
             <Card variant="panel" padding="none" className="overflow-hidden border-border/70 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
               <div className="border-b border-border/35 bg-surface/70 px-5 py-5 sm:px-7 sm:py-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.16em] text-copper">{ui.eyebrow}</p>
-                    <h1 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text sm:text-[2.25rem]">{copy.title}</h1>
-                  </div>
-                  <Link href="/" className="hidden text-sm font-medium text-muted transition-colors hover:text-text sm:inline-flex">
-                    {ui.form.backToLanding}
-                  </Link>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.16em] text-copper">{ui.eyebrow}</p>
+                  <h1 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text sm:text-[2.25rem]">{copy.title}</h1>
                 </div>
                 <p className="mt-3 max-w-[56ch] text-sm leading-6 text-secondary">
                   {mode === "register" ? copy.registerSubtitle : mode === "forgot" ? copy.forgotSubtitle : copy.loginSubtitle}
@@ -1296,14 +1310,14 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                       <FieldMessage error={loginForm.formState.errors.password?.message} />
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 text-sm">
-                      <button type="button" className="font-medium text-copper transition-colors hover:text-text" onClick={() => handleModeChange("forgot")}>{copy.forgotLink}</button>
-                    </div>
-
                     <Button type="submit" size="lg" className="w-full justify-center" disabled={activeSubmitting}>
                       {activeSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <ChevronRight className="h-4 w-4" />}
                       {ui.form.submitLogin}
                     </Button>
+
+                    <div className="pt-1 text-right text-sm">
+                      <button type="button" className="font-medium text-copper transition-colors hover:text-text" onClick={() => handleModeChange("forgot")}>{copy.forgotLink}</button>
+                    </div>
                   </form>
                 ) : null}
 
@@ -1410,15 +1424,22 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                   </form>
                 ) : null}
 
-                <div className="mt-6 border-t border-border/35 pt-5 sm:hidden">
-                  <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "border-transparent px-0")}>{ui.form.backToLanding}</Link>
+                <div className="mt-6 border-t border-border/35 pt-4">
+                  <nav aria-label="Auth support links" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
+                    <Link href="/legal/terms" className="transition-colors hover:text-text">{legal.terms}</Link>
+                    <Link href="/legal/privacy" className="transition-colors hover:text-text">{legal.privacy}</Link>
+                    <a href="mailto:privacy@fintax.nl" className="transition-colors hover:text-text">{legal.help}</a>
+                    <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "ml-auto h-auto border-transparent px-0 py-0 text-xs font-medium shadow-none hover:bg-transparent")}>
+                      {ui.form.backToLanding}
+                    </Link>
+                  </nav>
                 </div>
               </div>
             </Card>
           </div>
         </section>
 
-        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(63,107,84,0.32),transparent_38%),linear-gradient(180deg,#0c1611_0%,#101913_45%,#152119_100%)] px-8 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-12">
+        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(61,105,82,0.24),transparent_34%),linear-gradient(180deg,#0d1612_0%,#101913_48%,#141f18_100%)] px-8 py-10 text-white lg:flex lg:flex-col lg:gap-8 xl:px-12 xl:py-12">
           <div>
             <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-white">
               <span className="grid h-8 w-8 place-items-center rounded-lg border border-white/15 bg-white/10 font-heading text-sm text-white">F</span>
@@ -1426,40 +1447,32 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             </Link>
           </div>
 
-          <div className="space-y-7">
+          <div className="space-y-6">
             <div>
               <Badge variant="neutral" className="border-white/15 bg-white/10 text-white">{copy.trust.eyebrow}</Badge>
               <h2 className="mt-4 max-w-[14ch] font-heading text-[2.4rem] leading-[0.96] tracking-[-0.04em] text-white">{ui.panel.title}</h2>
-              <p className="mt-4 max-w-[44ch] text-sm leading-7 text-white/84">{copy.trust.body}</p>
+              <p className="mt-4 max-w-[42ch] text-sm leading-7 text-white/88">{copy.trust.body}</p>
             </div>
 
-            <Card variant="panel" padding="md" className="border-white/12 bg-white/[0.065] text-white shadow-[0_24px_60px_rgba(3,8,6,0.35)]">
+            <Card variant="panel" padding="md" className="border-white/12 bg-white/[0.06] text-white shadow-[0_24px_60px_rgba(3,8,6,0.32)]">
               <p className="text-xs uppercase tracking-[0.14em] text-white/60">{ui.panel.caseLabel}</p>
               <p className="mt-3 font-heading text-2xl leading-tight">{ui.panel.caseTitle}</p>
-              <p className="mt-3 text-sm leading-6 text-white/80">{ui.panel.caseCopy}</p>
+              <p className="mt-3 text-sm leading-6 text-white/86">{ui.panel.caseCopy}</p>
               <div className="mt-6 grid gap-3">
                 {copy.trust.points.map((point) => (
                   <div key={point} className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/10 bg-black/10 px-4 py-3">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-300" />
-                    <p className="text-sm leading-6 text-white/88">{point}</p>
+                    <p className="text-sm leading-6 text-white">{point}</p>
                   </div>
                 ))}
-              </div>
-              <div className="mt-6 rounded-[var(--radius-lg)] border border-white/10 bg-black/10 px-4 py-3">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/60">{copy.trust.methods}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-xs text-white/90">Email</span>
-                  <span className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-xs text-white/90">Google</span>
-                  <span className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-xs text-white/90">Apple</span>
-                </div>
               </div>
             </Card>
           </div>
 
-          <div className="rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.065] px-4 py-4 text-sm leading-6 text-white/84">
+          <div className="rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.055] px-4 py-4 text-sm leading-6 text-white/88">
             <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/60">{copy.trust.noteTitle}</div>
-            <p>{copy.trust.digid}</p>
-            <p className="mt-2 text-white/78">{copy.trust.noteBody}</p>
+            <p className="text-white/90">{copy.trust.digid}</p>
+            <p className="mt-2 text-white/80">{copy.trust.noteBody}</p>
           </div>
         </aside>
 
