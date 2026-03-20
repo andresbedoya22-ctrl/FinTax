@@ -12,7 +12,7 @@ const DEFAULT_OG_IMAGE = {
 
 let hasWarnedMissingAppUrl = false;
 
-function getConfiguredBaseUrl() {
+export function getConfiguredBaseUrl() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   if (!appUrl) {
     if (process.env.NODE_ENV === "development" && !hasWarnedMissingAppUrl) {
@@ -30,17 +30,23 @@ function normalizePathname(pathname: string) {
   return pathname.startsWith("/") ? pathname : `/${pathname}`;
 }
 
-function localizedUrl(locale: AppLocale, pathname: string) {
+export function localizedUrl(locale: AppLocale, pathname: string) {
   return `/${locale}${normalizePathname(pathname)}`;
 }
 
-export function buildLocaleAlternates(pathname: string) {
+export function buildAbsoluteUrl(pathname: string) {
+  const normalizedPath = pathname === "/" ? "/" : normalizePathname(pathname);
+  const metadataBase = getConfiguredBaseUrl();
+  return metadataBase ? new URL(normalizedPath, metadataBase).toString() : normalizedPath;
+}
+
+export function buildLocaleAlternates(pathname: string, locale: AppLocale) {
   const languages = Object.fromEntries(
     routing.locales.map((locale) => [locale, localizedUrl(locale, pathname)]),
   );
 
   return {
-    canonical: localizedUrl(routing.defaultLocale, pathname),
+    canonical: localizedUrl(locale, pathname),
     languages: {
       ...languages,
       "x-default": localizedUrl(routing.defaultLocale, pathname),
@@ -53,6 +59,7 @@ export interface BuildPublicMetadataOptions {
   pathname: string;
   title: string;
   description: string;
+  keywords?: string[];
   ogImage?: {
     url: string;
     width: number;
@@ -66,9 +73,10 @@ export function buildPublicMetadata({
   pathname,
   title,
   description,
+  keywords,
   ogImage = DEFAULT_OG_IMAGE,
 }: BuildPublicMetadataOptions): Metadata {
-  const alternates = buildLocaleAlternates(pathname);
+  const alternates = buildLocaleAlternates(pathname, locale);
   const metadataBase = getConfiguredBaseUrl();
   const pagePath = localizedUrl(locale, pathname);
 
@@ -76,6 +84,7 @@ export function buildPublicMetadata({
     metadataBase,
     title,
     description,
+    keywords,
     alternates,
     robots: {
       index: true,
@@ -89,12 +98,14 @@ export function buildPublicMetadata({
       type: "website",
       locale,
       url: pagePath,
+      siteName: "FinTax",
       title,
       description,
       images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
+      site: "@fintax",
       title,
       description,
       images: [ogImage.url],

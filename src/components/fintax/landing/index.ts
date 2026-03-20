@@ -4,5 +4,6 @@ export * from "./HowItWorksSection";
 export * from "./PremiumLandingPage";
 export * from "./PricingSection";
 export * from "./ServicesSection";
+export * from "./StructuredData";
 export * from "./TestimonialsSection";
 export * from "./WhyFinTaxSection";

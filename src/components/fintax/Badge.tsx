@@ -1,29 +1,21 @@
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
+import { Badge as UiBadge } from "@/components/ui";
 
 type BadgeVariant = "neutral" | "success" | "warning" | "info";
 
-const variantClasses: Record<BadgeVariant, string> = {
-  neutral: "border-border/60 bg-surface2 text-secondary",
-  success: "border-green/35 bg-green/15 text-green",
-  warning: "border-warning/35 bg-warning/15 text-warning",
-  info: "border-teal/35 bg-teal/15 text-teal",
-};
+const variantMap = {
+  neutral: "neutral",
+  success: "success",
+  warning: "copper",
+  info: "outline",
+} as const;
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: BadgeVariant;
 }
 
 export function Badge({ className, variant = "neutral", ...props }: BadgeProps) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold tracking-wide",
-        variantClasses[variant],
-        className
-      )}
-      {...props}
-    />
-  );
+  return <UiBadge className={cn(className)} variant={variantMap[variant]} {...props} />;
 }

@@ -108,7 +108,7 @@ export function AdminScreen() {
         </CardBody>
       </Card>
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 xl:grid-cols-[11fr_9fr]">
         <Card>
           <CardHeader><h3 className="text-base font-semibold text-text">{t("sections.users")}</h3></CardHeader>
           <CardBody className="space-y-2 text-sm text-secondary">

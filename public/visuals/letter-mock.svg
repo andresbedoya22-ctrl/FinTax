@@ -1,48 +1,135 @@
 <svg width="1400" height="900" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="paper" x1="112" y1="92" x2="1246" y2="790" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F7F4EE"/>
-      <stop offset="1" stop-color="#EEE7DA"/>
+    <linearGradient id="paper-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F9F6F0"/>
+      <stop offset="100%" stop-color="#EFE9DC"/>
     </linearGradient>
-    <linearGradient id="shadow" x1="700" y1="90" x2="700" y2="812" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#101724" stop-opacity="0.3"/>
-      <stop offset="1" stop-color="#101724" stop-opacity="0.55"/>
+    <linearGradient id="shell-dark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0B1620"/>
+      <stop offset="100%" stop-color="#080F19"/>
     </linearGradient>
-    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" stitchTiles="stitch"/>
-      <feComponentTransfer>
-        <feFuncA type="table" tableValues="0 0.035"/>
-      </feComponentTransfer>
+    <filter id="paper-shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 0.03"/></feComponentTransfer>
     </filter>
   </defs>
-  <rect width="1400" height="900" rx="28" fill="#0C1524"/>
-  <rect x="82" y="72" width="1236" height="756" rx="28" fill="url(#shadow)"/>
-  <g transform="rotate(-4 700 450)">
-    <rect x="184" y="92" width="908" height="696" rx="18" fill="url(#paper)"/>
-    <rect x="184" y="92" width="908" height="696" rx="18" stroke="#D8CCB7" stroke-opacity="0.75"/>
-    <rect x="244" y="162" width="208" height="56" rx="10" fill="#E8DECD"/>
-    <path d="M262 184H434" stroke="#716552" stroke-opacity="0.55" stroke-width="2"/>
-    <path d="M244 260H760" stroke="#A99A83" stroke-width="2"/>
-    <path d="M244 292H930" stroke="#A99A83" stroke-opacity="0.85" stroke-width="2"/>
-    <path d="M244 324H914" stroke="#A99A83" stroke-opacity="0.75" stroke-width="2"/>
-    <path d="M244 356H886" stroke="#A99A83" stroke-opacity="0.75" stroke-width="2"/>
-    <path d="M244 422H1040" stroke="#A99A83" stroke-width="2"/>
-    <path d="M244 454H1030" stroke="#A99A83" stroke-opacity="0.78" stroke-width="2"/>
-    <path d="M244 486H1014" stroke="#A99A83" stroke-opacity="0.7" stroke-width="2"/>
-    <rect x="244" y="552" width="342" height="144" rx="14" fill="#EFE5D4" stroke="#D4C4A9"/>
-    <path d="M270 584H556" stroke="#97876D" stroke-width="2"/>
-    <path d="M270 614H524" stroke="#97876D" stroke-opacity="0.72" stroke-width="2"/>
-    <path d="M270 644H464" stroke="#97876D" stroke-opacity="0.62" stroke-width="2"/>
-    <rect x="638" y="552" width="402" height="46" rx="10" fill="#E3EAD9" stroke="#AAB893"/>
-    <path d="M662 575H1010" stroke="#4A5B3E" stroke-opacity="0.6" stroke-width="2"/>
-    <rect x="638" y="618" width="402" height="46" rx="10" fill="#F0E7DA" stroke="#CDBA99"/>
-    <path d="M662 641H962" stroke="#6E604B" stroke-opacity="0.6" stroke-width="2"/>
-    <rect x="638" y="684" width="176" height="44" rx="10" fill="#0F2134"/>
-    <path d="M670 706H782" stroke="#DAE5F5" stroke-opacity="0.82" stroke-width="2"/>
+
+  <!-- Dark background shell -->
+  <rect width="1400" height="900" rx="20" fill="url(#shell-dark)"/>
+  <rect x="0.5" y="0.5" width="1399" height="899" rx="20" fill="none" stroke="#D9E3F0" stroke-opacity="0.07"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="450" x2="1400" y2="450" stroke="#D9E3F0" stroke-opacity="0.03"/>
+  <line x1="700" y1="0" x2="700" y2="900" stroke="#D9E3F0" stroke-opacity="0.03"/>
+
+  <!-- FinTax AI badge top-left -->
+  <rect x="36" y="32" width="130" height="28" rx="14" fill="#36B677" fill-opacity="0.12" stroke="#36B677" stroke-opacity="0.3"/>
+  <circle cx="56" cy="46" r="4" fill="#36B677"/>
+  <text x="68" y="51" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#36B677" font-weight="500">AI analyzed</text>
+
+  <!-- Paper document — slight rotate -->
+  <g transform="rotate(-2.5, 700, 450)" filter="url(#paper-shadow)">
+    <rect x="220" y="80" width="780" height="740" rx="6" fill="url(#paper-bg)"/>
+    <rect x="220" y="80" width="780" height="740" rx="6" fill="none" stroke="#C8B99A" stroke-opacity="0.5"/>
+
+    <!-- Paper texture lines -->
+    <line x1="220" y1="200" x2="1000" y2="200" stroke="#D4C4A4" stroke-opacity="0.25"/>
+    <line x1="220" y1="216" x2="1000" y2="216" stroke="#D4C4A4" stroke-opacity="0.12"/>
+
+    <!-- Belastingdienst header block -->
+    <rect x="220" y="80" width="780" height="90" rx="6" fill="#1C4B9C" fill-opacity="0.92"/>
+    <rect x="220" y="150" width="780" height="20" rx="0" fill="#1C4B9C" fill-opacity="0.12"/>
+
+    <!-- Logo area -->
+    <rect x="248" y="100" width="48" height="48" rx="4" fill="#FFFFFF" fill-opacity="0.15"/>
+    <text x="272" y="131" font-family="Georgia, serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="700">B</text>
+
+    <text x="312" y="120" font-family="IBM Plex Sans, sans-serif" font-size="15" fill="#FFFFFF" font-weight="600">Belastingdienst</text>
+    <text x="312" y="138" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#FFFFFF" fill-opacity="0.75">Ministerie van Financiën · Postbus 9000 · 6400 RA Heerlen</text>
+
+    <text x="940" y="120" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FFFFFF" fill-opacity="0.85" text-anchor="end">Kenmerk: 2024-IB-00384</text>
+    <text x="940" y="138" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FFFFFF" fill-opacity="0.65" text-anchor="end">Datum: 12 februari 2025</text>
+
+    <!-- Recipient block -->
+    <text x="256" y="224" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#4A3C2C">Maria Rodriguez</text>
+    <text x="256" y="240" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#4A3C2C">Keizersgracht 482</text>
+    <text x="256" y="256" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#4A3C2C">1017 EH Amsterdam</text>
+
+    <!-- Letter subject line -->
+    <text x="256" y="300" font-family="IBM Plex Sans, sans-serif" font-size="13" fill="#1A1008" font-weight="700">Betreft: Voorlopige aanslag inkomstenbelasting 2024</text>
+    <line x1="256" y1="308" x2="944" y2="308" stroke="#1C4B9C" stroke-opacity="0.3" stroke-width="1"/>
+
+    <!-- Body text blocks -->
+    <text x="256" y="340" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#2C2010">Geachte mevrouw Rodriguez,</text>
+
+    <rect x="256" y="358" width="688" height="10" rx="2" fill="#8B7A60" fill-opacity="0.22"/>
+    <rect x="256" y="374" width="660" height="10" rx="2" fill="#8B7A60" fill-opacity="0.18"/>
+    <rect x="256" y="390" width="644" height="10" rx="2" fill="#8B7A60" fill-opacity="0.18"/>
+    <rect x="256" y="406" width="688" height="10" rx="2" fill="#8B7A60" fill-opacity="0.16"/>
+
+    <rect x="256" y="434" width="688" height="10" rx="2" fill="#8B7A60" fill-opacity="0.20"/>
+    <rect x="256" y="450" width="632" height="10" rx="2" fill="#8B7A60" fill-opacity="0.18"/>
+    <rect x="256" y="466" width="672" height="10" rx="2" fill="#8B7A60" fill-opacity="0.16"/>
+
+    <!-- Highlighted important section -->
+    <rect x="248" y="498" width="704" height="72" rx="6" fill="#1C4B9C" fill-opacity="0.07" stroke="#1C4B9C" stroke-opacity="0.2"/>
+    <text x="268" y="520" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#1C4B9C" font-weight="600">Te betalen vóór 30 april 2025:</text>
+    <text x="268" y="548" font-family="IBM Plex Mono, monospace" font-size="20" fill="#1C4B9C" font-weight="700">€ 847,00</text>
+    <text x="440" y="548" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#1C4B9C" fill-opacity="0.7">Voorlopige aanslag 2024</text>
+
+    <rect x="256" y="594" width="688" height="10" rx="2" fill="#8B7A60" fill-opacity="0.16"/>
+    <rect x="256" y="610" width="540" height="10" rx="2" fill="#8B7A60" fill-opacity="0.14"/>
+
+    <!-- Signature block -->
+    <line x1="256" y1="660" x2="944" y2="660" stroke="#C8B99A" stroke-opacity="0.4"/>
+    <text x="256" y="682" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#4A3C2C">Hoogachtend,</text>
+    <text x="256" y="700" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#2C2010" font-weight="600">De Inspecteur der Belastingen</text>
+    <text x="256" y="716" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8B7A60">Belastingdienst / Kantoor Amsterdam</text>
+
+    <!-- QR code placeholder -->
+    <rect x="840" y="660" width="100" height="100" rx="4" fill="#1A1008" fill-opacity="0.08" stroke="#C8B99A" stroke-opacity="0.4"/>
+    <rect x="852" y="672" width="16" height="16" rx="2" fill="#2C2010" fill-opacity="0.4"/>
+    <rect x="916" y="672" width="16" height="16" rx="2" fill="#2C2010" fill-opacity="0.4"/>
+    <rect x="852" y="736" width="16" height="16" rx="2" fill="#2C2010" fill-opacity="0.4"/>
+    <rect x="872" y="692" width="48" height="48" rx="2" fill="#2C2010" fill-opacity="0.2"/>
+    <text x="890" y="776" font-family="IBM Plex Mono, monospace" font-size="8" fill="#8B7A60" text-anchor="middle">Scan to pay</text>
   </g>
-  <g opacity="0.16">
-    <path d="M78 154H1322" stroke="#D6E0ED" stroke-dasharray="5 8"/>
-    <path d="M112 754H1288" stroke="#D6E0ED" stroke-dasharray="3 8"/>
-  </g>
-  <rect width="1400" height="900" rx="28" filter="url(#grain)"/>
+
+  <!-- FinTax analysis overlay panel -->
+  <rect x="1060" y="160" width="300" height="380" rx="14" fill="#0D1B2E" stroke="#36B677" stroke-opacity="0.3"/>
+  <rect x="1060" y="160" width="300" height="44" rx="14" fill="#122B1C"/>
+  <rect x="1060" y="190" width="300" height="14" rx="0" fill="#122B1C"/>
+
+  <circle cx="1086" cy="182" r="6" fill="#36B677" fill-opacity="0.8"/>
+  <text x="1098" y="186" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#36B677" font-weight="600">FinTax Analysis</text>
+
+  <!-- Analysis items -->
+  <rect x="1080" y="222" width="260" height="48" rx="8" fill="#0A1825" stroke="#D9E3F0" stroke-opacity="0.07"/>
+  <text x="1096" y="242" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="0.5">DOCUMENT TYPE</text>
+  <text x="1096" y="260" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#E4EBF5" font-weight="500">Voorlopige aanslag</text>
+
+  <rect x="1080" y="280" width="260" height="48" rx="8" fill="#0A1825" stroke="#D9E3F0" stroke-opacity="0.07"/>
+  <text x="1096" y="300" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="0.5">AMOUNT DUE</text>
+  <text x="1096" y="318" font-family="IBM Plex Mono, monospace" font-size="16" fill="#B47B58" font-weight="600">€ 847,00</text>
+
+  <rect x="1080" y="338" width="260" height="48" rx="8" fill="#0A1825" stroke="#D9E3F0" stroke-opacity="0.07"/>
+  <text x="1096" y="358" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" letter-spacing="0.5">DEADLINE</text>
+  <text x="1096" y="376" font-family="IBM Plex Sans, sans-serif" font-size="14" fill="#E4EBF5" font-weight="500">30 April 2025</text>
+
+  <rect x="1080" y="396" width="260" height="48" rx="8" fill="#122B1C" stroke="#36B677" stroke-opacity="0.2"/>
+  <text x="1096" y="416" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#36B677" fill-opacity="0.7" letter-spacing="0.5">RECOMMENDATION</text>
+  <text x="1096" y="434" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#36B677">File bezwaar — possible refund</text>
+
+  <!-- CTA -->
+  <rect x="1080" y="458" width="260" height="38" rx="19" fill="#36B677"/>
+  <text x="1210" y="482" font-family="IBM Plex Sans, sans-serif" font-size="12" fill="#07130E" text-anchor="middle" font-weight="600">Attach to case →</text>
+
+  <rect x="1080" y="506" width="260" height="18" rx="4" fill="none"/>
+  <text x="1210" y="518" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#8494AB" text-anchor="middle">Handled securely in your workspace</text>
+
+  <!-- Grain overlay -->
+  <rect width="1400" height="900" rx="20" filter="url(#grain)" opacity="0.35"/>
 </svg>

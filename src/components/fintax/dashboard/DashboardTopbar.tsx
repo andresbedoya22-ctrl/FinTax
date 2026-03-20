@@ -27,7 +27,7 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
         : ((words[0]![0]?.toUpperCase() ?? "") + (words[words.length - 1]![0]?.toUpperCase() ?? ""));
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border/35 bg-bg/70 px-4 py-3 backdrop-blur-xl sm:px-6 lg:px-8">
+    <header className="border-b border-border/65 bg-surface px-4 py-2.5 sm:px-6 lg:px-8">
       <div className="flex items-center gap-3">
         <Button
           type="button"
@@ -40,22 +40,18 @@ export function DashboardTopbar({ onOpenSidebar }: DashboardTopbarProps) {
           <Menu className="size-5" aria-hidden="true" />
         </Button>
 
-        <div className="min-w-0">
-          <h1 className="font-heading text-xl font-semibold text-text sm:text-2xl">{t("title")}</h1>
-          <p className="hidden text-xs uppercase tracking-[0.14em] text-muted sm:block">Authenticated workspace</p>
-        </div>
+        <p className="hidden text-xs font-semibold uppercase tracking-[0.14em] text-muted md:block">{t("title")}</p>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <DashboardNotifications />
-
           <LanguageSwitcher compact />
 
           <button
             type="button"
-            className="focus-ring hidden items-center gap-2 rounded-xl border border-border/40 bg-surface/45 px-2.5 py-2 text-left sm:flex"
+            className="focus-ring hidden items-center gap-2 rounded-xl border border-border/45 bg-surface/35 px-2.5 py-2 text-left sm:flex"
             aria-label="Open profile menu"
           >
-            <div className="grid h-7 w-7 place-items-center rounded-lg border border-green/20 bg-green/10 text-xs font-bold text-green">{initials}</div>
+            <div className="grid h-7 w-7 place-items-center rounded-xl border border-green/20 bg-green/10 text-xs font-bold text-green">{initials}</div>
             {loading ? (
               <div className="hidden flex-col gap-1.5 md:flex">
                 <Skeleton className="h-3 w-24 rounded" />

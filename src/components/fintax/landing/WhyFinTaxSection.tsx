@@ -17,7 +17,7 @@ export function WhyFinTaxSection() {
   return (
     <Section id="why-fintax">
       <Container>
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-8 lg:grid-cols-[11fr_9fr]">
           <div>
             <p className="text-sm uppercase tracking-[0.16em] text-teal">{t("eyebrow")}</p>
             <h2 className="mt-2 text-3xl font-semibold text-text">{t("title")}</h2>
@@ -27,7 +27,7 @@ export function WhyFinTaxSection() {
                 return (
                   <Card key={reason.title}>
                     <CardBody>
-                      <div className="mb-3 inline-flex size-9 items-center justify-center rounded-md bg-surface2 text-teal">
+                      <div className="mb-3 inline-flex size-9 items-center justify-center rounded-lg bg-surface2 text-teal">
                         <Icon className="size-5" aria-hidden="true" />
                       </div>
                       <h3 className="text-base font-medium text-text">{reason.title}</h3>

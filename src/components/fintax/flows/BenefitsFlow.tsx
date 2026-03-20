@@ -123,7 +123,7 @@ export function BenefitsFlow() {
           <div className="mb-5 grid gap-3 md:grid-cols-[1fr_auto]">
             <div className="rounded-xl border border-border/35 bg-surface2/25 px-4 py-3">
               <p className="text-xs uppercase tracking-[0.14em] text-muted">Eligibility intake progress</p>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface/10">
                 <div className="h-full rounded-full bg-gradient-to-r from-copper to-green" style={{ width: `${Math.round(((step + 1) / steps.length) * 100)}%` }} />
               </div>
               <p className="mt-2 text-xs text-secondary">{Math.round(((step + 1) / steps.length) * 100)}% complete</p>
@@ -282,7 +282,7 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
       className={`flex h-11 items-center justify-between rounded-xl border px-3 text-sm ${checked ? "border-green/40 bg-green/10 text-text" : "border-border/35 bg-surface2/25 text-secondary"}`}
     >
       <span>{label}</span>
-      <span className={`h-2.5 w-2.5 rounded-full ${checked ? "bg-green" : "bg-white/30"}`} />
+      <span className={`h-2.5 w-2.5 rounded-full ${checked ? "bg-green" : "bg-surface/30"}`} />
     </button>
   );
 }

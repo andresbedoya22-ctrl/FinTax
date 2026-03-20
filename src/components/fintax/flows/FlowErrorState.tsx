@@ -68,7 +68,7 @@ export function FlowErrorState({ flow, error, onRetry }: { flow: FlowKind; error
   const description = copy.descriptions[code] ?? copy.fallback;
 
   return (
-    <div className="rounded-[var(--radius-xl)] border border-copper/30 bg-copper/10 p-6 shadow-panel">
+    <div className="rounded-xl border border-copper/30 bg-copper/10 p-6 shadow-panel">
       <div className="flex items-start gap-3">
         <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-full border border-copper/35 bg-copper/15 text-copper">
           <AlertTriangle className="h-4 w-4" />

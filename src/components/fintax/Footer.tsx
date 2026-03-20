@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
-import { Container } from "@/components/fintax/Container";
+import { Footer as UiFooter } from "@/components/ui";
 
 const footerSections = {
   Product: [
@@ -40,12 +40,11 @@ export function Footer({ className, ...props }: FooterProps) {
   const t = useTranslations("Footer");
 
   return (
-    <footer className={cn("border-t border-border/60 bg-surface2/60", className)} {...props}>
-      <Container className="py-14">
+    <UiFooter className={cn("border-border/80 bg-surface2/70", className)} {...props}>
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {(Object.keys(footerSections) as SectionTitle[]).map((section) => (
             <div key={section}>
-              <h3 className="font-heading text-sm font-semibold text-text">
+              <h3 className="font-body text-sm font-semibold text-text">
                 {t(`sections.${section.toLowerCase()}`)}
               </h3>
               <ul className="mt-4 space-y-2">
@@ -53,7 +52,7 @@ export function Footer({ className, ...props }: FooterProps) {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className="text-sm text-secondary transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                      className="focus-ring text-sm text-secondary transition-colors hover:text-text"
                     >
                       {section === "Languages" ? item.label : t(`links.${toFooterKey(item.label)}`)}
                     </Link>
@@ -63,8 +62,7 @@ export function Footer({ className, ...props }: FooterProps) {
             </div>
           ))}
         </div>
-      </Container>
-    </footer>
+    </UiFooter>
   );
 }
 

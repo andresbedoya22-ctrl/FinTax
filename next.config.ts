@@ -13,6 +13,7 @@ const SECURITY_HEADERS: Array<{ key: string; value: string }> = [
 ];
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   turbopack: {
     root: process.cwd(),
   },
@@ -21,7 +22,6 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: false,
   },
   typescript: {
-    // Type safety is enforced by the explicit gate `pnpm.cmd typecheck`.
     ignoreBuildErrors: process.env.SKIP_NEXT_TYPECHECK === "1",
   },
   async headers() {

@@ -1,0 +1,88 @@
+:root {
+  color-scheme: light;
+
+  /* Color tokens */
+  --bg: 245 247 244;
+  --bg-elevated: 255 255 255;
+  --surface: 255 255 255;
+  --surface-2: 242 246 242;
+  --surface-3: 234 240 234;
+  --border: 194 207 193;
+  --border-soft: 212 222 211;
+  --text: 22 33 24;
+  --text-secondary: 56 78 60;
+  --text-muted: 88 106 92;
+  --accent-green: 23 109 61;
+  --accent-green-strong: 16 87 49;
+  --accent-teal: 34 126 104;
+  --accent-copper: 148 116 78;
+  --accent-copper-soft: 117 92 61;
+  --warning: 186 128 42;
+  --error: 182 60 60;
+
+  /* Legacy aliases */
+  --secondary: rgb(var(--text-secondary));
+  --muted: rgb(var(--text-muted));
+  --green: rgb(var(--accent-green));
+  --green-hover: rgb(var(--accent-green-strong));
+  --teal: rgb(var(--accent-teal));
+  --green-glow: rgb(var(--accent-green) / 0.14);
+  --card: rgb(255 255 255 / 0.92);
+  --card-hover: rgb(249 252 249);
+  --navy-3: rgb(var(--surface-2));
+
+  /* Typography tokens */
+  --font-display: "Fraunces", "Iowan Old Style", "Georgia", serif;
+  --font-sans: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "Consolas", "SFMono-Regular", Menlo, monospace;
+  --font-heading: var(--font-display);
+  --font-body: var(--font-sans);
+  --font-ui-heading: var(--font-sans);
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: clamp(2rem, 2.8vw, 3.25rem);
+
+  /* Spacing tokens */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --section-y: clamp(2.75rem, 4vw, 4.5rem);
+  --stack-gap: clamp(1rem, 1.1vw, 1.4rem);
+
+  /* Radius tokens */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-pill: 999px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-24: 24px;
+
+  /* Border and shadow tokens */
+  --border-width-thin: 1px;
+  --border-width-strong: 2px;
+  --shadow-glass: 0 12px 26px rgb(11 28 15 / 0.08);
+  --shadow-glass-soft: 0 6px 16px rgb(11 28 15 / 0.06);
+  --shadow-panel: 0 14px 30px rgb(11 28 15 / 0.1);
+  --shadow-floating: 0 22px 42px rgb(11 28 15 / 0.12);
+
+  /* Focus tokens */
+  --focus-ring-color: rgb(var(--accent-green));
+  --focus-ring-offset-color: rgb(var(--bg));
+  --shadow-focus: 0 0 0 2px rgb(var(--bg)), 0 0 0 4px rgb(var(--accent-green) / 0.35);
+}

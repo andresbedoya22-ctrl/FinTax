@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import { getConfiguredBaseUrl } from "@/lib/seo";
+
 export const metadata: Metadata = {
-  title: "FinTax",
-  description: "FinTax web app",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  metadataBase: getConfiguredBaseUrl() ?? new URL("http://localhost:3000"),
+  title: {
+    default: "FinTax",
+    template: "%s",
+  },
+  description: "Structured tax and benefits support for international households in the Netherlands.",
 };
 
 export default function RootLayout({
