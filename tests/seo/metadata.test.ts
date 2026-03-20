@@ -1,8 +1,16 @@
 /// <reference types="vitest/globals" />
 
-import { buildLocaleAlternates, buildNoIndexMetadata, buildPublicMetadata } from "@/lib/seo";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { buildLocaleAlternates, buildNoIndexMetadata, buildPublicMetadata, getConfiguredBaseUrl } from "@/lib/seo";
 
 describe("seo helpers", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    delete process.env.NEXT_PUBLIC_APP_URL;
+    delete globalThis.__fintaxSeoWarnedMissingAppUrl__;
+  });
+
   it("builds locale alternates with x-default", () => {
     expect(buildLocaleAlternates("/legal/privacy", "en")).toEqual({
       canonical: "/en/legal/privacy",
@@ -53,5 +61,15 @@ describe("seo helpers", () => {
         follow: false,
       },
     });
+  });
+
+  it("warns only once in development when NEXT_PUBLIC_APP_URL is missing", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.stubEnv("NODE_ENV", "development");
+
+    expect(getConfiguredBaseUrl()).toBeUndefined();
+    expect(getConfiguredBaseUrl()).toBeUndefined();
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 });
