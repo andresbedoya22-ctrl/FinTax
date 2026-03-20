@@ -1,4 +1,4 @@
-import { AuthScreen } from "@/components/fintax/auth";
+import { AuthScreen } from "@/components/fintax/auth/AuthScreen";
 import type { AppLocale } from "@/i18n/routing";
 import { getPageMetadataCopy } from "@/lib/page-metadata";
 import { buildNoIndexMetadata } from "@/lib/seo";

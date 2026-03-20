@@ -1439,7 +1439,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
           </div>
         </section>
 
-        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(61,105,82,0.24),transparent_34%),linear-gradient(180deg,#0d1612_0%,#101913_48%,#141f18_100%)] px-8 py-10 text-white lg:flex lg:flex-col lg:gap-8 xl:px-12 xl:py-12">
+        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(73,129,101,0.2),transparent_34%),linear-gradient(180deg,#0d1612_0%,#101913_48%,#141f18_100%)] px-8 py-10 text-white lg:flex lg:flex-col lg:gap-8 xl:px-12 xl:py-12">
           <div>
             <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-white">
               <span className="grid h-8 w-8 place-items-center rounded-lg border border-white/15 bg-white/10 font-heading text-sm text-white">F</span>
@@ -1451,28 +1451,28 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             <div>
               <Badge variant="neutral" className="border-white/15 bg-white/10 text-white">{copy.trust.eyebrow}</Badge>
               <h2 className="mt-4 max-w-[14ch] font-heading text-[2.4rem] leading-[0.96] tracking-[-0.04em] text-white">{ui.panel.title}</h2>
-              <p className="mt-4 max-w-[42ch] text-sm leading-7 text-white/88">{copy.trust.body}</p>
+              <p className="mt-4 max-w-[42ch] text-sm leading-7 text-white/92">{copy.trust.body}</p>
             </div>
 
-            <Card variant="panel" padding="md" className="border-white/12 bg-white/[0.06] text-white shadow-[0_24px_60px_rgba(3,8,6,0.32)]">
-              <p className="text-xs uppercase tracking-[0.14em] text-white/60">{ui.panel.caseLabel}</p>
-              <p className="mt-3 font-heading text-2xl leading-tight">{ui.panel.caseTitle}</p>
-              <p className="mt-3 text-sm leading-6 text-white/86">{ui.panel.caseCopy}</p>
+            <Card variant="panel" padding="md" className="border-[#6f9f84]/26 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(8,18,14,0.2))] text-white shadow-[0_24px_60px_rgba(3,8,6,0.32)]">
+              <p className="text-xs uppercase tracking-[0.14em] text-[#9fd3b5]">{ui.panel.caseLabel}</p>
+              <p className="mt-3 font-heading text-2xl leading-tight text-white">{ui.panel.caseTitle}</p>
+              <p className="mt-3 text-sm leading-6 text-white/92">{ui.panel.caseCopy}</p>
               <div className="mt-6 grid gap-3">
                 {copy.trust.points.map((point) => (
-                  <div key={point} className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/10 bg-black/10 px-4 py-3">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-300" />
-                    <p className="text-sm leading-6 text-white">{point}</p>
+                  <div key={point} className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/14 bg-white/[0.075] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#9fd3b5]" />
+                    <p className="text-sm leading-6 text-white/96">{point}</p>
                   </div>
                 ))}
               </div>
             </Card>
           </div>
 
-          <div className="rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.055] px-4 py-4 text-sm leading-6 text-white/88">
-            <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/60">{copy.trust.noteTitle}</div>
-            <p className="text-white/90">{copy.trust.digid}</p>
-            <p className="mt-2 text-white/80">{copy.trust.noteBody}</p>
+          <div className="rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.055] px-4 py-4 text-sm leading-6 text-white/90">
+            <div className="mb-1 text-xs uppercase tracking-[0.14em] text-[#9fd3b5]">{copy.trust.noteTitle}</div>
+            <p className="text-white">{copy.trust.digid}</p>
+            <p className="mt-2 text-white/84">{copy.trust.noteBody}</p>
           </div>
         </aside>
 

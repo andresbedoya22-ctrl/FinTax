@@ -12,11 +12,18 @@ const DEFAULT_OG_IMAGE = {
 
 let hasWarnedMissingAppUrl = false;
 
+declare global {
+  // Prevent repeated dev-only SEO warnings across hot reload/module re-evaluation.
+  var __fintaxSeoWarnedMissingAppUrl__: boolean | undefined;
+}
+
 export function getConfiguredBaseUrl() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   if (!appUrl) {
-    if (process.env.NODE_ENV === "development" && !hasWarnedMissingAppUrl) {
+    const alreadyWarned = hasWarnedMissingAppUrl || globalThis.__fintaxSeoWarnedMissingAppUrl__ === true;
+    if (process.env.NODE_ENV === "development" && !alreadyWarned) {
       hasWarnedMissingAppUrl = true;
+      globalThis.__fintaxSeoWarnedMissingAppUrl__ = true;
       console.warn("[seo] NEXT_PUBLIC_APP_URL is not set. Falling back to relative metadata URLs.");
     }
     return undefined;

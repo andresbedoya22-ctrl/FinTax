@@ -73,6 +73,12 @@ describe("AuthScreen", () => {
     expect(screen.queryByText(/first time here/i)).not.toBeInTheDocument();
   });
 
+  it("re-exports AuthScreen from the auth barrel", async () => {
+    const barrel = await import("@/components/fintax/auth");
+
+    expect(barrel.AuthScreen).toBe(AuthScreen);
+  });
+
   it("renders the compact legal rail", () => {
     render(<AuthScreen />);
 
