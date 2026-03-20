@@ -73,6 +73,16 @@ describe("AuthScreen", () => {
     expect(screen.queryByText(/first time here/i)).not.toBeInTheDocument();
   });
 
+  it("renders the compact legal rail", () => {
+    render(<AuthScreen />);
+
+    expect(screen.getByRole("navigation", { name: /auth support links/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /terms/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /privacy/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /back to landing/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /help \/ contact/i })).toHaveAttribute("href", "mailto:privacy@fintax.nl");
+  });
+
   it("opens the mfa modal after a successful login when pending mfa setup exists", async () => {
     window.sessionStorage.setItem("fintax.auth.mfa_after_login", "1");
     createClientMock.mockReturnValue({
