@@ -1,9 +1,12 @@
 /// <reference types="vitest/globals" />
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { AuthScreen } from "@/components/fintax/auth/AuthScreen";
+
+const pushMock = vi.fn();
+const createClientMock = vi.fn<() => unknown>(() => null);
 
 vi.mock("next-intl", () => ({
   useLocale: () => "en",
@@ -14,7 +17,7 @@ vi.mock("@/hooks/useEncryptedFormDraft", () => ({
 }));
 
 vi.mock("@/lib/supabase/client", () => ({
-  createClient: () => null,
+  createClient: () => createClientMock(),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -24,11 +27,18 @@ vi.mock("@/i18n/navigation", () => ({
     </a>
   ),
   useRouter: () => ({
-    push: vi.fn(),
+    push: pushMock,
   }),
 }));
 
 describe("AuthScreen", () => {
+  beforeEach(() => {
+    createClientMock.mockReset();
+    createClientMock.mockReturnValue(null);
+    pushMock.mockReset();
+    window.sessionStorage.clear();
+  });
+
   it("opens the register tab by default when an intent is present", () => {
     render(<AuthScreen initialSearchParams={{ intent: "tax-return" }} />);
 
@@ -53,5 +63,33 @@ describe("AuthScreen", () => {
     fireEvent.change(screen.getByPlaceholderText(/at least 8 characters/i), { target: { value: "Longer!Pass123" } });
 
     expect(screen.getByText(/strong/i)).toBeInTheDocument();
+  });
+
+  it("shows the premium social buttons and removes the redundant register helper", () => {
+    render(<AuthScreen />);
+
+    expect(screen.getByRole("button", { name: /continue with google/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /continue with apple/i })).toBeInTheDocument();
+    expect(screen.queryByText(/first time here/i)).not.toBeInTheDocument();
+  });
+
+  it("opens the mfa modal after a successful login when pending mfa setup exists", async () => {
+    window.sessionStorage.setItem("fintax.auth.mfa_after_login", "1");
+    createClientMock.mockReturnValue({
+      auth: {
+        signInWithPassword: vi.fn().mockResolvedValue({ error: null }),
+        mfa: {
+          listFactors: vi.fn().mockResolvedValue({ error: { message: "disabled" } }),
+        },
+      },
+    });
+
+    render(<AuthScreen />);
+
+    fireEvent.change(screen.getByLabelText(/^email$/i), { target: { value: "user@example.com" } });
+    fireEvent.change(screen.getByLabelText(/^password$/i), { target: { value: "Password123!" } });
+    fireEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
+
+    await waitFor(() => expect(screen.getByRole("heading", { name: /set up two-step verification/i })).toBeInTheDocument());
   });
 });
