@@ -37,6 +37,7 @@ export function TaxReturnFlow({ initialService }: { initialService?: string | nu
   const [currentStep, setCurrentStep] = React.useState(0);
   const [draftCaseId, setDraftCaseId] = React.useState<string | null>(null);
   const [lastSavedAt, setLastSavedAt] = React.useState<string | null>(null);
+  const lastPersistedSignature = React.useRef<string | null>(null);
 
   const form = useForm<TaxReturnFormValues>({
     resolver: zodResolver(taxReturnWizardSchema),
@@ -52,6 +53,7 @@ export function TaxReturnFlow({ initialService }: { initialService?: string | nu
     const restoredValues = normalizeTaxReturnValues({ ...nextValues, service: selectedService });
 
     form.reset(restoredValues);
+    lastPersistedSignature.current = null;
     setCurrentStep(typeof snapshot?.progressStep === "number" ? Math.max(0, Math.min(snapshot.progressStep, taxReturnStepKeys.length - 1)) : 0);
     setDraftCaseId(typeof snapshot?.caseId === "string" ? snapshot.caseId : null);
     setLastSavedAt(typeof snapshot?.updatedAt === "string" ? snapshot.updatedAt : null);
@@ -67,44 +69,41 @@ export function TaxReturnFlow({ initialService }: { initialService?: string | nu
     }
   }, [form, normalizedValues, values]);
 
-  React.useEffect(() => {
-    const subscription = form.watch(() => {
-      const updatedAt = new Date().toISOString();
-      setLastSavedAt(updatedAt);
-
-      void persistWizardSnapshot({
-        storageKey,
-        caseId: draftCaseId ?? undefined,
-        payload: {
-          ...normalizeTaxReturnValues(form.getValues()),
-          selectedService,
-          currentStep,
-          draftStatus: currentStep >= taxReturnStepKeys.length - 2 ? "ready_for_review" : "in_progress",
-          lastSavedAt: updatedAt,
-        },
-      });
-    });
-
-    return () => subscription.unsubscribe();
-  }, [currentStep, draftCaseId, form, selectedService, storageKey]);
-
-  React.useEffect(() => {
+  const persistCurrentSnapshot = React.useCallback(() => {
     const updatedAt = new Date().toISOString();
-    setLastSavedAt(updatedAt);
     const latestValues = normalizeTaxReturnValues(form.getValues());
+    const payload = {
+      ...latestValues,
+      selectedService,
+      currentStep,
+      draftStatus: currentStep >= taxReturnStepKeys.length - 2 ? "ready_for_review" : "in_progress",
+      lastSavedAt: updatedAt,
+    };
+    const signature = JSON.stringify({ storageKey, caseId: draftCaseId, payload: { ...payload, lastSavedAt: null } });
+
+    if (signature === lastPersistedSignature.current) return;
+
+    lastPersistedSignature.current = signature;
+    setLastSavedAt(updatedAt);
 
     void persistWizardSnapshot({
       storageKey,
       caseId: draftCaseId ?? undefined,
-      payload: {
-        ...latestValues,
-        selectedService,
-        currentStep,
-        draftStatus: currentStep >= taxReturnStepKeys.length - 2 ? "ready_for_review" : "in_progress",
-        lastSavedAt: updatedAt,
-      },
+      payload,
     });
   }, [currentStep, draftCaseId, form, selectedService, storageKey]);
+
+  React.useEffect(() => {
+    const subscription = form.watch(() => {
+      persistCurrentSnapshot();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form, persistCurrentSnapshot]);
+
+  React.useEffect(() => {
+    persistCurrentSnapshot();
+  }, [persistCurrentSnapshot]);
 
   const createDraftCase = async () => {
     if (draftCaseId) return draftCaseId;
@@ -162,7 +161,7 @@ export function TaxReturnFlow({ initialService }: { initialService?: string | nu
           <TaxReturnProgressHeader currentStep={currentStep} steps={taxReturnStepKeys} />
         </CardHeader>
 
-        <CardBody className="space-y-6">
+        <CardBody className="space-y-5 sm:space-y-6">
           <form onSubmit={form.handleSubmit(() => undefined)} noValidate>
             {taxReturnStepKeys[currentStep] === "identity" ? <TaxReturnStepIdentity form={form} values={normalizedValues} /> : null}
             {taxReturnStepKeys[currentStep] === "income" ? <TaxReturnStepIncome form={form} values={normalizedValues} /> : null}
@@ -177,19 +176,20 @@ export function TaxReturnFlow({ initialService }: { initialService?: string | nu
             ) : null}
           </form>
 
-          <div className="flex items-center justify-between border-t border-border/35 pt-5">
+          <div className="flex flex-col-reverse gap-3 border-t border-border/35 pt-5 sm:flex-row sm:items-center sm:justify-between">
             <Button
               type="button"
               variant="ghost"
               onClick={prevStep}
               disabled={currentStep === 0}
               leftIcon={<ChevronLeft className="size-4" />}
+              className="w-full sm:w-auto"
             >
               {t("back")}
             </Button>
 
             {currentStep < taxReturnStepKeys.length - 1 ? (
-              <Button type="button" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />}>
+              <Button type="button" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />} className="w-full sm:w-auto">
                 {t("next")}
               </Button>
             ) : null}

@@ -42,7 +42,7 @@ export function TaxReturnProgressHeader({
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-2 md:hidden" aria-label={t("progress.completionLabel")}>
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-7 md:hidden" aria-label={t("progress.completionLabel")}>
         {steps.map((step, index) => {
           const active = currentStep === index;
           const complete = currentStep > index;
@@ -65,7 +65,7 @@ export function TaxReturnProgressHeader({
           description: t(`steps.${step}.description`),
         }))}
         currentStep={currentStep + 1}
-        className="hidden md:grid md:grid-cols-2"
+        className="hidden md:grid md:grid-cols-2 xl:grid-cols-4"
       />
     </div>
   );

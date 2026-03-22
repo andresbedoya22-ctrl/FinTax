@@ -15,8 +15,8 @@ export function TaxReturnSummaryCard({ estimate, caseId, updatedAt }: { estimate
   const t = useTranslations("TaxReturn");
 
   return (
-    <TaxPanel title={t("summary.cardTitle")} description={t("summary.cardDescription")} className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-3">
+    <TaxPanel title={t("summary.cardTitle")} description={t("summary.cardDescription")} className="space-y-4" aria-live="polite">
+      <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-1">
         <HintCard
           label={t("summary.estimateLabel")}
           value={estimate.status === "range" && estimate.min !== null && estimate.max !== null ? `${formatEuro(estimate.min)} - ${formatEuro(estimate.max)}` : t("summary.pendingEstimate")}
@@ -25,7 +25,7 @@ export function TaxReturnSummaryCard({ estimate, caseId, updatedAt }: { estimate
         <HintCard label={t("summary.reviewStateLabel")} value={caseId ? t("summary.draftConnected") : t("summary.localDraft")} />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-1">
         <Metric icon={CircleDollarSign} label={t("summary.incomeLabel")} value={formatEuro(estimate.incomeTotal)} />
         <Metric icon={Calculator} label={t("summary.deductionsLabel")} value={formatEuro(estimate.deductionsTotal)} />
         <Metric icon={FileClock} label={t("summary.lastSavedLabel")} value={updatedAt ? new Date(updatedAt).toLocaleString() : t("summary.justNow")} />
