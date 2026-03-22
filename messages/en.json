@@ -383,6 +383,7 @@
       "header": {
         "breadcrumb": "Dashboard",
         "declaration": "Declaration",
+        "noDate": "No date available",
         "updated": "Updated: {value}",
         "deadline": "Deadline: {value}",
         "primaryAction": "Add document",
@@ -391,6 +392,8 @@
       },
       "stepper": {
         "current": "Current step",
+        "completedLabel": "Done",
+        "pendingLabel": "Pending",
         "draft": "Start",
         "docs": "Documents",
         "review": "Review",
@@ -420,6 +423,8 @@
         "description": "Track upload completion and the remaining evidence required for review.",
         "progressLabel": "Documentation status",
         "progressCaption": "Files ready for review",
+        "emptyTitle": "No active declaration yet",
+        "emptyBody": "Start a tax return to begin uploading documents and unlock the operational dashboard.",
         "cta": "Review declaration"
       },
       "history": {

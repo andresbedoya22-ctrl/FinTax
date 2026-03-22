@@ -4,15 +4,61 @@ import "@testing-library/jest-dom/vitest";
 
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DashboardOverview } from "@/components/fintax/dashboard/DashboardOverview";
+
+const mockState = vi.hoisted(() => ({
+  cases: [
+    {
+      id: "case-1",
+      user_id: "user-1",
+      case_type: "tax_return_p",
+      status: "pending_documents",
+      display_name: "Declaracion 2025",
+      tax_year: 2025,
+      deadline: "2099-04-20T00:00:00.000Z",
+      estimated_refund: 1500,
+      actual_refund: null,
+      wizard_data: {},
+      wizard_completed: false,
+      machtiging_status: "requested",
+      machtiging_code: null,
+      stripe_payment_id: null,
+      assigned_admin: null,
+      notes_internal: null,
+      created_at: "2099-01-12T00:00:00.000Z",
+      updated_at: "2099-03-10T00:00:00.000Z",
+    },
+  ],
+  checklist: [
+    { id: "1", label: "Pasaporte", is_completed: true, is_document_upload: true },
+    { id: "2", label: "Contrato de alquiler", is_completed: false, is_document_upload: true },
+  ],
+  notifications: [
+    {
+      id: "note-1",
+      title: "Documento recibido",
+      message: "El documento de identidad fue validado.",
+      created_at: "2099-03-12T00:00:00.000Z",
+    },
+  ],
+  taxSummary: {
+    box1Income: 48000,
+    box3Assets: 70000,
+    credits: 2100,
+    netResult: 1650,
+    isFallback: true,
+    sourceLabel: "case_data_fallback",
+  },
+}));
 
 const translations = {
   apiError: { eyebrow: "API del dashboard", body: "No se pudo refrescar el resumen de la declaracion.", codePrefix: "Codigo:" },
   header: {
     breadcrumb: "Dashboard",
     declaration: "Declaracion",
+    noDate: "Sin fecha disponible",
     updated: "Actualizado: {value}",
     deadline: "Fecha limite: {value}",
     primaryAction: "Anadir documento",
@@ -21,6 +67,8 @@ const translations = {
   },
   stepper: {
     current: "Paso actual",
+    completedLabel: "Completado",
+    pendingLabel: "Pendiente",
     draft: "Inicio",
     docs: "Documentos",
     review: "Revision",
@@ -38,6 +86,8 @@ const translations = {
     description: "Sigue las cargas y lo que falta para que el expediente pase a revision.",
     progressLabel: "Estado documental",
     progressCaption: "Archivos listos para revision",
+    emptyTitle: "Todavia no hay una declaracion activa",
+    emptyBody: "Empieza una declaracion para cargar documentos y activar el dashboard operativo.",
     cta: "Ver declaracion",
   },
   history: {
@@ -153,7 +203,33 @@ vi.mock("@/i18n/navigation", () => ({
 
 vi.mock("@/hooks/useCases", () => ({
   useCases: () => ({
-    data: [
+    data: mockState.cases,
+    isError: false,
+    error: null,
+  }),
+}));
+
+vi.mock("@/hooks/useChecklist", () => ({
+  useChecklist: () => ({
+    data: mockState.checklist,
+  }),
+}));
+
+vi.mock("@/hooks/useNotifications", () => ({
+  useNotifications: () => ({
+    data: mockState.notifications,
+  }),
+}));
+
+vi.mock("@/hooks/useTaxSummary", () => ({
+  useTaxSummary: () => ({
+    data: mockState.taxSummary,
+  }),
+}));
+
+describe("DashboardOverview", () => {
+  beforeEach(() => {
+    mockState.cases = [
       {
         id: "case-1",
         user_id: "user-1",
@@ -174,48 +250,29 @@ vi.mock("@/hooks/useCases", () => ({
         created_at: "2099-01-12T00:00:00.000Z",
         updated_at: "2099-03-10T00:00:00.000Z",
       },
-    ],
-    isError: false,
-    error: null,
-  }),
-}));
-
-vi.mock("@/hooks/useChecklist", () => ({
-  useChecklist: () => ({
-    data: [
+    ];
+    mockState.checklist = [
       { id: "1", label: "Pasaporte", is_completed: true, is_document_upload: true },
       { id: "2", label: "Contrato de alquiler", is_completed: false, is_document_upload: true },
-    ],
-  }),
-}));
-
-vi.mock("@/hooks/useNotifications", () => ({
-  useNotifications: () => ({
-    data: [
+    ];
+    mockState.notifications = [
       {
         id: "note-1",
         title: "Documento recibido",
         message: "El documento de identidad fue validado.",
         created_at: "2099-03-12T00:00:00.000Z",
       },
-    ],
-  }),
-}));
-
-vi.mock("@/hooks/useTaxSummary", () => ({
-  useTaxSummary: () => ({
-    data: {
+    ];
+    mockState.taxSummary = {
       box1Income: 48000,
       box3Assets: 70000,
       credits: 2100,
       netResult: 1650,
       isFallback: true,
       sourceLabel: "case_data_fallback",
-    },
-  }),
-}));
+    };
+  });
 
-describe("DashboardOverview", () => {
   it("renders declaration KPIs and alerts panel", () => {
     render(<DashboardOverview />);
 
@@ -229,5 +286,32 @@ describe("DashboardOverview", () => {
     expect(screen.getByText("01/07/2027")).toBeInTheDocument();
     expect(screen.getByText(/Los activos de Box 3 superan 59.357 EUR/i)).toBeInTheDocument();
     expect(screen.getByText(/El checklist documental sigue incompleto/i)).toBeInTheDocument();
-  });
+    expect(screen.getByText("Fallback desde datos del caso")).toBeInTheDocument();
+  }, 10000);
+
+  it("shows an honest empty state and keeps the CTA pointed at /tax-return when there is no active case", () => {
+    mockState.cases = [];
+    mockState.checklist = [];
+    mockState.notifications = [];
+    mockState.taxSummary = {
+      box1Income: 0,
+      box3Assets: 0,
+      credits: 0,
+      netResult: 0,
+      isFallback: true,
+      sourceLabel: "summary_unavailable",
+    };
+
+    render(<DashboardOverview />);
+
+    expect(screen.getByRole("heading", { name: /Declaracion \d{4}/i })).toBeInTheDocument();
+    expect(screen.getByText("Todavia no hay una declaracion activa")).toBeInTheDocument();
+    expect(screen.getByText(/Empieza una declaracion para cargar documentos/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Anadir documento" })).toHaveAttribute("href", "/tax-return");
+    expect(screen.getByRole("link", { name: "Ver declaracion" })).toHaveAttribute("href", "/tax-return");
+    expect(screen.getByText("Resumen no disponible")).toBeInTheDocument();
+    expect(screen.getByText("Sin historial")).toBeInTheDocument();
+    expect(screen.getByText("Sin actividad")).toBeInTheDocument();
+    expect(screen.getByText("Sin alertas")).toBeInTheDocument();
+  }, 10000);
 });

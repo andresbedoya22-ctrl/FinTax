@@ -360,6 +360,7 @@
       "header": {
         "breadcrumb": "Dashboard",
         "declaration": "Declaration",
+        "noDate": "No date available",
         "updated": "Updated: {value}",
         "deadline": "Deadline: {value}",
         "primaryAction": "Add document",
@@ -372,7 +373,9 @@
         "docs": "Documents",
         "review": "Review",
         "submitted": "Submitted",
-        "completed": "Completed"
+        "completed": "Completed",
+        "completedLabel": "Done",
+        "pendingLabel": "Pending"
       },
       "kpis": {
         "box1Income": {
@@ -397,7 +400,9 @@
         "description": "Track upload completion and the remaining evidence required for review.",
         "progressLabel": "Documentation status",
         "progressCaption": "Files ready for review",
-        "cta": "Review declaration"
+        "cta": "Review declaration",
+        "emptyTitle": "No active declaration yet",
+        "emptyBody": "Start a tax return to begin uploading documents and unlock the operational dashboard."
       },
       "history": {
         "title": "Fiscal history",

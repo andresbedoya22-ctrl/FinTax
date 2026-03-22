@@ -117,4 +117,30 @@ describe("useTaxSummary", () => {
       sourceLabel: "case_data_fallback",
     });
   });
+
+  it("returns an unavailable summary when neither endpoint can be read", async () => {
+    const fetchMock = vi.fn(async () =>
+      new Response(JSON.stringify({ data: null, error: { code: "not_found", message: "missing" } }), {
+        status: 404,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { result } = renderHook(() => useTaxSummary("case-missing"), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data).toMatchObject({
+      box1Income: 0,
+      box3Assets: 0,
+      credits: 0,
+      netResult: 0,
+      isFallback: true,
+      sourceLabel: "summary_unavailable",
+    });
+  });
 });
