@@ -711,6 +711,8 @@
       "totalCaption": "Combined estimate across all potentially relevant benefits.",
       "eligibleCountLabel": "Potentially eligible benefits",
       "eligibleCountCaption": "Benefits that currently pass the main visible conditions.",
+      "noneEligibleTitle": "No benefit currently clears the visible conditions.",
+      "noneEligibleCopy": "That does not always mean the case is closed. Residency, insurance, housing setup or child-related registration details often need to be clarified before a second pass.",
       "honestyTitle": "Keep this result in the right context.",
       "honestyCopy": "Some cases still require supporting documents, official registration checks or manual review before an application should be filed.",
       "eligible": "Eligible",

@@ -863,6 +863,8 @@
       "totalCaption": "Estimación combinada de todos los subsidios potencialmente relevantes.",
       "eligibleCountLabel": "Subsidios potencialmente elegibles",
       "eligibleCountCaption": "Subsidios que ahora mismo cumplen las condiciones visibles principales.",
+      "noneEligibleTitle": "Ningún subsidio supera ahora mismo las condiciones visibles.",
+      "noneEligibleCopy": "Eso no siempre significa que el caso esté cerrado. La residencia, el seguro, la situación de vivienda o algunos registros relacionados con hijos pueden requerir aclaración antes de una segunda revisión.",
       "honestyTitle": "Pon este resultado en contexto.",
       "honestyCopy": "Algunos casos aún requieren documentos de soporte, comprobaciones oficiales de registro o revisión manual antes de presentar una solicitud.",
       "eligible": "Elegible",
