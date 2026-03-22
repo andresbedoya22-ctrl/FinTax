@@ -335,21 +335,30 @@
   "Dashboard": {
     "sidebar": {
       "brand": "FinTax",
-      "items": [
-        "Panel",
-        "Zeznanie podatkowe",
-        "Świadczenia",
-        "Dochody",
-        "Rząd",
-        "Ustawienia"
-      ]
+      "items": {
+        "dashboard": "Panel",
+        "taxReturn": "Zeznanie podatkowe",
+        "benefits": "Swiadczenia",
+        "settings": "Ustawienia",
+        "admin": "Admin"
+      },
+      "sections": {
+        "main": "Workspace"
+      },
+      "profile": {
+        "name": "Klient FinTax",
+        "role": "Konto standardowe",
+        "progress": "Onboarding i intake sprawy sa w toku"
+      },
+      "help": "Centrum pomocy"
     },
     "topbar": {
       "title": "Panel",
       "currentCase": "Bieżąca sprawa",
       "openSidebar": "Otwórz panel boczny",
       "closeSidebar": "Zamknij panel boczny",
-      "closeOverlay": "Zamknij nakładkę"
+      "closeOverlay": "Zamknij nakładkę",
+      "alerts": "Alerty"
     },
     "overview": {
       "apiError": {

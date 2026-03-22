@@ -65,17 +65,31 @@
   },
   "Dashboard": {
     "sidebar": {
-      "items": [
-        "Dashboard",
-        "Belastingaangifte",
-        "Toeslagen",
-        "Inkomen",
-        "Overheid",
-        "Instellingen"
-      ]
+      "brand": "FinTax",
+      "items": {
+        "dashboard": "Dashboard",
+        "taxReturn": "Belastingaangifte",
+        "benefits": "Toeslagen",
+        "settings": "Instellingen",
+        "admin": "Beheer"
+      },
+      "sections": {
+        "main": "Werkruimte"
+      },
+      "profile": {
+        "name": "FinTax klant",
+        "role": "Standaardaccount",
+        "progress": "Onboarding en intake zijn nog bezig"
+      },
+      "help": "Helpcentrum"
     },
     "topbar": {
-      "currentCase": "Huidige zaak"
+      "title": "Dashboard",
+      "currentCase": "Huidige zaak",
+      "openSidebar": "Zijbalk openen",
+      "closeSidebar": "Zijbalk sluiten",
+      "closeOverlay": "Zijbalkoverlay sluiten",
+      "alerts": "Meldingen"
     },
     "overview": {
       "apiError": {
