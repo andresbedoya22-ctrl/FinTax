@@ -375,34 +375,128 @@
       "alerts": "Alertas"
     },
     "overview": {
-      "caseTitle": "Resumen del caso",
-      "statusLabel": "Estado",
-      "statusValue": "En revisi?n",
-      "deadlineLabel": "Fecha l?mite",
-      "deadlineValue": "12 de mayo de 2026",
-      "checklistTitle": "Checklist",
-      "progressLabel": "Continuar checklist",
-      "refundTitle": "Estimaci?n de devoluci?n",
-      "refundAmount": "2.345",
-      "chartTitle": "?ltimos 7 puntos de control",
-      "chartNote": "Actualizado tras la ?ltima carga de n?mina",
-      "caseRows": [
-        {
-          "label": "Zorgtoeslag",
-          "amount": "EUR 1.286"
+      "apiError": {
+        "eyebrow": "API del dashboard",
+        "body": "No se pudo refrescar el resumen de la declaracion.",
+        "codePrefix": "Codigo:"
+      },
+      "header": {
+        "breadcrumb": "Dashboard",
+        "declaration": "Declaracion",
+        "updated": "Actualizado: {value}",
+        "deadline": "Fecha limite: {value}",
+        "primaryAction": "Anadir documento",
+        "secondaryAction": "Descargar resumen PDF",
+        "secondaryHint": "La exportacion PDF estara disponible cuando el resumen final este generado."
+      },
+      "stepper": {
+        "current": "Paso actual",
+        "draft": "Inicio",
+        "docs": "Documentos",
+        "review": "Revision",
+        "submitted": "Presentado",
+        "completed": "Completado"
+      },
+      "kpis": {
+        "box1Income": {
+          "title": "Ingresos Box 1",
+          "note": "Ingresos laborales declarados"
         },
-        {
-          "label": "Huurtoeslag",
-          "amount": "EUR 2.140"
+        "box3Assets": {
+          "title": "Activos Box 3",
+          "note": "Activos registrados en el expediente"
         },
-        {
-          "label": "Devoluci?n renta",
-          "amount": "EUR 1.102"
+        "credits": {
+          "title": "Creditos fiscales",
+          "note": "Creditos confirmados en el resumen actual"
+        },
+        "netResult": {
+          "title": "Resultado neto",
+          "note": "Estimacion actual tras ajustes"
         }
-      ],
-      "checklistItems": [
+      },
+      "documents": {
+        "title": "Progreso documental",
+        "description": "Sigue las cargas y lo que falta para que el expediente pase a revision.",
+        "progressLabel": "Estado documental",
+        "progressCaption": "Archivos listos para revision",
+        "cta": "Ver declaracion"
+      },
+      "history": {
+        "title": "Historial fiscal",
+        "description": "Declaraciones recientes y puntos de control ordenados por ultima actividad.",
+        "empty": "Todavia no hay historial de declaraciones.",
+        "taxYear": "Ano fiscal {year}",
+        "updated": "Actualizado {value}",
+        "cta": "Ver declaracion",
+        "types": {
+          "formP": "Declaracion de renta",
+          "formM": "Declaracion migratoria (M)",
+          "formC": "Declaracion no residente (C)",
+          "zzp": "Declaracion autonomo",
+          "vat": "Declaracion de IVA",
+          "healthcare": "Subsidio sanitario",
+          "rent": "Subsidio de alquiler",
+          "childBudget": "Ayuda por hijo",
+          "childcare": "Subsidio de guarderia"
+        }
+      },
+      "summary": {
+        "title": "Resumen fiscal",
+        "description": "Vista operativa del expediente fiscal activo.",
+        "netResultLabel": "Resultado neto",
+        "rows": {
+          "box1Income": "Ingresos Box 1",
+          "box3Assets": "Activos Box 3",
+          "credits": "Creditos fiscales",
+          "netResult": "Resultado neto"
+        },
+        "sources": {
+          "tax_summary_api": "Resumen fiscal en vivo",
+          "case_data_fallback": "Fallback desde datos del caso",
+          "summary_unavailable": "Resumen no disponible"
+        }
+      },
+      "alertsPanel": {
+        "title": "Alertas y calendario",
+        "description": "Fechas criticas y elementos que aun pueden retrasar la presentacion.",
+        "calendarTitle": "Calendario",
+        "alertsTitle": "Alertas prioritarias",
+        "empty": "No hay alertas prioritarias ahora mismo."
+      },
+      "alerts": {
+        "box3Threshold": "Los activos de Box 3 superan 59.357 EUR. Revisa la documentacion patrimonial antes de presentar.",
+        "checklistIncomplete": "El checklist documental sigue incompleto. Sube la evidencia pendiente para evitar retrasos.",
+        "deadlineNear": "La fecha limite esta proxima. Completa cuanto antes los pasos de revision."
+      },
+      "activity": {
+        "title": "Actividad reciente",
+        "description": "Ultimos eventos y actualizaciones operativas del expediente.",
+        "empty": "Todavia no hay actividad reciente.",
+        "caseUpdated": "{caseLabel} recibio una nueva actualizacion de estado"
+      },
+      "advisor": {
+        "title": "Panel del asesor",
+        "description": "La capa humana permanece visible cuando realmente ayuda a mover el caso.",
+        "statusTitle": "Asignacion de asesor activa",
+        "body": "Hay un especialista asignado a esta declaracion y podra continuar la revision cuando se resuelvan los bloqueos actuales.",
+        "primaryAction": "Escribir al asesor",
+        "secondaryAction": "Solicitar llamada"
+      },
+      "status": {
+        "draft": "Inicio",
+        "pendingDocuments": "Documentos pendientes",
+        "inReview": "En revision",
+        "pendingPayment": "Pago pendiente",
+        "pendingAuthorization": "Autorizacion pendiente",
+        "authorized": "Autorizado",
+        "submitted": "Presentado",
+        "completed": "Completado",
+        "rejected": "Requiere cambios"
+      },
+      "checklistFallback": [
         {
-          "label": "Pasaporte / DNI subido",
+          "label": "Pasaporte o documento de identidad",
           "done": true
         },
         {
@@ -411,16 +505,27 @@
         },
         {
           "label": "Detalles del contrato de alquiler",
-          "done": true
+          "done": false
         },
         {
-          "label": "Facturas de guarder?a",
+          "label": "Justificantes de saldo para Box 3",
           "done": false
         }
       ],
-      "openCase": "Abrir flujo",
-      "reviewBenefits": "Revisar elegibilidad de subsidios",
-      "cta": "Abrir estimador de subsidios"
+      "calendarMilestones": [
+        {
+          "date": "01/03/2027",
+          "label": "Inicio periodo de declaracion"
+        },
+        {
+          "date": "01/05/2027",
+          "label": "Fecha limite estandar"
+        },
+        {
+          "date": "01/07/2027",
+          "label": "Revision tardia / correcciones si aplica"
+        }
+      ]
     }
   },
   "Onboarding": {

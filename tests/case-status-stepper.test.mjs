@@ -12,7 +12,10 @@ import {
 assert.equal(mapCaseStatusToStep("draft"), 1);
 assert.equal(mapCaseStatusToStep("awaiting_docs"), 2);
 assert.equal(mapCaseStatusToStep("in_review"), 3);
-assert.equal(mapCaseStatusToStep("pending_payment"), 4);
+assert.equal(mapCaseStatusToStep("pending_payment"), 3);
+assert.equal(mapCaseStatusToStep("pending_authorization"), 3);
+assert.equal(mapCaseStatusToStep("authorized"), 3);
+assert.equal(mapCaseStatusToStep("submitted"), 4);
 assert.equal(mapCaseStatusToStep("completed"), 5);
 
 const okEnvelope = buildApiSuccess({ id: "1" }, { page: 1 });
