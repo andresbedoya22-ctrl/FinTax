@@ -32,8 +32,8 @@ export function BenefitsResults({
 
   return (
     <div className="space-y-5">
-      <section className="rounded-[30px] border border-border/50 bg-[linear-gradient(135deg,rgba(250,252,249,0.98),rgba(242,246,240,0.88))] p-6 shadow-[0_24px_70px_rgba(17,36,26,0.08)]">
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_17rem_17rem]">
+      <section className="rounded-[24px] border border-border/50 bg-[linear-gradient(135deg,rgba(250,252,249,0.98),rgba(242,246,240,0.88))] p-4 shadow-[0_24px_70px_rgba(17,36,26,0.08)] sm:rounded-[30px] sm:p-6">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_17rem_17rem]">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-copper/20 bg-copper/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-copper">
               <Sparkles className="size-3.5" />
@@ -49,12 +49,19 @@ export function BenefitsResults({
             <p className="mt-2 text-sm text-secondary">{t("results.totalCaption")}</p>
           </div>
 
-          <div className="rounded-[24px] border border-border/40 bg-white/85 p-4">
+          <div className="rounded-[24px] border border-border/40 bg-white/85 p-4 md:col-span-2 xl:col-span-1">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.eligibleCountLabel")}</p>
             <p className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">{eligibleCount}</p>
             <p className="mt-2 text-sm text-secondary">{t("results.eligibleCountCaption")}</p>
           </div>
         </div>
+
+        {eligibleCount === 0 ? (
+          <div className="mt-5 rounded-[24px] border border-copper/25 bg-copper/8 p-4">
+            <p className="text-sm font-semibold text-text">{t("results.noneEligibleTitle")}</p>
+            <p className="mt-1 text-sm leading-6 text-secondary">{t("results.noneEligibleCopy")}</p>
+          </div>
+        ) : null}
 
         <div className="mt-5 rounded-[24px] border border-border/35 bg-white/75 p-4">
           <div className="flex items-start gap-3">

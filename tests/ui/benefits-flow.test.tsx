@@ -88,13 +88,13 @@ describe("BenefitsFlow", () => {
     expect(screen.getByText(/housing questions simplified/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByText(/health coverage/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("heading", { name: /^health$/i })).toBeInTheDocument());
 
     fireEvent.click(screen.getByRole("button", { name: /dutch health insurance/i }));
     expect(screen.getByText(/zorgtoeslag remains unlikely/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByText(/children and childcare/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("heading", { name: /^children$/i })).toBeInTheDocument());
 
     expect(screen.getByText(/children section simplified/i)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /receiving kinderbijslag/i })).not.toBeInTheDocument();
@@ -114,6 +114,72 @@ describe("BenefitsFlow", () => {
     expect(screen.getByTestId("benefit-card-huurtoeslag")).toBeInTheDocument();
     expect(screen.getByTestId("benefit-card-kindgebondenBudget")).toBeInTheDocument();
     expect(screen.getByTestId("benefit-card-kinderopvangtoeslag")).toBeInTheDocument();
+  });
+
+  it("shows the no-eligibility state and disables the final continue action when nothing qualifies", async () => {
+    render(<BenefitsFlow />);
+
+    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+
+    await waitFor(() => expect(screen.getByText(/rental situation/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /independent home/i }));
+
+    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    await waitFor(() => expect(screen.getByRole("heading", { name: /^health$/i })).toBeInTheDocument());
+
+    fireEvent.click(screen.getByRole("button", { name: /dutch health insurance/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+
+    await waitFor(() => expect(screen.getByTestId("benefits-results-total")).toBeInTheDocument());
+    expect(screen.getByTestId("benefits-results-total")).toHaveTextContent("EUR 0.00");
+    expect(screen.queryAllByRole("button", { name: /remove from support plan/i })).toHaveLength(0);
+    expect(screen.getByText(/no benefits selected yet/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^continue$/i })).toBeDisabled();
+  });
+
+  it("auto-selects eligible benefits in results and allows clearing the support plan", async () => {
+    loadWizardSnapshotMock.mockReturnValue({
+      age: 36,
+      householdType: "single",
+      annualIncome: 28000,
+      assets: 5000,
+      nlResident: true,
+      hasHealthInsurance: true,
+      hasIndependentHome: true,
+      hasRentalContract: true,
+      monthlyRent: 900,
+      childrenUnder18: 1,
+      receivesKinderbijslag: true,
+      usesChildcare: false,
+      childcareHoursPerMonth: 0,
+      childcareType: "daycare",
+      childcareHourlyRate: 0,
+      registeredChildcare: false,
+      bothParentsWork: false,
+    });
+    readWizardSnapshotMock.mockReturnValue({
+      progressStep: 6,
+      payload: {
+        selectedBenefits: [],
+      },
+    });
+
+    render(<BenefitsFlow />);
+
+    await waitFor(() => expect(screen.getByText(/selected services/i)).toBeInTheDocument());
+
+    expect(screen.getAllByRole("button", { name: /remove from support plan/i }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("button", { name: /^continue$/i })).toBeEnabled();
+
+    screen.getAllByRole("button", { name: /remove from support plan/i }).forEach((button) => {
+      fireEvent.click(button);
+    });
+
+    await waitFor(() => expect(screen.getByText(/no benefits selected yet/i)).toBeInTheDocument());
+    expect(screen.getByRole("button", { name: /^continue$/i })).toBeDisabled();
   });
 
   it("loads a saved snapshot and persists the current step after advancing", async () => {

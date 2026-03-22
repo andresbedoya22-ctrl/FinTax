@@ -45,6 +45,23 @@ export function BenefitsProgressHeader({
         </div>
       </div>
 
+      <div className="grid grid-cols-7 gap-2 md:hidden" aria-label={t("progress.completionLabel")}>
+        {steps.map((step, index) => {
+          const stepNumber = index + 1;
+          const active = currentStep === index;
+          const complete = currentStep > index;
+
+          return (
+            <div
+              key={step}
+              className={`rounded-2xl border px-2 py-2 text-center ${active ? "border-green/35 bg-green/8" : complete ? "border-copper/30 bg-copper/8" : "border-border/40 bg-white/75"}`}
+            >
+              <p className={`text-xs font-semibold ${active ? "text-green" : complete ? "text-copper" : "text-muted"}`}>{stepNumber}</p>
+            </div>
+          );
+        })}
+      </div>
+
       <Stepper
         steps={steps.map((step, index) => ({
           id: step,
@@ -52,7 +69,7 @@ export function BenefitsProgressHeader({
           description: t(`steps.${step}.description`),
         }))}
         currentStep={currentStep + 1}
-        className="xl:grid-cols-2"
+        className="hidden md:grid md:grid-cols-2"
       />
     </div>
   );

@@ -26,7 +26,7 @@ export function BenefitsEligibilityCard({
   return (
     <article
       className={cn(
-        "rounded-[28px] border p-5 shadow-[0_18px_40px_rgba(17,36,26,0.06)]",
+        "rounded-[24px] border p-4 shadow-[0_18px_40px_rgba(17,36,26,0.06)] sm:rounded-[28px] sm:p-5",
         result.eligible
           ? "border-green/30 bg-[linear-gradient(180deg,rgba(248,251,248,0.96),rgba(233,245,237,0.8))]"
           : "border-border/50 bg-[linear-gradient(180deg,rgba(250,251,248,0.94),rgba(245,247,243,0.82))]",
@@ -35,7 +35,7 @@ export function BenefitsEligibilityCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-text">{t(`results.cards.${benefitKey}.title`)}</p>
+          <h4 className="text-sm font-semibold text-text">{t(`results.cards.${benefitKey}.title`)}</h4>
           <p className="mt-1 text-sm text-secondary">{t(`results.cards.${benefitKey}.subtitle`)}</p>
         </div>
         <Badge variant={result.eligible ? "success" : "outline"}>
@@ -58,7 +58,7 @@ export function BenefitsEligibilityCard({
         </div>
       </div>
 
-      <div className="mt-5 rounded-[22px] border border-border/35 bg-white/70 p-4">
+      <div className="mt-4 rounded-[20px] border border-border/35 bg-white/70 p-4 sm:mt-5 sm:rounded-[22px]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.whyLabel")}</p>
         <ul className="mt-3 space-y-2 text-sm leading-6 text-secondary">
           {result.reasoning.map((reason) => (
@@ -70,7 +70,7 @@ export function BenefitsEligibilityCard({
         </ul>
       </div>
 
-      <div className="mt-4 rounded-[22px] border border-border/35 bg-surface2/40 p-4">
+      <div className="mt-4 rounded-[20px] border border-border/35 bg-surface2/40 p-4 sm:rounded-[22px]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.nextStepLabel")}</p>
         <p className="mt-2 text-sm leading-6 text-text">{t(`results.nextSteps.${result.nextStep}`)}</p>
       </div>

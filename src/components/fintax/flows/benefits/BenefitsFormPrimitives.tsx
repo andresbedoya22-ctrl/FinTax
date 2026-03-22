@@ -19,8 +19,8 @@ export function BenefitStepLayout({
   aside?: React.ReactNode;
 }) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_19rem]">
-      <div className="space-y-5">
+    <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_19rem] xl:gap-5">
+      <div className="space-y-4 sm:space-y-5">
         <div className="space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-copper">{eyebrow}</p>
           <div className="space-y-2">
@@ -47,7 +47,7 @@ export function BenefitPanel({
   className?: string;
 }) {
   return (
-    <section className={cn("rounded-[28px] border border-border/50 bg-[linear-gradient(180deg,rgba(250,251,248,0.96),rgba(244,247,242,0.88))] p-5 shadow-[0_20px_55px_rgba(18,38,28,0.06)]", className)}>
+    <section className={cn("rounded-[24px] border border-border/50 bg-[linear-gradient(180deg,rgba(250,251,248,0.96),rgba(244,247,242,0.88))] p-4 shadow-[0_18px_44px_rgba(18,38,28,0.06)] sm:rounded-[28px] sm:p-5", className)}>
       <div className="mb-4 space-y-1">
         <h4 className="text-sm font-semibold text-text">{title}</h4>
         {description ? <p className="text-sm leading-6 text-secondary">{description}</p> : null}
@@ -94,8 +94,9 @@ export function ChoiceCard({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={cn(
-        "group rounded-[24px] border px-4 py-4 text-left transition-all",
+        "group rounded-[22px] border px-4 py-3.5 text-left transition-all sm:rounded-[24px] sm:py-4",
         active
           ? "border-green/45 bg-[linear-gradient(180deg,rgba(32,111,74,0.12),rgba(255,255,255,0.92))] shadow-[0_16px_34px_rgba(31,95,66,0.12)]"
           : "border-border/45 bg-white/75 hover:border-green/25 hover:bg-white",
@@ -134,8 +135,9 @@ export function ToggleCard({
     <button
       type="button"
       onClick={() => onChange(!checked)}
+      aria-pressed={checked}
       className={cn(
-        "flex w-full items-center justify-between gap-4 rounded-[24px] border px-4 py-4 text-left transition-all",
+        "flex w-full items-center justify-between gap-4 rounded-[22px] border px-4 py-3.5 text-left transition-all sm:rounded-[24px] sm:py-4",
         checked
           ? "border-green/45 bg-[linear-gradient(180deg,rgba(32,111,74,0.11),rgba(255,255,255,0.96))]"
           : "border-border/45 bg-white/75 hover:border-green/20",
@@ -164,7 +166,7 @@ export function ToggleCard({
 
 export function HintCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[24px] border border-border/45 bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(247,249,245,0.84))] px-4 py-4">
+    <div className="rounded-[22px] border border-border/45 bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(247,249,245,0.84))] px-4 py-3.5 sm:rounded-[24px] sm:py-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{label}</p>
       <p className="mt-2 text-sm font-medium text-text">{value}</p>
     </div>
@@ -188,7 +190,7 @@ export function ContextNote({
         : "border-border/45 bg-surface2/55";
 
   return (
-    <div className={cn("rounded-[24px] border px-4 py-4", toneClass)}>
+    <div className={cn("rounded-[22px] border px-4 py-3.5 sm:rounded-[24px] sm:py-4", toneClass)}>
       <p className="text-sm font-semibold text-text">{title}</p>
       <p className="mt-1 text-sm leading-6 text-secondary">{copy}</p>
     </div>
