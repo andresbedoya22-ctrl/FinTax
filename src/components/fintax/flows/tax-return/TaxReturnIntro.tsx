@@ -57,7 +57,7 @@ export function TaxReturnIntro({
         </div>
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {taxReturnServices.map((service) => {
           const isActive = selectedService === service.id;
           const saved = hasSavedProgress(service.id);
@@ -68,7 +68,7 @@ export function TaxReturnIntro({
               type="button"
               onClick={() => onSelectService(service.id)}
               className={cn(
-                "rounded-[24px] border px-4 py-4 text-left shadow-[0_14px_36px_rgba(18,38,28,0.05)] transition-all",
+                "flex h-full flex-col rounded-[24px] border px-4 py-4 text-left shadow-[0_14px_36px_rgba(18,38,28,0.05)] transition-all",
                 isActive
                   ? "border-green/45 bg-[linear-gradient(180deg,rgba(32,111,74,0.12),rgba(255,255,255,0.96))]"
                   : "border-border/45 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(246,249,244,0.88))] hover:border-green/25",
@@ -80,7 +80,7 @@ export function TaxReturnIntro({
               </div>
               <h2 className="mt-4 text-base font-semibold text-text">{t(`services.${service.translationKey}.title`)}</h2>
               <p className="mt-2 text-sm leading-6 text-secondary">{t(`services.${service.translationKey}.description`)}</p>
-              <div className="mt-4 flex items-end justify-between gap-3">
+              <div className="mt-4 flex flex-1 items-end justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("priceLabel")}</p>
                   <p className="mt-1 font-heading text-2xl text-text">EUR {service.priceFrom}</p>

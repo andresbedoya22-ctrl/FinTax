@@ -34,13 +34,13 @@ export function TaxReturnActionPanel({
 
       <ContextNote title={t("submission.nextTitle")} copy={t("submission.nextCopy")} tone="success" />
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-3 md:flex-row xl:flex-col">
         {caseId ? (
-          <Button asChild className="sm:flex-1" rightIcon={<ArrowRight className="size-4" />}>
+          <Button asChild className="w-full md:flex-1 xl:w-full" rightIcon={<ArrowRight className="size-4" />}>
             <Link href={`/tax-return/${caseId}`}>{t("submission.openCase")}</Link>
           </Button>
         ) : null}
-        <Button variant="secondary" type="button" className="sm:flex-1" disabled={!readyToContinue} leftIcon={<FolderKanban className="size-4" />}>
+        <Button variant="secondary" type="button" className="w-full md:flex-1 xl:w-full" disabled={!readyToContinue} leftIcon={<FolderKanban className="size-4" />}>
           {t("submission.readyForReview")}
         </Button>
       </div>

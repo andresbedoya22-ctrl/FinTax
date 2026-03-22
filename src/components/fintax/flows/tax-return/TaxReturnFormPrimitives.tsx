@@ -30,7 +30,7 @@ export function TaxStepLayout({
         </div>
         {children}
       </div>
-      {aside ? <div className="space-y-4">{aside}</div> : null}
+      {aside ? <div className="space-y-4 xl:sticky xl:top-24 xl:self-start">{aside}</div> : null}
     </div>
   );
 }

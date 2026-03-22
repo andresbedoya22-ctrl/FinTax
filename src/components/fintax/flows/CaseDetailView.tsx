@@ -52,6 +52,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   const tabs: TabKey[] = ["overview", "documents", "authorization", "activity"];
   const completed = checklist.filter((item) => item.is_completed).length;
   const currentStep = mapCaseStatusToStep(caseItem.status);
+  const machtigingStatusLabel = resolveTranslationValue(t, `machtigingStatusLabels.${caseItem.machtiging_status}`, "Pending review");
   const statusTone =
     caseItem.status === "pending_payment" || caseItem.status === "pending_documents"
       ? "amber"
@@ -104,17 +105,17 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             </div>
             <h2 className="font-heading text-2xl font-semibold text-text">{caseItem.display_name ?? caseItem.id}</h2>
             <p className="mt-1 text-sm text-secondary">
-              {t("status")}: {t(`statusLabels.${caseItem.status}`)} · {t("deadline")}: {caseItem.deadline ?? t("deadlinePending")}
+              {t("status")}: {t(`statusLabels.${caseItem.status}`)} | {t("deadline")}: {caseItem.deadline ?? t("deadlinePending")}
             </p>
           </div>
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-md lg:max-w-lg">
             <Stepper steps={CASE_STEPPER_STEPS.map((step) => ({ ...step, label: t(`stepper.${step.id}`) }))} currentStep={currentStep} />
           </div>
         </CardHeader>
       </Card>
 
       <Tabs value={tab} defaultValue="overview" onValueChange={(value) => setTab(value as TabKey)}>
-        <TabsList className="flex w-full flex-wrap justify-start" size="md">
+        <TabsList className="flex w-full flex-nowrap justify-start gap-2 overflow-x-auto pb-1" size="md">
           {tabs.map((tabKey) => (
             <TabsTrigger key={tabKey} value={tabKey}>
               {t(`tabs.${tabKey}`)}
@@ -126,7 +127,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           <Card>
             <CardBody className="grid gap-4 lg:grid-cols-3">
               <InfoTile label={t("overview.estimatedRefund")} value={caseItem.estimated_refund ? `EUR ${caseItem.estimated_refund}` : t("overview.pendingEstimate")} />
-              <InfoTile label={t("overview.machtigingStatus")} value={t(`machtigingStatusLabels.${caseItem.machtiging_status}`)} />
+              <InfoTile label={t("overview.machtigingStatus")} value={machtigingStatusLabel} />
               <InfoTile label={t("overview.progress")} value={`${completed}/${checklist.length}`} />
               <div className="lg:col-span-3 rounded-xl border border-border/35 bg-surface2/20 p-4">
                 <p className="mb-2 text-sm font-medium text-text">{t("overview.timeline")}</p>
@@ -162,7 +163,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                       <span className="text-text">{doc.file_name}</span>
                       <span className="text-xs text-secondary">{t(`documentStatusLabels.${doc.status}`)}</span>
                     </div>
-                    <p className="mt-1 text-xs text-muted">{doc.mime_type ?? "unknown"} · {((doc.file_size ?? 0) / 1024).toFixed(0)} KB</p>
+                    <p className="mt-1 text-xs text-muted">{doc.mime_type ?? "unknown"} | {((doc.file_size ?? 0) / 1024).toFixed(0)} KB</p>
                   </li>
                 ))}
               </ul>
@@ -240,4 +241,25 @@ function InfoTile({ label, value }: { label: string; value: string }) {
       <p className="mt-1 text-base font-semibold text-text">{value}</p>
     </div>
   );
+}
+
+function resolveTranslationValue(
+  t: ReturnType<typeof useTranslations>,
+  key: string,
+  fallback: string,
+) {
+  const translated = t(key);
+
+  if (translated !== key) {
+    return translated;
+  }
+
+  if (typeof t.raw === "function") {
+    const raw = t.raw(key);
+    if (typeof raw === "string" && raw.length > 0) {
+      return raw;
+    }
+  }
+
+  return fallback;
 }
