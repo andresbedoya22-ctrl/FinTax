@@ -52,18 +52,15 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
   const pathname = usePathname();
   const { profile } = useCurrentProfile();
   const { data: cases } = useCases();
-  const rawItems = t.raw("items") as
-    | string[]
-    | {
-        dashboard?: string;
-        taxReturn?: string;
-        benefits?: string;
-        settings?: string;
-        admin?: string;
-      };
+  const rawItems = t.raw("items") as {
+    dashboard?: string;
+    taxReturn?: string;
+    benefits?: string;
+    settings?: string;
+    admin?: string;
+  };
 
-  const getLabel = (key: (typeof navItems)[number]["key"], index: number) =>
-    Array.isArray(rawItems) ? (rawItems[index] ?? key) : (rawItems[key] ?? key);
+  const getLabel = (key: (typeof navItems)[number]["key"]) => rawItems[key] ?? key;
 
   const visibleNavItems = navItems.filter((item) => item.key !== "admin" || profile?.role === "admin");
   const fallbackName = locale === "nl" ? "FinTax klant" : locale === "es" ? "Cliente FinTax" : locale === "pl" ? "Klient FinTax" : locale === "ro" ? "Client FinTax" : "FinTax client";
@@ -103,7 +100,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
         </p>
 
         <nav className="space-y-0.5" aria-label={t("sections.main")}>
-          {visibleNavItems.map((item, index) => {
+          {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
@@ -119,7 +116,7 @@ export function DashboardSidebar({ className, onNavigate }: DashboardSidebarProp
                 )}
               >
                 <Icon className={cn("size-4 shrink-0", isActive ? "text-[#84d9a6]" : "text-[#89a090] group-hover:text-[#9be5b8]")} aria-hidden="true" />
-                <span>{getLabel(item.key, index)}</span>
+                <span>{getLabel(item.key)}</span>
               </Link>
             );
           })}

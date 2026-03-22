@@ -335,21 +335,30 @@
   "Dashboard": {
     "sidebar": {
       "brand": "FinTax",
-      "items": [
-        "Panou",
-        "Declarație fiscală",
-        "Beneficii",
-        "Venituri",
-        "Guvern",
-        "Setări"
-      ]
+      "items": {
+        "dashboard": "Panou",
+        "taxReturn": "Declaratie fiscala",
+        "benefits": "Beneficii",
+        "settings": "Setari",
+        "admin": "Admin"
+      },
+      "sections": {
+        "main": "Workspace"
+      },
+      "profile": {
+        "name": "Client FinTax",
+        "role": "Cont standard",
+        "progress": "Onboardingul si intake-ul cazului sunt in curs"
+      },
+      "help": "Centru de ajutor"
     },
     "topbar": {
       "title": "Panou",
       "currentCase": "Caz curent",
       "openSidebar": "Deschide bara laterală",
       "closeSidebar": "Închide bara laterală",
-      "closeOverlay": "Închide suprapunerea"
+      "closeOverlay": "Închide suprapunerea",
+      "alerts": "Alerte"
     },
     "overview": {
       "apiError": {
