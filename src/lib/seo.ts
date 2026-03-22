@@ -9,6 +9,7 @@ const DEFAULT_OG_IMAGE = {
   height: 1000,
   alt: "FinTax platform preview",
 };
+const LOCAL_DEV_APP_URL = "http://localhost:3000";
 
 let hasWarnedMissingAppUrl = false;
 
@@ -18,18 +19,23 @@ declare global {
 }
 
 export function getConfiguredBaseUrl() {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
   if (!appUrl) {
-    const alreadyWarned = hasWarnedMissingAppUrl || globalThis.__fintaxSeoWarnedMissingAppUrl__ === true;
-    if (process.env.NODE_ENV === "development" && !alreadyWarned) {
-      hasWarnedMissingAppUrl = true;
-      globalThis.__fintaxSeoWarnedMissingAppUrl__ = true;
-      console.warn("[seo] NEXT_PUBLIC_APP_URL is not set. Falling back to relative metadata URLs.");
-    }
-    return undefined;
+    return process.env.NODE_ENV === "development" ? new URL(LOCAL_DEV_APP_URL) : undefined;
   }
 
-  return new URL(appUrl);
+  try {
+    return new URL(appUrl);
+  } catch {
+    const alreadyWarned = hasWarnedMissingAppUrl || globalThis.__fintaxSeoWarnedMissingAppUrl__ === true;
+    if (!alreadyWarned) {
+      hasWarnedMissingAppUrl = true;
+      globalThis.__fintaxSeoWarnedMissingAppUrl__ = true;
+      console.warn(`[seo] Ignoring invalid NEXT_PUBLIC_APP_URL value: ${appUrl}`);
+    }
+
+    return process.env.NODE_ENV === "development" ? new URL(LOCAL_DEV_APP_URL) : undefined;
+  }
 }
 
 function normalizePathname(pathname: string) {

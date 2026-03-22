@@ -89,6 +89,20 @@ describe("AuthScreen", () => {
     expect(screen.getByRole("link", { name: /help \/ contact/i })).toHaveAttribute("href", "mailto:privacy@fintax.nl");
   });
 
+  it("restores a pending intent from session storage without needing URL params", async () => {
+    window.sessionStorage.setItem(
+      "fintax.pending_intent",
+      JSON.stringify({ intent: "benefits", next: "/benefits?service=zorgtoeslag", service: "zorgtoeslag" }),
+    );
+
+    render(<AuthScreen />);
+
+    await waitFor(() =>
+      expect(screen.getByRole("tab", { name: /create account/i })).toHaveAttribute("aria-selected", "true"),
+    );
+    expect(screen.getByText(/benefits intake requested/i)).toBeInTheDocument();
+  });
+
   it("opens the mfa modal after a successful login when pending mfa setup exists", async () => {
     window.sessionStorage.setItem("fintax.auth.mfa_after_login", "1");
     createClientMock.mockReturnValue({

@@ -9,6 +9,31 @@ type StoredEncryptedDraft = {
   payload: string;
 };
 
+function readSessionStorage(storageKey: string) {
+  try {
+    return window.sessionStorage.getItem(storageKey);
+  } catch {
+    return null;
+  }
+}
+
+function writeSessionStorage(storageKey: string, value: string) {
+  try {
+    window.sessionStorage.setItem(storageKey, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function removeSessionStorage(storageKey: string) {
+  try {
+    window.sessionStorage.removeItem(storageKey);
+  } catch {
+    // Ignore browser storage access failures.
+  }
+}
+
 function bytesToBase64(bytes: Uint8Array) {
   return btoa(String.fromCharCode(...bytes));
 }
@@ -89,7 +114,7 @@ export function useEncryptedFormDraft<T>({
         return;
       }
 
-      const raw = window.sessionStorage.getItem(storageKey);
+      const raw = readSessionStorage(storageKey);
       if (!raw) {
         if (active) setHydrated(true);
         return;
@@ -100,7 +125,7 @@ export function useEncryptedFormDraft<T>({
         const draft = await decryptDraftPayload<Partial<T>>(storageKey, parsed);
         if (active) onRestoreRef.current?.(draft);
       } catch {
-        window.sessionStorage.removeItem(storageKey);
+        removeSessionStorage(storageKey);
       } finally {
         if (active) setHydrated(true);
       }
@@ -122,7 +147,7 @@ export function useEncryptedFormDraft<T>({
       try {
         const encrypted = await encryptDraftPayload(storageKey, value);
         if (active) {
-          window.sessionStorage.setItem(storageKey, JSON.stringify(encrypted));
+          writeSessionStorage(storageKey, JSON.stringify(encrypted));
         }
       } catch {
         // Ignore client-side draft persistence failures.
@@ -138,7 +163,7 @@ export function useEncryptedFormDraft<T>({
 
   const clearDraft = React.useCallback(() => {
     if (typeof window === "undefined") return;
-    window.sessionStorage.removeItem(storageKey);
+    removeSessionStorage(storageKey);
   }, [storageKey]);
 
   return { hydrated, clearDraft };

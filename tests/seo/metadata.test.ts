@@ -63,12 +63,23 @@ describe("seo helpers", () => {
     });
   });
 
-  it("warns only once in development when NEXT_PUBLIC_APP_URL is missing", () => {
+  it("falls back to localhost in development when NEXT_PUBLIC_APP_URL is missing", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.stubEnv("NODE_ENV", "development");
 
-    expect(getConfiguredBaseUrl()).toBeUndefined();
-    expect(getConfiguredBaseUrl()).toBeUndefined();
+    expect(getConfiguredBaseUrl()?.toString()).toBe("http://localhost:3000/");
+    expect(getConfiguredBaseUrl()?.toString()).toBe("http://localhost:3000/");
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it("warns once for an invalid NEXT_PUBLIC_APP_URL and still falls back safely", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.stubEnv("NODE_ENV", "development");
+    process.env.NEXT_PUBLIC_APP_URL = "not a url";
+
+    expect(getConfiguredBaseUrl()?.toString()).toBe("http://localhost:3000/");
+    expect(getConfiguredBaseUrl()?.toString()).toBe("http://localhost:3000/");
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
   });
