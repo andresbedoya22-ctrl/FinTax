@@ -46,11 +46,22 @@ export function deriveFallbackTaxSummary(caseItem: Case | null | undefined): Tax
   if (!caseItem) return EMPTY_TAX_SUMMARY;
 
   const wizardData = caseItem.wizard_data as Record<string, unknown>;
+  const income = readRecord(wizardData.income);
+  const assets = readRecord(wizardData.assets);
+  const deductions = readRecord(wizardData.deductions);
 
   return {
-    box1Income: toNumber(wizardData.grossIncome),
-    box3Assets: toNumber(wizardData.box3Assets),
-    credits: toNumber(wizardData.taxCredits),
+    box1Income:
+      toNumber(income.employmentIncome) +
+      toNumber(income.selfEmploymentIncome) +
+      toNumber(income.otherIncome) +
+      toNumber(wizardData.grossIncome),
+    box3Assets: toNumber(assets.taxpayerAssets) + toNumber(assets.partnerAssets) + toNumber(wizardData.box3Assets),
+    credits:
+      toNumber(deductions.healthcareCosts) +
+      toNumber(deductions.educationCosts) +
+      toNumber(deductions.donationCosts) +
+      toNumber(wizardData.taxCredits),
     netResult: toNumber(caseItem.actual_refund ?? caseItem.estimated_refund),
     isFallback: true,
     sourceLabel: "case_data_fallback",
@@ -76,4 +87,8 @@ export function useTaxSummary(caseId: string) {
       }
     },
   });
+}
+
+function readRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
 }

@@ -78,9 +78,20 @@ describe("useTaxSummary", () => {
             estimated_refund: 1450,
             actual_refund: null,
             wizard_data: {
-              grossIncome: 41000,
-              box3Assets: 62000,
-              taxCredits: 900,
+              income: {
+                employmentIncome: 41000,
+                otherIncome: 0,
+                selfEmploymentIncome: 0,
+              },
+              assets: {
+                taxpayerAssets: 62000,
+                partnerAssets: 0,
+              },
+              deductions: {
+                healthcareCosts: 500,
+                educationCosts: 400,
+                donationCosts: 0,
+              },
             },
             wizard_completed: false,
             machtiging_status: "requested",
