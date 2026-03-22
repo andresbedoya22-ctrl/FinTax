@@ -2,15 +2,24 @@
 
 import { createClient } from "@/lib/supabase/client";
 
+export interface WizardSnapshot<T = Record<string, unknown>> {
+  hasDraft: boolean;
+  version: 2;
+  updatedAt: string;
+  progressStep: number | null;
+  selectedService: string | null;
+  payload: Partial<T>;
+}
+
 export async function persistWizardSnapshot(params: {
   storageKey: string;
   caseId?: string;
   payload: Record<string, unknown>;
 }) {
-  const metadata = buildLocalWizardMetadata(params.payload);
+  const snapshot = buildLocalWizardSnapshot(params.payload);
 
   if (typeof window !== "undefined") {
-    window.localStorage.setItem(params.storageKey, JSON.stringify(metadata));
+    window.localStorage.setItem(params.storageKey, JSON.stringify(snapshot));
   }
 
   if (!params.caseId) return;
@@ -35,20 +44,36 @@ export async function persistWizardSnapshot(params: {
 }
 
 export function loadWizardSnapshot<T>(storageKey: string, fallback: T): T {
-  void storageKey;
-  return fallback;
+  const snapshot = readWizardSnapshot<T>(storageKey);
+  if (!snapshot?.payload) return fallback;
+
+  return mergeWithFallback(fallback, snapshot.payload);
 }
 
 export function hasLocalWizardProgress(storageKey: string): boolean {
-  if (typeof window === "undefined") return false;
+  return Boolean(readWizardSnapshot(storageKey)?.hasDraft);
+}
+
+export function readWizardSnapshot<T>(storageKey: string): WizardSnapshot<T> | null {
+  if (typeof window === "undefined") return null;
 
   try {
     const raw = window.localStorage.getItem(storageKey);
-    if (!raw) return false;
-    const parsed = JSON.parse(raw) as { hasDraft?: boolean };
-    return Boolean(parsed.hasDraft);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as Partial<WizardSnapshot<T>> & { selectedService?: string | null };
+    if (!parsed || typeof parsed !== "object") return null;
+
+    return {
+      hasDraft: Boolean(parsed.hasDraft),
+      version: 2,
+      updatedAt: typeof parsed.updatedAt === "string" ? parsed.updatedAt : new Date().toISOString(),
+      progressStep: typeof parsed.progressStep === "number" ? parsed.progressStep : null,
+      selectedService: typeof parsed.selectedService === "string" ? parsed.selectedService : null,
+      payload: typeof parsed.payload === "object" && parsed.payload !== null ? parsed.payload : {},
+    };
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -58,11 +83,28 @@ function sanitizeWizardPayload(payload: Record<string, unknown>) {
   return clone;
 }
 
-function buildLocalWizardMetadata(payload: Record<string, unknown>) {
+function buildLocalWizardSnapshot(payload: Record<string, unknown>): WizardSnapshot {
   return {
     hasDraft: true,
+    version: 2,
     updatedAt: new Date().toISOString(),
     progressStep: typeof payload.currentStep === "number" ? payload.currentStep : null,
     selectedService: typeof payload.selectedService === "string" ? payload.selectedService : null,
+    payload: sanitizeWizardPayload(payload),
   };
+}
+
+function mergeWithFallback<T>(fallback: T, payload: Partial<T>): T {
+  if (!fallback || typeof fallback !== "object") return fallback;
+
+  const result = { ...(fallback as Record<string, unknown>) };
+  const payloadObject = payload as Record<string, unknown>;
+
+  for (const key of Object.keys(result)) {
+    if (key in payloadObject) {
+      result[key] = payloadObject[key];
+    }
+  }
+
+  return result as T;
 }

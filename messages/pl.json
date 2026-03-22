@@ -397,6 +397,290 @@
       ]
     }
   },
+  "Benefits": {
+    "heroTitle": "See which Dutch benefits may actually fit your case.",
+    "heroSubtitle": "A premium eligibility intake for 2026 toeslagen. The flow adapts to your situation, keeps the questions focused and finishes with a clear estimate, reasoning and recommended next step per benefit.",
+    "wizardTitle": "Benefits eligibility wizard",
+    "back": "Back",
+    "next": "Continue",
+    "intro": {
+      "eyebrow": "Benefits review",
+      "highlights": {
+        "rulesLabel": "Rule set",
+        "rulesValue": "2026 thresholds mapped into the wizard",
+        "scopeLabel": "Scope",
+        "scopeValue": "Only relevant questions, grouped by topic",
+        "reviewLabel": "Output",
+        "reviewValue": "Clear estimate plus documentary next steps"
+      }
+    },
+    "progress": {
+      "badge": "Contextual intake",
+      "stepCount": "{current} / {total}",
+      "completionLabel": "Progress",
+      "currentStepLabel": "Current focus: {step}"
+    },
+    "options": {
+      "single": "Single",
+      "partners": "Partners",
+      "daycare": "Daycare",
+      "outOfSchoolCare": "Out-of-school care",
+      "childminder": "Childminder"
+    },
+    "optionsDescriptions": {
+      "single": "One adult household assessed under single thresholds.",
+      "partners": "Two adult household assessed with partner thresholds."
+    },
+    "fields": {
+      "age": "Age",
+      "householdType": "Household type",
+      "nlResident": "Resident in the Netherlands",
+      "annualIncome": "Annual income",
+      "assets": "Assets",
+      "hasIndependentHome": "Independent home",
+      "hasRentalContract": "Rental contract",
+      "monthlyRent": "Monthly rent",
+      "hasHealthInsurance": "Dutch health insurance",
+      "childrenUnder18": "Children under 18",
+      "receivesKinderbijslag": "Receiving kinderbijslag",
+      "usesChildcare": "Needs childcare support",
+      "childcareHoursPerMonth": "Childcare hours per month",
+      "childcareType": "Childcare type",
+      "childcareHourlyRate": "Hourly childcare rate",
+      "registeredChildcare": "Registered childcare provider",
+      "bothParentsWork": "Parents work or qualify"
+    },
+    "fieldsHelp": {
+      "nlResident": "Residency is a core condition for zorgtoeslag and affects the rest of the review.",
+      "hasIndependentHome": "Huurtoeslag only makes sense if you rent an independent living space.",
+      "hasRentalContract": "We only ask for rent details when there is a formal rental relationship.",
+      "hasHealthInsurance": "Zorgtoeslag requires Dutch basic health insurance.",
+      "receivesKinderbijslag": "Kindgebonden budget depends on child benefit being in place.",
+      "usesChildcare": "Only continue with childcare questions if paid childcare is relevant.",
+      "registeredChildcare": "Kinderopvangtoeslag requires a registered provider.",
+      "bothParentsWork": "The childcare benefit usually depends on work or an equivalent qualifying status."
+    },
+    "fieldsHint": {
+      "annualIncome": "Gross household income for the year.",
+      "assets": "Savings and other relevant assets used for the benefits test.",
+      "monthlyRent": "Use the contract rent before service charges when possible.",
+      "childrenUnder18": "Only children under 18 count for this estimate.",
+      "childcareHoursPerMonth": "Average paid hours per month.",
+      "childcareType": "Provider category affects the hourly cap.",
+      "childcareHourlyRate": "Use the rate actually paid per hour."
+    },
+    "hints": {
+      "zorgIncomeMax": "2026 zorgtoeslag income threshold",
+      "assetThresholds": "2026 asset thresholds",
+      "huurRentCap": "Monthly rent cap used in the estimate",
+      "zorgMax": "Maximum annual zorgtoeslag"
+    },
+    "sections": {
+      "household": {
+        "title": "Household setup",
+        "description": "Start with the household structure that applies to the claim."
+      },
+      "identity": {
+        "title": "Personal baseline",
+        "description": "Age influences some thresholds, especially for housing support."
+      },
+      "residency": {
+        "title": "Residency check",
+        "description": "We use this to adapt the rest of the wizard and avoid irrelevant health questions."
+      },
+      "income": {
+        "title": "Income picture",
+        "description": "A single income figure lets us compare your case to the main 2026 limits."
+      },
+      "assets": {
+        "title": "Assets and reserves",
+        "description": "Some benefits stop when assets exceed the allowed ceiling."
+      },
+      "housing": {
+        "title": "Rental situation",
+        "description": "Only huurtoeslag-relevant housing questions stay visible."
+      },
+      "health": {
+        "title": "Health coverage",
+        "description": "This step only validates the conditions that matter for zorgtoeslag."
+      },
+      "children": {
+        "title": "Children and childcare",
+        "description": "The flow simplifies heavily when there are no children or no childcare costs."
+      }
+    },
+    "stepAside": {
+      "personal": {
+        "label": "Why this matters",
+        "value": "The household baseline controls the thresholds used in the estimate."
+      },
+      "income": {
+        "label": "Review note",
+        "value": "Income drives the largest swings in zorgtoeslag and childcare support."
+      },
+      "assets": {
+        "label": "Review note",
+        "value": "Asset limits are strict. We surface them early so the result stays honest."
+      },
+      "children": {
+        "label": "Review note",
+        "value": "We only collect childcare details if they can materially change the outcome."
+      }
+    },
+    "steps": {
+      "personal": {
+        "title": "Personal context",
+        "short": "Personal",
+        "description": "Define the household and residency baseline before anything else."
+      },
+      "income": {
+        "title": "Income",
+        "short": "Income",
+        "description": "Capture the annual income used for the first pass estimate."
+      },
+      "assets": {
+        "title": "Assets",
+        "short": "Assets",
+        "description": "Check whether savings and assets change eligibility."
+      },
+      "housing": {
+        "title": "Housing",
+        "short": "Housing",
+        "description": "Only huurtoeslag-relevant housing details stay in view."
+      },
+      "health": {
+        "title": "Health",
+        "short": "Health",
+        "description": "Confirm the health coverage conditions tied to zorgtoeslag."
+      },
+      "children": {
+        "title": "Children",
+        "short": "Children",
+        "description": "Open child-related questions only if the household needs them."
+      },
+      "results": {
+        "title": "Results",
+        "short": "Results",
+        "description": "See which benefits may fit, why, and what to prepare next."
+      }
+    },
+    "conditional": {
+      "nonResident": {
+        "title": "Residency affects the rest of the review.",
+        "copy": "Without Dutch residency, zorgtoeslag usually does not apply. The flow will keep the estimate honest and avoid implying guaranteed entitlement."
+      },
+      "housingSimplified": {
+        "title": "Housing questions simplified.",
+        "noRentalContract": "Without a rental contract, the wizard does not ask for detailed huurtoeslag rent values.",
+        "noIndependentHome": "Without an independent home, huurtoeslag is unlikely, so we skip rent questions that would not change the outcome."
+      },
+      "healthBlocked": {
+        "title": "Health check shortened.",
+        "copy": "Because residency is not currently confirmed, the wizard does not keep asking health insurance follow-up questions for zorgtoeslag."
+      },
+      "noInsurance": {
+        "title": "Zorgtoeslag remains unlikely in the current scenario.",
+        "copy": "Dutch basic health insurance is normally required. The result will show this clearly together with the next documentary step."
+      },
+      "noChildren": {
+        "title": "Children section simplified.",
+        "copy": "With no children under 18, child benefit and childcare questions are skipped."
+      },
+      "noChildcare": {
+        "title": "Childcare section shortened.",
+        "copy": "No childcare support was marked as relevant, so the wizard skips provider and invoice details."
+      }
+    },
+    "results": {
+      "summaryBadge": "Eligibility summary",
+      "summary": {
+        "none": "No clear benefit match appears from this first estimate.",
+        "one": "One benefit looks potentially relevant from this intake.",
+        "multiple": "Several benefits look potentially relevant from this intake."
+      },
+      "disclaimer": "This is an estimate, not an official decision. Final approval depends on official review, documentary evidence and the definitive government assessment.",
+      "totalLabel": "Estimated annual total",
+      "totalCaption": "Combined estimate across all potentially relevant benefits.",
+      "eligibleCountLabel": "Potentially eligible benefits",
+      "eligibleCountCaption": "Benefits that currently pass the main visible conditions.",
+      "honestyTitle": "Keep this result in the right context.",
+      "honestyCopy": "Some cases still require supporting documents, official registration checks or manual review before an application should be filed.",
+      "eligible": "Eligible",
+      "notEligible": "Not eligible",
+      "estimatedAnnualLabel": "Estimated annual amount",
+      "whyLabel": "Why this result",
+      "nextStepLabel": "Recommended next step",
+      "reviewNotice": "FinTax can review the estimate against documents before any application is submitted.",
+      "addToPlan": "Add to support plan",
+      "removeFromPlan": "Remove from support plan",
+      "cards": {
+        "zorgtoeslag": {
+          "title": "Zorgtoeslag",
+          "subtitle": "Health insurance allowance"
+        },
+        "huurtoeslag": {
+          "title": "Huurtoeslag",
+          "subtitle": "Rent support"
+        },
+        "kindgebondenBudget": {
+          "title": "Kindgebonden budget",
+          "subtitle": "Income-related child budget"
+        },
+        "kinderopvangtoeslag": {
+          "title": "Kinderopvangtoeslag",
+          "subtitle": "Childcare cost support"
+        }
+      },
+      "reasonCodes": {
+        "min_age": "The age baseline is below the usual threshold for this benefit.",
+        "nl_resident_required": "Dutch residency is generally required.",
+        "health_insurance_required": "Dutch basic health insurance is generally required.",
+        "income_too_high": "Current income appears above the main threshold used in this estimate.",
+        "assets_too_high": "Current assets appear above the main threshold used in this estimate.",
+        "resident_and_insured": "Residency and health insurance currently align with the main zorgtoeslag conditions.",
+        "income_within_threshold": "Income stays within the visible threshold used for this estimate.",
+        "assets_within_threshold": "Assets remain within the visible threshold used for this estimate.",
+        "independent_home_required": "An independent home is usually required for huurtoeslag.",
+        "rental_contract_required": "A rental contract is usually required for huurtoeslag.",
+        "independent_rental_home": "The housing setup matches the core independent rental condition.",
+        "assets_within_huur_threshold": "Assets remain within the main housing support threshold.",
+        "children_required": "At least one child under 18 is required for this benefit.",
+        "kinderbijslag_required": "Receiving kinderbijslag is usually required.",
+        "children_declared": "The household includes children under 18.",
+        "kinderbijslag_confirmed": "Kinderbijslag is currently marked as received.",
+        "childcare_not_needed": "No relevant childcare support was indicated in the intake.",
+        "registered_childcare_required": "The childcare provider must usually be registered.",
+        "working_parents_required": "Work or an equivalent qualifying status is usually required.",
+        "childcare_hours_required": "Paid childcare hours must be present to estimate this benefit.",
+        "childcare_requirements_met": "The current childcare answers support a first estimate.",
+        "childcare_costs_capped": "The estimate already applies the published hourly rate cap."
+      },
+      "nextSteps": {
+        "collectHealthPolicy": "Prepare your health insurance policy details and recent income evidence before filing.",
+        "reviewHealthConditions": "Review residency and health insurance status first, then reassess the estimate.",
+        "prepareRentalDocuments": "Prepare the rental contract, rent amount and address registration documents.",
+        "reviewHousingConditions": "Clarify whether the home is independent and whether a rental contract can be documented.",
+        "confirmChildBenefit": "Confirm kinderbijslag status and gather the child-related support documents.",
+        "reviewChildrenConditions": "Check child benefit status and the age or registration details for the children involved.",
+        "prepareChildcareInvoices": "Prepare childcare invoices, provider registration details and work-status evidence.",
+        "reviewChildcareConditions": "Check whether childcare is registered, paid and linked to qualifying work or status."
+      }
+    },
+    "bundle": {
+      "eyebrow": "Support plan",
+      "title": "Turn the estimate into a clean next step.",
+      "copy": "Choose the benefits you want to move forward with. We keep the action focused on review and application support, not an improvised checkout.",
+      "selectedServicesLabel": "Selected services",
+      "empty": "No benefits selected yet.",
+      "recommendedNextLabel": "Recommended next step",
+      "recommendedNextSelected": "Continue with a document review so the selected benefits can be checked against official evidence before any filing.",
+      "recommendedNextNone": "If you are unsure, request help first and we can review whether any benefit deserves a second pass.",
+      "annualImpactLabel": "Selected annual estimate",
+      "annualImpactCopy": "Combined estimate for the benefits currently included in your support plan.",
+      "continue": "Continue",
+      "askHelp": "Request help"
+    }
+  },
   "PaymentSuccess": {
     "eyebrow": "Platnosc",
     "title": "Przetwarzanie potwierdzenia",
