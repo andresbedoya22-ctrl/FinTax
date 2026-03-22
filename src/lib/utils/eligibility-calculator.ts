@@ -12,6 +12,7 @@ export interface BenefitsWizardInput {
   monthlyRent: number;
   childrenUnder18: number;
   receivesKinderbijslag: boolean;
+  usesChildcare: boolean;
   childcareHoursPerMonth: number;
   childcareType: "daycare" | "outOfSchoolCare" | "childminder";
   childcareHourlyRate: number;
@@ -23,6 +24,9 @@ export interface BenefitResult {
   eligible: boolean;
   estimatedAnnualAmount: number;
   reasons: string[];
+  reasoning: string[];
+  nextStep: string;
+  priority: number;
 }
 
 export interface EligibilityResults {
@@ -57,6 +61,9 @@ export function calculateEligibility(input: BenefitsWizardInput): EligibilityRes
   const zorgEstimate = zorgEligible
     ? roundCurrency(rules.zorgtoeslag.maxAnnualAmount[household] * (1 - zorgIncomeRatio * 0.7))
     : 0;
+  const zorgReasoning = zorgEligible
+    ? ["resident_and_insured", "income_within_threshold", "assets_within_threshold"]
+    : zorgReasons;
 
   const huurReasons: string[] = [];
   if (input.age < rules.huurtoeslag.minAge) huurReasons.push("min_age");
@@ -70,6 +77,7 @@ export function calculateEligibility(input: BenefitsWizardInput): EligibilityRes
   const annualRentForCalc = rentForCalc * 12;
   const incomeFactor = Math.max(0.18, 1 - input.annualIncome / 90000);
   const huurEstimate = huurEligible ? roundCurrency(annualRentForCalc * 0.32 * incomeFactor) : 0;
+  const huurReasoning = huurEligible ? ["independent_rental_home", "assets_within_huur_threshold"] : huurReasons;
 
   const kgbReasons: string[] = [];
   if (input.childrenUnder18 < 1) kgbReasons.push("children_required");
@@ -82,8 +90,10 @@ export function calculateEligibility(input: BenefitsWizardInput): EligibilityRes
   const incomeExcess = Math.max(0, input.annualIncome - threshold);
   const kgbReduction = incomeExcess * rules.kindgebondenBudget.reductionRate;
   const kgbEstimate = kgbEligible ? roundCurrency(baseKgb - kgbReduction) : 0;
+  const kgbReasoning = kgbEligible ? ["children_declared", "kinderbijslag_confirmed", "assets_within_threshold"] : kgbReasons;
 
   const kotReasons: string[] = [];
+  if (!input.usesChildcare) kotReasons.push("childcare_not_needed");
   if (!input.registeredChildcare) kotReasons.push("registered_childcare_required");
   if (!input.bothParentsWork) kotReasons.push("working_parents_required");
   if (input.childcareHoursPerMonth <= 0) kotReasons.push("childcare_hours_required");
@@ -97,12 +107,41 @@ export function calculateEligibility(input: BenefitsWizardInput): EligibilityRes
     ? rules.kinderopvangtoeslag.highCoverageRate
     : Math.max(0.33, 0.96 - (input.annualIncome - rules.kinderopvangtoeslag.highCoverageIncomeThreshold) / 220000);
   const kotEstimate = kotEligible ? roundCurrency(yearlyChildcareCost * coverageRate) : 0;
+  const kotReasoning = kotEligible ? ["childcare_requirements_met", "childcare_costs_capped"] : kotReasons;
 
   const results: EligibilityResults = {
-    zorgtoeslag: { eligible: zorgEligible, estimatedAnnualAmount: zorgEstimate, reasons: zorgReasons },
-    huurtoeslag: { eligible: huurEligible, estimatedAnnualAmount: huurEstimate, reasons: huurReasons },
-    kindgebondenBudget: { eligible: kgbEligible, estimatedAnnualAmount: kgbEstimate, reasons: kgbReasons },
-    kinderopvangtoeslag: { eligible: kotEligible, estimatedAnnualAmount: kotEstimate, reasons: kotReasons },
+    zorgtoeslag: {
+      eligible: zorgEligible,
+      estimatedAnnualAmount: zorgEstimate,
+      reasons: zorgReasons,
+      reasoning: zorgReasoning,
+      nextStep: zorgEligible ? "collectHealthPolicy" : "reviewHealthConditions",
+      priority: zorgEligible ? 1 : 4,
+    },
+    huurtoeslag: {
+      eligible: huurEligible,
+      estimatedAnnualAmount: huurEstimate,
+      reasons: huurReasons,
+      reasoning: huurReasoning,
+      nextStep: huurEligible ? "prepareRentalDocuments" : "reviewHousingConditions",
+      priority: huurEligible ? 2 : 5,
+    },
+    kindgebondenBudget: {
+      eligible: kgbEligible,
+      estimatedAnnualAmount: kgbEstimate,
+      reasons: kgbReasons,
+      reasoning: kgbReasoning,
+      nextStep: kgbEligible ? "confirmChildBenefit" : "reviewChildrenConditions",
+      priority: kgbEligible ? 3 : 6,
+    },
+    kinderopvangtoeslag: {
+      eligible: kotEligible,
+      estimatedAnnualAmount: kotEstimate,
+      reasons: kotReasons,
+      reasoning: kotReasoning,
+      nextStep: kotEligible ? "prepareChildcareInvoices" : "reviewChildcareConditions",
+      priority: kotEligible ? 4 : 7,
+    },
     totalEstimatedAnnualAmount: roundCurrency(zorgEstimate + huurEstimate + kgbEstimate + kotEstimate),
   };
 
