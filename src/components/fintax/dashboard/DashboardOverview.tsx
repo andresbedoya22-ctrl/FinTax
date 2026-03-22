@@ -26,8 +26,8 @@ type ChecklistFallbackItem = {
   done: boolean;
 };
 
-function formatDate(value: string | null | undefined, locale: string) {
-  if (!value) return "No date";
+function formatDate(value: string | null | undefined, locale: string, fallbackLabel: string) {
+  if (!value) return fallbackLabel;
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   return new Intl.DateTimeFormat(locale, { year: "numeric", month: "short", day: "2-digit" }).format(parsed);
@@ -114,26 +114,30 @@ function isDeadlineNear(deadline: string | null | undefined) {
 export function DashboardOverview() {
   const t = useTranslations("Dashboard.overview");
   const locale = useLocale();
+  const noDateLabel = t("header.noDate");
   const casesQuery = useCases();
   const notificationsQuery = useNotifications(6);
   const cases = casesQuery.data ?? [];
   const activeCase = cases[0] ?? null;
+  const hasActiveCase = activeCase !== null;
   const checklistQuery = useChecklist(activeCase?.id ?? "");
   const taxSummaryQuery = useTaxSummary(activeCase?.id ?? "");
 
   const fallbackChecklist = t.raw("checklistFallback") as ChecklistFallbackItem[];
   const checklistItems =
-    checklistQuery.data && checklistQuery.data.length > 0
+    !hasActiveCase
+      ? []
+      : checklistQuery.data && checklistQuery.data.length > 0
       ? checklistQuery.data.map((item) => ({ label: item.label, done: item.is_completed }))
       : fallbackChecklist;
   const checklistCompleted = checklistItems.filter((item) => item.done).length;
   const checklistProgress = checklistItems.length > 0 ? Math.round((checklistCompleted / checklistItems.length) * 100) : 0;
   const documentItems =
-    checklistQuery.data && checklistQuery.data.length > 0
+    hasActiveCase && checklistQuery.data && checklistQuery.data.length > 0
       ? checklistQuery.data.filter((item) => item.is_document_upload)
       : [];
   const uploadedDocuments = documentItems.filter((item) => item.is_completed).length;
-  const requiredDocuments = documentItems.length || checklistItems.length;
+  const requiredDocuments = hasActiveCase ? documentItems.length || checklistItems.length : 0;
   const documentProgress = requiredDocuments > 0 ? Math.round((uploadedDocuments / requiredDocuments) * 100) : checklistProgress;
   const currentStep = mapCaseStatusToStep(activeCase?.status ?? "draft");
   const taxYear = activeCase?.tax_year ?? new Date().getFullYear();
@@ -149,7 +153,7 @@ export function DashboardOverview() {
 
   const alerts: string[] = [];
   if (taxSummary.box3Assets > 59357) alerts.push(t("alerts.box3Threshold"));
-  if (checklistProgress < 100) alerts.push(t("alerts.checklistIncomplete"));
+  if (hasActiveCase && checklistProgress < 100) alerts.push(t("alerts.checklistIncomplete"));
   if (isDeadlineNear(activeCase?.deadline)) alerts.push(t("alerts.deadlineNear"));
 
   const historyItems = cases
@@ -162,7 +166,7 @@ export function DashboardOverview() {
           id: item.id,
           title: item.title,
           body: item.message,
-          createdAt: formatDate(item.created_at, locale),
+          createdAt: formatDate(item.created_at, locale, noDateLabel),
         }))
       : cases.slice(0, 5).map((item) => ({
           id: item.id,
@@ -170,7 +174,7 @@ export function DashboardOverview() {
             caseLabel: item.display_name ?? getDeclarationTypeLabel(item.case_type, t),
           }),
           body: getStatusLabel(item.status, t),
-          createdAt: formatDate(item.updated_at, locale),
+          createdAt: formatDate(item.updated_at, locale, noDateLabel),
         }));
 
   const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
@@ -194,8 +198,8 @@ export function DashboardOverview() {
         breadcrumbLabel={t("header.breadcrumb")}
         declarationLabel={t("header.declaration")}
         taxYear={taxYear}
-        updatedLabel={t("header.updated", { value: formatDate(activeCase?.updated_at, locale) })}
-        deadlineLabel={t("header.deadline", { value: formatDate(activeCase?.deadline, locale) })}
+        updatedLabel={t("header.updated", { value: formatDate(activeCase?.updated_at, locale, noDateLabel) })}
+        deadlineLabel={t("header.deadline", { value: formatDate(activeCase?.deadline, locale, noDateLabel) })}
         primaryHref={getCaseHref(activeCase)}
         primaryLabel={t("header.primaryAction")}
         secondaryLabel={t("header.secondaryAction")}
@@ -207,6 +211,8 @@ export function DashboardOverview() {
         currentStep={currentStep}
         steps={CASE_STEPPER_STEPS.map((step) => ({ ...step, label: t(`stepper.${step.id}`) }))}
         currentStepLabel={t("stepper.current")}
+        completedStepLabel={t("stepper.completedLabel")}
+        pendingStepLabel={t("stepper.pendingLabel")}
       />
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -224,35 +230,43 @@ export function DashboardOverview() {
               <CardDescription>{t("documents.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-[1.35rem] border border-border/45 bg-surface2/20 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("documents.progressLabel")}</p>
-                    <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-text">{documentProgress}%</p>
+              {hasActiveCase ? (
+                <>
+                  <div className="rounded-[1.35rem] border border-border/45 bg-surface2/20 p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("documents.progressLabel")}</p>
+                        <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-text">{documentProgress}%</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-mono text-sm text-text">
+                          {uploadedDocuments}/{requiredDocuments}
+                        </p>
+                        <p className="text-xs text-secondary">{t("documents.progressCaption")}</p>
+                      </div>
+                    </div>
+                    <div className="mt-4 h-2 overflow-hidden rounded-full bg-border/40">
+                      <div className="h-full rounded-full bg-gradient-to-r from-green to-copper transition-all" style={{ width: `${documentProgress}%` }} />
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-mono text-sm text-text">
-                      {uploadedDocuments}/{requiredDocuments}
-                    </p>
-                    <p className="text-xs text-secondary">{t("documents.progressCaption")}</p>
-                  </div>
+                  <ul className="grid gap-2">
+                    {checklistItems.slice(0, 6).map((item) => (
+                      <li
+                        key={item.label}
+                        className="flex items-center gap-3 rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/25 hover:bg-green/5"
+                      >
+                        {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
+                        <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <div className="rounded-[1.35rem] border border-dashed border-border/55 bg-surface2/18 p-5">
+                  <p className="text-sm font-semibold text-text">{t("documents.emptyTitle")}</p>
+                  <p className="mt-2 text-sm leading-6 text-secondary">{t("documents.emptyBody")}</p>
                 </div>
-                <div className="mt-4 h-2 overflow-hidden rounded-full bg-border/40">
-                  <div className="h-full rounded-full bg-gradient-to-r from-green to-copper transition-all" style={{ width: `${documentProgress}%` }} />
-                </div>
-              </div>
-
-              <ul className="grid gap-2">
-                {checklistItems.slice(0, 6).map((item) => (
-                  <li
-                    key={item.label}
-                    className="flex items-center gap-3 rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/25 hover:bg-green/5"
-                  >
-                    {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
-                    <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
-                  </li>
-                ))}
-              </ul>
+              )}
 
               <div className="flex justify-end">
                 <Link href={getCaseHref(activeCase)} className="inline-flex items-center gap-2 text-sm font-semibold text-green transition-colors hover:text-text">
@@ -289,7 +303,7 @@ export function DashboardOverview() {
                               <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
                               <span>{getDeclarationTypeLabel(item.case_type, t)}</span>
                               <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
-                              <span>{t("history.updated", { value: formatDate(item.updated_at, locale) })}</span>
+                              <span>{t("history.updated", { value: formatDate(item.updated_at, locale, noDateLabel) })}</span>
                             </div>
                           </div>
                           <div className="flex flex-wrap items-center gap-2">

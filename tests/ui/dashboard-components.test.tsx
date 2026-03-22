@@ -47,6 +47,8 @@ describe("HorizontalStepper", () => {
       <HorizontalStepper
         currentStep={3}
         currentStepLabel="Paso actual"
+        completedStepLabel="Completado"
+        pendingStepLabel="Pendiente"
         steps={[
           { id: "draft", label: "Inicio" },
           { id: "docs", label: "Documentos" },
@@ -61,8 +63,9 @@ describe("HorizontalStepper", () => {
     expect(screen.getByText("Documentos")).toBeInTheDocument();
     expect(screen.getByText("Revision")).toBeInTheDocument();
     expect(screen.getByText("Presentado")).toBeInTheDocument();
-    expect(screen.getByText("Completado")).toBeInTheDocument();
+    expect(screen.getAllByText("Completado").length).toBeGreaterThan(0);
     expect(screen.getByText("Paso actual")).toBeInTheDocument();
+    expect(screen.getAllByText(/Completado|Pendiente/).length).toBeGreaterThan(0);
     expect(screen.getByLabelText("Case progress")).toBeInTheDocument();
   });
 });

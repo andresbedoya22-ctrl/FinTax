@@ -13,21 +13,28 @@ export interface HorizontalStepperProps {
   currentStep: number;
   steps: HorizontalStepperStep[];
   currentStepLabel: string;
+  completedStepLabel: string;
+  pendingStepLabel: string;
 }
 
-export function HorizontalStepper({ currentStep, steps, currentStepLabel }: HorizontalStepperProps) {
+export function HorizontalStepper({
+  currentStep,
+  steps,
+  currentStepLabel,
+  completedStepLabel,
+  pendingStepLabel,
+}: HorizontalStepperProps) {
   return (
     <div className="overflow-hidden rounded-[1.6rem] border border-border/55 bg-surface p-4 shadow-[0_14px_30px_rgba(15,23,42,0.05)] sm:p-5">
-      <div className="overflow-x-auto pb-1">
-        <ol className="flex min-w-[760px] items-start gap-3 md:min-w-0 md:gap-4" aria-label="Case progress">
+      <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4" aria-label="Case progress">
           {steps.map((step, index) => {
             const stepNumber = index + 1;
             const isComplete = stepNumber < currentStep;
             const isCurrent = stepNumber === currentStep;
 
             return (
-              <li key={step.id} className="flex min-w-0 flex-1 items-start gap-3">
-                <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <li key={step.id} className="flex min-w-0">
+                <div className="flex min-w-0 flex-1 flex-col gap-3 rounded-[1.2rem] border border-border/45 bg-surface2/15 p-3 sm:p-4">
                   <div className="flex items-center gap-3">
                     <span
                       className={cn(
@@ -42,14 +49,14 @@ export function HorizontalStepper({ currentStep, steps, currentStepLabel }: Hori
                     </span>
                     <div className="min-w-0">
                       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-                        {isCurrent ? currentStepLabel : isComplete ? "Done" : "Pending"}
+                        {isCurrent ? currentStepLabel : isComplete ? completedStepLabel : pendingStepLabel}
                       </p>
                       <p className={cn("text-sm font-semibold", isCurrent ? "text-text" : "text-secondary")}>{step.label}</p>
                     </div>
                   </div>
                   <span
                     className={cn(
-                      "hidden h-1 rounded-full md:block",
+                      "h-1 rounded-full",
                       isComplete ? "bg-green" : isCurrent ? "bg-gradient-to-r from-green to-copper" : "bg-border/60",
                     )}
                     aria-hidden="true"
@@ -58,8 +65,7 @@ export function HorizontalStepper({ currentStep, steps, currentStepLabel }: Hori
               </li>
             );
           })}
-        </ol>
-      </div>
+      </ol>
     </div>
   );
 }

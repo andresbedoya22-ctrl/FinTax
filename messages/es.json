@@ -383,6 +383,7 @@
       "header": {
         "breadcrumb": "Dashboard",
         "declaration": "Declaracion",
+        "noDate": "Sin fecha disponible",
         "updated": "Actualizado: {value}",
         "deadline": "Fecha limite: {value}",
         "primaryAction": "Anadir documento",
@@ -391,6 +392,8 @@
       },
       "stepper": {
         "current": "Paso actual",
+        "completedLabel": "Completado",
+        "pendingLabel": "Pendiente",
         "draft": "Inicio",
         "docs": "Documentos",
         "review": "Revision",
@@ -420,6 +423,8 @@
         "description": "Sigue las cargas y lo que falta para que el expediente pase a revision.",
         "progressLabel": "Estado documental",
         "progressCaption": "Archivos listos para revision",
+        "emptyTitle": "Todavia no hay una declaracion activa",
+        "emptyBody": "Empieza una declaracion para cargar documentos y activar el dashboard operativo.",
         "cta": "Ver declaracion"
       },
       "history": {
