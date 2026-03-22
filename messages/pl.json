@@ -817,5 +817,512 @@
     "status": "Aktualny status",
     "dashboardCta": "Przejdz do dashboardu",
     "caseCta": "Otworz sprawe"
+  },
+  "TaxReturn": {
+    "heroTitle": "Build your Dutch tax return with a structured intake.",
+    "heroSubtitle": "Capture filing context, income, housing, assets and deductions in one serious flow. FinTax saves the draft and shows only an honest provisional estimate.",
+    "start": "Start",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Continue",
+    "wizardTitle": "Tax return case intake",
+    "savedBadge": "saved",
+    "priceLabel": "Starting from",
+    "intro": {
+      "eyebrow": "Tax return intake",
+      "highlights": {
+        "scopeLabel": "Scope",
+        "scopeValue": "Structured intake for real filing cases.",
+        "documentsLabel": "Documents",
+        "documentsValue": "Checklist stays aligned with the case.",
+        "reviewLabel": "Review",
+        "reviewValue": "Estimate stays provisional until validation."
+      }
+    },
+    "progress": {
+      "badge": "Product flow",
+      "stepCount": "{current} / {total}",
+      "completionLabel": "Completion",
+      "currentStepLabel": "Current step: {step}"
+    },
+    "common": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "services": {
+      "formP": {
+        "badge": "Form P",
+        "title": "Resident annual return",
+        "description": "Standard Dutch resident filing."
+      },
+      "formM": {
+        "badge": "Form M",
+        "title": "Migration-year return",
+        "description": "Arrival or departure year with changed residency."
+      },
+      "formC": {
+        "badge": "Form C",
+        "title": "Non-resident return",
+        "description": "Dutch income with residence outside NL."
+      },
+      "zzp": {
+        "badge": "ZZP",
+        "title": "Self-employed return",
+        "description": "Entrepreneur or mixed-income filing."
+      }
+    },
+    "aside": {
+      "caseTypeLabel": "Case type",
+      "taxYearLabel": "Tax year",
+      "employmentIncomeLabel": "Employment income",
+      "withholdingLabel": "Wage tax withheld",
+      "homeSituationLabel": "Home situation",
+      "householdSizeLabel": "Household size",
+      "box3Label": "Box 3 relevant",
+      "assetTotalLabel": "Declared assets",
+      "deductionTotalLabel": "Additional costs",
+      "preferredContactLabel": "Preferred follow-up"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "bsn": "BSN",
+      "bsnHint": "Stored masked in the draft snapshot.",
+      "taxYear": "Tax year",
+      "residency": "Residency context",
+      "filingStatus": "Filing status",
+      "partnerName": "Partner full name",
+      "employerName": "Main employer",
+      "monthsWorked": "Months worked in NL",
+      "employmentIncome": "Employment income",
+      "wageTaxWithheld": "Wage tax withheld",
+      "wageTaxWithheldHint": "Use the annual statement if known.",
+      "selfEmploymentIncome": "Self-employment income",
+      "otherIncome": "Other relevant income",
+      "address": "Primary address",
+      "city": "City",
+      "postalCode": "Postal code",
+      "householdSize": "Household size",
+      "monthlyHousingCost": "Monthly housing cost",
+      "taxpayerAssets": "Your assets",
+      "partnerAssets": "Partner assets",
+      "assetNotes": "Asset notes",
+      "healthcareCosts": "Healthcare costs",
+      "educationCosts": "Education costs",
+      "donationCosts": "Donations",
+      "otherContext": "Additional context for review"
+    },
+    "identity": {
+      "residency": {
+        "resident": {
+          "label": "Resident in the Netherlands",
+          "description": "Main tax residence stayed in NL."
+        },
+        "migration": {
+          "label": "Migration year",
+          "description": "You arrived in or left NL during the tax year."
+        },
+        "non_resident": {
+          "label": "Non-resident with Dutch income",
+          "description": "Dutch income while tax resident elsewhere."
+        }
+      },
+      "filingStatus": {
+        "single": {
+          "label": "Single filing",
+          "description": "No fiscal partner in scope."
+        },
+        "married": {
+          "label": "Married / registered partnership",
+          "description": "Partner data may be needed."
+        },
+        "fiscal_partner": {
+          "label": "Fiscal partner applies",
+          "description": "Shared positions may require partner review."
+        }
+      }
+    },
+    "income": {
+      "profile": {
+        "employment": {
+          "label": "Employment income",
+          "description": "Salary is the main source."
+        },
+        "self_employed": {
+          "label": "Self-employed income",
+          "description": "Business income drives the filing."
+        },
+        "mixed": {
+          "label": "Mixed income",
+          "description": "Employment and business both matter."
+        },
+        "benefits": {
+          "label": "Benefits income",
+          "description": "Benefits or replacement income are central."
+        },
+        "other": {
+          "label": "Other income context",
+          "description": "Manual review is needed from the start."
+        }
+      }
+    },
+    "housing": {
+      "situation": {
+        "tenant": {
+          "label": "Tenant",
+          "description": "Rent evidence may be needed."
+        },
+        "owner": {
+          "label": "Owner-occupier",
+          "description": "Mortgage or property data may matter."
+        },
+        "hosted": {
+          "label": "Hosted / staying with others",
+          "description": "Simpler housing context."
+        },
+        "other": {
+          "label": "Other housing setup",
+          "description": "Use for non-standard arrangements."
+        }
+      }
+    },
+    "assets": {
+      "box3": {
+        "label": "Relevant Box 3 assets exist",
+        "description": "Enable only when savings or investments matter."
+      },
+      "foreign": {
+        "label": "Foreign assets also matter",
+        "description": "Flag assets outside the Netherlands."
+      }
+    },
+    "steps": {
+      "identity": {
+        "eyebrow": "Step 1",
+        "title": "Identity and filing context",
+        "short": "Identity",
+        "description": "Define the tax year, residency and filing basis.",
+        "noteTitle": "Draft creation",
+        "noteCopy": "A valid first step can create or reconnect the case draft.",
+        "sections": {
+          "person": {
+            "title": "Client identity",
+            "description": "Use the details that should anchor the case."
+          },
+          "filing": {
+            "title": "Filing context",
+            "description": "These choices shape later review."
+          }
+        }
+      },
+      "income": {
+        "eyebrow": "Step 2",
+        "title": "Income picture",
+        "short": "Income",
+        "description": "Capture the main income streams and withholding data.",
+        "noteTitle": "Estimate discipline",
+        "noteCopy": "A range appears only when the intake is concrete enough.",
+        "sections": {
+          "profile": {
+            "title": "Income profile",
+            "description": "Choose the dominant income setup."
+          },
+          "employment": {
+            "title": "Employment figures",
+            "description": "Employer, months and withheld wage tax."
+          },
+          "selfEmployment": {
+            "title": "Self-employment figures",
+            "description": "Business-side income for review planning."
+          },
+          "additional": {
+            "title": "Other income",
+            "description": "Pensions, benefits or other relevant amounts."
+          }
+        }
+      },
+      "housing": {
+        "eyebrow": "Step 3",
+        "title": "Housing and household context",
+        "short": "Housing",
+        "description": "Store the primary address and household setup.",
+        "noteTitle": "Household evidence",
+        "noteCopy": "Address, rent or owner proof may still be required.",
+        "sections": {
+          "status": {
+            "title": "Home situation",
+            "description": "Choose the setup that fits the filing period."
+          },
+          "address": {
+            "title": "Address details",
+            "description": "Used for case continuity and review."
+          }
+        }
+      },
+      "assets": {
+        "eyebrow": "Step 4",
+        "title": "Assets intake",
+        "short": "Assets",
+        "description": "Capture Box 3 context without pretending to close the final logic.",
+        "noteTitle": "No fake Box 3 logic",
+        "noteCopy": "This step prepares review only.",
+        "sections": {
+          "scope": {
+            "title": "Asset relevance",
+            "description": "Decide whether Box 3 follow-up is needed."
+          },
+          "details": {
+            "title": "Asset details",
+            "description": "Keep figures high level and review-oriented."
+          }
+        }
+      },
+      "deductions": {
+        "eyebrow": "Step 5",
+        "title": "Deductions and additional details",
+        "short": "Deductions",
+        "description": "Capture relevant costs and follow-up preference.",
+        "noteTitle": "Evidence first",
+        "noteCopy": "Potential deductions stay provisional until documents are checked.",
+        "sections": {
+          "expenses": {
+            "title": "Expense inputs",
+            "description": "Major cost categories for triage."
+          },
+          "context": {
+            "title": "Additional review context",
+            "description": "Notes for edge cases or missing proof."
+          },
+          "contact": {
+            "title": "Preferred follow-up",
+            "description": "Choose how FinTax should continue the case."
+          }
+        }
+      },
+      "summary": {
+        "eyebrow": "Step 6",
+        "title": "Structured summary",
+        "short": "Summary",
+        "description": "Review the intake, estimate and missing items."
+      },
+      "submission": {
+        "eyebrow": "Step 7",
+        "title": "Submission and next step",
+        "short": "Next step",
+        "description": "Confirm the handoff and continue the case.",
+        "sections": {
+          "handoff": {
+            "title": "What happens next",
+            "description": "The file can move from intake into guided review."
+          },
+          "preferences": {
+            "title": "Review preferences",
+            "description": "Store client-facing continuation choices."
+          }
+        }
+      }
+    },
+    "summary": {
+      "cardTitle": "Draft estimate and review state",
+      "cardDescription": "Client-visible, but explicit about what still needs validation.",
+      "estimateLabel": "Preliminary range",
+      "pendingEstimate": "Estimate pending review",
+      "confidenceLabel": "Confidence",
+      "reviewStateLabel": "Draft status",
+      "incomeLabel": "Income captured",
+      "deductionsLabel": "Deductions captured",
+      "lastSavedLabel": "Last saved",
+      "justNow": "Just now",
+      "draftConnected": "Connected to a case draft",
+      "localDraft": "Saved locally until a case draft exists",
+      "honestyTitle": "Estimate policy",
+      "honestyRangeCopy": "This is an intake estimate only. Final tax outcome depends on statements, evidence and specialist validation.",
+      "honestyPendingCopy": "FinTax needs better income or withholding data before showing even a cautious range.",
+      "missingTitle": "Still needed for a stronger estimate",
+      "missingItems": {
+        "annualStatement": "Annual statement or employer payroll detail.",
+        "withholding": "Known wage tax withheld figure.",
+        "partnerDetails": "Partner identity context.",
+        "housingProof": "Housing agreement or owner evidence.",
+        "assetStatements": "Asset balances or statements.",
+        "deductionProof": "Evidence for entered costs.",
+        "bookkeeping": "Bookkeeping or profit summary."
+      },
+      "confidence": {
+        "low": "Low confidence",
+        "medium": "Medium confidence"
+      },
+      "caseSnapshotTitle": "Case snapshot",
+      "caseSnapshotDescription": "A clear summary of the structured intake.",
+      "snapshot": {
+        "service": "Service",
+        "taxYear": "Tax year",
+        "residency": "Residency",
+        "filingStatus": "Filing status",
+        "income": "Income total",
+        "deductions": "Deduction total"
+      },
+      "validationTitle": "Pending validation",
+      "validationCopy": "FinTax still validates documents, residency, withholding and partner positions before a final filing result."
+    },
+    "documents": {
+      "title": "Document checklist",
+      "description": "The checklist mirrors the intake and keeps follow-up evidence-based.",
+      "items": {
+        "identity": {
+          "title": "Identity ready",
+          "description": "Client identity and BSN context are captured."
+        },
+        "annualStatement": {
+          "title": "Income evidence",
+          "description": "Annual statements or payroll figures still matter."
+        },
+        "housing": {
+          "title": "Housing evidence",
+          "description": "Address, rent or owner proof should match the case."
+        },
+        "assets": {
+          "title": "Asset evidence",
+          "description": "Needed only when Box 3 is relevant."
+        },
+        "deductions": {
+          "title": "Deduction evidence",
+          "description": "Receipts or statements are needed before validation."
+        }
+      }
+    },
+    "submission": {
+      "panelTitle": "Case continuation",
+      "panelDescription": "The draft stays persistent and the case can continue without restarting.",
+      "saveTitle": "Draft saved",
+      "saveConnected": "This intake is already connected to a case draft.",
+      "saveLocal": "The draft is stored locally and will sync once the draft endpoint responds.",
+      "nextTitle": "Next operational step",
+      "nextCopy": "FinTax can now request missing documents, confirm the estimate basis and continue the case.",
+      "openCase": "Open case workspace",
+      "readyForReview": "Ready for guided review",
+      "authorizationTitle": "Authorization note",
+      "authorizationCopy": "If authorization is needed later, it will be requested through the case workflow. This intake does not promise direct DigiD automation.",
+      "nextSteps": [
+        "FinTax keeps the draft snapshot and structured wizard data together.",
+        "Missing documents can now be requested from case detail.",
+        "The provisional estimate stays subject to specialist validation.",
+        "Case status should continue through review, documents and submission."
+      ],
+      "reviewCall": {
+        "label": "Request a specialist review call",
+        "description": "Use when the client expects a short follow-up conversation."
+      },
+      "ready": {
+        "label": "Case can continue with review",
+        "description": "Turn this off only if the intake should pause."
+      },
+      "contact": {
+        "portal": {
+          "label": "Portal updates",
+          "description": "Keep follow-up inside the FinTax workspace."
+        },
+        "email": {
+          "label": "Email follow-up",
+          "description": "Use email for document coordination outside the dashboard."
+        },
+        "phone": {
+          "label": "Phone follow-up",
+          "description": "Use a call when facts need live clarification."
+        }
+      }
+    }
+  },
+  "CaseDetail": {
+    "notFound": "Case not found.",
+    "loadError": "Case details could not be loaded (code: {code}).",
+    "status": "Status",
+    "deadline": "Deadline",
+    "deadlinePending": "To be confirmed",
+    "tabs": {
+      "overview": "Overview",
+      "documents": "Documents",
+      "authorization": "Authorization",
+      "activity": "Activity"
+    },
+    "stepper": {
+      "draft": "Start",
+      "docs": "Documents",
+      "review": "Review",
+      "submitted": "Submitted",
+      "completed": "Completed"
+    },
+    "caseTypeLabels": {
+      "tax_return_p": "Resident return",
+      "tax_return_m": "Migration-year return",
+      "tax_return_c": "Non-resident return",
+      "tax_return_w": "Self-employed return",
+      "btw_declaration": "VAT declaration",
+      "zorgtoeslag": "Zorgtoeslag",
+      "huurtoeslag": "Huurtoeslag",
+      "kindgebonden_budget": "Kindgebonden budget",
+      "kinderopvangtoeslag": "Kinderopvangtoeslag"
+    },
+    "statusLabels": {
+      "draft": "Draft",
+      "pending_payment": "Pending payment",
+      "paid": "Paid",
+      "pending_authorization": "Pending authorization",
+      "authorized": "Authorized",
+      "in_review": "In review",
+      "pending_documents": "Pending documents",
+      "submitted": "Submitted",
+      "completed": "Completed",
+      "rejected": "Needs attention"
+    },
+    "machtigungStatusLabels": {
+      "not_started": "Not started",
+      "requested": "Requested",
+      "code_received": "Code received",
+      "activated": "Activated",
+      "rejected": "Issue detected"
+    },
+    "documentStatusLabels": {
+      "uploaded": "Uploaded",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "overview": {
+      "estimatedRefund": "Estimate",
+      "pendingEstimate": "Pending review",
+      "machtigingStatus": "Authorization status",
+      "progress": "Checklist progress",
+      "timeline": "Timeline",
+      "timelineItems": {
+        "intake": "Structured intake captured.",
+        "review": "Specialist review continues once draft data and documents are sufficient.",
+        "submission": "Submission follows only after validation, payment state and required authorizations align."
+      }
+    },
+    "documents": {
+      "title": "Documents",
+      "supported": "PDF / JPG / PNG up to 10MB.",
+      "uploadCta": "Upload files",
+      "empty": "No files uploaded yet. Use this area to continue the case once the draft is ready."
+    },
+    "authorization": {
+      "title": "Authorization",
+      "copy": "Enter the activation code received by post if FinTax requests authorization for this case.",
+      "placeholder": "Activation code",
+      "submit": "Save code"
+    },
+    "activity": {
+      "title": "Activity log",
+      "items": {
+        "created": "Case draft created and intake connected.",
+        "payment": "Payment step appears only when the backend case requires it.",
+        "review": "Specialist review starts after the intake and evidence are sufficient.",
+        "pending": "Waiting for missing documents, authorization or final validation."
+      }
+    },
+    "checklist": {
+      "title": "Checklist",
+      "empty": "Checklist items will appear here once the case has follow-up requirements."
+    }
   }
 }

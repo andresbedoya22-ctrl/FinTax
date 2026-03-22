@@ -8,6 +8,8 @@ export interface WizardSnapshot<T = Record<string, unknown>> {
   updatedAt: string;
   progressStep: number | null;
   selectedService: string | null;
+  caseId?: string | null;
+  draftStatus?: string | null;
   payload: Partial<T>;
 }
 
@@ -16,7 +18,7 @@ export async function persistWizardSnapshot(params: {
   caseId?: string;
   payload: Record<string, unknown>;
 }) {
-  const snapshot = buildLocalWizardSnapshot(params.payload);
+  const snapshot = buildLocalWizardSnapshot(params);
 
   if (typeof window !== "undefined") {
     window.localStorage.setItem(params.storageKey, JSON.stringify(snapshot));
@@ -70,6 +72,8 @@ export function readWizardSnapshot<T>(storageKey: string): WizardSnapshot<T> | n
       updatedAt: typeof parsed.updatedAt === "string" ? parsed.updatedAt : new Date().toISOString(),
       progressStep: typeof parsed.progressStep === "number" ? parsed.progressStep : null,
       selectedService: typeof parsed.selectedService === "string" ? parsed.selectedService : null,
+      caseId: typeof parsed.caseId === "string" ? parsed.caseId : null,
+      draftStatus: typeof parsed.draftStatus === "string" ? parsed.draftStatus : null,
       payload: typeof parsed.payload === "object" && parsed.payload !== null ? parsed.payload : {},
     };
   } catch {
@@ -78,19 +82,22 @@ export function readWizardSnapshot<T>(storageKey: string): WizardSnapshot<T> | n
 }
 
 function sanitizeWizardPayload(payload: Record<string, unknown>) {
-  const clone = { ...payload };
-  if ("bsn" in clone) clone.bsn = null;
-  return clone;
+  return sanitizeValue(payload) as Record<string, unknown>;
 }
 
-function buildLocalWizardSnapshot(payload: Record<string, unknown>): WizardSnapshot {
+function buildLocalWizardSnapshot(params: {
+  caseId?: string;
+  payload: Record<string, unknown>;
+}): WizardSnapshot {
   return {
     hasDraft: true,
     version: 2,
     updatedAt: new Date().toISOString(),
-    progressStep: typeof payload.currentStep === "number" ? payload.currentStep : null,
-    selectedService: typeof payload.selectedService === "string" ? payload.selectedService : null,
-    payload: sanitizeWizardPayload(payload),
+    progressStep: typeof params.payload.currentStep === "number" ? params.payload.currentStep : null,
+    selectedService: typeof params.payload.selectedService === "string" ? params.payload.selectedService : null,
+    caseId: params.caseId ?? null,
+    draftStatus: typeof params.payload.draftStatus === "string" ? params.payload.draftStatus : null,
+    payload: sanitizeWizardPayload(params.payload),
   };
 }
 
@@ -107,4 +114,18 @@ function mergeWithFallback<T>(fallback: T, payload: Partial<T>): T {
   }
 
   return result as T;
+}
+
+function sanitizeValue(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => sanitizeValue(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nextValue]) => [key, key.toLowerCase() === "bsn" ? null : sanitizeValue(nextValue)]),
+    );
+  }
+
+  return value;
 }
