@@ -31,4 +31,26 @@ describe("useEncryptedFormDraft", () => {
       });
     }
   });
+
+  it("stays hydrated when session storage access throws", async () => {
+    const getItem = vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+
+    try {
+      const onRestore = vi.fn();
+      const { result } = renderHook(() =>
+        useEncryptedFormDraft({
+          storageKey: "draft:test",
+          value: { email: "" },
+          onRestore,
+        }),
+      );
+
+      await waitFor(() => expect(result.current.hydrated).toBe(true));
+      expect(onRestore).not.toHaveBeenCalled();
+    } finally {
+      getItem.mockRestore();
+    }
+  });
 });

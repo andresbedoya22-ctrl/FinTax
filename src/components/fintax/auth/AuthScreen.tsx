@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import QRCode from "qrcode";
 import {
   AlertTriangle,
-  Apple,
   CheckCircle2,
   ChevronRight,
   Eye,
@@ -55,6 +54,7 @@ type AuthScreenSearchParams = {
   next?: string;
   reason?: string;
 };
+type AuthBanner = { message: string; tone?: "default" | "warn" | "success" };
 
 type LoginValues = { email: string; password: string };
 type RegisterValues = {
@@ -780,17 +780,12 @@ function storePendingIntent(pending: PendingAuthIntent | null) {
   window.sessionStorage.setItem(AUTH_INTENT_SESSION_KEY, JSON.stringify(pending));
 }
 
-function resolveAuthSuccessPath(searchParams: URLSearchParams | AuthScreenSearchParams) {
-  return readPendingIntent(searchParams)?.next ?? getStoredPendingIntent()?.next ?? "/app";
-}
-
 function withLocalePrefix(path: string, locale: AppLocale) {
   if (path.startsWith(`/${locale}/`)) return path;
   return `/${locale}${path}`;
 }
 
-function buildNextPathForRegister(searchParams: AuthScreenSearchParams) {
-  const nextPath = resolveAuthSuccessPath(searchParams);
+function buildNextPathForRegister(nextPath: string) {
   return nextPath === "/app" ? "/onboarding" : `/onboarding?next=${encodeURIComponent(nextPath)}`;
 }
 
@@ -807,6 +802,11 @@ function setMfaAfterLoginFlag(enabled: boolean) {
   }
   window.sessionStorage.removeItem(AUTH_MFA_AFTER_LOGIN_KEY);
 }
+
+function buildInitialInfoMessage(copy: AuthExtraCopy, mfaRequired: boolean): AuthBanner | null {
+  return mfaRequired ? { message: copy.mfa.required, tone: "warn" } : null;
+}
+
 function FieldLabel({ htmlFor, children, hint }: { htmlFor: string; children: React.ReactNode; hint?: string }) {
   return (
     <div className="mb-1.5 flex items-center gap-2">
@@ -873,6 +873,17 @@ function GoogleMark({ className }: { className?: string }) {
   );
 }
 
+function AppleMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      <path
+        fill="currentColor"
+        d="M15.67 12.59c.01 2.39 2.09 3.18 2.11 3.19-.02.06-.33 1.14-1.09 2.25-.66.96-1.34 1.92-2.42 1.94-1.06.02-1.4-.63-2.62-.63-1.22 0-1.6.61-2.59.65-1.04.04-1.84-1.04-2.5-1.99C5.18 16.63 4 14.09 4.03 11.68c.02-1.9 1.04-3.68 2.72-4.64.96-.56 2.1-.9 3.24-.92 1.02-.02 1.98.69 2.62.69.64 0 1.84-.86 3.1-.73.53.02 2.03.22 2.99 1.63-.08.05-1.78 1.04-1.77 3.88ZM14.89 4.9c.55-.67.93-1.6.83-2.53-.8.03-1.77.53-2.35 1.2-.52.6-.98 1.56-.86 2.48.89.07 1.81-.45 2.38-1.15Z"
+      />
+    </svg>
+  );
+}
+
 function SocialButton({
   icon,
   label,
@@ -891,14 +902,14 @@ function SocialButton({
       type="button"
       variant="secondary"
       size="lg"
-      className="justify-start gap-3 rounded-[var(--radius-lg)] border-border/70 bg-surface shadow-none hover:border-green/30 hover:bg-surface2/90"
+      className="justify-start gap-3 rounded-[var(--radius-lg)] border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(243,247,244,0.98))] px-4 shadow-[0_14px_30px_rgba(15,23,42,0.06)] hover:border-green/30 hover:bg-[linear-gradient(180deg,rgba(255,255,255,1),rgba(236,244,239,1))]"
       onClick={onClick}
       disabled={disabled}
     >
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border/60 bg-white shadow-[0_8px_18px_rgba(15,23,42,0.06)]">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border/50 bg-white shadow-[0_10px_22px_rgba(15,23,42,0.08)]">
         {loading ? <LoaderCircle className="h-4 w-4 animate-spin text-text" /> : icon}
       </span>
-      <span className="text-left text-[0.95rem] font-semibold text-text">{label}</span>
+      <span className="text-left text-[0.95rem] font-semibold tracking-[-0.01em] text-text">{label}</span>
     </Button>
   );
 }
@@ -934,19 +945,19 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const copy = getCopy(locale);
   const ui = getUiCopy(locale);
   const legal = getLegalRailCopy(locale);
-  const supabase = createClient();
-  const pendingIntent = React.useMemo(() => readPendingIntent(initialSearchParams), [initialSearchParams]);
+  const supabase = React.useMemo(() => createClient(), []);
+  const initialPendingIntent = React.useMemo(() => readPendingIntent(initialSearchParams), [initialSearchParams]);
   const mfaRequired = initialSearchParams.reason === "mfa_required";
-  const defaultMode: AuthMode = mfaRequired ? "login" : pendingIntent ? "register" : "login";
+  const defaultMode: AuthMode = mfaRequired ? "login" : initialPendingIntent ? "register" : "login";
   const { loginSchema, registerSchema, forgotSchema } = React.useMemo(() => buildSchemas(ui), [ui]);
 
   const [mode, setMode] = React.useState<AuthMode>(() => defaultMode);
+  const [pendingIntent, setPendingIntent] = React.useState<PendingAuthIntent | null>(initialPendingIntent);
+  const [pendingIntentHydrated, setPendingIntentHydrated] = React.useState(() => initialPendingIntent !== null);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
-  const [infoMessage, setInfoMessage] = React.useState<{ message: string; tone?: "default" | "warn" | "success" } | null>(
-    mfaRequired ? { message: copy.mfa.required, tone: "warn" } : pendingIntent ? { message: copy.intent.registerDefault } : null,
-  );
+  const [infoMessage, setInfoMessage] = React.useState<AuthBanner | null>(() => buildInitialInfoMessage(copy, mfaRequired));
   const [oauthLoading, setOauthLoading] = React.useState<"google" | "apple" | null>(null);
   const [mfaOpen, setMfaOpen] = React.useState(false);
   const [mfaLoading, setMfaLoading] = React.useState(false);
@@ -958,7 +969,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const [mfaSecret, setMfaSecret] = React.useState<string | null>(null);
   const [mfaReady, setMfaReady] = React.useState(false);
   const [mfaVerified, setMfaVerified] = React.useState(false);
-  const [postAuthDestination, setPostAuthDestination] = React.useState(() => resolveAuthSuccessPath(initialSearchParams));
+  const [postAuthDestination, setPostAuthDestination] = React.useState(() => initialPendingIntent?.next ?? "/app");
 
   const loginForm = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: "", password: "" }, mode: "onTouched" });
   const registerForm = useForm<RegisterValues>({
@@ -1001,7 +1012,35 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
     onRestore: restoreRegisterDraft,
   });
   useEncryptedFormDraft({ storageKey: FORGOT_DRAFT_KEY, value: { email: forgotEmail }, onRestore: restoreForgotDraft });
-  React.useEffect(() => { storePendingIntent(pendingIntent); }, [pendingIntent]);
+
+  React.useEffect(() => {
+    if (initialPendingIntent) {
+      setPendingIntent(initialPendingIntent);
+      setPendingIntentHydrated(true);
+      return;
+    }
+
+    setPendingIntent(getStoredPendingIntent());
+    setPendingIntentHydrated(true);
+  }, [initialPendingIntent]);
+
+  React.useEffect(() => {
+    if (!pendingIntentHydrated) return;
+    storePendingIntent(pendingIntent);
+  }, [pendingIntent, pendingIntentHydrated]);
+
+  React.useEffect(() => {
+    setPostAuthDestination(pendingIntent?.next ?? "/app");
+  }, [pendingIntent]);
+
+  React.useEffect(() => {
+    setInfoMessage(buildInitialInfoMessage(copy, mfaRequired));
+  }, [copy, mfaRequired]);
+
+  React.useEffect(() => {
+    if (mfaRequired || initialPendingIntent || !pendingIntent) return;
+    setMode((currentMode) => (currentMode === "login" ? "register" : currentMode));
+  }, [initialPendingIntent, mfaRequired, pendingIntent]);
 
   const clearSafeDrafts = React.useCallback(() => {
     if (typeof window === "undefined") return;
@@ -1012,8 +1051,8 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
   const resetTransientFeedback = React.useCallback(() => {
     setServerError(null);
-    setInfoMessage(mfaRequired ? { message: copy.mfa.required, tone: "warn" } : pendingIntent ? { message: copy.intent.registerDefault } : null);
-  }, [copy, mfaRequired, pendingIntent]);
+    setInfoMessage(buildInitialInfoMessage(copy, mfaRequired));
+  }, [copy, mfaRequired]);
 
   const openMfaDialog = React.useCallback((nextPath: string) => {
     setPostAuthDestination(nextPath);
@@ -1092,8 +1131,8 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const handleModeChange = React.useCallback((nextMode: AuthMode) => {
     setMode(nextMode);
     setServerError(null);
-    setInfoMessage(nextMode === "register" && pendingIntent ? { message: copy.intent.registerDefault } : null);
-  }, [copy.intent.registerDefault, pendingIntent]);
+    setInfoMessage(buildInitialInfoMessage(copy, mfaRequired));
+  }, [copy, mfaRequired]);
 
   const handleOAuth = React.useCallback(async (provider: "google" | "apple") => {
     resetTransientFeedback();
@@ -1103,12 +1142,12 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
     }
 
     setOauthLoading(provider);
-    const nextPath = resolveAuthSuccessPath(initialSearchParams);
+    const nextPath = pendingIntent?.next ?? "/app";
     const redirectTo = `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(withLocalePrefix(nextPath, locale))}`;
     const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
     setOauthLoading(null);
     if (error) setServerError(error.message);
-  }, [initialSearchParams, locale, resetTransientFeedback, supabase]);
+  }, [locale, pendingIntent, resetTransientFeedback, supabase]);
 
   const onLoginSubmit = loginForm.handleSubmit(async (values) => {
     resetTransientFeedback();
@@ -1124,13 +1163,13 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
     }
 
     clearSafeDrafts();
-    const nextPath = resolveAuthSuccessPath(initialSearchParams);
+    const nextPath = pendingIntent?.next ?? "/app";
     if (mfaRequired || readMfaAfterLoginFlag()) {
       openMfaDialog(nextPath);
       return;
     }
 
-    storePendingIntent(null);
+    setPendingIntent(null);
     router.push(nextPath);
   });
 
@@ -1141,7 +1180,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
       return;
     }
 
-    const redirectTarget = resolveAuthSuccessPath(initialSearchParams);
+    const redirectTarget = pendingIntent?.next ?? "/app";
     const emailRedirectTo = `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(withLocalePrefix(redirectTarget, locale))}`;
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
@@ -1157,7 +1196,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
     clearSafeDrafts();
     if (data.session) {
       setMfaAfterLoginFlag(false);
-      openMfaDialog(buildNextPathForRegister(initialSearchParams));
+      openMfaDialog(buildNextPathForRegister(redirectTarget));
       return;
     }
 
@@ -1217,7 +1256,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
   const closeMfaAndContinue = () => {
     setMfaOpen(false);
-    storePendingIntent(null);
+    setPendingIntent(null);
     router.push(postAuthDestination);
   };
 
@@ -1227,7 +1266,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   return (
     <div className="min-h-screen bg-mesh">
       <div className="mx-auto grid min-h-screen max-w-[1460px] lg:grid-cols-[minmax(0,1.02fr)_minmax(360px,0.82fr)]">
-        <section className="flex justify-center px-4 pb-8 pt-5 sm:px-6 sm:pt-7 lg:px-8 lg:pt-10 xl:px-12 xl:pt-12">
+        <section className="flex justify-center px-4 pb-8 pt-4 sm:px-6 sm:pt-5 lg:px-8 lg:pt-6 xl:px-12 xl:pt-7">
           <div className="w-full max-w-[640px]">
             <div className="mb-6 flex items-center justify-between lg:hidden">
               <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-text">
@@ -1238,17 +1277,20 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             </div>
 
             <Card variant="panel" padding="none" className="overflow-hidden border-border/70 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
-              <div className="border-b border-border/35 bg-surface/70 px-5 py-5 sm:px-7 sm:py-6">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-copper">{ui.eyebrow}</p>
-                  <h1 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text sm:text-[2.25rem]">{copy.title}</h1>
+              <div className="border-b border-border/35 bg-surface/80 px-5 py-4 sm:px-7 sm:py-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.16em] text-copper">{ui.eyebrow}</p>
+                    <h1 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text sm:text-[2.2rem]">{copy.title}</h1>
+                  </div>
+                  <Badge variant="neutral" className="hidden lg:inline-flex">{ui.form.continueAccount}</Badge>
                 </div>
                 <p className="mt-3 max-w-[56ch] text-sm leading-6 text-secondary">
                   {mode === "register" ? copy.registerSubtitle : mode === "forgot" ? copy.forgotSubtitle : copy.loginSubtitle}
                 </p>
               </div>
               <div className="px-5 py-5 sm:px-7 sm:py-6">
-                <div className="mb-5">
+                <div className="mb-4">
                   <Tabs value={mode === "forgot" ? "login" : mode} defaultValue={defaultMode} onValueChange={(value) => handleModeChange(value as AuthMode)} className="flex-1">
                     <TabsList className="w-full">
                       <TabsTrigger value="login" className="flex-1">{ui.tabs.login}</TabsTrigger>
@@ -1263,26 +1305,30 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
 
                 {mode !== "forgot" ? (
                   <>
-                    <div className="mb-5 grid gap-3 sm:grid-cols-2">
+                    <div className="mb-4 grid gap-3 sm:grid-cols-2">
                       <SocialButton
-                        icon={<GoogleMark className="h-4 w-4" />}
+                        icon={<GoogleMark className="h-[18px] w-[18px]" />}
                         label={ui.social.google}
                         loading={oauthLoading === "google"}
                         onClick={() => void handleOAuth("google")}
                         disabled={oauthLoading !== null}
                       />
                       <SocialButton
-                        icon={<Apple className="h-[18px] w-[18px] text-text" />}
+                        icon={<AppleMark className="h-[18px] w-[18px] text-[#111827]" />}
                         label={ui.social.apple}
                         loading={oauthLoading === "apple"}
                         onClick={() => void handleOAuth("apple")}
                         disabled={oauthLoading !== null}
                       />
                     </div>
-                    <div className="mb-5 flex items-center gap-3 text-xs text-muted">
+                    <div className="mb-4 flex items-center gap-3 text-xs text-muted">
                       <span className="h-px flex-1 bg-border/50" />
                       <span>{ui.social.emailDivider}</span>
                       <span className="h-px flex-1 bg-border/50" />
+                    </div>
+                    <div className="mb-5 flex items-start gap-2 rounded-[var(--radius-lg)] border border-border/55 bg-surface2/55 px-3.5 py-3 text-xs leading-5 text-secondary">
+                      <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green" />
+                      <p>{copy.trust.digid}</p>
                     </div>
                   </>
                 ) : null}
@@ -1425,11 +1471,11 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
                 ) : null}
 
                 <div className="mt-6 border-t border-border/35 pt-4">
-                  <nav aria-label="Auth support links" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
-                    <Link href="/legal/terms" className="transition-colors hover:text-text">{legal.terms}</Link>
-                    <Link href="/legal/privacy" className="transition-colors hover:text-text">{legal.privacy}</Link>
-                    <a href="mailto:privacy@fintax.nl" className="transition-colors hover:text-text">{legal.help}</a>
-                    <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "ml-auto h-auto border-transparent px-0 py-0 text-xs font-medium shadow-none hover:bg-transparent")}>
+                  <nav aria-label="Auth support links" className="flex flex-wrap items-center gap-2 text-xs text-secondary">
+                    <Link href="/legal/terms" className="rounded-full border border-border/60 bg-surface2/55 px-3 py-1.5 transition-colors hover:border-green/30 hover:text-text">{legal.terms}</Link>
+                    <Link href="/legal/privacy" className="rounded-full border border-border/60 bg-surface2/55 px-3 py-1.5 transition-colors hover:border-green/30 hover:text-text">{legal.privacy}</Link>
+                    <a href="mailto:privacy@fintax.nl" className="rounded-full border border-border/60 bg-surface2/55 px-3 py-1.5 transition-colors hover:border-green/30 hover:text-text">{legal.help}</a>
+                    <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "ml-auto h-8 rounded-full border border-transparent px-3 text-xs font-medium shadow-none hover:border-border/60 hover:bg-surface2/55")}>
                       {ui.form.backToLanding}
                     </Link>
                   </nav>
@@ -1439,7 +1485,7 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
           </div>
         </section>
 
-        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(73,129,101,0.2),transparent_34%),linear-gradient(180deg,#0d1612_0%,#101913_48%,#141f18_100%)] px-8 py-10 text-white lg:flex lg:flex-col lg:gap-8 xl:px-12 xl:py-12">
+        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(109,155,126,0.22),transparent_32%),linear-gradient(180deg,#122018_0%,#14231b_45%,#17271e_100%)] px-8 py-8 text-white lg:flex lg:flex-col lg:gap-7 xl:px-12 xl:py-10">
           <div>
             <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-white">
               <span className="grid h-8 w-8 place-items-center rounded-lg border border-white/15 bg-white/10 font-heading text-sm text-white">F</span>
@@ -1447,32 +1493,44 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
             </Link>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
               <Badge variant="neutral" className="border-white/15 bg-white/10 text-white">{copy.trust.eyebrow}</Badge>
-              <h2 className="mt-4 max-w-[14ch] font-heading text-[2.4rem] leading-[0.96] tracking-[-0.04em] text-white">{ui.panel.title}</h2>
-              <p className="mt-4 max-w-[42ch] text-sm leading-7 text-white/92">{copy.trust.body}</p>
+              <h2 className="mt-4 max-w-[13ch] font-heading text-[2.35rem] leading-[0.98] tracking-[-0.04em] text-white">{ui.panel.title}</h2>
+              <p className="mt-4 max-w-[40ch] text-sm leading-7 text-white/88">{copy.trust.body}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <span className="rounded-full border border-white/14 bg-white/[0.08] px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.16em] text-white/84">Email</span>
+                <span className="rounded-full border border-white/14 bg-white/[0.08] px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.16em] text-white/84">Google</span>
+                <span className="rounded-full border border-white/14 bg-white/[0.08] px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.16em] text-white/84">Apple</span>
+              </div>
             </div>
 
-            <Card variant="panel" padding="md" className="border-[#6f9f84]/26 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(8,18,14,0.2))] text-white shadow-[0_24px_60px_rgba(3,8,6,0.32)]">
-              <p className="text-xs uppercase tracking-[0.14em] text-[#9fd3b5]">{ui.panel.caseLabel}</p>
-              <p className="mt-3 font-heading text-2xl leading-tight text-white">{ui.panel.caseTitle}</p>
-              <p className="mt-3 text-sm leading-6 text-white/92">{ui.panel.caseCopy}</p>
-              <div className="mt-6 grid gap-3">
+            <Card variant="panel" padding="md" className="border-[#cfe0d5] bg-[linear-gradient(180deg,#f9fcfa_0%,#eff5f1_100%)] text-text shadow-[0_24px_60px_rgba(3,8,6,0.22)]">
+              <div>
+                <p className="text-xs uppercase tracking-[0.16em] text-green">{ui.panel.caseLabel}</p>
+                <p className="mt-3 font-heading text-[1.9rem] leading-[1.05] tracking-[-0.03em] text-[#173324]">{ui.panel.caseTitle}</p>
+              </div>
+              <p className="mt-4 max-w-[40ch] text-sm leading-7 text-[#334b3f]">{ui.panel.caseCopy}</p>
+              <div className="mt-5 grid gap-3">
                 {copy.trust.points.map((point) => (
-                  <div key={point} className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/14 bg-white/[0.075] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#9fd3b5]" />
-                    <p className="text-sm leading-6 text-white/96">{point}</p>
+                  <div key={point} className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-[#d8e4dc] bg-white/92 px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
+                    <div className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-green/12">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-green" />
+                    </div>
+                    <p className="text-sm leading-6 text-[#243a30]">{point}</p>
                   </div>
                 ))}
               </div>
             </Card>
           </div>
 
-          <div className="rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.055] px-4 py-4 text-sm leading-6 text-white/90">
-            <div className="mb-1 text-xs uppercase tracking-[0.14em] text-[#9fd3b5]">{copy.trust.noteTitle}</div>
-            <p className="text-white">{copy.trust.digid}</p>
-            <p className="mt-2 text-white/84">{copy.trust.noteBody}</p>
+          <div className="rounded-[var(--radius-lg)] border border-white/10 bg-white/[0.06] px-4 py-3 text-sm leading-6 text-white/82">
+            <div className="flex items-start gap-3">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#9fd3b5]" />
+              <p>
+                <span className="font-medium text-white">{copy.trust.noteTitle}.</span> {copy.trust.noteBody}
+              </p>
+            </div>
           </div>
         </aside>
 

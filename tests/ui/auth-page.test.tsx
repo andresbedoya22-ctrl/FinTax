@@ -3,7 +3,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/components/fintax/auth/AuthScreen", () => ({
+vi.mock("@/components/fintax/auth", () => ({
   AuthScreen: ({ initialSearchParams }: { initialSearchParams: Record<string, string | undefined> }) => (
     <div data-testid="auth-screen-proxy">{JSON.stringify(initialSearchParams)}</div>
   ),
