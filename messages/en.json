@@ -375,34 +375,128 @@
       "alerts": "Alerts"
     },
     "overview": {
-      "caseTitle": "Case Overview",
-      "statusLabel": "Status",
-      "statusValue": "In review",
-      "deadlineLabel": "Deadline",
-      "deadlineValue": "12 May 2026",
-      "checklistTitle": "Checklist",
-      "progressLabel": "Continue checklist",
-      "refundTitle": "Refund estimate",
-      "refundAmount": "2,345",
-      "chartTitle": "Last 7 checkpoints",
-      "chartNote": "Updated after latest payroll upload",
-      "caseRows": [
-        {
-          "label": "Zorgtoeslag",
-          "amount": "EUR 1,286"
+      "apiError": {
+        "eyebrow": "Dashboard API",
+        "body": "The declaration overview could not be refreshed.",
+        "codePrefix": "Code:"
+      },
+      "header": {
+        "breadcrumb": "Dashboard",
+        "declaration": "Declaration",
+        "updated": "Updated: {value}",
+        "deadline": "Deadline: {value}",
+        "primaryAction": "Add document",
+        "secondaryAction": "Download PDF summary",
+        "secondaryHint": "PDF export becomes available when the filing summary is generated."
+      },
+      "stepper": {
+        "current": "Current step",
+        "draft": "Start",
+        "docs": "Documents",
+        "review": "Review",
+        "submitted": "Submitted",
+        "completed": "Completed"
+      },
+      "kpis": {
+        "box1Income": {
+          "title": "Box 1 income",
+          "note": "Declared employment income"
         },
-        {
-          "label": "Huurtoeslag",
-          "amount": "EUR 2,140"
+        "box3Assets": {
+          "title": "Box 3 assets",
+          "note": "Assets captured in the current case"
         },
-        {
-          "label": "Tax return refund",
-          "amount": "EUR 1,102"
+        "credits": {
+          "title": "Tax credits",
+          "note": "Credits confirmed in the current summary"
+        },
+        "netResult": {
+          "title": "Net result",
+          "note": "Current estimate after adjustments"
         }
-      ],
-      "checklistItems": [
+      },
+      "documents": {
+        "title": "Document progress",
+        "description": "Track upload completion and the remaining evidence required for review.",
+        "progressLabel": "Documentation status",
+        "progressCaption": "Files ready for review",
+        "cta": "Review declaration"
+      },
+      "history": {
+        "title": "Fiscal history",
+        "description": "Recent declarations and status checkpoints ordered by latest activity.",
+        "empty": "No declaration history available yet.",
+        "taxYear": "Tax year {year}",
+        "updated": "Updated {value}",
+        "cta": "View declaration",
+        "types": {
+          "formP": "Income tax return",
+          "formM": "Migration return (M form)",
+          "formC": "Non-resident return (C form)",
+          "zzp": "Self-employed return",
+          "vat": "VAT declaration",
+          "healthcare": "Healthcare allowance",
+          "rent": "Rent allowance",
+          "childBudget": "Child budget allowance",
+          "childcare": "Childcare allowance"
+        }
+      },
+      "summary": {
+        "title": "Tax summary",
+        "description": "Operational fiscal snapshot based on the active declaration.",
+        "netResultLabel": "Net result",
+        "rows": {
+          "box1Income": "Box 1 income",
+          "box3Assets": "Box 3 assets",
+          "credits": "Tax credits",
+          "netResult": "Net result"
+        },
+        "sources": {
+          "tax_summary_api": "Live tax summary",
+          "case_data_fallback": "Fallback from case data",
+          "summary_unavailable": "Summary unavailable"
+        }
+      },
+      "alertsPanel": {
+        "title": "Alerts and calendar",
+        "description": "Critical deadlines and items that can still delay the declaration.",
+        "calendarTitle": "Calendar",
+        "alertsTitle": "Priority alerts",
+        "empty": "No priority alerts at this time."
+      },
+      "alerts": {
+        "box3Threshold": "Box 3 assets exceed EUR 59,357. Review the asset documentation before filing.",
+        "checklistIncomplete": "The document checklist is still incomplete. Upload the missing evidence to avoid delays.",
+        "deadlineNear": "The filing deadline is approaching. Complete the review steps as soon as possible."
+      },
+      "activity": {
+        "title": "Recent activity",
+        "description": "Latest case events and operational updates.",
+        "empty": "No recent activity yet.",
+        "caseUpdated": "{caseLabel} received a new status update"
+      },
+      "advisor": {
+        "title": "Advisor panel",
+        "description": "Human review stays visible when it materially helps the case move forward.",
+        "statusTitle": "Advisor assignment active",
+        "body": "A specialist is attached to this declaration and can continue the review once the current blockers are resolved.",
+        "primaryAction": "Message advisor",
+        "secondaryAction": "Request a call"
+      },
+      "status": {
+        "draft": "Start",
+        "pendingDocuments": "Documents pending",
+        "inReview": "In review",
+        "pendingPayment": "Pending payment",
+        "pendingAuthorization": "Pending authorization",
+        "authorized": "Authorized",
+        "submitted": "Submitted",
+        "completed": "Completed",
+        "rejected": "Needs update"
+      },
+      "checklistFallback": [
         {
-          "label": "Passport / ID uploaded",
+          "label": "Passport or ID document",
           "done": true
         },
         {
@@ -411,16 +505,27 @@
         },
         {
           "label": "Housing contract details",
-          "done": true
+          "done": false
         },
         {
-          "label": "Childcare invoices",
+          "label": "Bank balance evidence for Box 3",
           "done": false
         }
       ],
-      "openCase": "Open flow",
-      "reviewBenefits": "Review benefits eligibility",
-      "cta": "Open benefits estimator"
+      "calendarMilestones": [
+        {
+          "date": "01/03/2027",
+          "label": "Start of declaration period"
+        },
+        {
+          "date": "01/05/2027",
+          "label": "Standard filing deadline"
+        },
+        {
+          "date": "01/07/2027",
+          "label": "Late review / corrections if applicable"
+        }
+      ]
     }
   },
   "Onboarding": {

@@ -1,49 +1,33 @@
-"use client";
+﻿"use client";
 
-import { ArrowRight, CheckCircle2, ChevronRight, Circle, Clock3, FolderCheck, ReceiptText, ShieldCheck, Upload } from "lucide-react";
+import { AlertTriangle, ArrowRight, CalendarClock, CheckCircle2, Circle, Clock3, ShieldCheck } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 import { isApiClientError } from "@/hooks/api-client";
 import { useCases } from "@/hooks/useCases";
 import { useChecklist } from "@/hooks/useChecklist";
+import { useNotifications } from "@/hooks/useNotifications";
+import { useTaxSummary } from "@/hooks/useTaxSummary";
 import { cn } from "@/lib/cn";
 import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
+import type { Case, CaseType } from "@/types/database";
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
+import { DeclarationHeader } from "@/components/fintax/dashboard/DeclarationHeader";
+import { HorizontalStepper } from "@/components/fintax/dashboard/HorizontalStepper";
 
-type CaseStatusTone = "neutral" | "success" | "warning";
+type TimelineMilestone = {
+  date: string;
+  label: string;
+};
 
-function caseStatusLabel(status: string) {
-  switch (status) {
-    case "pending_documents":
-      return "Pending documents";
-    case "in_review":
-      return "Under review";
-    case "pending_payment":
-      return "Pending payment";
-    case "pending_authorization":
-      return "Pending authorization";
-    case "authorized":
-      return "Authorized";
-    case "submitted":
-      return "Submitted";
-    case "completed":
-      return "Completed";
-    case "rejected":
-      return "Needs update";
-    default:
-      return "Draft";
-  }
-}
-
-function caseStatusTone(status: string): CaseStatusTone {
-  if (status === "completed" || status === "authorized" || status === "submitted") return "success";
-  if (status === "pending_documents" || status === "pending_payment") return "warning";
-  return "neutral";
-}
+type ChecklistFallbackItem = {
+  label: string;
+  done: boolean;
+};
 
 function formatDate(value: string | null | undefined, locale: string) {
-  if (!value) return "No date yet";
+  if (!value) return "No date";
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   return new Intl.DateTimeFormat(locale, { year: "numeric", month: "short", day: "2-digit" }).format(parsed);
@@ -57,322 +41,400 @@ function formatMoney(value: number, locale: string) {
   }).format(value);
 }
 
+function isTaxCase(caseType: CaseType) {
+  return caseType.startsWith("tax_return") || caseType === "btw_declaration";
+}
+
+function getCaseHref(caseItem: Case | null) {
+  if (!caseItem) return "/tax-return";
+  return isTaxCase(caseItem.case_type) ? `/tax-return/${caseItem.id}` : `/benefits/${caseItem.id}`;
+}
+
+function getDeclarationTypeLabel(caseType: CaseType, t: ReturnType<typeof useTranslations<"Dashboard.overview">>) {
+  switch (caseType) {
+    case "tax_return_m":
+      return t("history.types.formM");
+    case "tax_return_c":
+      return t("history.types.formC");
+    case "tax_return_w":
+      return t("history.types.zzp");
+    case "btw_declaration":
+      return t("history.types.vat");
+    case "zorgtoeslag":
+      return t("history.types.healthcare");
+    case "huurtoeslag":
+      return t("history.types.rent");
+    case "kindgebonden_budget":
+      return t("history.types.childBudget");
+    case "kinderopvangtoeslag":
+      return t("history.types.childcare");
+    default:
+      return t("history.types.formP");
+  }
+}
+
+function getStatusLabel(status: string, t: ReturnType<typeof useTranslations<"Dashboard.overview">>) {
+  switch (status) {
+    case "pending_documents":
+      return t("status.pendingDocuments");
+    case "in_review":
+      return t("status.inReview");
+    case "pending_payment":
+      return t("status.pendingPayment");
+    case "pending_authorization":
+      return t("status.pendingAuthorization");
+    case "authorized":
+      return t("status.authorized");
+    case "submitted":
+      return t("status.submitted");
+    case "completed":
+      return t("status.completed");
+    case "rejected":
+      return t("status.rejected");
+    default:
+      return t("status.draft");
+  }
+}
+
+function getStatusTone(status: string) {
+  if (status === "completed" || status === "submitted" || status === "authorized") return "success" as const;
+  if (status === "pending_documents" || status === "pending_payment" || status === "rejected") return "copper" as const;
+  return "neutral" as const;
+}
+
+function isDeadlineNear(deadline: string | null | undefined) {
+  if (!deadline) return false;
+  const parsed = new Date(deadline);
+  if (Number.isNaN(parsed.getTime())) return false;
+  const now = new Date();
+  const diff = parsed.getTime() - now.getTime();
+  return diff >= 0 && diff <= 1000 * 60 * 60 * 24 * 30;
+}
+
 export function DashboardOverview() {
   const t = useTranslations("Dashboard.overview");
   const locale = useLocale();
   const casesQuery = useCases();
+  const notificationsQuery = useNotifications(6);
   const cases = casesQuery.data ?? [];
-  const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
-
   const activeCase = cases[0] ?? null;
   const checklistQuery = useChecklist(activeCase?.id ?? "");
-  const checklist = checklistQuery.data ?? [];
-  const fallbackChecklist = t.raw("checklistItems") as Array<{ label: string; done: boolean }>;
-  const checklistItems = checklist.length > 0 ? checklist.map((item) => ({ label: item.label, done: item.is_completed })) : fallbackChecklist;
+  const taxSummaryQuery = useTaxSummary(activeCase?.id ?? "");
 
-  const openCases = cases.length;
-  const pendingDocumentsCount = cases.filter((item) => item.status === "pending_documents").length;
-  const estimatedRefundTotal = cases.reduce((sum, item) => sum + (item.estimated_refund ?? 0), 0);
-  const fallbackEstimate = Number.parseInt(String(t("refundAmount")).replace(/[^\d]/g, ""), 10) || 1250;
-  const refundEstimateBase = estimatedRefundTotal > 0 ? Math.round(estimatedRefundTotal) : fallbackEstimate;
-
-  const currentStatus = activeCase?.status ?? "draft";
-  const currentStep = mapCaseStatusToStep(currentStatus);
-  const checklistProgress = checklistItems.length > 0 ? Math.round((checklistItems.filter((i) => i.done).length / checklistItems.length) * 100) : 0;
-  const activeStatusLabel = caseStatusLabel(currentStatus);
-  const activeStatusTone = caseStatusTone(currentStatus);
-  const deadlineText = formatDate(activeCase?.deadline, locale);
-  const updatedText = formatDate(activeCase?.updated_at, locale);
+  const fallbackChecklist = t.raw("checklistFallback") as ChecklistFallbackItem[];
+  const checklistItems =
+    checklistQuery.data && checklistQuery.data.length > 0
+      ? checklistQuery.data.map((item) => ({ label: item.label, done: item.is_completed }))
+      : fallbackChecklist;
+  const checklistCompleted = checklistItems.filter((item) => item.done).length;
+  const checklistProgress = checklistItems.length > 0 ? Math.round((checklistCompleted / checklistItems.length) * 100) : 0;
+  const documentItems =
+    checklistQuery.data && checklistQuery.data.length > 0
+      ? checklistQuery.data.filter((item) => item.is_document_upload)
+      : [];
+  const uploadedDocuments = documentItems.filter((item) => item.is_completed).length;
+  const requiredDocuments = documentItems.length || checklistItems.length;
+  const documentProgress = requiredDocuments > 0 ? Math.round((uploadedDocuments / requiredDocuments) * 100) : checklistProgress;
+  const currentStep = mapCaseStatusToStep(activeCase?.status ?? "draft");
   const taxYear = activeCase?.tax_year ?? new Date().getFullYear();
+  const taxSummary = taxSummaryQuery.data ?? {
+    box1Income: 0,
+    box3Assets: 0,
+    credits: 0,
+    netResult: activeCase?.estimated_refund ?? 0,
+    isFallback: true,
+    sourceLabel: "summary_unavailable" as const,
+  };
+  const milestoneItems = t.raw("calendarMilestones") as TimelineMilestone[];
 
-  const documentChecklist = checklist.filter((item) => item.is_document_upload);
-  const uploadedDocuments = documentChecklist.filter((item) => item.is_completed).length;
-  const requiredDocuments = documentChecklist.length;
-  const totalDocumentItems = requiredDocuments || checklistItems.length;
-  const documentProgress = totalDocumentItems > 0 ? Math.round((uploadedDocuments / totalDocumentItems) * 100) : checklistProgress;
+  const alerts: string[] = [];
+  if (taxSummary.box3Assets > 59357) alerts.push(t("alerts.box3Threshold"));
+  if (checklistProgress < 100) alerts.push(t("alerts.checklistIncomplete"));
+  if (isDeadlineNear(activeCase?.deadline)) alerts.push(t("alerts.deadlineNear"));
 
-  const fallbackRows = t.raw("caseRows") as Array<{ label: string; amount: string }>;
-  const breakdownRows =
-    cases.filter((item) => (item.estimated_refund ?? 0) > 0).length > 0
-      ? cases
-          .filter((item) => (item.estimated_refund ?? 0) > 0)
-          .slice(0, 4)
-          .map((item) => ({
-            label: item.display_name ?? item.case_type,
-            amount: item.estimated_refund ?? 0,
-          }))
-      : fallbackRows.map((row) => ({ label: row.label, amount: Number.parseFloat(row.amount.replace(/[^\d.]/g, "")) || 0 }));
+  const historyItems = cases
+    .slice()
+    .sort((left, right) => new Date(right.updated_at).getTime() - new Date(left.updated_at).getTime())
+    .slice(0, 5);
+  const recentActivity =
+    notificationsQuery.data && notificationsQuery.data.length > 0
+      ? notificationsQuery.data.slice(0, 5).map((item) => ({
+          id: item.id,
+          title: item.title,
+          body: item.message,
+          createdAt: formatDate(item.created_at, locale),
+        }))
+      : cases.slice(0, 5).map((item) => ({
+          id: item.id,
+          title: t("activity.caseUpdated", {
+            caseLabel: item.display_name ?? getDeclarationTypeLabel(item.case_type, t),
+          }),
+          body: getStatusLabel(item.status, t),
+          createdAt: formatDate(item.updated_at, locale),
+        }));
 
-  const refundBreakdownTotal = breakdownRows.reduce((sum, row) => sum + row.amount, 0);
-
-  const taxHistory = cases.slice(0, 5).map((item) => ({
-    id: item.id,
-    label: item.display_name ?? item.case_type,
-    year: item.tax_year ?? null,
-    status: caseStatusLabel(item.status),
-    updated: formatDate(item.updated_at, locale),
-  }));
-
-  const recentActivity = cases.slice(0, 4).map((item) => ({
-    id: item.id,
-    title: `${item.display_name ?? item.case_type} moved to ${caseStatusLabel(item.status).toLowerCase()}`,
-    date: formatDate(item.updated_at, locale),
-  }));
+  const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
+  const showAdvisorPanel =
+    activeCase !== null &&
+    ["in_review", "pending_authorization", "authorized", "submitted", "completed"].includes(activeCase.status);
 
   return (
     <section className="space-y-5">
       {casesQuery.isError ? (
-        <div className="rounded-lg border border-copper/30 bg-copper/10 p-4">
-          <p className="text-xs uppercase tracking-[0.14em] text-copper">Dashboard API</p>
+        <div className="rounded-2xl border border-copper/30 bg-copper/10 p-4">
+          <p className="text-xs uppercase tracking-[0.14em] text-copper">{t("apiError.eyebrow")}</p>
           <p className="mt-1 text-sm text-secondary">
-            Case overview could not be refreshed.
-            {casesErrorCode ? ` Code: ${casesErrorCode}.` : ""}
+            {t("apiError.body")}
+            {casesErrorCode ? ` ${t("apiError.codePrefix")} ${casesErrorCode}.` : ""}
           </p>
         </div>
       ) : null}
 
-      <header className="space-y-3 rounded-xl border border-border/60 bg-surface px-5 py-5 shadow-[0_8px_20px_rgba(12,24,16,0.05)] sm:px-6">
-        <div className="flex items-center gap-2 text-sm text-muted">
-          <span>Home</span>
-          <ChevronRight className="h-4 w-4" />
-          <span className="text-text">Declaration {taxYear}</span>
-        </div>
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="space-y-1">
-            <h1 className="text-[2.05rem] font-semibold tracking-[-0.03em] text-text sm:text-[2.35rem]">Tax declaration {taxYear}</h1>
-            <p className="text-sm text-secondary">
-              Updated: {updatedText} | Deadline: {deadlineText}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href="/tax-return"
-              className="inline-flex h-11 items-center gap-2 rounded-xl border border-green/45 bg-surface px-4 text-sm font-semibold text-green hover:bg-green/5"
-            >
-              <Upload className="h-4 w-4" />
-              Upload document
-            </Link>
-            <Link
-              href="/tax-return"
-              className="inline-flex h-11 items-center gap-2 rounded-xl border border-green/40 bg-green px-4 text-sm font-semibold text-white hover:bg-green-hover"
-            >
-              View full status
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </header>
+      <DeclarationHeader
+        breadcrumbLabel={t("header.breadcrumb")}
+        declarationLabel={t("header.declaration")}
+        taxYear={taxYear}
+        updatedLabel={t("header.updated", { value: formatDate(activeCase?.updated_at, locale) })}
+        deadlineLabel={t("header.deadline", { value: formatDate(activeCase?.deadline, locale) })}
+        primaryHref={getCaseHref(activeCase)}
+        primaryLabel={t("header.primaryAction")}
+        secondaryLabel={t("header.secondaryAction")}
+        secondaryHint={t("header.secondaryHint")}
+        secondaryDisabled
+      />
 
-      <Card variant="panel" padding="lg" className="border-green/20 bg-surface shadow-[0_8px_20px_rgba(12,24,16,0.05)]">
-        <CardHeader className="mb-4">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <Badge variant="copper">Case status</Badge>
-            <Badge variant={activeStatusTone === "success" ? "success" : "neutral"}>{activeStatusLabel}</Badge>
-          </div>
-          <CardTitle className="text-[1.9rem]">Declaration progress</CardTitle>
-          <CardDescription>
-            Step {currentStep} of {CASE_STEPPER_STEPS.length}. Your case follows the current fiscal status mapping.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <StatusTimeline currentStep={currentStep} />
-        </CardContent>
-      </Card>
+      <HorizontalStepper
+        currentStep={currentStep}
+        steps={CASE_STEPPER_STEPS.map((step) => ({ ...step, label: t(`stepper.${step.id}`) }))}
+        currentStepLabel={t("stepper.current")}
+      />
 
-      <div className="grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard title="Open cases" value={`${openCases}`} note="Across tax and benefits flows" tone="neutral" />
-        <KpiCard title="Pending documents" value={`${pendingDocumentsCount}`} note="Cases waiting for upload completion" tone="warning" />
-        <KpiCard title="Estimated refund" value={formatMoney(refundEstimateBase, locale)} note="Current projected total" tone="success" />
-        <KpiCard title="Checklist completion" value={`${checklistProgress}%`} note="Current active case" tone="neutral" />
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <KpiCard title={t("kpis.box1Income.title")} value={formatMoney(taxSummary.box1Income, locale)} note={t("kpis.box1Income.note")} />
+        <KpiCard title={t("kpis.box3Assets.title")} value={formatMoney(taxSummary.box3Assets, locale)} note={t("kpis.box3Assets.note")} />
+        <KpiCard title={t("kpis.credits.title")} value={formatMoney(taxSummary.credits, locale)} note={t("kpis.credits.note")} />
+        <KpiCard title={t("kpis.netResult.title")} value={formatMoney(taxSummary.netResult, locale)} note={t("kpis.netResult.note")} highlight />
       </div>
 
-      <div className="grid gap-8 xl:grid-cols-[minmax(0,1.58fr)_minmax(330px,1fr)]">
-        <div className="space-y-4">
-          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
-            <CardHeader className="mb-3">
-              <CardTitle className="text-2xl">Uploaded documents</CardTitle>
-              <CardDescription>Documents attached to your active checklist and review stage.</CardDescription>
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.92fr)]">
+        <div className="space-y-5">
+          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-[1.7rem]">{t("documents.title")}</CardTitle>
+              <CardDescription>{t("documents.description")}</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="mb-4 rounded-lg border border-border/35 bg-surface2/18 p-4">
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-secondary">Upload progress</span>
-                  <span className="font-mono text-sm font-semibold text-text">{uploadedDocuments}/{totalDocumentItems}</span>
+            <CardContent className="space-y-4">
+              <div className="rounded-[1.35rem] border border-border/45 bg-surface2/20 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("documents.progressLabel")}</p>
+                    <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-text">{documentProgress}%</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-mono text-sm text-text">
+                      {uploadedDocuments}/{requiredDocuments}
+                    </p>
+                    <p className="text-xs text-secondary">{t("documents.progressCaption")}</p>
+                  </div>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-surface">
-                  <div className="h-full rounded-full bg-green transition-all" style={{ width: `${documentProgress}%` }} />
+                <div className="mt-4 h-2 overflow-hidden rounded-full bg-border/40">
+                  <div className="h-full rounded-full bg-gradient-to-r from-green to-copper transition-all" style={{ width: `${documentProgress}%` }} />
                 </div>
               </div>
 
-              <ul className="space-y-2.5">
-                {checklistItems.slice(0, 5).map((item) => (
-                  <li key={item.label} className="flex items-center gap-3 rounded-xl border border-border/30 bg-surface px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
+              <ul className="grid gap-2">
+                {checklistItems.slice(0, 6).map((item) => (
+                  <li
+                    key={item.label}
+                    className="flex items-center gap-3 rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/25 hover:bg-green/5"
+                  >
                     {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
                     <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
                   </li>
                 ))}
               </ul>
+
+              <div className="flex justify-end">
+                <Link href={getCaseHref(activeCase)} className="inline-flex items-center gap-2 text-sm font-semibold text-green transition-colors hover:text-text">
+                  {t("documents.cta")}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
-            <CardHeader className="mb-3">
-              <CardTitle className="text-2xl">Fiscal history</CardTitle>
-              <CardDescription>Recent filing records and status checkpoints, ordered by last updates.</CardDescription>
+          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-[1.7rem]">{t("history.title")}</CardTitle>
+              <CardDescription>{t("history.description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5">
-                {taxHistory.length === 0 ? (
-                  <li className="rounded-xl border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No case history yet.</li>
-                ) : (
-                  taxHistory.map((item) => (
-                    <li key={item.id} className="rounded-xl border border-border/28 bg-surface px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
-                      <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3">
-                        <p className="truncate text-sm font-medium text-text">{item.label}</p>
-                        <span className="font-mono text-xs text-muted">{item.year ?? "Year n/a"}</span>
-                        <span className="text-xs text-secondary">{item.updated}</span>
-                      </div>
-                      <p className="mt-1 text-xs text-secondary">{item.status}</p>
-                    </li>
-                  ))
-                )}
-              </ul>
+              {historyItems.length === 0 ? (
+                <div className="rounded-[1.2rem] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">{t("history.empty")}</div>
+              ) : (
+                <ul className="space-y-3">
+                  {historyItems.map((item) => {
+                    const statusTone = getStatusTone(item.status);
+
+                    return (
+                      <li
+                        key={item.id}
+                        className="rounded-[1.3rem] border border-border/35 bg-surface px-4 py-4 transition-colors hover:border-green/20 hover:bg-green/5"
+                      >
+                        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="min-w-0 space-y-1">
+                            <p className="truncate text-base font-semibold text-text">{item.display_name ?? getDeclarationTypeLabel(item.case_type, t)}</p>
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-secondary">
+                              <span>{t("history.taxYear", { year: item.tax_year ?? "—" })}</span>
+                              <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
+                              <span>{getDeclarationTypeLabel(item.case_type, t)}</span>
+                              <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
+                              <span>{t("history.updated", { value: formatDate(item.updated_at, locale) })}</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge variant={statusTone === "success" ? "success" : statusTone === "copper" ? "copper" : "neutral"}>
+                              {getStatusLabel(item.status, t)}
+                            </Badge>
+                            <Link
+                              href={getCaseHref(item)}
+                              className="inline-flex h-10 items-center justify-center rounded-full border border-green/30 bg-white/80 px-4 text-sm font-semibold text-green transition-colors hover:bg-green/5 hover:text-text"
+                            >
+                              {t("history.cta")}
+                            </Link>
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </CardContent>
           </Card>
         </div>
 
-        <div className="space-y-6 xl:pl-6 2xl:pl-10">
-          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
-            <CardHeader className="mb-3">
-              <CardTitle className="text-2xl">Breakdown del reembolso</CardTitle>
-              <CardDescription>Current estimate by fiscal module, aligned to active case records.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="font-mono text-[2.75rem] font-semibold leading-none tracking-[-0.045em] text-text">{formatMoney(refundBreakdownTotal || refundEstimateBase, locale)}</p>
-              <div className="mt-4 rounded-lg border border-border/40 bg-surface2/20">
-                <div className="grid grid-cols-[1fr_auto] border-b border-border/35 px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-muted">
-                  <span>Item</span>
-                  <span className="font-mono">Amount</span>
-                </div>
-                {breakdownRows.map((row) => (
-                  <div key={row.label} className="grid grid-cols-[1fr_auto] items-center border-b border-border/20 px-4 py-2.5 transition hover:bg-green/5 last:border-b-0">
-                    <span className="text-sm text-secondary">{row.label}</span>
-                    <span className="font-mono text-sm font-semibold text-text">{formatMoney(row.amount, locale)}</span>
-                  </div>
-                ))}
+        <div className="space-y-5">
+          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+            <CardHeader className="mb-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant={taxSummary.isFallback ? "copper" : "success"}>{t(`summary.sources.${taxSummary.sourceLabel}`)}</Badge>
               </div>
-              <p className="mt-3 text-xs text-muted">Estimate based on current case data and checklist evidence.</p>
-              <Link
-                href="/tax-return"
-                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-green/45 bg-surface px-4 text-sm font-semibold text-green hover:bg-green/5"
-              >
-                Continue declaration
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
-            <CardHeader className="mb-3">
-              <CardTitle className="text-xl">Personal advisor</CardTitle>
-              <CardDescription>Assignment and contact status for your case.</CardDescription>
+              <CardTitle className="text-[1.7rem]">{t("summary.title")}</CardTitle>
+              <CardDescription>{t("summary.description")}</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3 rounded-lg border border-border/30 bg-surface2/18 p-4">
-                <div className="flex items-center gap-2 text-text">
-                  <ShieldCheck className="h-4 w-4 text-green" />
-                  <p className="text-sm font-medium">Advisor assignment status</p>
-                </div>
-                <p className="text-sm leading-6 text-secondary">
-                  {currentStatus === "in_review" || currentStatus === "submitted" || currentStatus === "completed"
-                    ? "A tax specialist is assigned and your case is currently under review."
-                    : "Advisor assignment starts automatically once documents and payment checks are complete."}
+            <CardContent className="space-y-4">
+              <div className="rounded-[1.35rem] border border-border/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.02),rgba(21,128,61,0.06))] p-4">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("summary.netResultLabel")}</p>
+                <p className="mt-2 font-mono text-[2.6rem] font-semibold leading-none tracking-[-0.05em] text-text">
+                  {formatMoney(taxSummary.netResult, locale)}
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  <button type="button" className="rounded-xl border border-green/35 bg-surface px-3 py-1.5 text-sm font-medium text-green transition duration-200 hover:-translate-y-0.5 hover:bg-green/5">
-                    Message advisor
-                  </button>
-                  <button type="button" className="rounded-xl border border-border/45 bg-surface px-3 py-1.5 text-sm font-medium text-text transition duration-200 hover:-translate-y-0.5 hover:border-green/30 hover:bg-surface2/45">
-                    Request call
-                  </button>
+              </div>
+
+              <dl className="grid gap-2">
+                <SummaryRow label={t("summary.rows.box1Income")} value={formatMoney(taxSummary.box1Income, locale)} />
+                <SummaryRow label={t("summary.rows.box3Assets")} value={formatMoney(taxSummary.box3Assets, locale)} />
+                <SummaryRow label={t("summary.rows.credits")} value={formatMoney(taxSummary.credits, locale)} />
+                <SummaryRow label={t("summary.rows.netResult")} value={formatMoney(taxSummary.netResult, locale)} emphasized />
+              </dl>
+            </CardContent>
+          </Card>
+
+          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-[1.7rem]">{t("alertsPanel.title")}</CardTitle>
+              <CardDescription>{t("alertsPanel.description")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <div className="mb-3 flex items-center gap-2 text-text">
+                  <CalendarClock className="h-4 w-4 text-green" />
+                  <p className="text-sm font-semibold">{t("alertsPanel.calendarTitle")}</p>
                 </div>
+                <ul className="space-y-2">
+                  {milestoneItems.map((milestone) => (
+                    <li key={`${milestone.date}-${milestone.label}`} className="rounded-[1.1rem] border border-border/35 bg-surface2/20 px-4 py-3">
+                      <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">{milestone.date}</p>
+                      <p className="mt-1 text-sm text-text">{milestone.label}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <div className="mb-3 flex items-center gap-2 text-text">
+                  <AlertTriangle className="h-4 w-4 text-copper" />
+                  <p className="text-sm font-semibold">{t("alertsPanel.alertsTitle")}</p>
+                </div>
+                {alerts.length === 0 ? (
+                  <div className="rounded-[1.1rem] border border-green/20 bg-green/5 px-4 py-3 text-sm text-secondary">{t("alertsPanel.empty")}</div>
+                ) : (
+                  <ul className="space-y-2">
+                    {alerts.map((alert) => (
+                      <li key={alert} className="rounded-[1.1rem] border border-copper/20 bg-copper/8 px-4 py-3 text-sm text-secondary">
+                        {alert}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="bg-surface shadow-[0_6px_18px_rgba(12,24,16,0.04)]">
-            <CardHeader className="mb-3">
-              <CardTitle className="text-xl">Recent activity</CardTitle>
-              <CardDescription>Latest operational updates from your active records.</CardDescription>
+          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+            <CardHeader className="mb-4">
+              <CardTitle className="text-[1.7rem]">{t("activity.title")}</CardTitle>
+              <CardDescription>{t("activity.description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5">
-                {recentActivity.length === 0 ? (
-                  <li className="rounded-xl border border-border/35 bg-surface2/25 px-3 py-2.5 text-sm text-secondary">No updates yet.</li>
-                ) : (
-                  recentActivity.map((activity) => (
-                    <li key={activity.id} className="rounded-xl border border-border/28 bg-surface px-3.5 py-2.5 transition duration-200 hover:border-green/30 hover:bg-green/5">
-                      <div className="flex items-start gap-2.5">
+              {recentActivity.length === 0 ? (
+                <div className="rounded-[1.2rem] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">{t("activity.empty")}</div>
+              ) : (
+                <ul className="space-y-3">
+                  {recentActivity.map((activity) => (
+                    <li key={activity.id} className="rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/20 hover:bg-green/5">
+                      <div className="flex items-start gap-3">
                         <Clock3 className="mt-0.5 h-4 w-4 text-copper" />
                         <div className="min-w-0">
-                          <p className="text-sm text-text">{activity.title}</p>
-                          <p className="mt-1 text-xs text-secondary">{activity.date}</p>
+                          <p className="text-sm font-semibold text-text">{activity.title}</p>
+                          <p className="mt-1 text-sm text-secondary">{activity.body}</p>
+                          <p className="mt-2 text-xs text-muted">{activity.createdAt}</p>
                         </div>
                       </div>
                     </li>
-                  ))
-                )}
-              </ul>
-              <Link href="/tax-return" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-copper transition hover:text-text">
-                View complete timeline
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+                  ))}
+                </ul>
+              )}
             </CardContent>
           </Card>
+
+          {showAdvisorPanel ? (
+            <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+              <CardHeader className="mb-4">
+                <CardTitle className="text-[1.7rem]">{t("advisor.title")}</CardTitle>
+                <CardDescription>{t("advisor.description")}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="rounded-[1.2rem] border border-green/20 bg-green/5 p-4">
+                  <div className="flex items-center gap-2 text-text">
+                    <ShieldCheck className="h-4 w-4 text-green" />
+                    <p className="text-sm font-semibold">{t("advisor.statusTitle")}</p>
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-secondary">{t("advisor.body")}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button type="button" className="rounded-full border border-green/30 bg-white px-4 py-2 text-sm font-semibold text-green transition-colors hover:bg-green/5 hover:text-text">
+                    {t("advisor.primaryAction")}
+                  </button>
+                  <button type="button" className="rounded-full border border-border/45 bg-surface px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-green/20 hover:bg-green/5">
+                    {t("advisor.secondaryAction")}
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : null}
         </div>
       </div>
     </section>
-  );
-}
-
-function StatusTimeline({ currentStep }: { currentStep: number }) {
-  return (
-    <ol className="grid gap-6 md:grid-cols-5 md:gap-3">
-      {CASE_STEPPER_STEPS.map((step, index) => {
-        const stepNumber = index + 1;
-        const isComplete = stepNumber < currentStep;
-        const isCurrent = stepNumber === currentStep;
-        return (
-          <li key={step.id} className="relative">
-            <div className="flex items-center md:block">
-              <div className="relative flex w-full items-center md:justify-center">
-                <span
-                  className={cn(
-                    "grid h-8 w-8 shrink-0 place-items-center rounded-full border text-xs font-semibold",
-                    isComplete && "border-green/45 bg-green text-white",
-                    isCurrent && "border-green bg-surface text-green ring-4 ring-green/15",
-                    !isComplete && !isCurrent && "border-border/70 bg-surface text-muted",
-                  )}
-                >
-                  {isComplete ? <CheckCircle2 className="h-4 w-4" /> : stepNumber}
-                </span>
-                {index < CASE_STEPPER_STEPS.length - 1 ? (
-                  <span
-                    className={cn(
-                      "mx-2 h-0.5 flex-1 rounded-full md:absolute md:left-[calc(50%+1rem)] md:right-[-50%] md:top-4 md:mx-0",
-                      isComplete ? "bg-green" : "bg-border/65",
-                    )}
-                  />
-                ) : null}
-              </div>
-              <div className="ml-3 md:ml-0 md:mt-2 md:text-center">
-                {isCurrent ? <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-green">You are here</p> : null}
-                <p className={cn("text-sm font-medium", isCurrent ? "text-text" : "text-secondary")}>{step.label}</p>
-              </div>
-            </div>
-          </li>
-        );
-      })}
-    </ol>
   );
 }
 
@@ -380,24 +442,34 @@ function KpiCard({
   title,
   value,
   note,
-  tone,
+  highlight = false,
 }: {
   title: string;
   value: string;
   note: string;
-  tone: "neutral" | "success" | "warning";
+  highlight?: boolean;
 }) {
-  const toneClass = tone === "success" ? "border-green/25 bg-green/7" : tone === "warning" ? "border-copper/25 bg-copper/7" : "border-border/30 bg-surface";
-  const icon = tone === "success" ? <FolderCheck className="h-4 w-4 text-green" /> : tone === "warning" ? <Clock3 className="h-4 w-4 text-copper" /> : <ReceiptText className="h-4 w-4 text-muted" />;
-
   return (
-    <Card variant="soft" padding="sm" className={cn("editorial-frame min-h-[132px]", toneClass)}>
-      <div className="mb-2 flex items-center justify-between">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{title}</p>
-        {icon}
-      </div>
-      <p className="font-mono text-[1.75rem] font-semibold tracking-[-0.03em] text-text">{value}</p>
+    <Card
+      variant="soft"
+      padding="sm"
+      className={cn(
+        "min-h-[132px] rounded-[1.4rem] border transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(15,23,42,0.08)]",
+        highlight ? "border-green/25 bg-[linear-gradient(135deg,rgba(21,128,61,0.08),rgba(195,145,91,0.08))]" : "border-border/35 bg-surface",
+      )}
+    >
+      <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{title}</p>
+      <p className="mt-3 font-mono text-[1.8rem] font-semibold tracking-[-0.04em] text-text">{value}</p>
       <p className="mt-1.5 text-xs text-secondary">{note}</p>
     </Card>
+  );
+}
+
+function SummaryRow({ label, value, emphasized = false }: { label: string; value: string; emphasized?: boolean }) {
+  return (
+    <div className={cn("flex items-center justify-between rounded-[1rem] border px-4 py-3", emphasized ? "border-green/25 bg-green/5" : "border-border/35 bg-surface")}>
+      <dt className="text-sm text-secondary">{label}</dt>
+      <dd className={cn("font-mono text-sm font-semibold", emphasized ? "text-green" : "text-text")}>{value}</dd>
+    </div>
   );
 }

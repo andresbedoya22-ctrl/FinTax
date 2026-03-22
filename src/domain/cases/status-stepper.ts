@@ -10,15 +10,15 @@ export function mapCaseStatusToStep(status: CaseStepperStatus): number {
     case "pending_documents":
       return 2;
     case "in_review":
-      return 3;
     case "pending_payment":
-      return 4;
-    case "paid":
     case "pending_authorization":
     case "authorized":
-    case "submitted":
-    case "completed":
+    case "paid":
     case "rejected":
+      return 3;
+    case "submitted":
+      return 4;
+    case "completed":
       return 5;
     default:
       return 1;
@@ -26,9 +26,9 @@ export function mapCaseStatusToStep(status: CaseStepperStatus): number {
 }
 
 export const CASE_STEPPER_STEPS: Array<{ id: string; label: string }> = [
-  { id: "draft", label: "Created" },
+  { id: "draft", label: "Start" },
   { id: "docs", label: "Documents" },
   { id: "review", label: "Review" },
-  { id: "payment", label: "Payment" },
-  { id: "done", label: "Done" },
+  { id: "submitted", label: "Submitted" },
+  { id: "completed", label: "Completed" },
 ];
