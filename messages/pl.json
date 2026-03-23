@@ -715,6 +715,11 @@
         "title": "Results",
         "short": "Results",
         "description": "See which benefits may fit, why, and what to prepare next."
+      },
+      "documentReview": {
+        "title": "Document review",
+        "short": "Review",
+        "description": "Check the recommended evidence before opening the case workspace."
       }
     },
     "conditional": {

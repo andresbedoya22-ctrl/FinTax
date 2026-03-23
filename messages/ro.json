@@ -715,6 +715,11 @@
         "title": "Rezultate",
         "short": "Rezultate",
         "description": "Vezi ce beneficii se pot potrivi, de ce si ce trebuie pregatit mai departe."
+      },
+      "documentReview": {
+        "title": "Revizuire documente",
+        "short": "Revizuire",
+        "description": "Verifica dovezile recomandate inainte sa deschizi spatiul de lucru al cazului."
       }
     },
     "conditional": {
