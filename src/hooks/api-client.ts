@@ -68,3 +68,18 @@ export async function apiPost<T, B>(url: string, body: B): Promise<T> {
 
   return parseEnvelope<T>(response);
 }
+
+export async function apiPatch<T, B>(url: string, body: B): Promise<T> {
+  const response = await fetch(url, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  return parseEnvelope<T>(response);
+}

@@ -1,9 +1,9 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslations } from "next-intl";
 
-import { BenefitPanel, BenefitStepLayout, Field, HintCard, inputClass } from "./BenefitsFormPrimitives";
+import { BenefitPanel, BenefitStepLayout, ContextNote, Field, HintCard, formatBenefitCurrency, inputClass } from "./BenefitsFormPrimitives";
 import type { BenefitsFormValues } from "./wizard";
 
 export function BenefitsStepIncome({
@@ -13,6 +13,7 @@ export function BenefitsStepIncome({
   form: UseFormReturn<BenefitsFormValues>;
   values: BenefitsFormValues;
 }) {
+  const locale = useLocale();
   const t = useTranslations("Benefits");
 
   return (
@@ -24,17 +25,49 @@ export function BenefitsStepIncome({
         <div className="space-y-4">
           <HintCard
             label={t("hints.zorgIncomeMax")}
-            value={values.householdType === "single" ? "EUR 40,857" : "EUR 51,142"}
+            value={t(values.householdType === "single" ? "hintValues.zorgIncomeMax.single" : "hintValues.zorgIncomeMax.partners", {
+              amount: formatBenefitCurrency(values.householdType === "single" ? 40857 : 51142, locale, 0),
+            })}
+          />
+          <HintCard
+            label={t("fields.householdAnnualIncome")}
+            value={formatBenefitCurrency(values.applicantAnnualIncome + (values.partnerAnnualIncome ?? 0), locale, 0)}
           />
           <HintCard label={t("stepAside.income.label")} value={t("stepAside.income.value")} />
         </div>
       }
     >
       <BenefitPanel title={t("sections.income.title")} description={t("sections.income.description")}>
-        <Field label={t("fields.annualIncome")} hint={t("fieldsHint.annualIncome")} error={form.formState.errors.annualIncome?.message}>
-          <input type="number" className={inputClass} {...form.register("annualIncome", { valueAsNumber: true })} />
-        </Field>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field
+            label={t("fields.applicantAnnualIncome")}
+            hint={t("fieldsHint.applicantAnnualIncome")}
+            error={form.formState.errors.applicantAnnualIncome?.message}
+          >
+            <input type="number" className={inputClass} {...form.register("applicantAnnualIncome", { valueAsNumber: true })} />
+          </Field>
+
+          {values.householdType === "partners" ? (
+            <Field
+              label={t("fields.partnerAnnualIncome")}
+              hint={t("fieldsHint.partnerAnnualIncome")}
+              error={form.formState.errors.partnerAnnualIncome?.message}
+            >
+              <input
+                type="number"
+                className={inputClass}
+                {...form.register("partnerAnnualIncome", {
+                  setValueAs: (value) => (value === "" ? null : Number(value)),
+                })}
+              />
+            </Field>
+          ) : null}
+        </div>
       </BenefitPanel>
+
+      {values.householdType === "partners" ? (
+        <ContextNote tone="neutral" title={t("conditional.partnerIncome.title")} copy={t("conditional.partnerIncome.copy")} />
+      ) : null}
     </BenefitStepLayout>
   );
 }

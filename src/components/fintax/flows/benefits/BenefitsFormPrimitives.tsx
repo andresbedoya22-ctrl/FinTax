@@ -199,3 +199,14 @@ export function ContextNote({
 
 export const inputClass =
   "h-12 w-full rounded-[18px] border border-border/50 bg-white/90 px-4 text-sm text-text outline-none ring-0 placeholder:text-muted focus:border-green/40";
+
+export function formatBenefitCurrency(value: number, locale: string, maximumFractionDigits = 2) {
+  const minimumFractionDigits = maximumFractionDigits === 0 ? 0 : 2;
+
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits,
+    maximumFractionDigits,
+  }).format(value);
+}

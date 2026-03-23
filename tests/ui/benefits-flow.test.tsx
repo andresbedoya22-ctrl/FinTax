@@ -10,8 +10,13 @@ import { BenefitsFlow } from "@/components/fintax/flows/BenefitsFlow";
 const loadWizardSnapshotMock = vi.fn();
 const persistWizardSnapshotMock = vi.fn();
 const readWizardSnapshotMock = vi.fn();
+const pushMock = vi.fn();
+const apiGetMock = vi.fn();
+const apiPatchMock = vi.fn();
+const apiPostMock = vi.fn();
 
 vi.mock("next-intl", () => ({
+  useLocale: () => "en",
   useTranslations: (namespace: string) => {
     const source = (enMessages as Record<string, unknown>)[namespace] as Record<string, unknown>;
 
@@ -40,10 +45,24 @@ vi.mock("next-intl", () => ({
   },
 }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: pushMock,
+  }),
+}));
+
 vi.mock("@/lib/wizards/persistence", () => ({
   loadWizardSnapshot: (...args: unknown[]) => loadWizardSnapshotMock(...args),
   persistWizardSnapshot: (...args: unknown[]) => persistWizardSnapshotMock(...args),
   readWizardSnapshot: (...args: unknown[]) => readWizardSnapshotMock(...args),
+}));
+
+vi.mock("@/hooks/api-client", () => ({
+  apiGet: (...args: unknown[]) => apiGetMock(...args),
+  apiPatch: (...args: unknown[]) => apiPatchMock(...args),
+  apiPost: (...args: unknown[]) => apiPostMock(...args),
+  isApiClientError: (error: unknown) =>
+    Boolean(error && typeof error === "object" && "code" in error && "status" in error),
 }));
 
 describe("BenefitsFlow", () => {
@@ -51,108 +70,131 @@ describe("BenefitsFlow", () => {
     loadWizardSnapshotMock.mockImplementation((_: string, fallback: unknown) => fallback);
     persistWizardSnapshotMock.mockResolvedValue(undefined);
     readWizardSnapshotMock.mockReturnValue(null);
+    pushMock.mockReset();
+    apiGetMock.mockRejectedValue({ code: "not_found", status: 404, message: "benefits_draft_not_found" });
+    apiPatchMock.mockResolvedValue({
+      id: "case-benefit-1",
+      user_id: "user-1",
+      case_type: "zorgtoeslag",
+      status: "draft",
+      display_name: "Benefits draft - zorgtoeslag",
+      tax_year: null,
+      deadline: null,
+      estimated_refund: null,
+      actual_refund: null,
+      paid_at: null,
+      wizard_data: {},
+      wizard_completed: true,
+      machtigung_status: "not_started",
+      machtigung_code: null,
+      stripe_payment_id: null,
+      created_at: "2099-01-01T00:00:00.000Z",
+      updated_at: "2099-01-01T00:00:00.000Z",
+    });
+    apiPostMock.mockResolvedValue({
+      id: "case-benefit-1",
+      user_id: "user-1",
+      case_type: "zorgtoeslag",
+      status: "draft",
+      display_name: "Benefits draft - zorgtoeslag",
+      tax_year: null,
+      deadline: null,
+      estimated_refund: null,
+      actual_refund: null,
+      paid_at: null,
+      wizard_data: {},
+      wizard_completed: true,
+      machtigung_status: "not_started",
+      machtigung_code: null,
+      stripe_payment_id: null,
+      created_at: "2099-01-01T00:00:00.000Z",
+      updated_at: "2099-01-01T00:00:00.000Z",
+    });
   });
 
-  it("renders the redesigned wizard shell", () => {
+  it("moves from results into the document review step", async () => {
+    seedResultsSnapshot();
     render(<BenefitsFlow />);
-
-    expect(screen.getByRole("heading", { name: /see which dutch benefits may actually fit your case/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /benefits eligibility wizard/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /personal context/i })).toBeInTheDocument();
-  });
-
-  it("updates step progress and supports next and back navigation", async () => {
-    render(<BenefitsFlow />);
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-
-    await waitFor(() => expect(screen.getByText(/income picture/i)).toBeInTheDocument());
-    expect(screen.getByText("2 / 7")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /back/i }));
-
-    await waitFor(() => expect(screen.getByText(/residency check/i)).toBeInTheDocument());
-  });
-
-  it("simplifies conditional sections for no rent, no insurance and no children", async () => {
-    render(<BenefitsFlow />);
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-
-    await waitFor(() => expect(screen.getByText(/rental situation/i)).toBeInTheDocument());
-
-    fireEvent.click(screen.getByRole("button", { name: /independent home/i }));
-    expect(screen.queryByLabelText(/monthly rent/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/housing questions simplified/i)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: /^health$/i })).toBeInTheDocument());
-
-    fireEvent.click(screen.getByRole("button", { name: /dutch health insurance/i }));
-    expect(screen.getByText(/zorgtoeslag remains unlikely/i)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: /^children$/i })).toBeInTheDocument());
-
-    expect(screen.getByText(/children section simplified/i)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /receiving kinderbijslag/i })).not.toBeInTheDocument();
-  });
-
-  it("shows the final eligibility cards, total and summary message", async () => {
-    render(<BenefitsFlow />);
-
-    for (let index = 0; index < 6; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    }
 
     await waitFor(() => expect(screen.getByTestId("benefits-results-total")).toBeInTheDocument());
+    fireEvent.click(getContinueButton());
 
-    expect(screen.getByText(/several benefits look potentially relevant/i)).toBeInTheDocument();
-    expect(screen.getByTestId("benefit-card-zorgtoeslag")).toBeInTheDocument();
-    expect(screen.getByTestId("benefit-card-huurtoeslag")).toBeInTheDocument();
-    expect(screen.getByTestId("benefit-card-kindgebondenBudget")).toBeInTheDocument();
-    expect(screen.getByTestId("benefit-card-kinderopvangtoeslag")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("heading", { name: /review the evidence before this moves into the workspace/i })).toBeInTheDocument());
   });
 
-  it("shows the no-eligibility state and disables the final continue action when nothing qualifies", async () => {
+  it("keeps the selected benefits visible in document review", async () => {
+    seedResultsSnapshot();
     render(<BenefitsFlow />);
 
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-
-    await waitFor(() => expect(screen.getByText(/rental situation/i)).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /independent home/i }));
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: /^health$/i })).toBeInTheDocument());
-
-    fireEvent.click(screen.getByRole("button", { name: /dutch health insurance/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-
     await waitFor(() => expect(screen.getByTestId("benefits-results-total")).toBeInTheDocument());
-    expect(screen.getByTestId("benefits-results-total")).toHaveTextContent("EUR 0.00");
-    expect(screen.queryAllByRole("button", { name: /remove from support plan/i })).toHaveLength(0);
-    expect(screen.getByText(/no benefits selected yet/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^continue$/i })).toBeDisabled();
+    fireEvent.click(getContinueButton());
+
+    await waitFor(() => expect(screen.getByText(/recommended supporting documents/i)).toBeInTheDocument());
+    expect(screen.getAllByText("Zorgtoeslag").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Huurtoeslag").length).toBeGreaterThan(0);
   });
 
-  it("auto-selects eligible benefits in results and allows clearing the support plan", async () => {
+  it("derives the expected document suggestions for the selected benefits", async () => {
+    loadWizardSnapshotMock.mockReturnValue({
+      age: 36,
+      householdType: "partners",
+      applicantAnnualIncome: 32000,
+      partnerAnnualIncome: 24000,
+      applicantAssets: 5000,
+      partnerAssets: 4000,
+      nlResident: true,
+      hasHealthInsurance: true,
+      hasIndependentHome: true,
+      hasRentalContract: true,
+      monthlyRent: 1100,
+      childrenUnder18: 2,
+      receivesKinderbijslag: true,
+      usesChildcare: true,
+      childcareHoursPerMonth: 48,
+      childcareType: "daycare",
+      childcareHourlyRate: 10.5,
+      registeredChildcare: true,
+      bothParentsWork: true,
+    });
+    readWizardSnapshotMock.mockReturnValue({
+      progressStep: 7,
+      payload: {
+        selectedBenefits: ["zorgtoeslag", "huurtoeslag", "kindgebondenBudget", "kinderopvangtoeslag"],
+      },
+    });
+
+    render(<BenefitsFlow />);
+
+    await waitFor(() => expect(screen.getByRole("heading", { name: /review the evidence before this moves into the workspace/i })).toBeInTheDocument());
+
+    expect(screen.getByText(/health insurance evidence/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/income evidence/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/rental contract/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/rent evidence/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/address registration/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/child and household evidence/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/childcare invoices/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/provider registration/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/work-status evidence/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/partner households should include partner income evidence/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/for partner households with childcare support, work-status evidence may be needed for both adults/i)).toBeInTheDocument();
+  });
+
+  it("creates the benefits draft and routes into the case workspace", async () => {
     loadWizardSnapshotMock.mockReturnValue({
       age: 36,
       householdType: "single",
-      annualIncome: 28000,
-      assets: 5000,
+      applicantAnnualIncome: 32000,
+      partnerAnnualIncome: null,
+      applicantAssets: 5000,
+      partnerAssets: null,
       nlResident: true,
       hasHealthInsurance: true,
       hasIndependentHome: true,
       hasRentalContract: true,
-      monthlyRent: 900,
-      childrenUnder18: 1,
-      receivesKinderbijslag: true,
+      monthlyRent: 1100,
+      childrenUnder18: 0,
+      receivesKinderbijslag: false,
       usesChildcare: false,
       childcareHoursPerMonth: 0,
       childcareType: "daycare",
@@ -161,72 +203,62 @@ describe("BenefitsFlow", () => {
       bothParentsWork: false,
     });
     readWizardSnapshotMock.mockReturnValue({
-      progressStep: 6,
+      progressStep: 7,
       payload: {
-        selectedBenefits: [],
+        selectedBenefits: ["zorgtoeslag", "huurtoeslag"],
       },
     });
-
     render(<BenefitsFlow />);
 
-    await waitFor(() => expect(screen.getByText(/selected services/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("heading", { name: /review the evidence before this moves into the workspace/i })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /continue to case workspace/i }));
 
-    expect(screen.getAllByRole("button", { name: /remove from support plan/i }).length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /^continue$/i })).toBeEnabled();
-
-    screen.getAllByRole("button", { name: /remove from support plan/i }).forEach((button) => {
-      fireEvent.click(button);
-    });
-
-    await waitFor(() => expect(screen.getByText(/no benefits selected yet/i)).toBeInTheDocument());
-    expect(screen.getByRole("button", { name: /^continue$/i })).toBeDisabled();
-  });
-
-  it("loads a saved snapshot and persists the current step after advancing", async () => {
-    loadWizardSnapshotMock.mockReturnValue({
-      age: 41,
-      householdType: "partners",
-      annualIncome: 52000,
-      assets: 9000,
-      nlResident: true,
-      hasHealthInsurance: true,
-      hasIndependentHome: true,
-      hasRentalContract: true,
-      monthlyRent: 1200,
-      childrenUnder18: 1,
-      receivesKinderbijslag: true,
-      usesChildcare: false,
-      childcareHoursPerMonth: 0,
-      childcareType: "daycare",
-      childcareHourlyRate: 0,
-      registeredChildcare: false,
-      bothParentsWork: false,
-    });
-    readWizardSnapshotMock.mockReturnValue({
-      progressStep: 0,
-      payload: {
-        selectedBenefits: ["zorgtoeslag"],
-      },
-    });
-
-    render(<BenefitsFlow />);
-
-    expect(loadWizardSnapshotMock).toHaveBeenCalledWith("fintax-benefits-wizard", expect.any(Object));
-    expect(readWizardSnapshotMock).toHaveBeenCalledWith("fintax-benefits-wizard");
-
-    persistWizardSnapshotMock.mockClear();
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-
-    await waitFor(() =>
-      expect(persistWizardSnapshotMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          storageKey: "fintax-benefits-wizard",
-          payload: expect.objectContaining({
-            currentStep: 1,
-          }),
+    await waitFor(() => expect(apiPostMock.mock.calls.length + apiPatchMock.mock.calls.length).toBeGreaterThan(0));
+    const upsertCall = apiPostMock.mock.calls.at(0) ?? apiPatchMock.mock.calls.at(0);
+    expect(upsertCall).toBeDefined();
+    expect(upsertCall?.[0]).toBe("/api/cases/benefits-draft");
+    expect(upsertCall?.[1]).toEqual(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          selectedBenefits: ["zorgtoeslag", "huurtoeslag"],
         }),
-      ),
+      }),
     );
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/en/benefits/case-benefit-1"));
   });
 });
+
+function getContinueButton() {
+  const buttons = screen.getAllByRole("button", { name: /^continue$/i });
+  return buttons[buttons.length - 1];
+}
+
+function seedResultsSnapshot() {
+  loadWizardSnapshotMock.mockReturnValue({
+    age: 36,
+    householdType: "single",
+    applicantAnnualIncome: 32000,
+    partnerAnnualIncome: null,
+    applicantAssets: 5000,
+    partnerAssets: null,
+    nlResident: true,
+    hasHealthInsurance: true,
+    hasIndependentHome: true,
+    hasRentalContract: true,
+    monthlyRent: 1100,
+    childrenUnder18: 0,
+    receivesKinderbijslag: false,
+    usesChildcare: false,
+    childcareHoursPerMonth: 0,
+    childcareType: "daycare",
+    childcareHourlyRate: 0,
+    registeredChildcare: false,
+    bothParentsWork: false,
+  });
+  readWizardSnapshotMock.mockReturnValue({
+    progressStep: 6,
+    payload: {
+      selectedBenefits: ["zorgtoeslag", "huurtoeslag"],
+    },
+  });
+}

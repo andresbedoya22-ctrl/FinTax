@@ -1,4 +1,5 @@
 export * from "./BenefitsBundleSummary";
+export * from "./BenefitsDocumentReviewStep";
 export * from "./BenefitsEligibilityCard";
 export * from "./BenefitsFormPrimitives";
 export * from "./BenefitsIntro";
@@ -10,4 +11,5 @@ export * from "./BenefitsStepHealth";
 export * from "./BenefitsStepHousing";
 export * from "./BenefitsStepIncome";
 export * from "./BenefitsStepPersonal";
+export * from "./document-review";
 export * from "./wizard";
