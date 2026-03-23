@@ -1,9 +1,9 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslations } from "next-intl";
 
-import { BenefitPanel, BenefitStepLayout, ContextNote, HintCard, ToggleCard } from "./BenefitsFormPrimitives";
+import { BenefitPanel, BenefitStepLayout, ContextNote, HintCard, ToggleCard, formatBenefitCurrency } from "./BenefitsFormPrimitives";
 import type { BenefitsFormValues } from "./wizard";
 
 export function BenefitsStepHealth({
@@ -13,6 +13,7 @@ export function BenefitsStepHealth({
   form: UseFormReturn<BenefitsFormValues>;
   values: BenefitsFormValues;
 }) {
+  const locale = useLocale();
   const t = useTranslations("Benefits");
 
   return (
@@ -20,7 +21,14 @@ export function BenefitsStepHealth({
       eyebrow={t("steps.health.short")}
       title={t("steps.health.title")}
       description={t("steps.health.description")}
-      aside={<HintCard label={t("hints.zorgMax")} value={values.householdType === "single" ? "EUR 1,574 / year" : "EUR 3,010 / year"} />}
+      aside={
+        <HintCard
+          label={t("hints.zorgMax")}
+          value={t(values.householdType === "single" ? "hintValues.zorgMax.single" : "hintValues.zorgMax.partners", {
+            amount: formatBenefitCurrency(values.householdType === "single" ? 1574 : 3010, locale, 0),
+          })}
+        />
+      }
     >
       <BenefitPanel title={t("sections.health.title")} description={t("sections.health.description")}>
         {values.nlResident ? (
