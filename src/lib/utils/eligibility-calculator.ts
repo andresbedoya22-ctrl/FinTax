@@ -3,8 +3,10 @@ import { TOESLAGEN_RULES_2026, type HouseholdType } from "../constants/toeslagen
 export interface BenefitsWizardInput {
   age: number;
   householdType: HouseholdType;
-  annualIncome: number;
-  assets: number;
+  applicantAnnualIncome: number;
+  partnerAnnualIncome: number;
+  applicantAssets: number;
+  partnerAssets: number;
   nlResident: boolean;
   hasHealthInsurance: boolean;
   hasIndependentHome: boolean;
@@ -48,16 +50,18 @@ function inThreshold(value: number, max: number): boolean {
 export function calculateEligibility(input: BenefitsWizardInput): EligibilityResults {
   const rules = TOESLAGEN_RULES_2026;
   const household = input.householdType;
+  const householdAnnualIncome = input.applicantAnnualIncome + input.partnerAnnualIncome;
+  const householdAssets = input.applicantAssets + input.partnerAssets;
 
   const zorgReasons: string[] = [];
   if (input.age < rules.zorgtoeslag.minAge) zorgReasons.push("min_age");
   if (!input.nlResident) zorgReasons.push("nl_resident_required");
   if (!input.hasHealthInsurance) zorgReasons.push("health_insurance_required");
-  if (!inThreshold(input.annualIncome, rules.zorgtoeslag.maxIncome[household])) zorgReasons.push("income_too_high");
-  if (!inThreshold(input.assets, rules.zorgtoeslag.maxAssets[household])) zorgReasons.push("assets_too_high");
+  if (!inThreshold(householdAnnualIncome, rules.zorgtoeslag.maxIncome[household])) zorgReasons.push("income_too_high");
+  if (!inThreshold(householdAssets, rules.zorgtoeslag.maxAssets[household])) zorgReasons.push("assets_too_high");
 
   const zorgEligible = zorgReasons.length === 0;
-  const zorgIncomeRatio = Math.min(1, input.annualIncome / rules.zorgtoeslag.maxIncome[household]);
+  const zorgIncomeRatio = Math.min(1, householdAnnualIncome / rules.zorgtoeslag.maxIncome[household]);
   const zorgEstimate = zorgEligible
     ? roundCurrency(rules.zorgtoeslag.maxAnnualAmount[household] * (1 - zorgIncomeRatio * 0.7))
     : 0;
@@ -69,25 +73,25 @@ export function calculateEligibility(input: BenefitsWizardInput): EligibilityRes
   if (input.age < rules.huurtoeslag.minAge) huurReasons.push("min_age");
   if (!input.hasIndependentHome) huurReasons.push("independent_home_required");
   if (!input.hasRentalContract) huurReasons.push("rental_contract_required");
-  if (!inThreshold(input.assets, rules.huurtoeslag.maxAssets[household])) huurReasons.push("assets_too_high");
+  if (!inThreshold(householdAssets, rules.huurtoeslag.maxAssets[household])) huurReasons.push("assets_too_high");
 
   const huurEligible = huurReasons.length === 0;
   const rentCap = input.age < 23 ? rules.huurtoeslag.maxRentConsidered.under23 : rules.huurtoeslag.maxRentConsidered.standard;
   const rentForCalc = Math.min(input.monthlyRent, rentCap);
   const annualRentForCalc = rentForCalc * 12;
-  const incomeFactor = Math.max(0.18, 1 - input.annualIncome / 90000);
+  const incomeFactor = Math.max(0.18, 1 - householdAnnualIncome / 90000);
   const huurEstimate = huurEligible ? roundCurrency(annualRentForCalc * 0.32 * incomeFactor) : 0;
   const huurReasoning = huurEligible ? ["independent_rental_home", "assets_within_huur_threshold"] : huurReasons;
 
   const kgbReasons: string[] = [];
   if (input.childrenUnder18 < 1) kgbReasons.push("children_required");
   if (!input.receivesKinderbijslag) kgbReasons.push("kinderbijslag_required");
-  if (!inThreshold(input.assets, rules.kindgebondenBudget.maxAssets[household])) kgbReasons.push("assets_too_high");
+  if (!inThreshold(householdAssets, rules.kindgebondenBudget.maxAssets[household])) kgbReasons.push("assets_too_high");
 
   const kgbEligible = kgbReasons.length === 0;
   const baseKgb = input.childrenUnder18 * 1650;
   const threshold = rules.kindgebondenBudget.fullAmountIncomeThreshold[household];
-  const incomeExcess = Math.max(0, input.annualIncome - threshold);
+  const incomeExcess = Math.max(0, householdAnnualIncome - threshold);
   const kgbReduction = incomeExcess * rules.kindgebondenBudget.reductionRate;
   const kgbEstimate = kgbEligible ? roundCurrency(baseKgb - kgbReduction) : 0;
   const kgbReasoning = kgbEligible ? ["children_declared", "kinderbijslag_confirmed", "assets_within_threshold"] : kgbReasons;
@@ -103,9 +107,9 @@ export function calculateEligibility(input: BenefitsWizardInput): EligibilityRes
   const maxRate = rules.kinderopvangtoeslag.maxHourlyRate[input.childcareType];
   const eligibleHourlyRate = Math.min(input.childcareHourlyRate, maxRate);
   const yearlyChildcareCost = eligibleHourlyRate * input.childcareHoursPerMonth * 12;
-  const coverageRate = input.annualIncome <= rules.kinderopvangtoeslag.highCoverageIncomeThreshold
+  const coverageRate = householdAnnualIncome <= rules.kinderopvangtoeslag.highCoverageIncomeThreshold
     ? rules.kinderopvangtoeslag.highCoverageRate
-    : Math.max(0.33, 0.96 - (input.annualIncome - rules.kinderopvangtoeslag.highCoverageIncomeThreshold) / 220000);
+    : Math.max(0.33, 0.96 - (householdAnnualIncome - rules.kinderopvangtoeslag.highCoverageIncomeThreshold) / 220000);
   const kotEstimate = kotEligible ? roundCurrency(yearlyChildcareCost * coverageRate) : 0;
   const kotReasoning = kotEligible ? ["childcare_requirements_met", "childcare_costs_capped"] : kotReasons;
 
