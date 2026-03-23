@@ -1,13 +1,14 @@
 "use client";
 
 import { ArrowRight, CheckCircle2, CircleX } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/fintax/Button";
 import { Badge } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import type { BenefitResult } from "@/lib/utils/eligibility-calculator";
 
+import { formatBenefitCurrency } from "./BenefitsFormPrimitives";
 import type { BenefitCardKey } from "./wizard";
 
 export function BenefitsEligibilityCard({
@@ -21,6 +22,7 @@ export function BenefitsEligibilityCard({
   selected: boolean;
   onToggleSelected: () => void;
 }) {
+  const locale = useLocale();
   const t = useTranslations("Benefits");
 
   return (
@@ -54,7 +56,7 @@ export function BenefitsEligibilityCard({
         </div>
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.estimatedAnnualLabel")}</p>
-          <p className="font-heading text-3xl tracking-[-0.03em] text-text">EUR {result.estimatedAnnualAmount.toFixed(2)}</p>
+          <p className="font-heading text-3xl tracking-[-0.03em] text-text">{formatBenefitCurrency(result.estimatedAnnualAmount, locale)}</p>
         </div>
       </div>
 
