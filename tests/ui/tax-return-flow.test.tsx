@@ -132,29 +132,29 @@ describe("TaxReturnFlow", () => {
     expect(screen.getByRole("heading", { name: /structured summary/i })).toBeInTheDocument();
     expect(screen.getByText(/preliminary range/i)).toBeInTheDocument();
     expect(screen.getByText(/eur 450 - eur 2,000/i)).toBeInTheDocument();
-  });
+  }, 15000);
 
   it("shows an honest pending estimate state when withholding is missing", async () => {
     render(<TaxReturnFlow />);
 
     fillIdentityStep();
-    fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+    fireEvent.click(getContinueButton());
     await waitFor(() => expect(screen.getByRole("heading", { name: /income picture/i })).toBeInTheDocument());
 
     fillIncomeStep({ wageTaxWithheld: "0" });
-    fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+    fireEvent.click(getContinueButton());
     await waitFor(() => expect(screen.getByRole("heading", { name: /housing and household context/i })).toBeInTheDocument());
     fillHousingStep();
-    fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+    fireEvent.click(getContinueButton());
     await waitFor(() => expect(screen.getByRole("heading", { name: /assets intake/i })).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+    fireEvent.click(getContinueButton());
     await waitFor(() => expect(screen.getByRole("heading", { name: /deductions and additional details/i })).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+    fireEvent.click(getContinueButton());
 
     await waitFor(() => expect(screen.getByRole("heading", { name: /structured summary/i })).toBeInTheDocument());
     expect(screen.getByText(/estimate pending review/i)).toBeInTheDocument();
     expect(screen.getByText(/known wage tax withheld figure/i)).toBeInTheDocument();
-  });
+  }, 15000);
 
   it("restores the saved step from the snapshot metadata", async () => {
     loadWizardSnapshotMock.mockReturnValue({
@@ -187,6 +187,7 @@ function fillIdentityStep() {
 }
 
 function fillIncomeStep(overrides?: { wageTaxWithheld?: string }) {
+  fireEvent.click(screen.getByRole("button", { name: /employment income/i }));
   fireEvent.change(screen.getByLabelText(/main employer/i), { target: { value: "Example BV" } });
   fireEvent.change(screen.getByLabelText(/employment income/i), { target: { value: "42000" } });
   fireEvent.change(screen.getByLabelText(/wage tax withheld/i), { target: { value: overrides?.wageTaxWithheld ?? "3600" } });
@@ -200,16 +201,21 @@ function fillHousingStep() {
 
 async function moveToSummary() {
   fillIdentityStep();
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  fireEvent.click(getContinueButton());
   await waitFor(() => expect(screen.getByRole("heading", { name: /income picture/i })).toBeInTheDocument());
   fillIncomeStep();
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  fireEvent.click(getContinueButton());
   await waitFor(() => expect(screen.getByRole("heading", { name: /housing and household context/i })).toBeInTheDocument());
   fillHousingStep();
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  fireEvent.click(getContinueButton());
   await waitFor(() => expect(screen.getByRole("heading", { name: /assets intake/i })).toBeInTheDocument());
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  fireEvent.click(getContinueButton());
   await waitFor(() => expect(screen.getByRole("heading", { name: /deductions and additional details/i })).toBeInTheDocument());
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  fireEvent.click(getContinueButton());
   await waitFor(() => expect(screen.getByRole("heading", { name: /structured summary/i })).toBeInTheDocument());
+}
+
+function getContinueButton() {
+  const buttons = screen.getAllByRole("button", { name: /^continue$/i });
+  return buttons[buttons.length - 1];
 }

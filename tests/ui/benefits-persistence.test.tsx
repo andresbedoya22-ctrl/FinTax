@@ -17,7 +17,8 @@ describe("benefits wizard persistence", () => {
     await persistWizardSnapshot({
       storageKey: "benefits-test",
       payload: {
-        annualIncome: 34000,
+        applicantAnnualIncome: 34000,
+        partnerAnnualIncome: 18000,
         currentStep: 3,
         selectedBenefits: ["zorgtoeslag"],
       },
@@ -25,15 +26,19 @@ describe("benefits wizard persistence", () => {
 
     const snapshot = readWizardSnapshot<Record<string, unknown>>("benefits-test");
     const restored = loadWizardSnapshot("benefits-test", {
-      annualIncome: 0,
-      assets: 0,
+      applicantAnnualIncome: 0,
+      partnerAnnualIncome: null,
+      applicantAssets: 0,
+      partnerAssets: null,
     });
 
     expect(snapshot?.progressStep).toBe(3);
     expect(snapshot?.payload.selectedBenefits).toEqual(["zorgtoeslag"]);
     expect(restored).toEqual({
-      annualIncome: 34000,
-      assets: 0,
+      applicantAnnualIncome: 34000,
+      partnerAnnualIncome: 18000,
+      applicantAssets: 0,
+      partnerAssets: null,
     });
   });
 });
