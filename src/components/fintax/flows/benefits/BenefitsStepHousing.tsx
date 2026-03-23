@@ -1,7 +1,7 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslations } from "next-intl";
 
 import {
   BenefitPanel,
@@ -10,6 +10,7 @@ import {
   Field,
   HintCard,
   ToggleCard,
+  formatBenefitCurrency,
   inputClass,
 } from "./BenefitsFormPrimitives";
 import type { BenefitsFormValues } from "./wizard";
@@ -21,6 +22,7 @@ export function BenefitsStepHousing({
   form: UseFormReturn<BenefitsFormValues>;
   values: BenefitsFormValues;
 }) {
+  const locale = useLocale();
   const t = useTranslations("Benefits");
 
   return (
@@ -28,7 +30,14 @@ export function BenefitsStepHousing({
       eyebrow={t("steps.housing.short")}
       title={t("steps.housing.title")}
       description={t("steps.housing.description")}
-      aside={<HintCard label={t("hints.huurRentCap")} value={values.age < 23 ? "EUR 498.20" : "EUR 932.93"} />}
+      aside={
+        <HintCard
+          label={t("hints.huurRentCap")}
+          value={t(values.age < 23 ? "hintValues.huurRentCap.under23" : "hintValues.huurRentCap.standard", {
+            amount: formatBenefitCurrency(values.age < 23 ? 498.2 : 932.93, locale),
+          })}
+        />
+      }
     >
       <BenefitPanel title={t("sections.housing.title")} description={t("sections.housing.description")}>
         <div className="grid gap-3 lg:grid-cols-2">

@@ -520,289 +520,428 @@
     }
   },
   "Benefits": {
-    "heroTitle": "See which Dutch benefits may actually fit your case.",
-    "heroSubtitle": "A premium eligibility intake for 2026 toeslagen. The flow adapts to your situation, keeps the questions focused and finishes with a clear estimate, reasoning and recommended next step per benefit.",
-    "wizardTitle": "Benefits eligibility wizard",
-    "back": "Back",
-    "next": "Continue",
+    "heroTitle": "Vezi ce beneficii din Olanda se potrivesc cu adevarat situatiei tale.",
+    "heroSubtitle": "Un intake premium de eligibilitate pentru toeslagen 2026. Fluxul se adapteaza situatiei tale, pastreaza intrebarile relevante si se incheie cu o estimare clara, explicatii si urmatorul pas recomandat pentru fiecare beneficiu.",
+    "wizardTitle": "Wizard de eligibilitate pentru beneficii",
+    "back": "Inapoi",
+    "next": "Continua",
     "intro": {
-      "eyebrow": "Benefits review",
+      "eyebrow": "Revizuire beneficii",
       "highlights": {
-        "rulesLabel": "Rule set",
-        "rulesValue": "2026 thresholds mapped into the wizard",
-        "scopeLabel": "Scope",
-        "scopeValue": "Only relevant questions, grouped by topic",
-        "reviewLabel": "Output",
-        "reviewValue": "Clear estimate plus documentary next steps"
+        "rulesLabel": "Set de reguli",
+        "rulesValue": "Pragurile pentru 2026 sunt integrate in wizard",
+        "scopeLabel": "Scop",
+        "scopeValue": "Doar intrebarile relevante, grupate pe subiecte",
+        "reviewLabel": "Rezultat",
+        "reviewValue": "Estimare clara si urmatorii pasi documentari"
       }
     },
     "progress": {
-      "badge": "Contextual intake",
+      "badge": "Intake contextual",
       "stepCount": "{current} / {total}",
-      "completionLabel": "Progress",
-      "currentStepLabel": "Current focus: {step}"
+      "completionLabel": "Progres",
+      "currentStepLabel": "Focus curent: {step}"
     },
     "options": {
-      "single": "Single",
-      "partners": "Partners",
-      "daycare": "Daycare",
-      "outOfSchoolCare": "Out-of-school care",
-      "childminder": "Childminder"
+      "single": "Singur",
+      "partners": "Parteneri",
+      "daycare": "Cresa",
+      "outOfSchoolCare": "Program dupa scoala",
+      "childminder": "Ingrijitor autorizat"
     },
     "optionsDescriptions": {
-      "single": "One adult household assessed under single thresholds.",
-      "partners": "Two adult household assessed with partner thresholds."
+      "single": "Gospodarie cu un singur adult evaluata pe pragurile pentru persoane singure.",
+      "partners": "Gospodarie cu doi adulti evaluata pe pragurile pentru parteneri."
     },
     "fields": {
-      "age": "Age",
-      "householdType": "Household type",
-      "nlResident": "Resident in the Netherlands",
-      "annualIncome": "Annual income",
-      "assets": "Assets",
-      "hasIndependentHome": "Independent home",
-      "hasRentalContract": "Rental contract",
-      "monthlyRent": "Monthly rent",
-      "hasHealthInsurance": "Dutch health insurance",
-      "childrenUnder18": "Children under 18",
-      "receivesKinderbijslag": "Receiving kinderbijslag",
-      "usesChildcare": "Needs childcare support",
-      "childcareHoursPerMonth": "Childcare hours per month",
-      "childcareType": "Childcare type",
-      "childcareHourlyRate": "Hourly childcare rate",
-      "registeredChildcare": "Registered childcare provider",
-      "bothParentsWork": "Parents work or qualify"
+      "age": "Varsta",
+      "householdType": "Tip de gospodarie",
+      "nlResident": "Rezident in Olanda",
+      "applicantAnnualIncome": "Venitul anual al solicitantului",
+      "partnerAnnualIncome": "Venitul anual al partenerului",
+      "householdAnnualIncome": "Venitul anual al gospodariei",
+      "applicantAssets": "Activele solicitantului",
+      "partnerAssets": "Activele partenerului",
+      "householdAssets": "Activele gospodariei",
+      "hasIndependentHome": "Locuinta independenta",
+      "hasRentalContract": "Contract de inchiriere",
+      "monthlyRent": "Chiria lunara",
+      "hasHealthInsurance": "Asigurare medicala olandeza",
+      "childrenUnder18": "Copii sub 18 ani",
+      "receivesKinderbijslag": "Primeste kinderbijslag",
+      "usesChildcare": "Are nevoie de sprijin pentru ingrijirea copiilor",
+      "childcareHoursPerMonth": "Ore de ingrijire pe luna",
+      "childcareType": "Tip de ingrijire",
+      "childcareHourlyRate": "Tarif orar pentru ingrijire",
+      "registeredChildcare": "Furnizor de ingrijire inregistrat",
+      "bothParentsWork": "Parintii lucreaza sau se incadreaza"
     },
     "fieldsHelp": {
-      "nlResident": "Residency is a core condition for zorgtoeslag and affects the rest of the review.",
-      "hasIndependentHome": "Huurtoeslag only makes sense if you rent an independent living space.",
-      "hasRentalContract": "We only ask for rent details when there is a formal rental relationship.",
-      "hasHealthInsurance": "Zorgtoeslag requires Dutch basic health insurance.",
-      "receivesKinderbijslag": "Kindgebonden budget depends on child benefit being in place.",
-      "usesChildcare": "Only continue with childcare questions if paid childcare is relevant.",
-      "registeredChildcare": "Kinderopvangtoeslag requires a registered provider.",
-      "bothParentsWork": "The childcare benefit usually depends on work or an equivalent qualifying status."
+      "nlResident": "Rezidenta este o conditie de baza pentru zorgtoeslag si influenteaza restul revizuirii.",
+      "hasIndependentHome": "Huurtoeslag are sens doar daca inchiriezi o locuinta independenta.",
+      "hasRentalContract": "Cerem detaliile chiriei doar cand exista o relatie contractuala formala.",
+      "hasHealthInsurance": "Zorgtoeslag cere de regula asigurare medicala de baza in Olanda.",
+      "receivesKinderbijslag": "Kindgebonden budget depinde de faptul ca kinderbijslag este deja activ.",
+      "usesChildcare": "Continua cu intrebarile despre ingrijire doar daca exista costuri reale de ingrijire.",
+      "registeredChildcare": "Kinderopvangtoeslag cere de regula un furnizor inregistrat.",
+      "bothParentsWork": "Beneficiul pentru ingrijirea copiilor depinde de obicei de munca sau de un statut echivalent."
     },
     "fieldsHint": {
-      "annualIncome": "Gross household income for the year.",
-      "assets": "Savings and other relevant assets used for the benefits test.",
-      "monthlyRent": "Use the contract rent before service charges when possible.",
-      "childrenUnder18": "Only children under 18 count for this estimate.",
-      "childcareHoursPerMonth": "Average paid hours per month.",
-      "childcareType": "Provider category affects the hourly cap.",
-      "childcareHourlyRate": "Use the rate actually paid per hour."
+      "applicantAnnualIncome": "Venitul brut anual al solicitantului.",
+      "partnerAnnualIncome": "Venitul brut anual al partenerului.",
+      "applicantAssets": "Economiile si alte active relevante ale solicitantului folosite in testul pentru beneficii.",
+      "partnerAssets": "Economiile si alte active relevante ale partenerului folosite in testul pentru beneficii.",
+      "monthlyRent": "Foloseste chiria din contract, fara costurile de servicii, daca este posibil.",
+      "childrenUnder18": "Numai copiii sub 18 ani conteaza pentru aceasta estimare.",
+      "childcareHoursPerMonth": "Media orelor platite pe luna.",
+      "childcareType": "Categoria furnizorului influenteaza plafonul orar.",
+      "childcareHourlyRate": "Foloseste tariful platit efectiv pe ora."
     },
     "hints": {
-      "zorgIncomeMax": "2026 zorgtoeslag income threshold",
-      "assetThresholds": "2026 asset thresholds",
-      "huurRentCap": "Monthly rent cap used in the estimate",
-      "zorgMax": "Maximum annual zorgtoeslag"
+      "zorgIncomeMax": "Pragul de venit 2026 pentru zorgtoeslag",
+      "assetThresholds": "Pragurile de active pentru 2026",
+      "huurRentCap": "Plafonul de chirie folosit in estimare",
+      "zorgMax": "Valoarea maxima anuala pentru zorgtoeslag"
+    },
+    "hintValues": {
+      "zorgIncomeMax": {
+        "single": "{amount}",
+        "partners": "{amount}"
+      },
+      "assetThresholds": {
+        "single": "{primary} / {secondary}",
+        "partners": "{primary} / {secondary}"
+      },
+      "huurRentCap": {
+        "under23": "{amount}",
+        "standard": "{amount}"
+      },
+      "zorgMax": {
+        "single": "{amount} pe an",
+        "partners": "{amount} pe an"
+      }
+    },
+    "validation": {
+      "enterNumber": "Introdu un numar valid pentru {field}.",
+      "minValue": "{field} trebuie sa fie cel putin {min}.",
+      "maxValue": "{field} trebuie sa fie cel mult {max}.",
+      "partnerAnnualIncomeRequired": "Venitul anual al partenerului este obligatoriu pentru gospodariile cu parteneri.",
+      "partnerAssetsRequired": "Activele partenerului sunt obligatorii pentru gospodariile cu parteneri."
     },
     "sections": {
       "household": {
-        "title": "Household setup",
-        "description": "Start with the household structure that applies to the claim."
+        "title": "Structura gospodariei",
+        "description": "Incepe cu structura gospodariei care se aplica cererii."
       },
       "identity": {
-        "title": "Personal baseline",
-        "description": "Age influences some thresholds, especially for housing support."
+        "title": "Baza personala",
+        "description": "Varsta influenteaza unele praguri, mai ales pentru sprijinul de locuire."
       },
       "residency": {
-        "title": "Residency check",
-        "description": "We use this to adapt the rest of the wizard and avoid irrelevant health questions."
+        "title": "Verificarea rezidentei",
+        "description": "Folosim aceasta informatie ca sa adaptam restul wizardului si sa evitam intrebarile irelevante despre sanatate."
       },
       "income": {
-        "title": "Income picture",
-        "description": "A single income figure lets us compare your case to the main 2026 limits."
+        "title": "Imaginea veniturilor",
+        "description": "Colectam separat veniturile solicitantului si ale partenerului, pentru ca testul gospodariei sa foloseasca totalurile corecte."
       },
       "assets": {
-        "title": "Assets and reserves",
-        "description": "Some benefits stop when assets exceed the allowed ceiling."
+        "title": "Active si rezerve",
+        "description": "Pastram separate activele solicitantului si ale partenerului, ca sa verificam corect plafonul de active al gospodariei."
       },
       "housing": {
-        "title": "Rental situation",
-        "description": "Only huurtoeslag-relevant housing questions stay visible."
+        "title": "Situatia locuintei",
+        "description": "Raman vizibile doar intrebarile de locuire relevante pentru huurtoeslag."
       },
       "health": {
-        "title": "Health coverage",
-        "description": "This step only validates the conditions that matter for zorgtoeslag."
+        "title": "Acoperire medicala",
+        "description": "Acest pas valideaza doar conditiile care conteaza pentru zorgtoeslag."
       },
       "children": {
-        "title": "Children and childcare",
-        "description": "The flow simplifies heavily when there are no children or no childcare costs."
+        "title": "Copii si ingrijire",
+        "description": "Fluxul se simplifica mult cand nu exista copii sau costuri de ingrijire."
       }
     },
     "stepAside": {
       "personal": {
-        "label": "Why this matters",
-        "value": "The household baseline controls the thresholds used in the estimate."
+        "label": "De ce conteaza",
+        "value": "Baza gospodariei controleaza pragurile folosite in estimare."
       },
       "income": {
-        "label": "Review note",
-        "value": "Income drives the largest swings in zorgtoeslag and childcare support."
+        "label": "Nota de revizuire",
+        "value": "Veniturile influenteaza cel mai mult variatiile din zorgtoeslag si sprijinul pentru ingrijire."
       },
       "assets": {
-        "label": "Review note",
-        "value": "Asset limits are strict. We surface them early so the result stays honest."
+        "label": "Nota de revizuire",
+        "value": "Limitele de active sunt stricte. Le afisam din timp pentru ca rezultatul sa ramana onest."
       },
       "children": {
-        "label": "Review note",
-        "value": "We only collect childcare details if they can materially change the outcome."
+        "label": "Nota de revizuire",
+        "value": "Colectam detalii despre ingrijirea copiilor doar daca pot schimba semnificativ rezultatul."
       }
     },
     "steps": {
       "personal": {
-        "title": "Personal context",
+        "title": "Context personal",
         "short": "Personal",
-        "description": "Define the household and residency baseline before anything else."
+        "description": "Stabileste baza gospodariei si a rezidentei inainte de orice altceva."
       },
       "income": {
-        "title": "Income",
-        "short": "Income",
-        "description": "Capture the annual income used for the first pass estimate."
+        "title": "Venituri",
+        "short": "Venituri",
+        "description": "Colecteaza veniturile anuale folosite in prima estimare."
       },
       "assets": {
-        "title": "Assets",
-        "short": "Assets",
-        "description": "Check whether savings and assets change eligibility."
+        "title": "Active",
+        "short": "Active",
+        "description": "Verifica daca economiile si activele schimba eligibilitatea."
       },
       "housing": {
-        "title": "Housing",
-        "short": "Housing",
-        "description": "Only huurtoeslag-relevant housing details stay in view."
+        "title": "Locuinta",
+        "short": "Locuinta",
+        "description": "Raman in vedere doar detaliile de locuire care influenteaza huurtoeslag."
       },
       "health": {
-        "title": "Health",
-        "short": "Health",
-        "description": "Confirm the health coverage conditions tied to zorgtoeslag."
+        "title": "Sanatate",
+        "short": "Sanatate",
+        "description": "Confirma conditiile de acoperire medicala legate de zorgtoeslag."
       },
       "children": {
-        "title": "Children",
-        "short": "Children",
-        "description": "Open child-related questions only if the household needs them."
+        "title": "Copii",
+        "short": "Copii",
+        "description": "Deschide intrebarile despre copii doar daca gospodaria are nevoie de ele."
       },
       "results": {
-        "title": "Results",
-        "short": "Results",
-        "description": "See which benefits may fit, why, and what to prepare next."
+        "title": "Rezultate",
+        "short": "Rezultate",
+        "description": "Vezi ce beneficii se pot potrivi, de ce si ce trebuie pregatit mai departe."
+      },
+      "documentReview": {
+        "title": "Revizuire documente",
+        "short": "Revizuire",
+        "description": "Verifica dovezile recomandate inainte sa deschizi spatiul de lucru al cazului."
       }
     },
     "conditional": {
       "nonResident": {
-        "title": "Residency affects the rest of the review.",
-        "copy": "Without Dutch residency, zorgtoeslag usually does not apply. The flow will keep the estimate honest and avoid implying guaranteed entitlement."
+        "title": "Rezidenta schimba restul revizuirii.",
+        "copy": "Fara rezidenta in Olanda, zorgtoeslag de obicei nu se aplica. Fluxul va pastra estimarea onesta si va evita sa sugereze un drept garantat."
+      },
+      "partnerHousehold": {
+        "title": "Gospodariile cu partener au nevoie de ambele profiluri adulte.",
+        "copy": "Pasii urmatori vor colecta separat veniturile si activele partenerului inainte sa derive totalurile gospodariei."
+      },
+      "partnerIncome": {
+        "title": "Venitul partenerului este obligatoriu pentru pragurile de parteneri.",
+        "copy": "Pastram separat venitul solicitantului si al partenerului in intake, apoi derivam totalul gospodariei folosit de logica de eligibilitate."
+      },
+      "partnerAssets": {
+        "title": "Activele partenerului fac parte din testul economic al gospodariei.",
+        "copy": "Pragurile de active se aplica la nivel de gospodarie, deci ambele pozitii trebuie sa fie prezente intr-o evaluare de parteneri."
       },
       "housingSimplified": {
-        "title": "Housing questions simplified.",
-        "noRentalContract": "Without a rental contract, the wizard does not ask for detailed huurtoeslag rent values.",
-        "noIndependentHome": "Without an independent home, huurtoeslag is unlikely, so we skip rent questions that would not change the outcome."
+        "title": "Intrebarile despre locuinta au fost simplificate.",
+        "noRentalContract": "Fara contract de inchiriere, wizardul nu mai cere valori detaliate ale chiriei pentru huurtoeslag.",
+        "noIndependentHome": "Fara o locuinta independenta, huurtoeslag este putin probabil, asa ca sarim peste intrebarile despre chirie care nu ar schimba rezultatul."
       },
       "healthBlocked": {
-        "title": "Health check shortened.",
-        "copy": "Because residency is not currently confirmed, the wizard does not keep asking health insurance follow-up questions for zorgtoeslag."
+        "title": "Verificarea medicala a fost scurtata.",
+        "copy": "Pentru ca rezidenta nu este confirmata in acest moment, wizardul nu continua cu intrebari suplimentare despre asigurarea medicala pentru zorgtoeslag."
       },
       "noInsurance": {
-        "title": "Zorgtoeslag remains unlikely in the current scenario.",
-        "copy": "Dutch basic health insurance is normally required. The result will show this clearly together with the next documentary step."
+        "title": "Zorgtoeslag ramane putin probabil in scenariul actual.",
+        "copy": "Asigurarea medicala de baza din Olanda este de regula obligatorie. Rezultatul va arata clar acest lucru impreuna cu urmatorul pas documentar."
       },
       "noChildren": {
-        "title": "Children section simplified.",
-        "copy": "With no children under 18, child benefit and childcare questions are skipped."
+        "title": "Sectiunea pentru copii a fost simplificata.",
+        "copy": "Fara copii sub 18 ani, intrebarile despre alocatia pentru copii si ingrijire sunt omise."
       },
       "noChildcare": {
-        "title": "Childcare section shortened.",
-        "copy": "No childcare support was marked as relevant, so the wizard skips provider and invoice details."
+        "title": "Sectiunea despre ingrijire a fost scurtata.",
+        "copy": "Nu a fost marcat sprijinul pentru ingrijirea copiilor ca fiind relevant, asa ca wizardul omite detaliile despre furnizor si facturi."
       }
     },
     "results": {
-      "summaryBadge": "Eligibility summary",
+      "summaryBadge": "Rezumat de eligibilitate",
       "summary": {
-        "none": "No clear benefit match appears from this first estimate.",
-        "one": "One benefit looks potentially relevant from this intake.",
-        "multiple": "Several benefits look potentially relevant from this intake."
+        "none": "Nu apare niciun beneficiu clar din aceasta prima estimare.",
+        "one": "Un beneficiu pare potential relevant pe baza acestui intake.",
+        "multiple": "Mai multe beneficii par potential relevante pe baza acestui intake."
       },
-      "disclaimer": "This is an estimate, not an official decision. Final approval depends on official review, documentary evidence and the definitive government assessment.",
-      "totalLabel": "Estimated annual total",
-      "totalCaption": "Combined estimate across all potentially relevant benefits.",
-      "eligibleCountLabel": "Potentially eligible benefits",
-      "eligibleCountCaption": "Benefits that currently pass the main visible conditions.",
-      "noneEligibleTitle": "No benefit currently clears the visible conditions.",
-      "noneEligibleCopy": "That does not always mean the case is closed. Residency, insurance, housing setup or child-related registration details often need to be clarified before a second pass.",
-      "honestyTitle": "Keep this result in the right context.",
-      "honestyCopy": "Some cases still require supporting documents, official registration checks or manual review before an application should be filed.",
-      "eligible": "Eligible",
-      "notEligible": "Not eligible",
-      "estimatedAnnualLabel": "Estimated annual amount",
-      "whyLabel": "Why this result",
-      "nextStepLabel": "Recommended next step",
-      "reviewNotice": "FinTax can review the estimate against documents before any application is submitted.",
-      "addToPlan": "Add to support plan",
-      "removeFromPlan": "Remove from support plan",
+      "disclaimer": "Aceasta este o estimare, nu o decizie oficiala. Aprobarea finala depinde de revizuirea oficiala, de documentele justificative si de evaluarea definitiva a autoritatilor.",
+      "totalLabel": "Total anual estimat",
+      "totalCaption": "Estimarea combinata pentru toate beneficiile potential relevante.",
+      "eligibleCountLabel": "Beneficii potential eligibile",
+      "eligibleCountCaption": "Beneficiile care trec in prezent conditiile principale vizibile.",
+      "noneEligibleTitle": "Niciun beneficiu nu indeplineste momentan conditiile vizibile.",
+      "noneEligibleCopy": "Asta nu inseamna intotdeauna ca dosarul este inchis. Rezidenta, asigurarea, situatia locuintei sau detaliile de inregistrare legate de copii trebuie adesea clarificate inainte de o a doua evaluare.",
+      "honestyTitle": "Pastreaza acest rezultat in contextul corect.",
+      "honestyCopy": "Unele cazuri au in continuare nevoie de documente justificative, verificari oficiale de inregistrare sau revizuire manuala inainte de depunerea unei cereri.",
+      "eligible": "Eligibil",
+      "notEligible": "Neeligibil",
+      "estimatedAnnualLabel": "Suma anuala estimata",
+      "whyLabel": "De ce apare acest rezultat",
+      "nextStepLabel": "Urmatorul pas recomandat",
+      "reviewNotice": "FinTax poate revizui estimarea in raport cu documentele inainte de depunerea oricarei cereri.",
+      "addToPlan": "Adauga in planul de suport",
+      "removeFromPlan": "Scoate din planul de suport",
       "cards": {
         "zorgtoeslag": {
           "title": "Zorgtoeslag",
-          "subtitle": "Health insurance allowance"
+          "subtitle": "Sprijin pentru asigurarea medicala"
         },
         "huurtoeslag": {
           "title": "Huurtoeslag",
-          "subtitle": "Rent support"
+          "subtitle": "Sprijin pentru chirie"
         },
         "kindgebondenBudget": {
           "title": "Kindgebonden budget",
-          "subtitle": "Income-related child budget"
+          "subtitle": "Buget pentru copii legat de venit"
         },
         "kinderopvangtoeslag": {
           "title": "Kinderopvangtoeslag",
-          "subtitle": "Childcare cost support"
+          "subtitle": "Sprijin pentru costurile de ingrijire"
         }
       },
       "reasonCodes": {
-        "min_age": "The age baseline is below the usual threshold for this benefit.",
-        "nl_resident_required": "Dutch residency is generally required.",
-        "health_insurance_required": "Dutch basic health insurance is generally required.",
-        "income_too_high": "Current income appears above the main threshold used in this estimate.",
-        "assets_too_high": "Current assets appear above the main threshold used in this estimate.",
-        "resident_and_insured": "Residency and health insurance currently align with the main zorgtoeslag conditions.",
-        "income_within_threshold": "Income stays within the visible threshold used for this estimate.",
-        "assets_within_threshold": "Assets remain within the visible threshold used for this estimate.",
-        "independent_home_required": "An independent home is usually required for huurtoeslag.",
-        "rental_contract_required": "A rental contract is usually required for huurtoeslag.",
-        "independent_rental_home": "The housing setup matches the core independent rental condition.",
-        "assets_within_huur_threshold": "Assets remain within the main housing support threshold.",
-        "children_required": "At least one child under 18 is required for this benefit.",
-        "kinderbijslag_required": "Receiving kinderbijslag is usually required.",
-        "children_declared": "The household includes children under 18.",
-        "kinderbijslag_confirmed": "Kinderbijslag is currently marked as received.",
-        "childcare_not_needed": "No relevant childcare support was indicated in the intake.",
-        "registered_childcare_required": "The childcare provider must usually be registered.",
-        "working_parents_required": "Work or an equivalent qualifying status is usually required.",
-        "childcare_hours_required": "Paid childcare hours must be present to estimate this benefit.",
-        "childcare_requirements_met": "The current childcare answers support a first estimate.",
-        "childcare_costs_capped": "The estimate already applies the published hourly rate cap."
+        "min_age": "Baza de varsta este sub pragul obisnuit pentru acest beneficiu.",
+        "nl_resident_required": "Rezidenta in Olanda este in general obligatorie.",
+        "health_insurance_required": "Asigurarea medicala de baza din Olanda este in general obligatorie.",
+        "income_too_high": "Venitul actual pare peste pragul principal folosit in aceasta estimare.",
+        "assets_too_high": "Activele actuale par peste pragul principal folosit in aceasta estimare.",
+        "resident_and_insured": "Rezidenta si asigurarea medicala sunt in prezent aliniate cu principalele conditii pentru zorgtoeslag.",
+        "income_within_threshold": "Venitul ramane in pragul vizibil folosit in aceasta estimare.",
+        "assets_within_threshold": "Activele raman in pragul vizibil folosit in aceasta estimare.",
+        "independent_home_required": "O locuinta independenta este de obicei obligatorie pentru huurtoeslag.",
+        "rental_contract_required": "Un contract de inchiriere este de obicei obligatoriu pentru huurtoeslag.",
+        "independent_rental_home": "Situatia locuintei corespunde conditiei de baza pentru o chirie independenta.",
+        "assets_within_huur_threshold": "Activele raman in pragul principal pentru sprijinul de locuire.",
+        "children_required": "Cel putin un copil sub 18 ani este necesar pentru acest beneficiu.",
+        "kinderbijslag_required": "Primirea kinderbijslag este de obicei obligatorie.",
+        "children_declared": "Gospodaria include copii sub 18 ani.",
+        "kinderbijslag_confirmed": "Kinderbijslag este marcat in prezent ca fiind primit.",
+        "childcare_not_needed": "In intake nu a fost indicat niciun sprijin relevant pentru ingrijirea copiilor.",
+        "registered_childcare_required": "Furnizorul de ingrijire trebuie de obicei sa fie inregistrat.",
+        "working_parents_required": "Munca sau un statut echivalent sunt de obicei obligatorii.",
+        "childcare_hours_required": "Trebuie sa existe ore platite de ingrijire pentru a estima acest beneficiu.",
+        "childcare_requirements_met": "Raspunsurile actuale despre ingrijire permit o prima estimare.",
+        "childcare_costs_capped": "Estimarea aplica deja plafonul publicat pentru tariful orar."
       },
       "nextSteps": {
-        "collectHealthPolicy": "Prepare your health insurance policy details and recent income evidence before filing.",
-        "reviewHealthConditions": "Review residency and health insurance status first, then reassess the estimate.",
-        "prepareRentalDocuments": "Prepare the rental contract, rent amount and address registration documents.",
-        "reviewHousingConditions": "Clarify whether the home is independent and whether a rental contract can be documented.",
-        "confirmChildBenefit": "Confirm kinderbijslag status and gather the child-related support documents.",
-        "reviewChildrenConditions": "Check child benefit status and the age or registration details for the children involved.",
-        "prepareChildcareInvoices": "Prepare childcare invoices, provider registration details and work-status evidence.",
-        "reviewChildcareConditions": "Check whether childcare is registered, paid and linked to qualifying work or status."
+        "collectHealthPolicy": "Pregateste detaliile politei de asigurare medicala si dovezile recente de venit inainte de depunere.",
+        "reviewHealthConditions": "Revizuieste mai intai rezidenta si statutul asigurarii medicale, apoi reevalueaza estimarea.",
+        "prepareRentalDocuments": "Pregateste contractul de inchiriere, valoarea chiriei si documentele de inregistrare la adresa.",
+        "reviewHousingConditions": "Clarifica daca locuinta este independenta si daca un contract de inchiriere poate fi documentat.",
+        "confirmChildBenefit": "Confirma statutul kinderbijslag si aduna documentele de sprijin legate de copii.",
+        "reviewChildrenConditions": "Verifica statutul alocatiei pentru copii si datele de varsta sau de inregistrare pentru copiii implicati.",
+        "prepareChildcareInvoices": "Pregateste facturile de ingrijire, datele de inregistrare ale furnizorului si dovezile privind statutul de munca.",
+        "reviewChildcareConditions": "Verifica daca ingrijirea este inregistrata, platita si legata de munca sau de un statut eligibil."
       }
     },
+    "caseDraft": {
+      "connected": "Draftul cazului este conectat.",
+      "lastSaved": "Ultima salvare {value}."
+    },
+    "syncErrors": {
+      "unavailable": "Sincronizarea draftului de beneficii nu este disponibila. Persistenta pe server este necesara inainte de lansare.",
+      "syncFailed": "Sincronizarea draftului de beneficii a esuat. Datele de pe server raman sursa principala pentru acest caz.",
+      "syncFailedWithCode": "Sincronizarea draftului de beneficii a esuat ({code}). Datele de pe server raman sursa principala pentru acest caz.",
+      "creationFailed": "Crearea draftului de beneficii a esuat. Stocarea locala ramane doar o rezerva pana cand exista un caz.",
+      "creationFailedWithCode": "Crearea draftului de beneficii a esuat ({code}). Stocarea locala ramane doar o rezerva pana cand exista un caz."
+    },
     "bundle": {
-      "eyebrow": "Support plan",
-      "title": "Turn the estimate into a clean next step.",
-      "copy": "Choose the benefits you want to move forward with. We keep the action focused on review and application support, not an improvised checkout.",
-      "selectedServicesLabel": "Selected services",
-      "empty": "No benefits selected yet.",
-      "recommendedNextLabel": "Recommended next step",
-      "recommendedNextSelected": "Continue with a document review so the selected benefits can be checked against official evidence before any filing.",
-      "recommendedNextNone": "If you are unsure, request help first and we can review whether any benefit deserves a second pass.",
-      "annualImpactLabel": "Selected annual estimate",
-      "annualImpactCopy": "Combined estimate for the benefits currently included in your support plan.",
-      "continue": "Continue",
-      "askHelp": "Request help"
+      "eyebrow": "Plan de suport",
+      "title": "Transforma estimarea intr-un urmator pas clar.",
+      "copy": "Alege beneficiile pentru care vrei sa mergi mai departe. Pasii raman concentrati pe review si suport pentru aplicare, nu pe un checkout improvizat.",
+      "selectedServicesLabel": "Servicii selectate",
+      "empty": "Nu ai selectat inca niciun beneficiu.",
+      "recommendedNextLabel": "Urmatorul pas recomandat",
+      "recommendedNextSelected": "Continua cu o revizuire a documentelor, pentru ca beneficiile selectate sa fie verificate fata de dovezile oficiale inainte de orice depunere.",
+      "recommendedNextNone": "Daca nu esti sigur, cere mai intai ajutor si putem revizui daca vreun beneficiu merita o a doua evaluare.",
+      "annualImpactLabel": "Estimarea anuala selectata",
+      "annualImpactCopy": "Estimarea combinata pentru beneficiile incluse momentan in planul tau de suport.",
+      "continue": "Continua",
+      "askHelp": "Solicita ajutor"
+    },
+    "documentReview": {
+      "eyebrow": "Revizuire documente",
+      "title": "Revizuieste dovezile inainte ca dosarul sa intre in workspace.",
+      "copy": "FinTax transforma beneficiile selectate intr-un pachet real de review. Confirma dovezile de mai jos, apoi continua in workspace-ul cazului pentru a urmari documentele si pasii urmatori.",
+      "metrics": {
+        "selectedBenefits": "Beneficii selectate",
+        "selectedBenefitsCopy": "Beneficiile incluse in prezent in acest pachet de review.",
+        "annualEstimate": "Estimare anuala selectata"
+      },
+      "selectedBenefitsLabel": "Beneficii selectate",
+      "reviewReadinessTitle": "Ce se intampla in acest pas",
+      "reviewReadinessCopy": "Pastram beneficiile selectate, mentinem contextul intake-ului in draft si pregatim cazul pentru colectarea documentelor, in loc sa lasam utilizatorul intr-un impas.",
+      "connectedCaseTitle": "Draft conectat",
+      "connectedCaseCopy": "ID-ul actual al cazului: {caseId}",
+      "documentsLabel": "Harta dovezilor",
+      "documentsTitle": "Documente justificative recomandate",
+      "documentsCopy": "Aceste recomandari sunt derivate din beneficiile selectate si din contextul gospodariei deja capturat in wizard.",
+      "workspaceLabel": "Workspace caz",
+      "workspaceTitle": "Continua in workspace-ul cazului",
+      "workspaceCopy": "Deschide cazul de beneficii conectat pentru a gestiona incarcari, checklistul si urmatorul pas operational.",
+      "workspaceCta": "Continua catre workspace-ul cazului",
+      "workspaceLoading": "Se deschide workspace-ul cazului...",
+      "householdHintsLabel": "Note sensibile la gospodarie",
+      "launchError": "Draftul de beneficii nu a putut fi pregatit. Incearca din nou pentru a continua in workspace-ul cazului.",
+      "emptyTitle": "Nu exista beneficii selectate pentru review",
+      "emptyCopy": "Intoarce-te la pasul de rezultate, alege cel putin un beneficiu si apoi continua in revizuirea documentelor.",
+      "household": {
+        "singleHousehold": "Set de dovezi pentru gospodarie cu un singur adult",
+        "partnerHousehold": "Set de dovezi pentru gospodarie cu parteneri"
+      },
+      "documents": {
+        "healthInsurance": {
+          "title": "Dovezi privind asigurarea medicala",
+          "description": "Colecteaza polita de asigurare medicala de baza din Olanda sau o dovada recenta de plata pentru membrii asigurati ai gospodariei."
+        },
+        "incomeEvidence": {
+          "title": "Dovezi de venit",
+          "description": "Pregateste fluturasi de salariu recenti, fise anuale sau documente privind venituri de inlocuire care sustin estimarea."
+        },
+        "rentalContract": {
+          "title": "Contract de inchiriere",
+          "description": "Prezinta contractul de inchiriere semnat, cu adresa, data de inceput si datele chiriasului."
+        },
+        "rentEvidence": {
+          "title": "Dovezi privind chiria",
+          "description": "Adauga facturi recente de chirie, confirmari de plata sau o declaratie a proprietarului care arata chiria lunara actuala."
+        },
+        "addressRegistration": {
+          "title": "Inregistrare la adresa",
+          "description": "Pregateste inregistrarea municipala sau dovezi BRP care arata cine este inregistrat la adresa."
+        },
+        "childHouseholdEvidence": {
+          "title": "Dovezi despre copil si gospodarie",
+          "description": "Colecteaza documente legate de copii, precum confirmarea kinderbijslag, custodia sau dovezi privind componenta gospodariei."
+        },
+        "childcareInvoices": {
+          "title": "Facturi pentru ingrijirea copiilor",
+          "description": "Prezinta facturi de ingrijire sau situatii anuale care arata orele platite, tarifele si perioadele relevante."
+        },
+        "providerRegistration": {
+          "title": "Inregistrarea furnizorului",
+          "description": "Pregateste dovezi ca furnizorul de ingrijire este corect inregistrat, inclusiv datele de inregistrare ale furnizorului."
+        },
+        "workStatusEvidence": {
+          "title": "Dovezi privind statutul de munca",
+          "description": "Adauga declaratii de la angajator, contracte sau dovezi echivalente privind statutul de munca care sustin cererea pentru ingrijirea copiilor."
+        }
+      },
+      "hints": {
+        "partnerIncome": "Gospodariile cu parteneri ar trebui sa includa dovezi ale venitului partenerului in pachetul de review.",
+        "householdRegistration": "Daca este implicat un partener sau mai multi copii, inregistrarea gospodariei ar trebui sa arate clar componenta actuala.",
+        "childRegistration": "Beneficiile legate de copii au nevoie de obicei de o legatura clara intre copil, gospodarie si evidentele actuale de inregistrare.",
+        "partnerWorkStatus": "Pentru gospodariile cu parteneri si sprijin pentru ingrijirea copiilor, pot fi necesare dovezi privind statutul de munca pentru ambii adulti.",
+        "workStatus": "Daca este selectat sprijinul pentru ingrijirea copiilor, tine pregatite dovezi privind statutul de munca al solicitantului.",
+        "partnerHousehold": "Cazurile cu parteneri sunt revizuite pe imaginea combinata a gospodariei, nu doar pe detaliile solicitantului.",
+        "childHousehold": "Cand sunt implicati copii, asigura-te ca dosarul explica cine locuieste in gospodarie si cine primeste sprijin.",
+        "childcareHours": "Review-ul pentru ingrijirea copiilor merge mai repede cand facturile si orele contractate acopera aceleasi perioade.",
+        "reviewOnly": "Acest pas pregateste dovezile pentru review. Nu promite depunere sau aprobare automata."
+      }
     }
   },
   "PaymentSuccess": {

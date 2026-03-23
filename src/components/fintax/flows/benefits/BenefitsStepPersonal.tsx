@@ -69,6 +69,9 @@ export function BenefitsStepPersonal({
       {!values.nlResident ? (
         <ContextNote tone="warning" title={t("conditional.nonResident.title")} copy={t("conditional.nonResident.copy")} />
       ) : null}
+      {values.householdType === "partners" ? (
+        <ContextNote tone="success" title={t("conditional.partnerHousehold.title")} copy={t("conditional.partnerHousehold.copy")} />
+      ) : null}
     </BenefitStepLayout>
   );
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { FileText, Sparkles } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import type { EligibilityResults } from "@/lib/utils/eligibility-calculator";
 
 import { BenefitsBundleSummary } from "./BenefitsBundleSummary";
 import { BenefitsEligibilityCard } from "./BenefitsEligibilityCard";
+import { formatBenefitCurrency } from "./BenefitsFormPrimitives";
 import type { BenefitCardKey } from "./wizard";
 import { benefitCardOrder } from "./wizard";
 
@@ -14,11 +15,14 @@ export function BenefitsResults({
   results,
   selectedKeys,
   onToggleSelected,
+  onContinue,
 }: {
   results: EligibilityResults;
   selectedKeys: BenefitCardKey[];
   onToggleSelected: (key: BenefitCardKey) => void;
+  onContinue: () => void;
 }) {
+  const locale = useLocale();
   const t = useTranslations("Benefits");
   const eligibleCount = benefitCardOrder.filter((key) => results[key].eligible).length;
   const selectedAmount = selectedKeys.reduce((sum, key) => sum + results[key].estimatedAnnualAmount, 0);
@@ -45,7 +49,9 @@ export function BenefitsResults({
 
           <div className="rounded-[24px] border border-border/40 bg-white/85 p-4" data-testid="benefits-results-total">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.totalLabel")}</p>
-            <p className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">EUR {results.totalEstimatedAnnualAmount.toFixed(2)}</p>
+            <p className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">
+              {formatBenefitCurrency(results.totalEstimatedAnnualAmount, locale)}
+            </p>
             <p className="mt-2 text-sm text-secondary">{t("results.totalCaption")}</p>
           </div>
 
@@ -88,7 +94,7 @@ export function BenefitsResults({
         ))}
       </div>
 
-      <BenefitsBundleSummary selectedKeys={selectedKeys} selectedAmount={selectedAmount} />
+      <BenefitsBundleSummary selectedKeys={selectedKeys} selectedAmount={selectedAmount} onContinue={onContinue} />
     </div>
   );
 }

@@ -557,8 +557,12 @@
       "age": "Age",
       "householdType": "Household type",
       "nlResident": "Resident in the Netherlands",
-      "annualIncome": "Annual income",
-      "assets": "Assets",
+      "applicantAnnualIncome": "Applicant annual income",
+      "partnerAnnualIncome": "Partner annual income",
+      "householdAnnualIncome": "Household annual income",
+      "applicantAssets": "Applicant assets",
+      "partnerAssets": "Partner assets",
+      "householdAssets": "Household assets",
       "hasIndependentHome": "Independent home",
       "hasRentalContract": "Rental contract",
       "monthlyRent": "Monthly rent",
@@ -583,8 +587,10 @@
       "bothParentsWork": "The childcare benefit usually depends on work or an equivalent qualifying status."
     },
     "fieldsHint": {
-      "annualIncome": "Gross household income for the year.",
-      "assets": "Savings and other relevant assets used for the benefits test.",
+      "applicantAnnualIncome": "Gross applicant income for the year.",
+      "partnerAnnualIncome": "Gross partner income for the year.",
+      "applicantAssets": "Applicant savings and other relevant assets used for the benefits test.",
+      "partnerAssets": "Partner savings and other relevant assets used for the benefits test.",
       "monthlyRent": "Use the contract rent before service charges when possible.",
       "childrenUnder18": "Only children under 18 count for this estimate.",
       "childcareHoursPerMonth": "Average paid hours per month.",
@@ -596,6 +602,31 @@
       "assetThresholds": "2026 asset thresholds",
       "huurRentCap": "Monthly rent cap used in the estimate",
       "zorgMax": "Maximum annual zorgtoeslag"
+    },
+    "hintValues": {
+      "zorgIncomeMax": {
+        "single": "{amount}",
+        "partners": "{amount}"
+      },
+      "assetThresholds": {
+        "single": "{primary} / {secondary}",
+        "partners": "{primary} / {secondary}"
+      },
+      "huurRentCap": {
+        "under23": "{amount}",
+        "standard": "{amount}"
+      },
+      "zorgMax": {
+        "single": "{amount} rocznie",
+        "partners": "{amount} rocznie"
+      }
+    },
+    "validation": {
+      "enterNumber": "Wpisz prawidlowa liczbe dla pola {field}.",
+      "minValue": "{field} musi wynosic co najmniej {min}.",
+      "maxValue": "{field} moze wynosic maksymalnie {max}.",
+      "partnerAnnualIncomeRequired": "Dochod roczny partnera jest wymagany dla gospodarstw partnerskich.",
+      "partnerAssetsRequired": "Majatek partnera jest wymagany dla gospodarstw partnerskich."
     },
     "sections": {
       "household": {
@@ -612,11 +643,11 @@
       },
       "income": {
         "title": "Income picture",
-        "description": "A single income figure lets us compare your case to the main 2026 limits."
+        "description": "Collect applicant and partner income separately so the household test uses the right totals."
       },
       "assets": {
         "title": "Assets and reserves",
-        "description": "Some benefits stop when assets exceed the allowed ceiling."
+        "description": "Keep applicant and partner assets separate so the household asset ceiling is checked correctly."
       },
       "housing": {
         "title": "Rental situation",
@@ -684,12 +715,29 @@
         "title": "Results",
         "short": "Results",
         "description": "See which benefits may fit, why, and what to prepare next."
+      },
+      "documentReview": {
+        "title": "Document review",
+        "short": "Review",
+        "description": "Check the recommended evidence before opening the case workspace."
       }
     },
     "conditional": {
       "nonResident": {
         "title": "Residency affects the rest of the review.",
         "copy": "Without Dutch residency, zorgtoeslag usually does not apply. The flow will keep the estimate honest and avoid implying guaranteed entitlement."
+      },
+      "partnerHousehold": {
+        "title": "Partner households need both adult profiles.",
+        "copy": "The next steps will collect partner income and partner assets separately before household totals are derived."
+      },
+      "partnerIncome": {
+        "title": "Partner income is required for partner thresholds.",
+        "copy": "We keep applicant and partner income separate in the intake, then derive the household total used by the eligibility logic."
+      },
+      "partnerAssets": {
+        "title": "Partner assets are part of the household means test.",
+        "copy": "Asset thresholds apply at household level, so both adult asset positions need to be present for a partner assessment."
       },
       "housingSimplified": {
         "title": "Housing questions simplified.",
@@ -790,6 +838,17 @@
         "reviewChildcareConditions": "Check whether childcare is registered, paid and linked to qualifying work or status."
       }
     },
+    "caseDraft": {
+      "connected": "Case draft connected.",
+      "lastSaved": "Last saved {value}."
+    },
+    "syncErrors": {
+      "unavailable": "Benefits draft sync is unavailable. Server persistence is required before launch.",
+      "syncFailed": "Benefits draft sync failed. Server data remains the source of truth for this case.",
+      "syncFailedWithCode": "Benefits draft sync failed ({code}). Server data remains the source of truth for this case.",
+      "creationFailed": "Benefits draft creation failed. Local storage is only a fallback before a case exists.",
+      "creationFailedWithCode": "Benefits draft creation failed ({code}). Local storage is only a fallback before a case exists."
+    },
     "bundle": {
       "eyebrow": "Support plan",
       "title": "Turn the estimate into a clean next step.",
@@ -803,6 +862,86 @@
       "annualImpactCopy": "Combined estimate for the benefits currently included in your support plan.",
       "continue": "Continue",
       "askHelp": "Request help"
+    },
+    "documentReview": {
+      "eyebrow": "Document review",
+      "title": "Review the evidence before this moves into the workspace.",
+      "copy": "FinTax turns the selected benefits into a real review package. Confirm the evidence below, then continue into the case workspace to track documents and follow-up.",
+      "metrics": {
+        "selectedBenefits": "Selected benefits",
+        "selectedBenefitsCopy": "Benefits currently included in this review package.",
+        "annualEstimate": "Selected annual estimate"
+      },
+      "selectedBenefitsLabel": "Selected benefits",
+      "reviewReadinessTitle": "What happens in this step",
+      "reviewReadinessCopy": "We preserve the selected benefits, keep the intake context with the draft and prepare the case for document collection instead of dropping the user into a dead end.",
+      "connectedCaseTitle": "Draft connected",
+      "connectedCaseCopy": "Current case id: {caseId}",
+      "documentsLabel": "Evidence map",
+      "documentsTitle": "Recommended supporting documents",
+      "documentsCopy": "These suggestions are derived from the selected benefits and the household context already captured in the wizard.",
+      "workspaceLabel": "Case workspace",
+      "workspaceTitle": "Continue into the case workspace",
+      "workspaceCopy": "Open the linked benefits case to manage uploads, checklist follow-up and the next operational step.",
+      "workspaceCta": "Continue to case workspace",
+      "workspaceLoading": "Opening case workspace...",
+      "householdHintsLabel": "Household-sensitive notes",
+      "launchError": "The benefits draft could not be prepared. Try again to continue into the case workspace.",
+      "emptyTitle": "No selected benefits to review",
+      "emptyCopy": "Go back to the results step, choose at least one benefit and then continue into document review.",
+      "household": {
+        "singleHousehold": "Single-household evidence set",
+        "partnerHousehold": "Partner-household evidence set"
+      },
+      "documents": {
+        "healthInsurance": {
+          "title": "Health insurance evidence",
+          "description": "Collect the Dutch basic health insurance policy or a recent premium statement for the insured household members."
+        },
+        "incomeEvidence": {
+          "title": "Income evidence",
+          "description": "Prepare recent salary slips, annual statements or replacement-income documents used to support the estimate."
+        },
+        "rentalContract": {
+          "title": "Rental contract",
+          "description": "Provide the signed rental contract showing the address, start date and the tenant details."
+        },
+        "rentEvidence": {
+          "title": "Rent evidence",
+          "description": "Add recent rent invoices, payment confirmations or a landlord statement showing the current monthly rent."
+        },
+        "addressRegistration": {
+          "title": "Address registration",
+          "description": "Prepare municipality registration or BRP evidence showing who is registered at the address."
+        },
+        "childHouseholdEvidence": {
+          "title": "Child and household evidence",
+          "description": "Collect child-related records such as kinderbijslag confirmation, custody or household composition evidence."
+        },
+        "childcareInvoices": {
+          "title": "Childcare invoices",
+          "description": "Provide childcare invoices or year statements that show paid hours, rates and the relevant periods."
+        },
+        "providerRegistration": {
+          "title": "Provider registration",
+          "description": "Prepare proof that the childcare provider is properly registered, including the provider registration details."
+        },
+        "workStatusEvidence": {
+          "title": "Work-status evidence",
+          "description": "Add employer statements, contracts or equivalent work-status evidence that supports the childcare claim."
+        }
+      },
+      "hints": {
+        "partnerIncome": "Partner households should include partner income evidence as part of the review package.",
+        "householdRegistration": "If a partner or multiple children are involved, household registration should show the current composition clearly.",
+        "childRegistration": "Child-related benefits usually need a clear link between the child, the household and the current registration records.",
+        "partnerWorkStatus": "For partner households with childcare support, work-status evidence may be needed for both adults.",
+        "workStatus": "If childcare support is selected, keep work-status evidence ready for the applicant.",
+        "partnerHousehold": "Partner cases are reviewed on the combined household picture, not just the applicant details.",
+        "childHousehold": "Where children are involved, make sure the file explains who lives in the household and who receives support.",
+        "childcareHours": "Childcare reviews move faster when invoices and contracted hours cover the same periods.",
+        "reviewOnly": "This step prepares evidence for review. It does not promise an automatic filing or approval."
+      }
     }
   },
   "PaymentSuccess": {
