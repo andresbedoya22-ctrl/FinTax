@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 import { createAdminClient } from "@/lib/supabase/server";
+import { sendPaymentConfirmedEmail } from "@/lib/email/notifications";
 import { getStripeServerClient } from "@/lib/stripe/server";
 import {
   extractCheckoutCompletedPayload,
@@ -60,6 +61,20 @@ async function handleCheckoutCompleted(event: Stripe.Event) {
     .eq("id", payload.caseId)
     .eq("user_id", payload.userId)
     .in("status", ["pending_payment", "draft"]);
+
+  const [{ data: profile }, { data: caseRecord }] = await Promise.all([
+    admin.from("profiles").select("email,preferred_language").eq("id", payload.userId).maybeSingle(),
+    admin.from("cases").select("display_name,case_type").eq("id", payload.caseId).maybeSingle(),
+  ]);
+
+  if (profile?.email) {
+    await sendPaymentConfirmedEmail({
+      to: profile.email,
+      locale: profile.preferred_language ?? "en",
+      caseName: caseRecord?.display_name ?? caseRecord?.case_type ?? payload.caseType,
+      caseId: payload.caseId,
+    });
+  }
 
   return { processed: true, paymentId: insertedPayment?.id ?? null };
 }

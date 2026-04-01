@@ -29,6 +29,7 @@ export function SettingsScreen() {
   const [settingsError, setSettingsError] = React.useState<string | null>(null);
   const [resettingPassword, setResettingPassword] = React.useState(false);
   const [privacyActionLoading, setPrivacyActionLoading] = React.useState<DsarRequestType | null>(null);
+  const [latestExportPath, setLatestExportPath] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     if (!profile) return;
@@ -143,8 +144,16 @@ export function SettingsScreen() {
           details: { source: "settings_screen" },
         },
       );
+      const downloadPath =
+        created.request_type === "export" &&
+        typeof created.requested_payload?.download_path === "string"
+          ? created.requested_payload.download_path
+          : null;
+      setLatestExportPath(downloadPath);
       setSettingsMessage(
-        `Request received (${created.request_type}). Response target date: ${new Date(created.due_at).toLocaleDateString()}.`,
+        downloadPath
+          ? `Export ready. Response target date: ${new Date(created.due_at).toLocaleDateString()}.`
+          : `Request received (${created.request_type}). Response target date: ${new Date(created.due_at).toLocaleDateString()}.`,
       );
     } catch {
       setSettingsError("We could not submit your privacy request right now. Please retry in a minute.");
@@ -285,6 +294,11 @@ export function SettingsScreen() {
                 {t("privacy.deleteRequest")}
               </Button>
               {privacyActionLoading ? <Badge variant="neutral">Submitting {privacyActionLoading}...</Badge> : null}
+              {latestExportPath ? (
+                <Button type="button" variant="secondary" onClick={() => window.open(latestExportPath, "_blank", "noopener,noreferrer")}>
+                  Download latest export
+                </Button>
+              ) : null}
             </div>
             <p className="text-xs text-muted">
               Data-subject requests are logged with a 30-day due date and reviewed by the privacy team.

@@ -40,7 +40,7 @@ export default function PrivacyPage() {
           <a className="text-copper underline underline-offset-4" href="mailto:privacy@fintax.nl">
             privacy@fintax.nl
           </a>
-          . Each request is tracked with a due date and resolution status.
+          . Export requests are generated for authenticated download inside the application. Each request is tracked with a due date and resolution status.
         </p>
       </div>
     </main>

@@ -18,9 +18,10 @@ FinTax is a Next.js App Router platform for multilingual Dutch tax and benefits 
 Copy `.env.example` to `.env.local` and fill values.
 
 Security-critical variables:
-- `BSN_ENCRYPTION_KEY` must stay server-only
+- `BSN_ENCRYPTION_KEY` / `BSN_ENCRYPTION_KEYS` must stay server-only
 - `SUPABASE_SERVICE_ROLE_KEY` must stay server-only
 - `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` must stay server-only
+- `RESEND_API_KEY` must stay server-only
 
 Public variables:
 - `NEXT_PUBLIC_*`
@@ -64,12 +65,20 @@ Details: [docs/local-hooks.md](docs/local-hooks.md)
 ## Stripe
 - Checkout route: `src/app/api/stripe/checkout/route.ts`
 - Webhook route: `src/app/api/stripe/webhook/route.ts`
+- Checkout validates authenticated ownership of the case and resolves pricing server-side
 - Webhook processing must remain idempotent
 
 ## Security notes
 - Client sends plaintext BSN only to server routes
-- Server encrypts BSN with `BSN_ENCRYPTION_KEY` before DB storage (`profiles.bsn_encrypted`)
+- Server encrypts BSN with AES-256-GCM before DB storage using `profiles.bsn_key_id` + `profiles.bsn_ciphertext`
+- `profiles.bsn_encrypted` is legacy compatibility only and should not receive new writes
+- A baseline CSP is applied from `next.config.ts`
 - Do not move encryption to client code
+
+## Privacy / DSAR
+- `POST /api/dsar` creates tracked requests with a 30-day due date
+- Export requests are completed automatically and can be downloaded from `/api/dsar/[id]/export` after authentication
+- Rectification and deletion requests remain tracked/manual in this iteration
 
 ## i18n
 - Locales are configured in `src/i18n/routing.ts`
@@ -94,6 +103,8 @@ Known deployment target is not declared in-repo. Safe default:
 - Build with `pnpm build`
 - Set all required env vars in the hosting platform
 - Ensure webhook endpoint and secrets are configured per environment
+- Configure a real `RESEND_FROM_EMAIL` in production
+- Disable any mock fallback behavior outside local development
 
 ## Governance docs
 - [docs/ai-rules.md](docs/ai-rules.md)

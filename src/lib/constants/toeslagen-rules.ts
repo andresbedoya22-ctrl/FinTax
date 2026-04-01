@@ -14,7 +14,7 @@ export interface ToeslagRules2026 {
   huurtoeslag: {
     minAge: number;
     maxAssets: Record<HouseholdType, number>;
-    noMaxRentFrom2026: true;
+    noMaxRentFrom2026: boolean;
     maxRentConsidered: {
       under23: number;
       standard: number;
@@ -42,7 +42,56 @@ export interface ToeslagRules2026 {
   };
 }
 
-export const TOESLAGEN_RULES_2026: ToeslagRules2026 = {
+export interface ToeslagRuleSet extends ToeslagRules2026 {
+  year: 2025 | 2026;
+  source: string;
+  validatedAt: string;
+}
+
+export const TOESLAGEN_RULES_2025: ToeslagRuleSet = {
+  year: 2025,
+  source: "Belastingdienst Toeslagenkaart 2025 and Dienst Toeslagen public threshold pages",
+  validatedAt: "2026-04-01",
+  zorgtoeslag: {
+    minAge: 18,
+    maxIncome: { single: 39719, partners: 50206 },
+    maxAssets: { single: 141896, partners: 179429 },
+    maxAnnualAmount: { single: 1572, partners: 3008 },
+    requiresNlResident: true,
+    requiresHealthInsurance: true,
+  },
+  huurtoeslag: {
+    minAge: 18,
+    maxAssets: { single: 37795, partners: 75590 },
+    noMaxRentFrom2026: false,
+    maxRentConsidered: { standard: 900.07, under23: 477.2 },
+    requiresIndependentHome: true,
+    requiresRentalContract: true,
+  },
+  kindgebondenBudget: {
+    maxAssets: { single: 141896, partners: 179429 },
+    fullAmountIncomeThreshold: { single: 28297, partners: 39927 },
+    reductionRate: 0.0675,
+    requiresChildrenUnder18: true,
+    requiresKinderbijslag: true,
+  },
+  kinderopvangtoeslag: {
+    highCoverageIncomeThreshold: 47200,
+    highCoverageRate: 0.96,
+    requiresRegisteredChildcare: true,
+    requiresWorkingParents: true,
+    maxHourlyRate: {
+      daycare: 10.71,
+      outOfSchoolCare: 9.52,
+      childminder: 8.1,
+    },
+  },
+};
+
+export const TOESLAGEN_RULES_2026: ToeslagRuleSet = {
+  year: 2026,
+  source: "Dienst Toeslagen public threshold pages validated on 2026-04-01",
+  validatedAt: "2026-04-01",
   zorgtoeslag: {
     minAge: 18,
     maxIncome: { single: 40857, partners: 51142 },
@@ -78,6 +127,11 @@ export const TOESLAGEN_RULES_2026: ToeslagRules2026 = {
     },
   },
 };
+
+export function getToeslagenRules(year: number): ToeslagRuleSet {
+  if (year <= 2025) return TOESLAGEN_RULES_2025;
+  return TOESLAGEN_RULES_2026;
+}
 
 export const BENEFIT_CASE_TYPES: CaseType[] = [
   "zorgtoeslag",
