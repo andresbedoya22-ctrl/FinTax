@@ -1,6 +1,7 @@
-import { TOESLAGEN_RULES_2026, type HouseholdType } from "../constants/toeslagen-rules";
+import { getToeslagenRules, type HouseholdType } from "../constants/toeslagen-rules";
 
 export interface BenefitsWizardInput {
+  benefitsYear?: 2025 | 2026;
   age: number;
   householdType: HouseholdType;
   annualIncome: number;
@@ -46,7 +47,7 @@ function inThreshold(value: number, max: number): boolean {
 }
 
 export function calculateEligibility(input: BenefitsWizardInput): EligibilityResults {
-  const rules = TOESLAGEN_RULES_2026;
+  const rules = getToeslagenRules(input.benefitsYear ?? 2026);
   const household = input.householdType;
 
   const zorgReasons: string[] = [];

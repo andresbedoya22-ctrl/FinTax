@@ -83,6 +83,10 @@ export interface Case {
   updated_at: string;
 }
 
+export interface AdminCase extends Case {
+  profile: Pick<Profile, "full_name" | "email" | "preferred_language"> | null;
+}
+
 export interface ChecklistItem {
   id: string;
   case_id: string;

@@ -1,28 +1,67 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 
 import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Badge, EmptyState, Skeleton } from "@/components/ui";
-import { isApiClientError } from "@/hooks/api-client";
-import { useCases } from "@/hooks/useCases";
+import { apiPatch, isApiClientError } from "@/hooks/api-client";
+import { useAdminCases } from "@/hooks/useAdminCases";
 import { useServicePricing } from "@/hooks/useServicePricing";
-import type { CaseStatus } from "@/types/database";
+import type { AdminCase, CaseStatus } from "@/types/database";
+
+const CASE_STATUSES: CaseStatus[] = [
+  "draft",
+  "pending_payment",
+  "paid",
+  "pending_authorization",
+  "authorized",
+  "in_review",
+  "pending_documents",
+  "submitted",
+  "completed",
+  "rejected",
+];
 
 export function AdminScreen() {
   const t = useTranslations("Admin");
-  const casesQuery = useCases();
+  const queryClient = useQueryClient();
+  const casesQuery = useAdminCases();
   const pricingQuery = useServicePricing();
   const cases = casesQuery.data ?? [];
   const pricingItems = pricingQuery.data ?? [];
   const [notes, setNotes] = React.useState<Record<string, string>>({});
   const [statusOverrides, setStatusOverrides] = React.useState<Record<string, CaseStatus>>({});
+  const [savingCaseId, setSavingCaseId] = React.useState<string | null>(null);
+  const [bannerMessage, setBannerMessage] = React.useState<string | null>(null);
+  const [bannerError, setBannerError] = React.useState<string | null>(null);
 
   const updateStatus = (id: string, status: CaseStatus) => {
-    // Local-only UI state for status preview until admin mutation endpoint is wired.
     setStatusOverrides((prev) => ({ ...prev, [id]: status }));
+  };
+
+  const saveCase = async (item: AdminCase, options?: { assignToSelf?: boolean; sendNotification?: boolean }) => {
+    setSavingCaseId(item.id);
+    setBannerMessage(null);
+    setBannerError(null);
+
+    try {
+      await apiPatch(`/api/admin/cases/${item.id}`, {
+        status: statusOverrides[item.id] ?? item.status,
+        notesInternal: notes[item.id] ?? item.notes_internal ?? null,
+        assignToSelf: options?.assignToSelf ?? false,
+        sendNotification: options?.sendNotification ?? false,
+        locale: item.profile?.preferred_language ?? "en",
+      });
+      await queryClient.invalidateQueries({ queryKey: ["admin-cases"] });
+      setBannerMessage("Admin update saved.");
+    } catch (error) {
+      setBannerError(isApiClientError(error) ? `Admin update failed: ${error.code}` : "Admin update failed.");
+    } finally {
+      setSavingCaseId(null);
+    }
   };
 
   const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
@@ -35,6 +74,9 @@ export function AdminScreen() {
         <h2 className="mt-2 font-heading text-3xl font-semibold tracking-[-0.03em] text-text">{t("title")}</h2>
         <p className="mt-2 text-sm text-secondary">{t("subtitle")}</p>
       </div>
+
+      {bannerMessage ? <div className="rounded-xl border border-green/25 bg-green/10 px-4 py-3 text-sm text-green">{bannerMessage}</div> : null}
+      {bannerError ? <div className="rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error">{bannerError}</div> : null}
 
       <div className="grid gap-4 lg:grid-cols-4">
         <Kpi title={t("kpi.activeCases")} value={String(cases.length)} tone="neutral" />
@@ -81,26 +123,37 @@ export function AdminScreen() {
                       </span>
                     </div>
                     <p className="font-medium text-text">{item.display_name}</p>
+                    <p className="text-xs text-muted">{item.profile?.full_name ?? "Unknown user"} · {item.profile?.email ?? "No email"}</p>
                     <p className="text-xs text-muted">{item.id}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <select className="h-10 rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text" value={statusOverrides[item.id] ?? item.status} onChange={(e) => updateStatus(item.id, e.target.value as CaseStatus)}>
-                      {(["draft","pending_payment","paid","pending_authorization","authorized","in_review","pending_documents","submitted","completed","rejected"] as const).map((status) => (
+                    <select
+                      className="h-10 rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text"
+                      value={statusOverrides[item.id] ?? item.status}
+                      onChange={(e) => updateStatus(item.id, e.target.value as CaseStatus)}
+                    >
+                      {CASE_STATUSES.map((status) => (
                         <option key={status} value={status}>{status}</option>
                       ))}
                     </select>
-                    <Button type="button" size="sm" variant="secondary">{t("actions.notify")}</Button>
+                    <Button type="button" size="sm" variant="secondary" disabled={savingCaseId === item.id} onClick={() => void saveCase(item, { sendNotification: true })}>
+                      {t("actions.notify")}
+                    </Button>
                   </div>
                 </div>
                 <div className="mt-3 grid gap-3 lg:grid-cols-[1fr_auto_auto]">
                   <input
-                    value={notes[item.id] ?? ""}
+                    value={notes[item.id] ?? item.notes_internal ?? ""}
                     onChange={(e) => setNotes((prev) => ({ ...prev, [item.id]: e.target.value }))}
                     placeholder={t("placeholders.internalNote")}
                     className="h-10 rounded-xl border border-border/35 bg-surface/45 px-3 text-sm text-text outline-none"
                   />
-                  <Button type="button" size="sm" variant="secondary">{t("actions.assign")}</Button>
-                  <Button type="button" size="sm">{t("actions.save")}</Button>
+                  <Button type="button" size="sm" variant="secondary" disabled={savingCaseId === item.id} onClick={() => void saveCase(item, { assignToSelf: true })}>
+                    {t("actions.assign")}
+                  </Button>
+                  <Button type="button" size="sm" disabled={savingCaseId === item.id} onClick={() => void saveCase(item)}>
+                    {t("actions.save")}
+                  </Button>
                 </div>
               </div>
             ))
@@ -112,13 +165,11 @@ export function AdminScreen() {
         <Card>
           <CardHeader><h3 className="text-base font-semibold text-text">{t("sections.users")}</h3></CardHeader>
           <CardBody className="space-y-2 text-sm text-secondary">
-            <div className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3">demo@fintax.test · user</div>
-            <div className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3">ops@fintax.test · admin</div>
-            <div className="rounded-xl border border-border/35 bg-surface2/15 p-3">
-              <p className="mb-2 text-xs uppercase tracking-[0.12em] text-muted">Queue placeholder</p>
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="mt-2 h-3 w-2/3" />
-            </div>
+            {cases.slice(0, 5).map((item) => (
+              <div key={`user-${item.id}`} className="rounded-xl border border-border/35 bg-surface2/20 px-4 py-3">
+                {item.profile?.email ?? "unknown@fintax.local"} · {item.assigned_admin ? "assigned" : "unassigned"}
+              </div>
+            ))}
           </CardBody>
         </Card>
 

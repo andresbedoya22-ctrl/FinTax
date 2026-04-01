@@ -34,7 +34,6 @@ export async function POST(request: Request) {
       full_name: parsed.data.fullName,
       bsn_key_id: encryptedBsn.keyId,
       bsn_ciphertext: encryptedBsn.ciphertext,
-      bsn_encrypted: `${encryptedBsn.keyId}:${encryptedBsn.ciphertext}`,
       updated_at: new Date().toISOString(),
     })
     .eq("id", user.id);

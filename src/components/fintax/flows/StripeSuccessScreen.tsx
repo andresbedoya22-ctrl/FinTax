@@ -1,7 +1,6 @@
 "use client";
 
 import { CheckCircle2, LoaderCircle } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 
@@ -14,16 +13,27 @@ import type { Case } from "@/types/database";
 const POLL_INTERVAL_MS = 3000;
 const MAX_POLLS = 20;
 
-export function StripeSuccessScreen() {
+export function StripeSuccessScreen({
+  caseId,
+  initialStatus,
+  initialCaseStatus,
+  sessionId,
+}: {
+  caseId: string | null;
+  initialStatus: "paid" | "pending" | "invalid";
+  initialCaseStatus?: string | null;
+  sessionId?: string | null;
+}) {
   const t = useTranslations("PaymentSuccess");
-  const searchParams = useSearchParams();
-  const caseId = searchParams.get("caseId");
-  const [status, setStatus] = React.useState<"loading" | "paid" | "pending" | "error">("loading");
-  const [currentCase, setCurrentCase] = React.useState<Case | null>(null);
+  const [status, setStatus] = React.useState<"loading" | "paid" | "pending" | "error">(
+    initialStatus === "paid" ? "paid" : initialStatus === "pending" ? "pending" : "error",
+  );
+  const [currentCase, setCurrentCase] = React.useState<Case | null>(
+    initialCaseStatus ? ({ status: initialCaseStatus } as Case) : null,
+  );
 
   React.useEffect(() => {
-    if (!caseId) {
-      setStatus("error");
+    if (!caseId || initialStatus !== "pending") {
       return;
     }
 
@@ -62,7 +72,7 @@ export function StripeSuccessScreen() {
     return () => {
       active = false;
     };
-  }, [caseId]);
+  }, [caseId, initialStatus]);
 
   return (
     <div className="mx-auto max-w-3xl py-16">
@@ -95,6 +105,7 @@ export function StripeSuccessScreen() {
 
           <div className="rounded-xl border border-border/35 bg-surface2/20 p-4 text-sm text-secondary">
             <p>{t("caseId")}: {caseId ?? "-"}</p>
+            <p className="mt-1">Session: {sessionId ?? "-"}</p>
             <p className="mt-1">{t("status")}: {currentCase?.status ?? "-"}</p>
           </div>
 

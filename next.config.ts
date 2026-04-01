@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+import { buildContentSecurityPolicy } from "./src/lib/security/csp";
+
 const SECURITY_HEADERS: Array<{ key: string; value: string }> = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -10,6 +12,7 @@ const SECURITY_HEADERS: Array<{ key: string; value: string }> = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
   { key: "X-DNS-Prefetch-Control", value: "off" },
+  { key: "Content-Security-Policy", value: buildContentSecurityPolicy(process.env.NEXT_PUBLIC_APP_URL) },
 ];
 
 const nextConfig: NextConfig = {
