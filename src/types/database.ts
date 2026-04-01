@@ -21,7 +21,18 @@ export type CaseStatus =
   | "completed"
   | "rejected";
 
-export type DocumentStatus = "uploaded" | "under_review" | "approved" | "rejected";
+export type DocumentStatus =
+  | "uploading"
+  | "uploaded"
+  | "under_review"
+  | "approved"
+  | "rejected"
+  | "replaced"
+  | "archived";
+
+export type RequirementType = "info" | "document" | "boolean" | "date" | "list" | "confirmation";
+
+export type RequirementStatus = "pending" | "uploaded" | "approved" | "rejected" | "waived" | "not_applicable";
 
 export type NotificationType = "info" | "success" | "warning" | "error" | "action_required";
 
@@ -65,12 +76,22 @@ export interface Case {
   status: CaseStatus;
   display_name: string | null;
   tax_year: number | null;
+  origin_country_code?: string | null;
+  residency_pattern?: string | null;
+  filing_route?: string | null;
   deadline: string | null;
   estimated_refund: number | null;
   actual_refund: number | null;
   paid_at?: string | null;
   wizard_data: Record<string, unknown>;
   wizard_completed: boolean;
+  current_intake_snapshot_id?: string | null;
+  active_rule_set_id?: string | null;
+  requirements_completion_ratio?: number;
+  blocking_requirements_count?: number;
+  requirements_summary?: Record<string, unknown>;
+  last_client_submission_at?: string | null;
+  last_requirement_refresh_at?: string | null;
   machtiging_status: MachtigingStatus;
   machtiging_code: string | null;
   stripe_payment_id: string | null;
@@ -107,10 +128,20 @@ export interface Document {
   case_id: string;
   user_id: string;
   checklist_item_id: string | null;
+  upload_session_id?: string | null;
   file_name: string;
   file_path: string;
   file_size: number | null;
   mime_type: string | null;
+  storage_provider?: string;
+  storage_bucket?: string | null;
+  storage_object_key?: string | null;
+  sha256_checksum?: string | null;
+  upload_state?: "uploading" | "uploaded" | "finalized" | "replaced" | "deleted";
+  replaced_by_document_id?: string | null;
+  deleted_at?: string | null;
+  deleted_by?: string | null;
+  metadata?: Record<string, unknown>;
   status: DocumentStatus;
   review_notes: string | null;
   reviewed_by: string | null;
@@ -191,5 +222,100 @@ export interface AdminActivityLog {
   case_id: string | null;
   action: string;
   details: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export interface CaseIntakeSnapshot {
+  id: string;
+  case_id: string;
+  schema_version: string;
+  normalization_version: string;
+  source: "wizard" | "admin" | "migration" | "api";
+  payload: Record<string, unknown>;
+  derived_facts: Record<string, unknown>;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface RequirementHelpContent {
+  id: string;
+  requirement_code: string;
+  version: string;
+  locale: string;
+  content: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CaseRequirement {
+  id: string;
+  case_id: string;
+  template_id: string | null;
+  snapshot_id: string;
+  rule_set_id: string;
+  requirement_code: string;
+  instance_key: string;
+  section: string;
+  requirement_type: RequirementType;
+  title: string;
+  description: string | null;
+  help_content: Record<string, unknown>;
+  status: RequirementStatus;
+  is_blocking: boolean;
+  is_document_required: boolean;
+  min_files: number;
+  max_files: number | null;
+  accepted_mime_types: string[];
+  max_file_size_bytes: number;
+  sort_order: number;
+  applicability_reason: Record<string, unknown>;
+  answer_value: Record<string, unknown>;
+  customer_note: string | null;
+  availability_status: "available" | "not_yet_available";
+  availability_note: string | null;
+  availability_marked_at: string | null;
+  review_notes: string | null;
+  rejection_reason: string | null;
+  requested_at: string;
+  first_completed_at: string | null;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DocumentUploadSession {
+  id: string;
+  case_id: string;
+  requirement_id: string;
+  user_id: string;
+  intended_filename: string;
+  mime_type: string;
+  file_size_bytes: number;
+  storage_bucket: string;
+  storage_path: string;
+  replaces_document_id: string | null;
+  status: "issued" | "uploaded" | "expired" | "finalized" | "cancelled";
+  expires_at: string;
+  created_at: string;
+  finalized_at: string | null;
+}
+
+export interface RequirementDocument {
+  id: string;
+  requirement_id: string;
+  document_id: string;
+  is_primary: boolean;
+  created_at: string;
+}
+
+export interface CaseEvent {
+  id: string;
+  case_id: string;
+  actor_type: "user" | "admin" | "system";
+  actor_id: string | null;
+  event_type: string;
+  visibility: "internal" | "client" | "both";
+  payload: Record<string, unknown>;
   created_at: string;
 }
