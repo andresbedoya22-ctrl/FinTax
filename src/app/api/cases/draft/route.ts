@@ -1,18 +1,10 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
-
 import { encryptBsn } from "@/lib/security/encryption";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
-
-const schema = z.object({
-  caseType: z.string().min(1),
-  fullName: z.string().min(2),
-  bsn: z.string().min(4),
-  taxYear: z.number().int().optional(),
-});
+import { caseDraftSchema } from "@/lib/tax-documents/contracts";
 
 export async function POST(request: Request) {
-  const parsed = schema.safeParse(await request.json().catch(() => null));
+  const parsed = caseDraftSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
 
   const supabase = await createClient().catch(() => null);
@@ -58,6 +50,7 @@ export async function POST(request: Request) {
       status: "draft",
       display_name: `${parsed.data.caseType} ${parsed.data.taxYear ?? ""}`.trim(),
       tax_year: parsed.data.taxYear ?? null,
+      origin_country_code: parsed.data.originCountryCode ?? null,
       wizard_data: { fullName: parsed.data.fullName, taxYear: parsed.data.taxYear ?? null, bsn_present: true },
       wizard_completed: false,
     })
