@@ -1,5 +1,6 @@
 export * from "./TaxReturnActionPanel";
 export * from "./TaxReturnDocumentChecklist";
+export * from "./TaxReturnDocumentWorkspace";
 export * from "./TaxReturnFormPrimitives";
 export * from "./TaxReturnIntro";
 export * from "./TaxReturnProgressHeader";

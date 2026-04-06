@@ -31,9 +31,18 @@ const mockState = vi.hoisted(() => ({
       updated_at: "2099-03-10T00:00:00.000Z",
     },
   ],
-  checklist: [
-    { id: "1", label: "Pasaporte", is_completed: true, is_document_upload: true },
-    { id: "2", label: "Contrato de alquiler", is_completed: false, is_document_upload: true },
+  requirements: [
+    { id: "1", title: "Pasaporte", status: "approved", requirement_type: "document", is_document_required: true },
+    { id: "2", title: "Contrato de alquiler", status: "pending", requirement_type: "document", is_document_required: true },
+  ],
+  progress: { total: 2, completed: 1, uploaded: 0, pending: 1, rejected: 0, blockingRemaining: 1, completionRatio: 50, blockers: [] },
+  events: [
+    {
+      id: "evt-1",
+      event_type: "document_uploaded",
+      created_at: "2099-03-12T00:00:00.000Z",
+      payload: { fileName: "passport.pdf" },
+    },
   ],
   notifications: [
     {
@@ -162,10 +171,11 @@ const translations = {
     completed: "Completado",
     rejected: "Requiere cambios",
   },
-  checklistFallback: [
-    { label: "Pasaporte", done: true },
-    { label: "Ingresos", done: false },
-  ],
+  docFlow: {
+    eventTypes: {
+      document_uploaded: { title: "Documento subido", body: "El documento fue subido." },
+    },
+  },
   calendarMilestones: [
     { date: "01/03/2027", label: "Inicio periodo de declaracion" },
     { date: "01/05/2027", label: "Fecha limite estandar" },
@@ -209,9 +219,18 @@ vi.mock("@/hooks/useCases", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useChecklist", () => ({
-  useChecklist: () => ({
-    data: mockState.checklist,
+vi.mock("@/hooks/useTaxReturnDocFlow", () => ({
+  useCaseRequirements: () => ({
+    data: {
+      requirements: mockState.requirements,
+      progress: mockState.progress,
+    },
+  }),
+  useCaseProgress: () => ({
+    data: mockState.progress,
+  }),
+  useCaseEvents: () => ({
+    data: mockState.events,
   }),
 }));
 
@@ -251,9 +270,18 @@ describe("DashboardOverview", () => {
         updated_at: "2099-03-10T00:00:00.000Z",
       },
     ];
-    mockState.checklist = [
-      { id: "1", label: "Pasaporte", is_completed: true, is_document_upload: true },
-      { id: "2", label: "Contrato de alquiler", is_completed: false, is_document_upload: true },
+    mockState.requirements = [
+      { id: "1", title: "Pasaporte", status: "approved", requirement_type: "document", is_document_required: true },
+      { id: "2", title: "Contrato de alquiler", status: "pending", requirement_type: "document", is_document_required: true },
+    ];
+    mockState.progress = { total: 2, completed: 1, uploaded: 0, pending: 1, rejected: 0, blockingRemaining: 1, completionRatio: 50, blockers: [] };
+    mockState.events = [
+      {
+        id: "evt-1",
+        event_type: "document_uploaded",
+        created_at: "2099-03-12T00:00:00.000Z",
+        payload: { fileName: "passport.pdf" },
+      },
     ];
     mockState.notifications = [
       {
@@ -291,7 +319,9 @@ describe("DashboardOverview", () => {
 
   it("shows an honest empty state and keeps the CTA pointed at /tax-return when there is no active case", () => {
     mockState.cases = [];
-    mockState.checklist = [];
+    mockState.requirements = [];
+    mockState.progress = { total: 0, completed: 0, uploaded: 0, pending: 0, rejected: 0, blockingRemaining: 0, completionRatio: 0, blockers: [] };
+    mockState.events = [];
     mockState.notifications = [];
     mockState.taxSummary = {
       box1Income: 0,
