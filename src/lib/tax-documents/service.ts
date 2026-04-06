@@ -100,7 +100,7 @@ export async function saveCaseIntake(params: {
   await recordCaseEvent(params.supabase, {
     caseId: params.caseRecord.id,
     actorId: params.actorId,
-    actorType: "user",
+    actorType: resolveIntakeActorType(params.source),
     eventType: "intake_saved",
     visibility: "both",
     payload: {
@@ -160,7 +160,9 @@ export async function ensureRuleMetadata(params: {
 
   if (templateRowsError) throw templateRowsError;
 
-  const templateMap = new Map<string, string>((templateRows ?? []).map((row: { id: string; code: string }) => [row.code, row.id]));
+  const templateMap = new Map<string, string>(
+    (templateRows ?? []).map((row: { id: string; code: string }) => [row.code, row.id])
+  );
   const existingRulesResponse = await params.supabase
     .from("requirement_rules")
     .select("id, template_id")
@@ -168,7 +170,9 @@ export async function ensureRuleMetadata(params: {
 
   if (existingRulesResponse.error) throw existingRulesResponse.error;
 
-  const existingTemplateIds = new Set<string>((existingRulesResponse.data ?? []).map((row: { template_id: string }) => row.template_id));
+  const existingTemplateIds = new Set<string>(
+    (existingRulesResponse.data ?? []).map((row: { template_id: string }) => row.template_id)
+  );
   const missingRuleRows = buildRuleSeedRows(params.caseType)
     .map((row) => ({
       rule_set_id: ruleSet.id,
@@ -190,7 +194,11 @@ export async function ensureRuleMetadata(params: {
   };
 }
 
-async function getActiveRuleSet(supabase: SupabaseLike, caseType: Case["case_type"], taxYear: number) {
+async function getActiveRuleSet(
+  supabase: SupabaseLike,
+  caseType: Case["case_type"],
+  taxYear: number
+) {
   const { data, error } = await supabase
     .from("requirement_rule_sets")
     .select("*")
@@ -203,7 +211,10 @@ async function getActiveRuleSet(supabase: SupabaseLike, caseType: Case["case_typ
   return data ?? null;
 }
 
-async function upsertRequirementTemplates(supabase: SupabaseLike, templates: RequirementTemplateSeed[]) {
+async function upsertRequirementTemplates(
+  supabase: SupabaseLike,
+  templates: RequirementTemplateSeed[]
+) {
   const rows = templates.map((template) => ({
     code: template.code,
     case_type: template.caseType,
@@ -220,11 +231,17 @@ async function upsertRequirementTemplates(supabase: SupabaseLike, templates: Req
     updated_at: new Date().toISOString(),
   }));
 
-  const { error } = await supabase.from("requirement_templates").upsert(rows, { onConflict: "code" });
+  const { error } = await supabase
+    .from("requirement_templates")
+    .upsert(rows, { onConflict: "code" });
   if (error) throw error;
 }
 
-async function upsertRequirementHelpContent(supabase: SupabaseLike, templates: RequirementTemplateSeed[], taxYear: number) {
+async function upsertRequirementHelpContent(
+  supabase: SupabaseLike,
+  templates: RequirementTemplateSeed[],
+  taxYear: number
+) {
   const rows = templates.map((template) => ({
     requirement_code: template.code,
     version: TAX_RETURN_DOCUMENT_FLOW_RULESET_VERSION,
@@ -233,7 +250,9 @@ async function upsertRequirementHelpContent(supabase: SupabaseLike, templates: R
     updated_at: new Date().toISOString(),
   }));
 
-  const { error } = await supabase.from("requirement_help_content").upsert(rows, { onConflict: "requirement_code" });
+  const { error } = await supabase
+    .from("requirement_help_content")
+    .upsert(rows, { onConflict: "requirement_code" });
   if (error) throw error;
 }
 
@@ -264,7 +283,10 @@ export async function regenerateCaseRequirements(params: {
   if (existingError) throw existingError;
 
   const existingMap = new Map<string, CaseRequirement>(
-    ((existingRows ?? []) as CaseRequirement[]).map((row) => [`${row.requirement_code}::${row.instance_key}`, row]),
+    ((existingRows ?? []) as CaseRequirement[]).map((row) => [
+      `${row.requirement_code}::${row.instance_key}`,
+      row,
+    ])
   );
 
   const touchedKeys = new Set<string>();
@@ -273,7 +295,11 @@ export async function regenerateCaseRequirements(params: {
     const key = `${draft.requirementCode}::${draft.instanceKey}`;
     touchedKeys.add(key);
     const existing = existingMap.get(key);
-    const nextStatus = deriveRequirementStatusFromDraft(draft, existing?.status, existing?.answer_value);
+    const nextStatus = deriveRequirementStatusFromDraft(
+      draft,
+      existing?.status,
+      existing?.answer_value
+    );
 
     const row = {
       case_id: params.caseRecord.id,
@@ -298,26 +324,34 @@ export async function regenerateCaseRequirements(params: {
       applicability_reason: draft.applicabilityReason,
       answer_value: draft.answerValue,
       review_notes:
-        existing && JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) && !draft.isDocumentRequired
+        existing &&
+        JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) &&
+        !draft.isDocumentRequired
           ? null
-          : existing?.review_notes ?? null,
+          : (existing?.review_notes ?? null),
       rejection_reason:
-        existing && JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) && !draft.isDocumentRequired
+        existing &&
+        JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) &&
+        !draft.isDocumentRequired
           ? null
-          : existing?.rejection_reason ?? null,
+          : (existing?.rejection_reason ?? null),
       reviewed_at:
-        existing && JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) && !draft.isDocumentRequired
+        existing &&
+        JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) &&
+        !draft.isDocumentRequired
           ? null
-          : existing?.reviewed_at ?? null,
+          : (existing?.reviewed_at ?? null),
       reviewed_by:
-        existing && JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) && !draft.isDocumentRequired
+        existing &&
+        JSON.stringify(existing.answer_value ?? {}) !== JSON.stringify(draft.answerValue ?? {}) &&
+        !draft.isDocumentRequired
           ? null
-          : existing?.reviewed_by ?? null,
+          : (existing?.reviewed_by ?? null),
       updated_at: new Date().toISOString(),
       first_completed_at:
         nextStatus === "approved" || nextStatus === "waived" || nextStatus === "uploaded"
-          ? existing?.first_completed_at ?? new Date().toISOString()
-          : existing?.first_completed_at ?? null,
+          ? (existing?.first_completed_at ?? new Date().toISOString())
+          : (existing?.first_completed_at ?? null),
     };
 
     const response = existing
@@ -345,7 +379,10 @@ export async function regenerateCaseRequirements(params: {
   const refreshedRows = await listCaseRequirements(params.supabase, params.caseRecord.id);
   const progress = summarizeRequirementProgress(refreshedRows);
 
-  const nextCaseStatus = deriveCaseStatusFromRequirements(params.caseRecord.status, progress.blockingRemaining);
+  const nextCaseStatus = deriveCaseStatusFromRequirements(
+    params.caseRecord.status,
+    progress.blockingRemaining
+  );
 
   await params.supabase
     .from("cases")
@@ -391,9 +428,13 @@ export async function listCaseRequirements(supabase: SupabaseLike, caseId: strin
 
 export function summarizeRequirementProgress(requirements: CaseRequirement[]) {
   const applicable = requirements.filter((item) => item.status !== "not_applicable");
-  const completed = applicable.filter((item) => ["approved", "waived"].includes(item.status)).length;
+  const completed = applicable.filter((item) =>
+    ["approved", "waived"].includes(item.status)
+  ).length;
   const uploaded = applicable.filter((item) => item.status === "uploaded").length;
-  const blockingRemaining = applicable.filter((item) => item.is_blocking && ["pending", "rejected"].includes(item.status)).length;
+  const blockingRemaining = applicable.filter(
+    (item) => item.is_blocking && ["pending", "rejected"].includes(item.status)
+  ).length;
   const blockers = applicable
     .filter((item) => item.is_blocking && ["pending", "rejected"].includes(item.status))
     .map((item) => ({
@@ -410,13 +451,26 @@ export function summarizeRequirementProgress(requirements: CaseRequirement[]) {
     pending: applicable.filter((item) => item.status === "pending").length,
     rejected: applicable.filter((item) => item.status === "rejected").length,
     blockingRemaining,
-    completionRatio: applicable.length === 0 ? 0 : Number(((completed / applicable.length) * 100).toFixed(2)),
+    completionRatio:
+      applicable.length === 0 ? 0 : Number(((completed / applicable.length) * 100).toFixed(2)),
     blockers,
   };
 }
 
-export function deriveCaseStatusFromRequirements(currentStatus: CaseStatus, blockingRemaining: number): CaseStatus {
-  if (["submitted", "completed", "rejected", "pending_payment", "pending_authorization", "authorized"].includes(currentStatus)) {
+export function deriveCaseStatusFromRequirements(
+  currentStatus: CaseStatus,
+  blockingRemaining: number
+): CaseStatus {
+  if (
+    [
+      "submitted",
+      "completed",
+      "rejected",
+      "pending_payment",
+      "pending_authorization",
+      "authorized",
+    ].includes(currentStatus)
+  ) {
     return currentStatus;
   }
 
@@ -439,12 +493,17 @@ export async function listCaseDocuments(supabase: SupabaseLike, caseId: string) 
     .select("requirement_id, document_id")
     .in(
       "document_id",
-      ((docs ?? []) as Array<{ id: string }>).map((doc) => doc.id),
+      ((docs ?? []) as Array<{ id: string }>).map((doc) => doc.id)
     );
 
   if (joinsError) throw joinsError;
 
-  const requirementByDocumentId = new Map<string, string>((joins ?? []).map((row: { requirement_id: string; document_id: string }) => [row.document_id, row.requirement_id]));
+  const requirementByDocumentId = new Map<string, string>(
+    (joins ?? []).map((row: { requirement_id: string; document_id: string }) => [
+      row.document_id,
+      row.requirement_id,
+    ])
+  );
   return ((docs ?? []) as Document[]).map((doc) => ({
     ...doc,
     requirement_id: requirementByDocumentId.get(doc.id) ?? null,
@@ -463,7 +522,10 @@ export async function createUploadSession(params: {
 }) {
   validateUploadAgainstRequirement(params.requirement, params.mimeType, params.fileSizeBytes);
 
-  if (params.requirement.case_id !== params.caseRecord.id || params.requirement.status === "not_applicable") {
+  if (
+    params.requirement.case_id !== params.caseRecord.id ||
+    params.requirement.status === "not_applicable"
+  ) {
     throw new Error("requirement_not_uploadable");
   }
 
@@ -502,7 +564,9 @@ export async function createUploadSession(params: {
 
   if (sessionError) throw sessionError;
 
-  const signedUpload = await params.supabase.storage.from(CASE_DOCUMENT_BUCKET).createSignedUploadUrl(storagePath);
+  const signedUpload = await params.supabase.storage
+    .from(CASE_DOCUMENT_BUCKET)
+    .createSignedUploadUrl(storagePath);
   if (signedUpload.error) throw signedUpload.error;
 
   await recordCaseEvent(params.supabase, {
@@ -525,12 +589,19 @@ export async function createUploadSession(params: {
   };
 }
 
-function validateUploadAgainstRequirement(requirement: CaseRequirement, mimeType: string, fileSizeBytes: number) {
+function validateUploadAgainstRequirement(
+  requirement: CaseRequirement,
+  mimeType: string,
+  fileSizeBytes: number
+) {
   if (!requirement.is_document_required) {
     throw new Error("requirement_does_not_accept_documents");
   }
 
-  if (requirement.accepted_mime_types.length > 0 && !requirement.accepted_mime_types.includes(mimeType)) {
+  if (
+    requirement.accepted_mime_types.length > 0 &&
+    !requirement.accepted_mime_types.includes(mimeType)
+  ) {
     throw new Error("unsupported_mime_type");
   }
 
@@ -557,12 +628,19 @@ export async function finalizeUpload(params: {
   if (sessionError) throw sessionError;
   if (!session) throw new Error("upload_session_not_found");
   if (session.status !== "issued") throw new Error("upload_session_invalid_state");
-  if (new Date(session.expires_at).getTime() < Date.now()) throw new Error("upload_session_expired");
+  if (new Date(session.expires_at).getTime() < Date.now())
+    throw new Error("upload_session_expired");
 
-  const requirement = await getCaseRequirementOrThrow(params.supabase, params.caseRecord.id, session.requirement_id);
+  const requirement = await getCaseRequirementOrThrow(
+    params.supabase,
+    params.caseRecord.id,
+    session.requirement_id
+  );
   if (requirement.status === "not_applicable") throw new Error("requirement_not_uploadable");
 
-  const downloadAttempt = await params.supabase.storage.from(session.storage_bucket).download(session.storage_path);
+  const downloadAttempt = await params.supabase.storage
+    .from(session.storage_bucket)
+    .download(session.storage_path);
   if (downloadAttempt.error) throw new Error("uploaded_object_not_found");
 
   const { data: document, error: documentError } = await params.supabase
@@ -673,7 +751,9 @@ export async function softDeleteDocument(params: {
   if (!document) throw new Error("document_not_found");
   if (document.status === "approved") throw new Error("approved_document_cannot_be_deleted");
 
-  await params.supabase.storage.from(document.storage_bucket ?? CASE_DOCUMENT_BUCKET).remove([document.storage_object_key ?? document.file_path]);
+  await params.supabase.storage
+    .from(document.storage_bucket ?? CASE_DOCUMENT_BUCKET)
+    .remove([document.storage_object_key ?? document.file_path]);
 
   await params.supabase
     .from("documents")
@@ -844,7 +924,10 @@ export async function reviewRequirement(params: {
 
   const requirements = await listCaseRequirements(params.supabase, params.caseRecord.id);
   const progress = summarizeRequirementProgress(requirements);
-  const nextStatus = deriveCaseStatusFromRequirements(params.caseRecord.status, progress.blockingRemaining);
+  const nextStatus = deriveCaseStatusFromRequirements(
+    params.caseRecord.status,
+    progress.blockingRemaining
+  );
 
   await params.supabase
     .from("cases")
@@ -867,6 +950,19 @@ export async function reviewDocument(params: {
   reviewNotes?: string;
 }) {
   const now = new Date().toISOString();
+
+  const { data: existingDocument, error: existingDocumentError } = await params.supabase
+    .from("documents")
+    .select("*")
+    .eq("id", params.documentId)
+    .eq("case_id", params.caseRecord.id)
+    .maybeSingle();
+
+  if (existingDocumentError) throw existingDocumentError;
+  if (!existingDocument) throw new Error("document_not_found");
+  if (!isDocumentReviewable(existingDocument as Document)) {
+    throw new Error("document_review_invalid_state");
+  }
 
   const { data: document, error: documentError } = await params.supabase
     .from("documents")
@@ -893,14 +989,18 @@ export async function reviewDocument(params: {
 
   if (joinLookup.data?.requirement_id) {
     const mappedRequirementStatus: RequirementStatus =
-      params.status === "approved" ? "approved" : params.status === "rejected" ? "rejected" : "uploaded";
+      params.status === "approved"
+        ? "approved"
+        : params.status === "rejected"
+          ? "rejected"
+          : "uploaded";
 
     await params.supabase
       .from("case_requirements")
       .update({
         status: mappedRequirementStatus,
         review_notes: params.reviewNotes ?? null,
-        rejection_reason: params.status === "rejected" ? params.reviewNotes ?? null : null,
+        rejection_reason: params.status === "rejected" ? (params.reviewNotes ?? null) : null,
         reviewed_at: now,
         reviewed_by: params.adminId,
         updated_at: now,
@@ -925,10 +1025,21 @@ export async function reviewDocument(params: {
   return document as Document;
 }
 
+export function isDocumentReviewable(
+  document: Pick<Document, "status" | "upload_state" | "deleted_at">
+) {
+  if (document.deleted_at) return false;
+  if (document.upload_state === "replaced" || document.upload_state === "deleted") return false;
+  return document.status !== "archived" && document.status !== "replaced";
+}
+
 async function syncCaseDerivedState(supabase: SupabaseLike, caseRecord: Case) {
   const requirements = await listCaseRequirements(supabase, caseRecord.id);
   const progress = summarizeRequirementProgress(requirements);
-  const nextStatus = deriveCaseStatusFromRequirements(caseRecord.status, progress.blockingRemaining);
+  const nextStatus = deriveCaseStatusFromRequirements(
+    caseRecord.status,
+    progress.blockingRemaining
+  );
 
   await supabase
     .from("cases")
@@ -942,7 +1053,11 @@ async function syncCaseDerivedState(supabase: SupabaseLike, caseRecord: Case) {
     .eq("id", caseRecord.id);
 }
 
-async function getCaseRequirementOrThrow(supabase: SupabaseLike, caseId: string, requirementId: string) {
+async function getCaseRequirementOrThrow(
+  supabase: SupabaseLike,
+  caseId: string,
+  requirementId: string
+) {
   const { data, error } = await supabase
     .from("case_requirements")
     .select("*")
@@ -972,7 +1087,11 @@ async function assertReplaceTarget(params: {
 
   if (documentError) throw documentError;
   if (!document || document.deleted_at) throw new Error("replace_document_not_found");
-  if (document.status === "approved" || document.status === "archived" || document.status === "replaced") {
+  if (
+    document.status === "approved" ||
+    document.status === "archived" ||
+    document.status === "replaced"
+  ) {
     throw new Error("replace_document_not_allowed");
   }
 
@@ -983,11 +1102,20 @@ async function assertReplaceTarget(params: {
     .maybeSingle();
 
   if (joinError) throw joinError;
-  if (!join || join.requirement_id !== params.requirementId) throw new Error("replace_document_not_allowed");
+  if (!join || join.requirement_id !== params.requirementId)
+    throw new Error("replace_document_not_allowed");
 }
 
-export async function listCaseEvents(supabase: SupabaseLike, caseId: string, includeInternal = false) {
-  const query = supabase.from("case_events").select("*").eq("case_id", caseId).order("created_at", { ascending: false });
+export async function listCaseEvents(
+  supabase: SupabaseLike,
+  caseId: string,
+  includeInternal = false
+) {
+  const query = supabase
+    .from("case_events")
+    .select("*")
+    .eq("case_id", caseId)
+    .order("created_at", { ascending: false });
   if (!includeInternal) {
     query.in("visibility", ["client", "both"]);
   }
@@ -1006,7 +1134,7 @@ export async function recordCaseEvent(
     eventType: string;
     visibility: "internal" | "client" | "both";
     payload: Record<string, unknown>;
-  },
+  }
 ) {
   const { error } = await supabase.from("case_events").insert({
     case_id: input.caseId,
@@ -1020,7 +1148,10 @@ export async function recordCaseEvent(
   if (error) throw error;
 }
 
-export function buildTaxSummary(input: { caseRecord: Case; snapshot?: { payload?: TaxReturnIntakePayload } | null }) {
+export function buildTaxSummary(input: {
+  caseRecord: Case;
+  snapshot?: { payload?: TaxReturnIntakePayload } | null;
+}) {
   const snapshotSummary = input.snapshot?.payload?.summary;
   if (snapshotSummary) {
     return {
@@ -1039,7 +1170,9 @@ export function buildTaxSummary(input: { caseRecord: Case; snapshot?: { payload?
     box1Income: toNumber(wizardSummary?.box1Income),
     box3Assets: toNumber(wizardSummary?.box3Assets),
     credits: toNumber(wizardSummary?.credits),
-    netResult: toNumber(wizardSummary?.netResult) || toNumber(input.caseRecord.actual_refund ?? input.caseRecord.estimated_refund),
+    netResult:
+      toNumber(wizardSummary?.netResult) ||
+      toNumber(input.caseRecord.actual_refund ?? input.caseRecord.estimated_refund),
     sourceLabel: wizardSummary ? ("case_data_fallback" as const) : ("summary_unavailable" as const),
     isFallback: true,
   };
@@ -1051,4 +1184,10 @@ function sanitizeFilename(value: string) {
 
 function toNumber(value: unknown) {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function resolveIntakeActorType(source: "wizard" | "admin" | "migration" | "api") {
+  if (source === "admin") return "admin" as const;
+  if (source === "migration") return "system" as const;
+  return "user" as const;
 }

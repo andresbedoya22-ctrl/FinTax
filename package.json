@@ -19,7 +19,11 @@
     "stripe:reconcile": "node scripts/stripe-reconcile.mjs",
     "bsn:reencrypt": "node --experimental-strip-types scripts/bsn-reencrypt.mjs",
     "smoke:staging": "node scripts/verify-staging-parity.mjs",
-    "smoke:postdeploy": "node scripts/smoke-postdeploy.mjs"
+    "smoke:postdeploy": "node scripts/smoke-postdeploy.mjs",
+    "docflow:bootstrap": "tsx scripts/docflow-bootstrap.ts",
+    "docflow:backfill": "tsx scripts/docflow-backfill.ts",
+    "docflow:e2e": "tsx scripts/docflow-e2e.ts",
+    "audit:high": "pnpm audit --audit-level=high"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -63,12 +67,17 @@
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.1",
+    "tsx": "^4.20.6",
     "typescript": "^5",
     "vitest": "^4.1.0"
   },
   "pnpm": {
     "overrides": {
-      "picomatch": "4.0.4"
+      "picomatch": "4.0.4",
+      "flatted": "3.4.2",
+      "minimatch@<4": "3.1.4",
+      "minimatch@>=9.0.0 <9.0.7": "9.0.7",
+      "vite": "8.0.5"
     }
   }
 }
