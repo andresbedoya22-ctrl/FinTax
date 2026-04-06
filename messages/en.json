@@ -1779,7 +1779,12 @@
       "replace": "Replace"
     },
     "errors": {
-      "caseLoad": "Could not load the case workspace. Code: {code}."
+      "caseLoad": "Could not load the case workspace. Code: {code}.",
+      "saveIntake": "Could not save the intake right now. Please try again."
+    },
+    "common": {
+      "yes": "Yes",
+      "no": "No"
     }
   }
 }

@@ -39,7 +39,9 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     });
 
     return apiSuccess({ ok: true });
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "admin_requirement_review_failed";
+    if (message === "requirement_not_found") return apiError("not_found", message);
     return apiError("internal", "admin_requirement_review_failed");
   }
 }

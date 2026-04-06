@@ -1371,9 +1371,9 @@
   },
   "DocFlow": {
     "hero": {
-      "eyebrow": "Document cutover",
-      "title": "Tax return documents now follow the real case backend.",
-      "description": "Select the fiscal year, answer the intake once, generate only the applicable requirements, upload the real evidence, fix rejections, and finish the flow without email handoffs.",
+      "eyebrow": "Flux de documente",
+      "title": "Fluxul de documente pentru declara?ie folose?te acum backendul real al cazului.",
+      "description": "Alege anul fiscal, completeaz? intake-ul o singur? dat?, genereaz? doar cerin?ele aplicabile, ?ncarc? documente reale, corecteaz? respingerile ?i finalizeaz? fluxul f?r? email manual.",
       "highlights": [
         "Real requirements from the backend",
         "Signed uploads and finalize flow",
@@ -1383,34 +1383,34 @@
     },
     "stages": {
       "selection": {
-        "title": "Initial selection",
-        "description": "Choose the declaration type and fiscal year before the documentary intake starts.",
-        "short": "Stage 1"
+        "title": "Selec?ie ini?ial?",
+        "description": "Alege mai ?nt?i tipul declara?iei ?i anul fiscal.",
+        "short": "Etapa 1"
       },
       "intake": {
-        "title": "Document intake",
-        "description": "Capture the real intake facts that drive conditional requirements.",
-        "short": "Stage 2"
+        "title": "Intake documentar",
+        "description": "Captureaz? faptele care conduc cerin?ele reale.",
+        "short": "Etapa 2"
       },
       "requirements": {
-        "title": "Real requirements",
-        "description": "Review the actual case requirements grouped by section, not a local checklist.",
-        "short": "Stage 3"
+        "title": "Cerin?e reale",
+        "description": "Vezi cerin?ele reale ale cazului pe sec?iuni.",
+        "short": "Etapa 3"
       },
       "uploads": {
-        "title": "Upload center",
-        "description": "Upload, replace and delete files through the signed upload flow.",
-        "short": "Stage 4"
+        "title": "Centru de ?nc?rcare",
+        "description": "?ncarc?, ?nlocuie?te ?i ?terge fi?iere prin fluxul semnat.",
+        "short": "Etapa 4"
       },
       "timeline": {
-        "title": "Case timeline",
-        "description": "Read the live case events emitted by the backend.",
-        "short": "Stage 5"
+        "title": "Timeline",
+        "description": "Cite?te evenimentele live ale cazului din backend.",
+        "short": "Etapa 5"
       },
       "summary": {
-        "title": "Final summary",
-        "description": "See what is complete, partial, rejected or still blocking the case.",
-        "short": "Stage 6"
+        "title": "Rezumat final",
+        "description": "Vezi ce este complet, par?ial, respins sau blocant.",
+        "short": "Etapa 6"
       }
     },
     "caseTypes": {
@@ -1448,101 +1448,101 @@
       "progressCaption": "{complete} complete of {total}. {blockers} blocking requirements remain."
     },
     "selection": {
-      "title": "Choose declaration and year",
-      "description": "Start with the declaration type and fiscal year. The platform will ask only the intake needed to generate the real requirements.",
-      "caseType": "Declaration type",
-      "caseTypeDescription": "Choose the backend route that matches this case.",
-      "taxYear": "Fiscal year",
-      "taxYearDescription": "Tax year must stay editable and cannot be hardcoded.",
-      "explainer": "After this, FinTax saves the intake snapshot in the case and refreshes the requirement engine so the client only sees applicable evidence.",
-      "originCountry": "Origin country"
+      "title": "Alege declara?ia ?i anul",
+      "description": "?ncepe cu tipul declara?iei ?i anul fiscal. Apoi platforma arat? doar intake-ul necesar pentru cerin?ele reale.",
+      "caseType": "Tip declara?ie",
+      "caseTypeDescription": "Alege ruta backend potrivit? pentru acest caz.",
+      "taxYear": "An fiscal",
+      "taxYearDescription": "Anul fiscal trebuie s? r?m?n? editabil ?i nu poate fi hardcodat.",
+      "explainer": "Dup? salvare, FinTax persist? snapshot-ul de intake ?n caz ?i re?mprosp?teaz? motorul de cerin?e ca clientul s? vad? doar dovezile aplicabile.",
+      "originCountry": "?ara de origine"
     },
     "intake": {
-      "title": "Document intake",
-      "description": "These answers feed the persisted intake snapshot and regenerate the real requirements when saved.",
+      "title": "Intake documentar",
+      "description": "Aceste r?spunsuri populeaz? snapshot-ul persistent de intake ?i regenereaz? cerin?ele reale.",
       "identity": {
-        "fullName": "Full name",
+        "fullName": "Nume complet",
         "bsn": "BSN"
       },
       "filing": {
-        "originCountryCode": "Origin country code",
-        "currentCountryOfResidence": "Current country of residence",
-        "firstDeclarationWithFinTax": "First declaration with FinTax"
+        "originCountryCode": "Cod ?ar? de origine",
+        "currentCountryOfResidence": "?ara actual? de reziden??",
+        "firstDeclarationWithFinTax": "Prima declara?ie cu FinTax"
       },
       "residency": {
-        "registeredInNlFullYear": "Registered in NL for the full year",
-        "firstRegistrationInNlInTaxYear": "First NL registration happened in this tax year",
-        "hadRegistrationInterruption": "Registration was interrupted",
-        "emigratedOrDeregistered": "Emigrated or deregistered during the year",
-        "firstRegistrationDateInNl": "First registration date in NL",
-        "emigrationOrDeregistrationDate": "Emigration or deregistration date"
+        "registeredInNlFullYear": "?nregistrat ?n NL tot anul",
+        "firstRegistrationInNlInTaxYear": "Prima ?nregistrare ?n NL ?n acest an fiscal",
+        "hadRegistrationInterruption": "?nregistrarea a fost ?ntrerupt?",
+        "emigratedOrDeregistered": "Emigrare sau radiere ?n cursul anului",
+        "firstRegistrationDateInNl": "Data primei ?nregistr?ri ?n NL",
+        "emigrationOrDeregistrationDate": "Data emigr?rii sau radierii"
       },
       "household": {
-        "hasChildrenRegisteredSameAddress": "Children registered at the same address",
-        "childrenCountSameAddress": "Children count at the same address"
+        "hasChildrenRegisteredSameAddress": "Copii ?nregistra?i la aceea?i adres?",
+        "childrenCountSameAddress": "Num?r copii la aceea?i adres?"
       },
       "income": {
-        "employers": "Employers",
-        "employersHelp": "Add one employer per annual statement requirement.",
-        "employerPlaceholder": "Employer name",
-        "noEmployers": "No employers added yet.",
-        "hasUwvIncome": "UWV income",
+        "employers": "Angajatori",
+        "employersHelp": "Adaug? un angajator pentru fiecare cerin?? de jaaropgave.",
+        "employerPlaceholder": "Nume angajator",
+        "noEmployers": "Nu exist? ?nc? angajatori ad?uga?i.",
+        "hasUwvIncome": "Venit UWV",
         "hasTransitievergoeding": "Transitievergoeding",
-        "hasZzpIncome": "ZZP income",
-        "zzpHoursOver1225": "More than 1225 ZZP hours"
+        "hasZzpIncome": "Venit ZZP",
+        "zzpHoursOver1225": "Peste 1225 ore ZZP"
       },
       "housing": {
-        "hasMortgage": "Mortgage",
-        "hasSvnOrStarterslening": "SVN or starterslening"
+        "hasMortgage": "Ipotec?",
+        "hasSvnOrStarterslening": "SVN sau starterslening"
       },
       "assets": {
-        "hasForeignBankAccounts": "Foreign bank or savings accounts",
-        "hasCrypto": "Crypto holdings"
+        "hasForeignBankAccounts": "Conturi bancare sau de economii ?n str?in?tate",
+        "hasCrypto": "Cripto"
       },
       "debts": {
-        "hasConsumerLoans": "Consumer loans"
+        "hasConsumerLoans": "?mprumuturi de consum"
       },
       "deductions": {
-        "hasUnreimbursedDeductibleMedicalCosts": "Unreimbursed deductible medical costs"
+        "hasUnreimbursedDeductibleMedicalCosts": "Cheltuieli medicale deductibile nerecuperate"
       },
       "summary": {
-        "box1Income": "Box 1 income",
-        "box3Assets": "Box 3 assets",
-        "credits": "Credits",
-        "netResult": "Net result"
+        "box1Income": "Venit Box 1",
+        "box3Assets": "Active Box 3",
+        "credits": "Credite",
+        "netResult": "Rezultat net"
       }
     },
     "requirements": {
-      "title": "Backend requirements",
-      "description": "The visible checklist now comes from case_requirements only.",
+      "title": "Cerin?e backend",
+      "description": "Checklistul vizibil vine acum doar din case_requirements.",
       "emptyBeforeSave": "Save the intake first to generate requirements.",
       "empty": "No requirements are active for this case yet.",
-      "blocking": "Blocking",
-      "customerNote": "Client note",
-      "notAvailableTitle": "Still not available",
-      "howToGet": "How to get it",
-      "helpUnavailable": "Help content is not available yet for this requirement.",
-      "helpFallbackTitle": "Requirement help"
+      "blocking": "Blocant",
+      "customerNote": "Not? client",
+      "notAvailableTitle": "?nc? indisponibil",
+      "howToGet": "Cum ?l ob?ii",
+      "helpUnavailable": "Con?inutul de ajutor nu este ?nc? disponibil pentru aceast? cerin??.",
+      "helpFallbackTitle": "Ajutor pentru cerin??"
     },
     "uploads": {
-      "title": "Upload center",
-      "description": "Uploads now request a session, push the file to signed storage, finalize the document and refresh the requirement state.",
-      "emptyBeforeSave": "Generate requirements first to enable uploads.",
-      "empty": "No documents uploaded yet.",
-      "centerTitle": "Requirement uploads",
-      "selectFile": "Select file",
-      "noneForRequirement": "No files uploaded for this requirement yet.",
-      "validation": "Accepted: {mimes}. Max size: {max}.",
-      "uploading": "Uploading and finalizing...",
-      "answerOnlyRequirement": "This requirement does not accept file uploads."
+      "title": "Centru de ?nc?rcare",
+      "description": "?nc?rc?rile cer o sesiune, trimit fi?ierul ?n storage semnat, finalizeaz? documentul ?i re?mprosp?teaz? starea cerin?ei.",
+      "emptyBeforeSave": "Genereaz? mai ?nt?i cerin?ele pentru a activa ?nc?rc?rile.",
+      "empty": "Nu exist? ?nc? documente ?nc?rcate.",
+      "centerTitle": "?nc?rc?ri pe cerin??",
+      "selectFile": "Selecteaz? fi?ier",
+      "noneForRequirement": "Nu exist? ?nc? fi?iere pentru aceast? cerin??.",
+      "validation": "Acceptate: {mimes}. Dimensiune maxim?: {max}.",
+      "uploading": "Se ?ncarc? ?i se finalizeaz?...",
+      "answerOnlyRequirement": "Aceast? cerin?? nu accept? fi?iere."
     },
     "timeline": {
       "title": "Timeline",
-      "description": "The activity feed is read from case_events.",
-      "emptyBeforeSave": "A live timeline appears after the case exists.",
-      "empty": "No timeline events yet.",
-      "fallbackFile": "uploaded file",
-      "fallbackStatus": "updated",
+      "description": "Fluxul de activitate este citit din case_events.",
+      "emptyBeforeSave": "Timeline-ul live apare dup? ce exist? cazul.",
+      "empty": "Nu exist? ?nc? evenimente.",
+      "fallbackFile": "fi?ier ?nc?rcat",
+      "fallbackStatus": "actualizat",
       "eventTypes": {
         "intake_saved": {
           "title": "Intake saved",
@@ -1587,35 +1587,35 @@
       }
     },
     "summary": {
-      "title": "Operational summary",
-      "description": "Use the real progress data to understand what still blocks completion.",
+      "title": "Rezumat opera?ional",
+      "description": "Folose?te datele reale de progres pentru a vedea ce mai blocheaz? finalizarea.",
       "emptyBeforeSave": "A summary becomes available once the case exists.",
       "metrics": {
-        "complete": "Complete",
-        "partial": "Partial",
-        "blocked": "Blocked",
-        "rejected": "Rejected"
+        "complete": "Complet",
+        "partial": "Par?ial",
+        "blocked": "Blocat",
+        "rejected": "Respins"
       }
     },
     "sidebar": {
-      "progressEyebrow": "Progress",
-      "progressTitle": "Live progress",
-      "progressDescription": "One source of truth for completion and blockers.",
-      "progressCompletion": "Completion",
-      "pendingUploads": "Uploaded waiting review",
-      "pendingReview": "Pending",
-      "rejected": "Rejected",
-      "taxSummaryEyebrow": "Tax summary",
-      "taxSummaryTitle": "Tax summary API",
-      "taxSummaryDescription": "Summary values come from the real tax summary endpoint.",
+      "progressEyebrow": "Progres",
+      "progressTitle": "Progres live",
+      "progressDescription": "O singur? surs? de adev?r pentru completare ?i blocaje.",
+      "progressCompletion": "Completare",
+      "pendingUploads": "?nc?rcat, ?n a?teptarea review-ului",
+      "pendingReview": "?n a?teptare",
+      "rejected": "Respins",
+      "taxSummaryEyebrow": "Rezumat fiscal",
+      "taxSummaryTitle": "API rezumat fiscal",
+      "taxSummaryDescription": "Valorile rezumatului vin din endpointul real tax-summary.",
       "box1": "Box 1",
       "box3": "Box 3",
-      "credits": "Credits",
+      "credits": "Credite",
       "net": "Net",
-      "pendingEyebrow": "Real pending work",
-      "pendingTitle": "Pending requirements",
-      "pendingDescription": "Open requirements from the backend.",
-      "pendingEmpty": "No open requirements."
+      "pendingEyebrow": "Munc? deschis?",
+      "pendingTitle": "Cerin?e deschise",
+      "pendingDescription": "Cerin?e deschise din backend.",
+      "pendingEmpty": "Nu exist? cerin?e deschise."
     },
     "requirementStatus": {
       "pending": "Pending",
@@ -1652,19 +1652,24 @@
       "deductions": "Deductions"
     },
     "actions": {
-      "startIntake": "Continue to intake",
-      "openCase": "Open case",
-      "generateRequirements": "Save intake and generate requirements",
-      "refreshRequirements": "Refresh requirements",
-      "addEmployer": "Add employer",
-      "remove": "Remove",
-      "saveNote": "Save note",
-      "markNotAvailable": "Mark not available",
-      "delete": "Delete",
-      "replace": "Replace"
+      "startIntake": "Continu? la intake",
+      "openCase": "Deschide cazul",
+      "generateRequirements": "Salveaz? intake-ul ?i genereaz? cerin?e",
+      "refreshRequirements": "Re?mprosp?teaz? cerin?ele",
+      "addEmployer": "Adaug? angajator",
+      "remove": "Elimin?",
+      "saveNote": "Salveaz? nota",
+      "markNotAvailable": "Marcheaz? ca indisponibil",
+      "delete": "?terge",
+      "replace": "?nlocuie?te"
     },
     "errors": {
-      "caseLoad": "Could not load the case workspace. Code: {code}."
+      "caseLoad": "Could not load the case workspace. Code: {code}.",
+      "saveIntake": "Nu s-a putut salva intake-ul acum. ?ncearc? din nou."
+    },
+    "common": {
+      "yes": "Da",
+      "no": "Nu"
     }
   }
 }

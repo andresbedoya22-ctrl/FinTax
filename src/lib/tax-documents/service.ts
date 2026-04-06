@@ -463,6 +463,20 @@ export async function createUploadSession(params: {
 }) {
   validateUploadAgainstRequirement(params.requirement, params.mimeType, params.fileSizeBytes);
 
+  if (params.requirement.case_id !== params.caseRecord.id || params.requirement.status === "not_applicable") {
+    throw new Error("requirement_not_uploadable");
+  }
+
+  if (params.replacesDocumentId) {
+    await assertReplaceTarget({
+      supabase: params.supabase,
+      caseRecord: params.caseRecord,
+      userId: params.userId,
+      requirementId: params.requirement.id,
+      documentId: params.replacesDocumentId,
+    });
+  }
+
   const sessionId = crypto.randomUUID();
   const storagePath = `${params.userId}/${params.caseRecord.id}/${params.requirement.id}/${sessionId}-${sanitizeFilename(params.fileName)}`;
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
@@ -545,6 +559,9 @@ export async function finalizeUpload(params: {
   if (session.status !== "issued") throw new Error("upload_session_invalid_state");
   if (new Date(session.expires_at).getTime() < Date.now()) throw new Error("upload_session_expired");
 
+  const requirement = await getCaseRequirementOrThrow(params.supabase, params.caseRecord.id, session.requirement_id);
+  if (requirement.status === "not_applicable") throw new Error("requirement_not_uploadable");
+
   const downloadAttempt = await params.supabase.storage.from(session.storage_bucket).download(session.storage_path);
   if (downloadAttempt.error) throw new Error("uploaded_object_not_found");
 
@@ -571,6 +588,9 @@ export async function finalizeUpload(params: {
     .single();
 
   if (documentError) throw documentError;
+  if (document.status === "archived" || document.status === "replaced") {
+    throw new Error("document_review_invalid_state");
+  }
 
   const { error: joinError } = await params.supabase.from("requirement_documents").insert({
     requirement_id: session.requirement_id,
@@ -603,14 +623,18 @@ export async function finalizeUpload(params: {
   if (requirementError) throw requirementError;
 
   if (session.replaces_document_id) {
-    await params.supabase
+    const replaceResponse = await params.supabase
       .from("documents")
       .update({
         status: "replaced",
         upload_state: "replaced",
         replaced_by_document_id: document.id,
       })
-      .eq("id", session.replaces_document_id);
+      .eq("id", session.replaces_document_id)
+      .eq("case_id", params.caseRecord.id)
+      .eq("user_id", params.userId);
+
+    if (replaceResponse.error) throw replaceResponse.error;
   }
 
   await recordCaseEvent(params.supabase, {
@@ -625,6 +649,8 @@ export async function finalizeUpload(params: {
       fileName: session.intended_filename,
     },
   });
+
+  await syncCaseDerivedState(params.supabase, params.caseRecord);
 
   return document as Document;
 }
@@ -699,6 +725,8 @@ export async function softDeleteDocument(params: {
       fileName: document.file_name,
     },
   });
+
+  await syncCaseDerivedState(params.supabase, params.caseRecord);
 }
 
 export async function markRequirementNotYetAvailable(params: {
@@ -708,7 +736,7 @@ export async function markRequirementNotYetAvailable(params: {
   requirementId: string;
   note: string;
 }) {
-  const { error } = await params.supabase
+  const { data, error } = await params.supabase
     .from("case_requirements")
     .update({
       availability_status: "not_yet_available",
@@ -717,9 +745,13 @@ export async function markRequirementNotYetAvailable(params: {
       updated_at: new Date().toISOString(),
     })
     .eq("id", params.requirementId)
-    .eq("case_id", params.caseRecord.id);
+    .eq("case_id", params.caseRecord.id)
+    .neq("status", "not_applicable")
+    .select("id")
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error("requirement_not_found");
 
   await recordCaseEvent(params.supabase, {
     caseId: params.caseRecord.id,
@@ -741,16 +773,20 @@ export async function addRequirementCustomerNote(params: {
   requirementId: string;
   note: string;
 }) {
-  const { error } = await params.supabase
+  const { data, error } = await params.supabase
     .from("case_requirements")
     .update({
       customer_note: params.note,
       updated_at: new Date().toISOString(),
     })
     .eq("id", params.requirementId)
-    .eq("case_id", params.caseRecord.id);
+    .eq("case_id", params.caseRecord.id)
+    .neq("status", "not_applicable")
+    .select("id")
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error("requirement_not_found");
 
   await recordCaseEvent(params.supabase, {
     caseId: params.caseRecord.id,
@@ -774,7 +810,7 @@ export async function reviewRequirement(params: {
   rejectionReason?: string;
 }) {
   const now = new Date().toISOString();
-  const { error } = await params.supabase
+  const { data, error } = await params.supabase
     .from("case_requirements")
     .update({
       status: params.status,
@@ -785,9 +821,13 @@ export async function reviewRequirement(params: {
       updated_at: now,
     })
     .eq("id", params.requirementId)
-    .eq("case_id", params.caseRecord.id);
+    .eq("case_id", params.caseRecord.id)
+    .neq("status", "not_applicable")
+    .select("id")
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error("requirement_not_found");
 
   await recordCaseEvent(params.supabase, {
     caseId: params.caseRecord.id,
@@ -880,7 +920,70 @@ export async function reviewDocument(params: {
     },
   });
 
+  await syncCaseDerivedState(params.supabase, params.caseRecord);
+
   return document as Document;
+}
+
+async function syncCaseDerivedState(supabase: SupabaseLike, caseRecord: Case) {
+  const requirements = await listCaseRequirements(supabase, caseRecord.id);
+  const progress = summarizeRequirementProgress(requirements);
+  const nextStatus = deriveCaseStatusFromRequirements(caseRecord.status, progress.blockingRemaining);
+
+  await supabase
+    .from("cases")
+    .update({
+      requirements_completion_ratio: progress.completionRatio,
+      blocking_requirements_count: progress.blockingRemaining,
+      requirements_summary: progress,
+      status: nextStatus,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", caseRecord.id);
+}
+
+async function getCaseRequirementOrThrow(supabase: SupabaseLike, caseId: string, requirementId: string) {
+  const { data, error } = await supabase
+    .from("case_requirements")
+    .select("*")
+    .eq("id", requirementId)
+    .eq("case_id", caseId)
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) throw new Error("requirement_not_found");
+  return data as CaseRequirement;
+}
+
+async function assertReplaceTarget(params: {
+  supabase: SupabaseLike;
+  caseRecord: Case;
+  userId: string;
+  requirementId: string;
+  documentId: string;
+}) {
+  const { data: document, error: documentError } = await params.supabase
+    .from("documents")
+    .select("id, case_id, user_id, status, deleted_at")
+    .eq("id", params.documentId)
+    .eq("case_id", params.caseRecord.id)
+    .eq("user_id", params.userId)
+    .maybeSingle();
+
+  if (documentError) throw documentError;
+  if (!document || document.deleted_at) throw new Error("replace_document_not_found");
+  if (document.status === "approved" || document.status === "archived" || document.status === "replaced") {
+    throw new Error("replace_document_not_allowed");
+  }
+
+  const { data: join, error: joinError } = await params.supabase
+    .from("requirement_documents")
+    .select("requirement_id")
+    .eq("document_id", params.documentId)
+    .maybeSingle();
+
+  if (joinError) throw joinError;
+  if (!join || join.requirement_id !== params.requirementId) throw new Error("replace_document_not_allowed");
 }
 
 export async function listCaseEvents(supabase: SupabaseLike, caseId: string, includeInternal = false) {

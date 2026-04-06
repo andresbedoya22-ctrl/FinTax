@@ -8,6 +8,7 @@ import { Button } from "@/components/fintax/Button";
 import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import { Link } from "@/i18n/navigation";
 import { useCase } from "@/hooks/useCase";
+import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 import { isApiClientError } from "@/hooks/api-client";
 import { useTaxSummary } from "@/hooks/useTaxSummary";
 import {
@@ -49,6 +50,7 @@ export function TaxReturnDocumentWorkspace({ caseId, initialService }: Workspace
   const activeCases = useLatestActiveTaxCase(caseId ?? null);
   const currentCaseId = caseId ?? activeCases.selectedCaseId ?? null;
   const caseQuery = useCase(currentCaseId ?? "");
+  const profileQuery = useCurrentProfile();
   const caseItem = caseQuery.data ?? null;
   const intakeQuery = useCaseIntake(currentCaseId ?? "");
   const requirementsQuery = useCaseRequirements(currentCaseId ?? "");
@@ -69,6 +71,7 @@ export function TaxReturnDocumentWorkspace({ caseId, initialService }: Workspace
   const [noteDrafts, setNoteDrafts] = React.useState<Record<string, string>>({});
   const [availabilityDrafts, setAvailabilityDrafts] = React.useState<Record<string, string>>({});
   const [expandedHelpId, setExpandedHelpId] = React.useState<string | null>(null);
+  const [actionError, setActionError] = React.useState<string | null>(null);
   const helpQuery = useRequirementHelp(currentCaseId ?? "", expandedHelpId ?? "", Boolean(expandedHelpId));
 
   React.useEffect(() => {
@@ -86,6 +89,26 @@ export function TaxReturnDocumentWorkspace({ caseId, initialService }: Workspace
     );
     setHydrated(true);
   }, [caseItem, intakeQuery.data]);
+
+  React.useEffect(() => {
+    if (caseItem || !profileQuery.profile) return;
+    const originCountryCode =
+      profileQuery.profile.country_of_origin?.trim().toUpperCase().slice(0, 2) ||
+      profileQuery.profile.address_country?.trim().toUpperCase().slice(0, 2) ||
+      "NL";
+
+    setDraft((prev) => ({
+      ...prev,
+      fullName: prev.fullName || profileQuery.profile?.full_name || "",
+      payload: {
+        ...prev.payload,
+        filing: {
+          ...prev.payload.filing,
+          originCountryCode,
+        },
+      },
+    }));
+  }, [caseItem, profileQuery.profile]);
 
   React.useEffect(() => {
     if (!caseItem || !progressQuery.data) return;
@@ -129,19 +152,24 @@ export function TaxReturnDocumentWorkspace({ caseId, initialService }: Workspace
   const currentStep = mapCaseStatusToStep(caseItem?.status ?? "draft");
 
   async function saveIntake() {
-    const nextCaseId =
-      currentCaseId ??
-      (await createDraftMutation.mutateAsync({
-        caseType: draft.payload.caseType ?? resolveCaseType(initialService),
-        fullName: draft.fullName,
-        bsn: draft.bsn,
-        taxYear: draft.payload.filing.taxYear,
-        originCountryCode: draft.payload.filing.originCountryCode,
-      }));
+    setActionError(null);
+    try {
+      const nextCaseId =
+        currentCaseId ??
+        (await createDraftMutation.mutateAsync({
+          caseType: draft.payload.caseType ?? resolveCaseType(initialService),
+          fullName: draft.fullName,
+          bsn: draft.bsn,
+          taxYear: draft.payload.filing.taxYear,
+          originCountryCode: draft.payload.filing.originCountryCode,
+        }));
 
-    if (!currentCaseId) activeCases.setSelectedCaseId(nextCaseId);
-    await saveIntakeMutation.mutateAsync(draft.payload);
-    setStage(2);
+      if (!currentCaseId) activeCases.setSelectedCaseId(nextCaseId);
+      await saveIntakeMutation.mutateAsync({ caseId: nextCaseId, payload: draft.payload });
+      setStage(2);
+    } catch {
+      setActionError(t("errors.saveIntake"));
+    }
   }
 
   return (
@@ -192,6 +220,7 @@ export function TaxReturnDocumentWorkspace({ caseId, initialService }: Workspace
           ) : null}
         </CardHeader>
         <CardBody className="space-y-6">
+          {actionError ? <div className="rounded-[1rem] border border-copper/20 bg-copper/8 px-4 py-3 text-sm text-secondary">{actionError}</div> : null}
           <section className="grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_360px]">
             <div className="space-y-5">
               <Card className={cn("border border-border/45 bg-white/90", stage === 0 ? "ring-1 ring-copper/20" : "")}>
@@ -300,6 +329,7 @@ export function TaxReturnDocumentWorkspace({ caseId, initialService }: Workspace
                   </div>
 
                   <ToggleGrid
+                    t={t}
                     items={[
                       {
                         label: t("intake.filing.firstDeclarationWithFinTax"),
@@ -788,8 +818,10 @@ function DateField({ label, onChange, value }: { label: string; onChange: (value
 
 function ToggleGrid({
   items,
+  t,
 }: {
   items: Array<{ label: string; onChange: (value: boolean) => void; value: boolean }>;
+  t: ReturnType<typeof useTranslations<"DocFlow">>;
 }) {
   return (
     <div className="grid gap-3 md:grid-cols-2">
@@ -805,7 +837,7 @@ function ToggleGrid({
                 item.value ? "border-green/30 bg-green/10 text-green" : "border-border/45 bg-white text-secondary",
               )}
             >
-              Yes
+              {t("common.yes")}
             </button>
             <button
               type="button"
@@ -815,7 +847,7 @@ function ToggleGrid({
                 !item.value ? "border-green/30 bg-green/10 text-green" : "border-border/45 bg-white text-secondary",
               )}
             >
-              No
+              {t("common.no")}
             </button>
           </div>
         </div>
@@ -996,14 +1028,14 @@ function RequirementRow({
             <div className="rounded-[1rem] border border-border/35 bg-surface2/20 p-4">
               <p className="text-sm font-semibold text-text">{t("requirements.customerNote")}</p>
               <Textarea className="mt-3 min-h-[110px]" value={noteDraft} onChange={(event) => onNoteChange(event.target.value)} />
-              <Button type="button" className="mt-3" size="sm" variant="secondary" onClick={() => onSaveNote(noteDraft)}>
+              <Button type="button" className="mt-3" size="sm" variant="secondary" onClick={() => onSaveNote(noteDraft)} disabled={noteDraft.trim().length === 0}>
                 {t("actions.saveNote")}
               </Button>
             </div>
             <div className="rounded-[1rem] border border-border/35 bg-surface2/20 p-4">
               <p className="text-sm font-semibold text-text">{t("requirements.notAvailableTitle")}</p>
               <Textarea className="mt-3 min-h-[110px]" value={availabilityDraft} onChange={(event) => onAvailabilityChange(event.target.value)} />
-              <Button type="button" className="mt-3" size="sm" variant="secondary" onClick={() => onSaveAvailability(availabilityDraft)}>
+              <Button type="button" className="mt-3" size="sm" variant="secondary" onClick={() => onSaveAvailability(availabilityDraft)} disabled={availabilityDraft.trim().length < 3}>
                 {t("actions.markNotAvailable")}
               </Button>
             </div>

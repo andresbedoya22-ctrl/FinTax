@@ -120,6 +120,6 @@ describe("AuthScreen", () => {
     fireEvent.change(screen.getByLabelText(/^password$/i), { target: { value: "Password123!" } });
     fireEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
 
-    await waitFor(() => expect(screen.getByRole("heading", { name: /set up two-step verification/i })).toBeInTheDocument());
+    expect(await screen.findByRole("heading", { name: /set up two-step verification/i }, { timeout: 10_000 })).toBeInTheDocument();
   });
 });

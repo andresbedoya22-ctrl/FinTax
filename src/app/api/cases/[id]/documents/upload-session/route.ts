@@ -40,8 +40,17 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     return apiSuccess(session);
   } catch (error) {
     const message = error instanceof Error ? error.message : "document_upload_session_failed";
-    if (message === "unsupported_mime_type" || message === "file_too_large" || message === "requirement_does_not_accept_documents") {
+    if (
+      message === "unsupported_mime_type" ||
+      message === "file_too_large" ||
+      message === "requirement_does_not_accept_documents" ||
+      message === "requirement_not_uploadable" ||
+      message === "replace_document_not_allowed"
+    ) {
       return apiError("conflict", message);
+    }
+    if (message === "requirement_not_found" || message === "replace_document_not_found") {
+      return apiError("not_found", message);
     }
     return apiError("internal", message);
   }

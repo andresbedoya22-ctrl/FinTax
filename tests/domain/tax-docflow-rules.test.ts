@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { Case } from "@/types/database";
+import { createDefaultTaxReturnIntake } from "@/hooks/useTaxReturnDocFlow";
 import { taxReturnIntakeSchema } from "@/lib/tax-documents/contracts";
 import { normalizeTaxReturnIntake } from "@/lib/tax-documents/normalize";
 import { buildTaxSummary, deriveCaseStatusFromRequirements, summarizeRequirementProgress } from "@/lib/tax-documents/service";
@@ -365,5 +366,12 @@ describe("tax return document flow rules", () => {
       isFallback: true,
       sourceLabel: "case_data_fallback",
     });
+  });
+
+  it("does not default new intake drafts to Spain", () => {
+    const draft = createDefaultTaxReturnIntake();
+
+    expect(draft.filing.originCountryCode).toBe("NL");
+    expect(draft.filing.originCountryCode).not.toBe("ES");
   });
 });

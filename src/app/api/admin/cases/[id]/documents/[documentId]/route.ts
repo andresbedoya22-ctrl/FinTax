@@ -38,7 +38,9 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     });
 
     return apiSuccess(document);
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "admin_document_review_failed";
+    if (message === "document_review_invalid_state") return apiError("conflict", message);
     return apiError("internal", "admin_document_review_failed");
   }
 }

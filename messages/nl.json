@@ -1102,9 +1102,9 @@
   },
   "DocFlow": {
     "hero": {
-      "eyebrow": "Document cutover",
-      "title": "Tax return documents now follow the real case backend.",
-      "description": "Select the fiscal year, answer the intake once, generate only the applicable requirements, upload the real evidence, fix rejections, and finish the flow without email handoffs.",
+      "eyebrow": "Documentenflow",
+      "title": "De documentstroom voor de aangifte gebruikt nu de echte case-backend.",
+      "description": "Kies het belastingjaar, vul de intake ??n keer in, genereer alleen toepasselijke vereisten, upload echte documenten, herstel afwijzingen en rond de flow af zonder handmatige e-mail.",
       "highlights": [
         "Real requirements from the backend",
         "Signed uploads and finalize flow",
@@ -1114,34 +1114,34 @@
     },
     "stages": {
       "selection": {
-        "title": "Initial selection",
-        "description": "Choose the declaration type and fiscal year before the documentary intake starts.",
-        "short": "Stage 1"
+        "title": "Eerste selectie",
+        "description": "Kies eerst het type aangifte en het belastingjaar.",
+        "short": "Stap 1"
       },
       "intake": {
-        "title": "Document intake",
-        "description": "Capture the real intake facts that drive conditional requirements.",
-        "short": "Stage 2"
+        "title": "Documentintake",
+        "description": "Leg de feiten vast die de echte vereisten aansturen.",
+        "short": "Stap 2"
       },
       "requirements": {
-        "title": "Real requirements",
-        "description": "Review the actual case requirements grouped by section, not a local checklist.",
-        "short": "Stage 3"
+        "title": "Echte vereisten",
+        "description": "Bekijk de echte case requirements per sectie.",
+        "short": "Stap 3"
       },
       "uploads": {
-        "title": "Upload center",
-        "description": "Upload, replace and delete files through the signed upload flow.",
-        "short": "Stage 4"
+        "title": "Uploadcentrum",
+        "description": "Upload, vervang en verwijder bestanden via de ondertekende uploadflow.",
+        "short": "Stap 4"
       },
       "timeline": {
-        "title": "Case timeline",
-        "description": "Read the live case events emitted by the backend.",
-        "short": "Stage 5"
+        "title": "Tijdlijn",
+        "description": "Lees de live case-events uit de backend.",
+        "short": "Stap 5"
       },
       "summary": {
-        "title": "Final summary",
-        "description": "See what is complete, partial, rejected or still blocking the case.",
-        "short": "Stage 6"
+        "title": "Eindsamenvatting",
+        "description": "Zie wat compleet, gedeeltelijk, afgewezen of blokkerend is.",
+        "short": "Stap 6"
       }
     },
     "caseTypes": {
@@ -1179,101 +1179,101 @@
       "progressCaption": "{complete} complete of {total}. {blockers} blocking requirements remain."
     },
     "selection": {
-      "title": "Choose declaration and year",
-      "description": "Start with the declaration type and fiscal year. The platform will ask only the intake needed to generate the real requirements.",
-      "caseType": "Declaration type",
-      "caseTypeDescription": "Choose the backend route that matches this case.",
-      "taxYear": "Fiscal year",
-      "taxYearDescription": "Tax year must stay editable and cannot be hardcoded.",
-      "explainer": "After this, FinTax saves the intake snapshot in the case and refreshes the requirement engine so the client only sees applicable evidence.",
-      "originCountry": "Origin country"
+      "title": "Kies aangifte en jaar",
+      "description": "Begin met het type aangifte en het belastingjaar. Daarna tonen we alleen de intake die nodig is voor echte requirements.",
+      "caseType": "Type aangifte",
+      "caseTypeDescription": "Kies de backend-route die bij deze case hoort.",
+      "taxYear": "Belastingjaar",
+      "taxYearDescription": "Het belastingjaar moet wijzigbaar blijven en mag niet hardcoded zijn.",
+      "explainer": "Na opslaan bewaart FinTax de intake snapshot in de case en ververst de requirement engine zodat de klant alleen toepasselijk bewijs ziet.",
+      "originCountry": "Land van herkomst"
     },
     "intake": {
-      "title": "Document intake",
-      "description": "These answers feed the persisted intake snapshot and regenerate the real requirements when saved.",
+      "title": "Documentintake",
+      "description": "Deze antwoorden vullen de persistente intake snapshot en regenereren de echte requirements.",
       "identity": {
-        "fullName": "Full name",
+        "fullName": "Volledige naam",
         "bsn": "BSN"
       },
       "filing": {
-        "originCountryCode": "Origin country code",
-        "currentCountryOfResidence": "Current country of residence",
-        "firstDeclarationWithFinTax": "First declaration with FinTax"
+        "originCountryCode": "Landcode van herkomst",
+        "currentCountryOfResidence": "Huidig woonland",
+        "firstDeclarationWithFinTax": "Eerste aangifte met FinTax"
       },
       "residency": {
-        "registeredInNlFullYear": "Registered in NL for the full year",
-        "firstRegistrationInNlInTaxYear": "First NL registration happened in this tax year",
-        "hadRegistrationInterruption": "Registration was interrupted",
-        "emigratedOrDeregistered": "Emigrated or deregistered during the year",
-        "firstRegistrationDateInNl": "First registration date in NL",
-        "emigrationOrDeregistrationDate": "Emigration or deregistration date"
+        "registeredInNlFullYear": "Volledig jaar in NL ingeschreven",
+        "firstRegistrationInNlInTaxYear": "Eerste NL-inschrijving in dit belastingjaar",
+        "hadRegistrationInterruption": "Inschrijving was onderbroken",
+        "emigratedOrDeregistered": "Ge?migreerd of uitgeschreven in dit jaar",
+        "firstRegistrationDateInNl": "Datum eerste inschrijving in NL",
+        "emigrationOrDeregistrationDate": "Datum emigratie of uitschrijving"
       },
       "household": {
-        "hasChildrenRegisteredSameAddress": "Children registered at the same address",
-        "childrenCountSameAddress": "Children count at the same address"
+        "hasChildrenRegisteredSameAddress": "Kinderen op hetzelfde adres ingeschreven",
+        "childrenCountSameAddress": "Aantal kinderen op hetzelfde adres"
       },
       "income": {
-        "employers": "Employers",
-        "employersHelp": "Add one employer per annual statement requirement.",
-        "employerPlaceholder": "Employer name",
-        "noEmployers": "No employers added yet.",
-        "hasUwvIncome": "UWV income",
+        "employers": "Werkgevers",
+        "employersHelp": "Voeg ??n werkgever toe per jaaropgave.",
+        "employerPlaceholder": "Naam werkgever",
+        "noEmployers": "Nog geen werkgevers toegevoegd.",
+        "hasUwvIncome": "UWV-inkomen",
         "hasTransitievergoeding": "Transitievergoeding",
-        "hasZzpIncome": "ZZP income",
-        "zzpHoursOver1225": "More than 1225 ZZP hours"
+        "hasZzpIncome": "ZZP-inkomen",
+        "zzpHoursOver1225": "Meer dan 1225 ZZP-uren"
       },
       "housing": {
-        "hasMortgage": "Mortgage",
-        "hasSvnOrStarterslening": "SVN or starterslening"
+        "hasMortgage": "Hypotheek",
+        "hasSvnOrStarterslening": "SVN of starterslening"
       },
       "assets": {
-        "hasForeignBankAccounts": "Foreign bank or savings accounts",
-        "hasCrypto": "Crypto holdings"
+        "hasForeignBankAccounts": "Buitenlandse bank- of spaarrekeningen",
+        "hasCrypto": "Crypto-bezit"
       },
       "debts": {
-        "hasConsumerLoans": "Consumer loans"
+        "hasConsumerLoans": "Consumptieve leningen"
       },
       "deductions": {
-        "hasUnreimbursedDeductibleMedicalCosts": "Unreimbursed deductible medical costs"
+        "hasUnreimbursedDeductibleMedicalCosts": "Niet-vergoede aftrekbare zorgkosten"
       },
       "summary": {
-        "box1Income": "Box 1 income",
-        "box3Assets": "Box 3 assets",
-        "credits": "Credits",
-        "netResult": "Net result"
+        "box1Income": "Box 1 inkomen",
+        "box3Assets": "Box 3 vermogen",
+        "credits": "Heffingskortingen",
+        "netResult": "Nettoresultaat"
       }
     },
     "requirements": {
       "title": "Backend requirements",
-      "description": "The visible checklist now comes from case_requirements only.",
+      "description": "De zichtbare checklist komt nu alleen uit case_requirements.",
       "emptyBeforeSave": "Save the intake first to generate requirements.",
       "empty": "No requirements are active for this case yet.",
-      "blocking": "Blocking",
-      "customerNote": "Client note",
-      "notAvailableTitle": "Still not available",
-      "howToGet": "How to get it",
-      "helpUnavailable": "Help content is not available yet for this requirement.",
-      "helpFallbackTitle": "Requirement help"
+      "blocking": "Blokkerend",
+      "customerNote": "Notitie van klant",
+      "notAvailableTitle": "Nog niet beschikbaar",
+      "howToGet": "Hoe krijg ik dit?",
+      "helpUnavailable": "Helpcontent is nog niet beschikbaar voor dit requirement.",
+      "helpFallbackTitle": "Hulp bij requirement"
     },
     "uploads": {
-      "title": "Upload center",
-      "description": "Uploads now request a session, push the file to signed storage, finalize the document and refresh the requirement state.",
-      "emptyBeforeSave": "Generate requirements first to enable uploads.",
-      "empty": "No documents uploaded yet.",
-      "centerTitle": "Requirement uploads",
-      "selectFile": "Select file",
-      "noneForRequirement": "No files uploaded for this requirement yet.",
-      "validation": "Accepted: {mimes}. Max size: {max}.",
-      "uploading": "Uploading and finalizing...",
-      "answerOnlyRequirement": "This requirement does not accept file uploads."
+      "title": "Uploadcentrum",
+      "description": "Uploads vragen nu een sessie aan, sturen het bestand naar ondertekende opslag, finalizen het document en verversen de requirement-status.",
+      "emptyBeforeSave": "Genereer eerst requirements om uploads te activeren.",
+      "empty": "Nog geen documenten ge?pload.",
+      "centerTitle": "Uploads per requirement",
+      "selectFile": "Bestand kiezen",
+      "noneForRequirement": "Nog geen bestanden voor dit requirement.",
+      "validation": "Toegestaan: {mimes}. Maximale grootte: {max}.",
+      "uploading": "Bezig met uploaden en finalizen...",
+      "answerOnlyRequirement": "Voor dit requirement zijn geen bestanden nodig."
     },
     "timeline": {
-      "title": "Timeline",
-      "description": "The activity feed is read from case_events.",
-      "emptyBeforeSave": "A live timeline appears after the case exists.",
-      "empty": "No timeline events yet.",
-      "fallbackFile": "uploaded file",
-      "fallbackStatus": "updated",
+      "title": "Tijdlijn",
+      "description": "De activity-feed wordt gelezen uit case_events.",
+      "emptyBeforeSave": "Een live tijdlijn verschijnt zodra de case bestaat.",
+      "empty": "Nog geen tijdlijngebeurtenissen.",
+      "fallbackFile": "ge?pload bestand",
+      "fallbackStatus": "bijgewerkt",
       "eventTypes": {
         "intake_saved": {
           "title": "Intake saved",
@@ -1318,35 +1318,35 @@
       }
     },
     "summary": {
-      "title": "Operational summary",
-      "description": "Use the real progress data to understand what still blocks completion.",
+      "title": "Operationele samenvatting",
+      "description": "Gebruik de echte voortgangsdata om te zien wat de afronding nog blokkeert.",
       "emptyBeforeSave": "A summary becomes available once the case exists.",
       "metrics": {
-        "complete": "Complete",
-        "partial": "Partial",
-        "blocked": "Blocked",
-        "rejected": "Rejected"
+        "complete": "Voltooid",
+        "partial": "Gedeeltelijk",
+        "blocked": "Geblokkeerd",
+        "rejected": "Afgewezen"
       }
     },
     "sidebar": {
-      "progressEyebrow": "Progress",
-      "progressTitle": "Live progress",
-      "progressDescription": "One source of truth for completion and blockers.",
-      "progressCompletion": "Completion",
-      "pendingUploads": "Uploaded waiting review",
-      "pendingReview": "Pending",
-      "rejected": "Rejected",
-      "taxSummaryEyebrow": "Tax summary",
+      "progressEyebrow": "Voortgang",
+      "progressTitle": "Live voortgang",
+      "progressDescription": "??n bron van waarheid voor afronding en blockers.",
+      "progressCompletion": "Voltooiing",
+      "pendingUploads": "Ge?pload, wacht op review",
+      "pendingReview": "In behandeling",
+      "rejected": "Afgewezen",
+      "taxSummaryEyebrow": "Belastingsamenvatting",
       "taxSummaryTitle": "Tax summary API",
-      "taxSummaryDescription": "Summary values come from the real tax summary endpoint.",
+      "taxSummaryDescription": "Samenvattingswaarden komen van het echte tax-summary endpoint.",
       "box1": "Box 1",
       "box3": "Box 3",
-      "credits": "Credits",
-      "net": "Net",
-      "pendingEyebrow": "Real pending work",
-      "pendingTitle": "Pending requirements",
-      "pendingDescription": "Open requirements from the backend.",
-      "pendingEmpty": "No open requirements."
+      "credits": "Kortingen",
+      "net": "Netto",
+      "pendingEyebrow": "Open werk",
+      "pendingTitle": "Open requirements",
+      "pendingDescription": "Open requirements uit de backend.",
+      "pendingEmpty": "Geen open requirements."
     },
     "requirementStatus": {
       "pending": "Pending",
@@ -1383,19 +1383,24 @@
       "deductions": "Deductions"
     },
     "actions": {
-      "startIntake": "Continue to intake",
-      "openCase": "Open case",
-      "generateRequirements": "Save intake and generate requirements",
-      "refreshRequirements": "Refresh requirements",
-      "addEmployer": "Add employer",
-      "remove": "Remove",
-      "saveNote": "Save note",
-      "markNotAvailable": "Mark not available",
-      "delete": "Delete",
-      "replace": "Replace"
+      "startIntake": "Verder naar intake",
+      "openCase": "Case openen",
+      "generateRequirements": "Intake opslaan en requirements genereren",
+      "refreshRequirements": "Requirements verversen",
+      "addEmployer": "Werkgever toevoegen",
+      "remove": "Verwijderen",
+      "saveNote": "Notitie opslaan",
+      "markNotAvailable": "Markeer als niet beschikbaar",
+      "delete": "Verwijderen",
+      "replace": "Vervangen"
     },
     "errors": {
-      "caseLoad": "Could not load the case workspace. Code: {code}."
+      "caseLoad": "Could not load the case workspace. Code: {code}.",
+      "saveIntake": "De intake kon nu niet worden opgeslagen. Probeer opnieuw."
+    },
+    "common": {
+      "yes": "Ja",
+      "no": "Nee"
     }
   }
 }

@@ -1371,9 +1371,9 @@
   },
   "DocFlow": {
     "hero": {
-      "eyebrow": "Document cutover",
-      "title": "Tax return documents now follow the real case backend.",
-      "description": "Select the fiscal year, answer the intake once, generate only the applicable requirements, upload the real evidence, fix rejections, and finish the flow without email handoffs.",
+      "eyebrow": "Przep?yw dokument?w",
+      "title": "Przep?yw dokument?w deklaracji korzysta ju? z prawdziwego backendu sprawy.",
+      "description": "Wybierz rok podatkowy, odpowiedz raz na intake, wygeneruj tylko w?a?ciwe wymagania, prze?lij prawdziwe dokumenty, popraw odrzucenia i zako?cz proces bez r?cznej korespondencji e-mail.",
       "highlights": [
         "Real requirements from the backend",
         "Signed uploads and finalize flow",
@@ -1383,34 +1383,34 @@
     },
     "stages": {
       "selection": {
-        "title": "Initial selection",
-        "description": "Choose the declaration type and fiscal year before the documentary intake starts.",
-        "short": "Stage 1"
+        "title": "Wyb?r pocz?tkowy",
+        "description": "Najpierw wybierz typ deklaracji i rok podatkowy.",
+        "short": "Etap 1"
       },
       "intake": {
-        "title": "Document intake",
-        "description": "Capture the real intake facts that drive conditional requirements.",
-        "short": "Stage 2"
+        "title": "Intake dokument?w",
+        "description": "Zapisz fakty steruj?ce rzeczywistymi wymaganiami.",
+        "short": "Etap 2"
       },
       "requirements": {
-        "title": "Real requirements",
-        "description": "Review the actual case requirements grouped by section, not a local checklist.",
-        "short": "Stage 3"
+        "title": "Rzeczywiste wymagania",
+        "description": "Przegl?daj prawdziwe wymagania sprawy wed?ug sekcji.",
+        "short": "Etap 3"
       },
       "uploads": {
-        "title": "Upload center",
-        "description": "Upload, replace and delete files through the signed upload flow.",
-        "short": "Stage 4"
+        "title": "Centrum przesy?ania",
+        "description": "Przesy?aj, podmieniaj i usuwaj pliki przez podpisany upload.",
+        "short": "Etap 4"
       },
       "timeline": {
-        "title": "Case timeline",
-        "description": "Read the live case events emitted by the backend.",
-        "short": "Stage 5"
+        "title": "O? czasu",
+        "description": "Czytaj zdarzenia sprawy z backendu.",
+        "short": "Etap 5"
       },
       "summary": {
-        "title": "Final summary",
-        "description": "See what is complete, partial, rejected or still blocking the case.",
-        "short": "Stage 6"
+        "title": "Podsumowanie ko?cowe",
+        "description": "Zobacz, co jest uko?czone, cz??ciowe, odrzucone lub blokuj?ce.",
+        "short": "Etap 6"
       }
     },
     "caseTypes": {
@@ -1448,101 +1448,101 @@
       "progressCaption": "{complete} complete of {total}. {blockers} blocking requirements remain."
     },
     "selection": {
-      "title": "Choose declaration and year",
-      "description": "Start with the declaration type and fiscal year. The platform will ask only the intake needed to generate the real requirements.",
-      "caseType": "Declaration type",
-      "caseTypeDescription": "Choose the backend route that matches this case.",
-      "taxYear": "Fiscal year",
-      "taxYearDescription": "Tax year must stay editable and cannot be hardcoded.",
-      "explainer": "After this, FinTax saves the intake snapshot in the case and refreshes the requirement engine so the client only sees applicable evidence.",
-      "originCountry": "Origin country"
+      "title": "Wybierz deklaracj? i rok",
+      "description": "Zacznij od typu deklaracji i roku podatkowego. Nast?pnie poka?emy tylko intake potrzebny do wygenerowania prawdziwych wymaga?.",
+      "caseType": "Typ deklaracji",
+      "caseTypeDescription": "Wybierz ?cie?k? backendow? pasuj?c? do tej sprawy.",
+      "taxYear": "Rok podatkowy",
+      "taxYearDescription": "Rok podatkowy musi pozosta? edytowalny i nie mo?e by? wpisany na sztywno.",
+      "explainer": "Po zapisaniu FinTax zapisuje snapshot intake w sprawie i od?wie?a silnik wymaga?, aby klient widzia? tylko w?a?ciwe dowody.",
+      "originCountry": "Kraj pochodzenia"
     },
     "intake": {
-      "title": "Document intake",
-      "description": "These answers feed the persisted intake snapshot and regenerate the real requirements when saved.",
+      "title": "Intake dokument?w",
+      "description": "Te odpowiedzi wype?niaj? trwa?y snapshot intake i regeneruj? prawdziwe wymagania.",
       "identity": {
-        "fullName": "Full name",
+        "fullName": "Imi? i nazwisko",
         "bsn": "BSN"
       },
       "filing": {
-        "originCountryCode": "Origin country code",
-        "currentCountryOfResidence": "Current country of residence",
-        "firstDeclarationWithFinTax": "First declaration with FinTax"
+        "originCountryCode": "Kod kraju pochodzenia",
+        "currentCountryOfResidence": "Obecny kraj zamieszkania",
+        "firstDeclarationWithFinTax": "Pierwsza deklaracja z FinTax"
       },
       "residency": {
-        "registeredInNlFullYear": "Registered in NL for the full year",
-        "firstRegistrationInNlInTaxYear": "First NL registration happened in this tax year",
-        "hadRegistrationInterruption": "Registration was interrupted",
-        "emigratedOrDeregistered": "Emigrated or deregistered during the year",
-        "firstRegistrationDateInNl": "First registration date in NL",
-        "emigrationOrDeregistrationDate": "Emigration or deregistration date"
+        "registeredInNlFullYear": "Zameldowanie w NL przez ca?y rok",
+        "firstRegistrationInNlInTaxYear": "Pierwsza rejestracja w NL w tym roku podatkowym",
+        "hadRegistrationInterruption": "Rejestracja by?a przerwana",
+        "emigratedOrDeregistered": "Emigracja lub wymeldowanie w trakcie roku",
+        "firstRegistrationDateInNl": "Data pierwszej rejestracji w NL",
+        "emigrationOrDeregistrationDate": "Data emigracji lub wymeldowania"
       },
       "household": {
-        "hasChildrenRegisteredSameAddress": "Children registered at the same address",
-        "childrenCountSameAddress": "Children count at the same address"
+        "hasChildrenRegisteredSameAddress": "Dzieci zameldowane pod tym samym adresem",
+        "childrenCountSameAddress": "Liczba dzieci pod tym samym adresem"
       },
       "income": {
-        "employers": "Employers",
-        "employersHelp": "Add one employer per annual statement requirement.",
-        "employerPlaceholder": "Employer name",
-        "noEmployers": "No employers added yet.",
-        "hasUwvIncome": "UWV income",
+        "employers": "Pracodawcy",
+        "employersHelp": "Dodaj jednego pracodawc? dla ka?dego wymagania jaaropgave.",
+        "employerPlaceholder": "Nazwa pracodawcy",
+        "noEmployers": "Nie dodano jeszcze pracodawc?w.",
+        "hasUwvIncome": "Doch?d z UWV",
         "hasTransitievergoeding": "Transitievergoeding",
-        "hasZzpIncome": "ZZP income",
-        "zzpHoursOver1225": "More than 1225 ZZP hours"
+        "hasZzpIncome": "Doch?d ZZP",
+        "zzpHoursOver1225": "Ponad 1225 godzin ZZP"
       },
       "housing": {
-        "hasMortgage": "Mortgage",
-        "hasSvnOrStarterslening": "SVN or starterslening"
+        "hasMortgage": "Hipoteka",
+        "hasSvnOrStarterslening": "SVN lub starterslening"
       },
       "assets": {
-        "hasForeignBankAccounts": "Foreign bank or savings accounts",
-        "hasCrypto": "Crypto holdings"
+        "hasForeignBankAccounts": "Zagraniczne rachunki bankowe lub oszcz?dno?ciowe",
+        "hasCrypto": "Kryptowaluty"
       },
       "debts": {
-        "hasConsumerLoans": "Consumer loans"
+        "hasConsumerLoans": "Po?yczki konsumenckie"
       },
       "deductions": {
-        "hasUnreimbursedDeductibleMedicalCosts": "Unreimbursed deductible medical costs"
+        "hasUnreimbursedDeductibleMedicalCosts": "Nierefundowane koszty medyczne podlegaj?ce odliczeniu"
       },
       "summary": {
-        "box1Income": "Box 1 income",
-        "box3Assets": "Box 3 assets",
-        "credits": "Credits",
-        "netResult": "Net result"
+        "box1Income": "Doch?d Box 1",
+        "box3Assets": "Aktywa Box 3",
+        "credits": "Ulgi",
+        "netResult": "Wynik netto"
       }
     },
     "requirements": {
-      "title": "Backend requirements",
-      "description": "The visible checklist now comes from case_requirements only.",
+      "title": "Wymagania backendu",
+      "description": "Widoczna lista kontrolna pochodzi teraz wy??cznie z case_requirements.",
       "emptyBeforeSave": "Save the intake first to generate requirements.",
       "empty": "No requirements are active for this case yet.",
-      "blocking": "Blocking",
-      "customerNote": "Client note",
-      "notAvailableTitle": "Still not available",
-      "howToGet": "How to get it",
-      "helpUnavailable": "Help content is not available yet for this requirement.",
-      "helpFallbackTitle": "Requirement help"
+      "blocking": "Blokuj?ce",
+      "customerNote": "Notatka klienta",
+      "notAvailableTitle": "Jeszcze niedost?pne",
+      "howToGet": "Jak to uzyska??",
+      "helpUnavailable": "Tre?? pomocy nie jest jeszcze dost?pna dla tego wymagania.",
+      "helpFallbackTitle": "Pomoc do wymagania"
     },
     "uploads": {
-      "title": "Upload center",
-      "description": "Uploads now request a session, push the file to signed storage, finalize the document and refresh the requirement state.",
-      "emptyBeforeSave": "Generate requirements first to enable uploads.",
-      "empty": "No documents uploaded yet.",
-      "centerTitle": "Requirement uploads",
-      "selectFile": "Select file",
-      "noneForRequirement": "No files uploaded for this requirement yet.",
-      "validation": "Accepted: {mimes}. Max size: {max}.",
-      "uploading": "Uploading and finalizing...",
-      "answerOnlyRequirement": "This requirement does not accept file uploads."
+      "title": "Centrum przesy?ania",
+      "description": "Uploady ??daj? sesji, wysy?aj? plik do podpisanej pami?ci, finalizuj? dokument i od?wie?aj? stan wymagania.",
+      "emptyBeforeSave": "Najpierw wygeneruj wymagania, aby w??czy? uploady.",
+      "empty": "Nie przes?ano jeszcze ?adnych dokument?w.",
+      "centerTitle": "Pliki dla wymagania",
+      "selectFile": "Wybierz plik",
+      "noneForRequirement": "Brak plik?w dla tego wymagania.",
+      "validation": "Dozwolone: {mimes}. Maksymalny rozmiar: {max}.",
+      "uploading": "Trwa przesy?anie i finalizacja...",
+      "answerOnlyRequirement": "To wymaganie nie przyjmuje plik?w."
     },
     "timeline": {
-      "title": "Timeline",
-      "description": "The activity feed is read from case_events.",
-      "emptyBeforeSave": "A live timeline appears after the case exists.",
-      "empty": "No timeline events yet.",
-      "fallbackFile": "uploaded file",
-      "fallbackStatus": "updated",
+      "title": "O? czasu",
+      "description": "Kana? aktywno?ci jest odczytywany z case_events.",
+      "emptyBeforeSave": "O? czasu pojawi si? po utworzeniu sprawy.",
+      "empty": "Brak zdarze? na osi czasu.",
+      "fallbackFile": "przes?any plik",
+      "fallbackStatus": "zaktualizowano",
       "eventTypes": {
         "intake_saved": {
           "title": "Intake saved",
@@ -1587,35 +1587,35 @@
       }
     },
     "summary": {
-      "title": "Operational summary",
-      "description": "Use the real progress data to understand what still blocks completion.",
+      "title": "Podsumowanie operacyjne",
+      "description": "U?yj prawdziwych danych post?pu, aby zobaczy?, co blokuje zako?czenie.",
       "emptyBeforeSave": "A summary becomes available once the case exists.",
       "metrics": {
-        "complete": "Complete",
-        "partial": "Partial",
-        "blocked": "Blocked",
-        "rejected": "Rejected"
+        "complete": "Uko?czone",
+        "partial": "Cz??ciowe",
+        "blocked": "Zablokowane",
+        "rejected": "Odrzucone"
       }
     },
     "sidebar": {
-      "progressEyebrow": "Progress",
-      "progressTitle": "Live progress",
-      "progressDescription": "One source of truth for completion and blockers.",
-      "progressCompletion": "Completion",
-      "pendingUploads": "Uploaded waiting review",
-      "pendingReview": "Pending",
-      "rejected": "Rejected",
-      "taxSummaryEyebrow": "Tax summary",
-      "taxSummaryTitle": "Tax summary API",
-      "taxSummaryDescription": "Summary values come from the real tax summary endpoint.",
+      "progressEyebrow": "Post?p",
+      "progressTitle": "Post?p na ?ywo",
+      "progressDescription": "Jedno ?r?d?o prawdy dla uko?czenia i blokad.",
+      "progressCompletion": "Uko?czenie",
+      "pendingUploads": "Przes?ane, czekaj? na review",
+      "pendingReview": "Oczekuj?ce",
+      "rejected": "Odrzucone",
+      "taxSummaryEyebrow": "Podsumowanie podatkowe",
+      "taxSummaryTitle": "API podsumowania podatkowego",
+      "taxSummaryDescription": "Warto?ci pochodz? z prawdziwego endpointu tax-summary.",
       "box1": "Box 1",
       "box3": "Box 3",
-      "credits": "Credits",
-      "net": "Net",
-      "pendingEyebrow": "Real pending work",
-      "pendingTitle": "Pending requirements",
-      "pendingDescription": "Open requirements from the backend.",
-      "pendingEmpty": "No open requirements."
+      "credits": "Ulgi",
+      "net": "Netto",
+      "pendingEyebrow": "Otwarte zadania",
+      "pendingTitle": "Otwarte wymagania",
+      "pendingDescription": "Otwarte wymagania z backendu.",
+      "pendingEmpty": "Brak otwartych wymaga?."
     },
     "requirementStatus": {
       "pending": "Pending",
@@ -1652,19 +1652,24 @@
       "deductions": "Deductions"
     },
     "actions": {
-      "startIntake": "Continue to intake",
-      "openCase": "Open case",
-      "generateRequirements": "Save intake and generate requirements",
-      "refreshRequirements": "Refresh requirements",
-      "addEmployer": "Add employer",
-      "remove": "Remove",
-      "saveNote": "Save note",
-      "markNotAvailable": "Mark not available",
-      "delete": "Delete",
-      "replace": "Replace"
+      "startIntake": "Przejd? do intake",
+      "openCase": "Otw?rz spraw?",
+      "generateRequirements": "Zapisz intake i wygeneruj wymagania",
+      "refreshRequirements": "Od?wie? wymagania",
+      "addEmployer": "Dodaj pracodawc?",
+      "remove": "Usu?",
+      "saveNote": "Zapisz notatk?",
+      "markNotAvailable": "Oznacz jako niedost?pne",
+      "delete": "Usu?",
+      "replace": "Podmie?"
     },
     "errors": {
-      "caseLoad": "Could not load the case workspace. Code: {code}."
+      "caseLoad": "Could not load the case workspace. Code: {code}.",
+      "saveIntake": "Nie uda?o si? teraz zapisa? intake. Spr?buj ponownie."
+    },
+    "common": {
+      "yes": "Tak",
+      "no": "Nie"
     }
   }
 }
