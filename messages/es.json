@@ -1769,7 +1769,12 @@
       "replace": "Reemplazar"
     },
     "errors": {
-      "caseLoad": "Could not load the case workspace. Code: {code}."
+      "caseLoad": "Could not load the case workspace. Code: {code}.",
+      "saveIntake": "No se pudo guardar el intake ahora mismo. Int?ntalo de nuevo."
+    },
+    "common": {
+      "yes": "S?",
+      "no": "No"
     }
   }
 }

@@ -4,6 +4,7 @@ import { apiError, apiSuccess } from "@/lib/api/response";
 import { createAdminClient } from "@/lib/supabase/server";
 import { listCaseRequirements } from "@/lib/tax-documents/service";
 
+// Legacy compatibility endpoint. Main tax-return surfaces must read `requirements`/`progress` directly.
 export async function GET(_: Request, context: { params: Promise<{ id: string }> }) {
   const rawParams = await context.params;
   const parsedParams = parseIdParam(rawParams);

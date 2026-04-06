@@ -37,7 +37,9 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     });
 
     return apiSuccess({ ok: true });
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "requirement_note_failed";
+    if (message === "requirement_not_found") return apiError("not_found", message);
     return apiError("internal", "requirement_note_failed");
   }
 }

@@ -37,9 +37,13 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       message === "upload_session_not_found" ||
       message === "upload_session_invalid_state" ||
       message === "upload_session_expired" ||
-      message === "uploaded_object_not_found"
+      message === "uploaded_object_not_found" ||
+      message === "requirement_not_uploadable"
     ) {
       return apiError("conflict", message);
+    }
+    if (message === "requirement_not_found") {
+      return apiError("not_found", message);
     }
     return apiError("internal", message);
   }

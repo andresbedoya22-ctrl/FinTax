@@ -47,14 +47,14 @@ export interface TaxReturnIntakeDraftValues {
   payload: TaxReturnIntakePayload;
 }
 
-export function createDefaultTaxReturnIntake(caseType: Case["case_type"] = "tax_return_p"): TaxReturnIntakePayload {
+export function createDefaultTaxReturnIntake(caseType: Case["case_type"] = "tax_return_p", originCountryCode = "NL"): TaxReturnIntakePayload {
   const currentYear = new Date().getFullYear();
 
   return {
     caseType: caseType as TaxReturnIntakePayload["caseType"],
     filing: {
       taxYear: currentYear - 1,
-      originCountryCode: "ES",
+      originCountryCode,
       currentCountryOfResidence: "NL",
       firstDeclarationWithFinTax: false,
       filingRoute: caseType === "tax_return_m" ? "migration" : caseType === "tax_return_c" ? "non_resident" : caseType === "tax_return_w" ? "self_employed" : "standard",
@@ -225,10 +225,10 @@ export function useSaveCaseIntake(caseId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: TaxReturnIntakePayload) =>
-      apiPut<{ snapshot: CaseIntakeSnapshot; requirements: CaseRequirement[] }, TaxReturnIntakePayload>(`/api/cases/${caseId}/intake`, payload),
-    onSuccess: async () => {
-      await invalidateCaseDocflow(queryClient, caseId);
+    mutationFn: ({ caseId: targetCaseId, payload }: { caseId?: string; payload: TaxReturnIntakePayload }) =>
+      apiPut<{ snapshot: CaseIntakeSnapshot; requirements: CaseRequirement[] }, TaxReturnIntakePayload>(`/api/cases/${targetCaseId ?? caseId}/intake`, payload),
+    onSuccess: async (_data, variables) => {
+      await invalidateCaseDocflow(queryClient, variables.caseId ?? caseId);
     },
   });
 }
