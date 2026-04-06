@@ -4,8 +4,16 @@ import type { Case } from "@/types/database";
 import { createDefaultTaxReturnIntake } from "@/hooks/useTaxReturnDocFlow";
 import { taxReturnIntakeSchema } from "@/lib/tax-documents/contracts";
 import { normalizeTaxReturnIntake } from "@/lib/tax-documents/normalize";
-import { buildTaxSummary, deriveCaseStatusFromRequirements, summarizeRequirementProgress } from "@/lib/tax-documents/service";
-import { deriveRequirementStatusFromDraft, generateRequirementDrafts } from "@/lib/tax-documents/rules";
+import {
+  buildTaxSummary,
+  deriveCaseStatusFromRequirements,
+  isDocumentReviewable,
+  summarizeRequirementProgress,
+} from "@/lib/tax-documents/service";
+import {
+  deriveRequirementStatusFromDraft,
+  generateRequirementDrafts,
+} from "@/lib/tax-documents/rules";
 
 function createIntake(overrides: Record<string, unknown> = {}) {
   return taxReturnIntakeSchema.parse({
@@ -126,8 +134,12 @@ describe("tax return document flow rules", () => {
     });
 
     expect(normalized.derivedFacts.residency.requires_origin_income_certificate).toBe(true);
-    expect(drafts.some((item) => item.requirementCode === "origin_country_income_certificate")).toBe(true);
-    expect(drafts.some((item) => item.requirementCode === "proof_of_nl_registration_periods")).toBe(true);
+    expect(
+      drafts.some((item) => item.requirementCode === "origin_country_income_certificate")
+    ).toBe(true);
+    expect(drafts.some((item) => item.requirementCode === "proof_of_nl_registration_periods")).toBe(
+      true
+    );
   });
 
   it("creates one employer requirement per employer", () => {
@@ -239,7 +251,11 @@ describe("tax return document flow rules", () => {
     expect(firstDraft).toBeDefined();
     expect(nextDraft).toBeDefined();
     expect(
-      deriveRequirementStatusFromDraft(nextDraft!, "approved", firstDraft?.answerValue as Record<string, unknown>),
+      deriveRequirementStatusFromDraft(
+        nextDraft!,
+        "approved",
+        firstDraft?.answerValue as Record<string, unknown>
+      )
     ).toBe("uploaded");
   });
 
@@ -322,7 +338,9 @@ describe("tax return document flow rules", () => {
     expect(progress.total).toBe(2);
     expect(progress.completed).toBe(1);
     expect(progress.blockingRemaining).toBe(1);
-    expect(deriveCaseStatusFromRequirements("draft", progress.blockingRemaining)).toBe("pending_documents");
+    expect(deriveCaseStatusFromRequirements("draft", progress.blockingRemaining)).toBe(
+      "pending_documents"
+    );
     expect(deriveCaseStatusFromRequirements("draft", 0)).toBe("in_review");
   });
 
@@ -373,5 +391,21 @@ describe("tax return document flow rules", () => {
 
     expect(draft.filing.originCountryCode).toBe("NL");
     expect(draft.filing.originCountryCode).not.toBe("ES");
+  });
+
+  it("rejects review actions on replaced, deleted or archived documents", () => {
+    expect(
+      isDocumentReviewable({ status: "uploaded", upload_state: "finalized", deleted_at: null })
+    ).toBe(true);
+    expect(
+      isDocumentReviewable({ status: "replaced", upload_state: "replaced", deleted_at: null })
+    ).toBe(false);
+    expect(
+      isDocumentReviewable({
+        status: "archived",
+        upload_state: "deleted",
+        deleted_at: "2026-01-01T00:00:00.000Z",
+      })
+    ).toBe(false);
   });
 });
