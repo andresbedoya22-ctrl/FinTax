@@ -516,7 +516,51 @@
           "date": "01/07/2027",
           "label": "Late review / corrections if applicable"
         }
-      ]
+      ],
+      "docFlow": {
+        "eventTypes": {
+          "intake_saved": {
+            "title": "Intake saved",
+            "body": "The documentary intake snapshot was saved."
+          },
+          "requirements_regenerated": {
+            "title": "Requirements regenerated",
+            "body": "{count} requirements were refreshed from the backend rules."
+          },
+          "document_upload_session_issued": {
+            "title": "Upload prepared",
+            "body": "A signed upload session was issued for {fileName}."
+          },
+          "document_uploaded": {
+            "title": "Document uploaded",
+            "body": "{fileName} was uploaded and finalized."
+          },
+          "document_deleted": {
+            "title": "Document removed",
+            "body": "{fileName} was removed from the case."
+          },
+          "document_reviewed": {
+            "title": "Document reviewed",
+            "body": "A reviewer marked the document as {status}."
+          },
+          "requirement_marked_not_available": {
+            "title": "Marked as not available",
+            "body": "The client marked the requirement as not yet available."
+          },
+          "requirement_note_added": {
+            "title": "Client note added",
+            "body": "A client note was saved on the requirement."
+          },
+          "requirement_reviewed": {
+            "title": "Requirement reviewed",
+            "body": "The requirement was marked as {status}."
+          },
+          "default": {
+            "title": "Case event",
+            "body": "The case timeline received a new event."
+          }
+        }
+      }
     }
   },
   "Benefits": {
@@ -1323,6 +1367,304 @@
     "checklist": {
       "title": "Checklist",
       "empty": "Checklist items will appear here once the case has follow-up requirements."
+    }
+  },
+  "DocFlow": {
+    "hero": {
+      "eyebrow": "Document cutover",
+      "title": "Tax return documents now follow the real case backend.",
+      "description": "Select the fiscal year, answer the intake once, generate only the applicable requirements, upload the real evidence, fix rejections, and finish the flow without email handoffs.",
+      "highlights": [
+        "Real requirements from the backend",
+        "Signed uploads and finalize flow",
+        "Consistent progress across wizard, case and dashboard"
+      ],
+      "progressEyebrow": "Current stage"
+    },
+    "stages": {
+      "selection": {
+        "title": "Initial selection",
+        "description": "Choose the declaration type and fiscal year before the documentary intake starts.",
+        "short": "Stage 1"
+      },
+      "intake": {
+        "title": "Document intake",
+        "description": "Capture the real intake facts that drive conditional requirements.",
+        "short": "Stage 2"
+      },
+      "requirements": {
+        "title": "Real requirements",
+        "description": "Review the actual case requirements grouped by section, not a local checklist.",
+        "short": "Stage 3"
+      },
+      "uploads": {
+        "title": "Upload center",
+        "description": "Upload, replace and delete files through the signed upload flow.",
+        "short": "Stage 4"
+      },
+      "timeline": {
+        "title": "Case timeline",
+        "description": "Read the live case events emitted by the backend.",
+        "short": "Stage 5"
+      },
+      "summary": {
+        "title": "Final summary",
+        "description": "See what is complete, partial, rejected or still blocking the case.",
+        "short": "Stage 6"
+      }
+    },
+    "caseTypes": {
+      "tax_return_p": "P form tax return",
+      "tax_return_m": "M form migration return",
+      "tax_return_c": "C form non-resident return",
+      "tax_return_w": "ZZP tax return"
+    },
+    "status": {
+      "draft": "Draft",
+      "pendingDocuments": "Pending documents",
+      "pending_documents": "Pending documents",
+      "inReview": "In review",
+      "in_review": "In review",
+      "pendingPayment": "Pending payment",
+      "pending_payment": "Pending payment",
+      "pendingAuthorization": "Pending authorization",
+      "pending_authorization": "Pending authorization",
+      "authorized": "Authorized",
+      "submitted": "Submitted",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    },
+    "stepper": {
+      "draft": "Start",
+      "docs": "Documents",
+      "review": "Review",
+      "submitted": "Submitted",
+      "completed": "Completed"
+    },
+    "caseMeta": {
+      "fallbackTitle": "Tax return {year}",
+      "description": "This workspace reads the live case state. Intake, requirements, uploads, help, progress and timeline all come from the case backend.",
+      "progressEyebrow": "Progress",
+      "progressCaption": "{complete} complete of {total}. {blockers} blocking requirements remain."
+    },
+    "selection": {
+      "title": "Choose declaration and year",
+      "description": "Start with the declaration type and fiscal year. The platform will ask only the intake needed to generate the real requirements.",
+      "caseType": "Declaration type",
+      "caseTypeDescription": "Choose the backend route that matches this case.",
+      "taxYear": "Fiscal year",
+      "taxYearDescription": "Tax year must stay editable and cannot be hardcoded.",
+      "explainer": "After this, FinTax saves the intake snapshot in the case and refreshes the requirement engine so the client only sees applicable evidence.",
+      "originCountry": "Origin country"
+    },
+    "intake": {
+      "title": "Document intake",
+      "description": "These answers feed the persisted intake snapshot and regenerate the real requirements when saved.",
+      "identity": {
+        "fullName": "Full name",
+        "bsn": "BSN"
+      },
+      "filing": {
+        "originCountryCode": "Origin country code",
+        "currentCountryOfResidence": "Current country of residence",
+        "firstDeclarationWithFinTax": "First declaration with FinTax"
+      },
+      "residency": {
+        "registeredInNlFullYear": "Registered in NL for the full year",
+        "firstRegistrationInNlInTaxYear": "First NL registration happened in this tax year",
+        "hadRegistrationInterruption": "Registration was interrupted",
+        "emigratedOrDeregistered": "Emigrated or deregistered during the year",
+        "firstRegistrationDateInNl": "First registration date in NL",
+        "emigrationOrDeregistrationDate": "Emigration or deregistration date"
+      },
+      "household": {
+        "hasChildrenRegisteredSameAddress": "Children registered at the same address",
+        "childrenCountSameAddress": "Children count at the same address"
+      },
+      "income": {
+        "employers": "Employers",
+        "employersHelp": "Add one employer per annual statement requirement.",
+        "employerPlaceholder": "Employer name",
+        "noEmployers": "No employers added yet.",
+        "hasUwvIncome": "UWV income",
+        "hasTransitievergoeding": "Transitievergoeding",
+        "hasZzpIncome": "ZZP income",
+        "zzpHoursOver1225": "More than 1225 ZZP hours"
+      },
+      "housing": {
+        "hasMortgage": "Mortgage",
+        "hasSvnOrStarterslening": "SVN or starterslening"
+      },
+      "assets": {
+        "hasForeignBankAccounts": "Foreign bank or savings accounts",
+        "hasCrypto": "Crypto holdings"
+      },
+      "debts": {
+        "hasConsumerLoans": "Consumer loans"
+      },
+      "deductions": {
+        "hasUnreimbursedDeductibleMedicalCosts": "Unreimbursed deductible medical costs"
+      },
+      "summary": {
+        "box1Income": "Box 1 income",
+        "box3Assets": "Box 3 assets",
+        "credits": "Credits",
+        "netResult": "Net result"
+      }
+    },
+    "requirements": {
+      "title": "Backend requirements",
+      "description": "The visible checklist now comes from case_requirements only.",
+      "emptyBeforeSave": "Save the intake first to generate requirements.",
+      "empty": "No requirements are active for this case yet.",
+      "blocking": "Blocking",
+      "customerNote": "Client note",
+      "notAvailableTitle": "Still not available",
+      "howToGet": "How to get it",
+      "helpUnavailable": "Help content is not available yet for this requirement.",
+      "helpFallbackTitle": "Requirement help"
+    },
+    "uploads": {
+      "title": "Upload center",
+      "description": "Uploads now request a session, push the file to signed storage, finalize the document and refresh the requirement state.",
+      "emptyBeforeSave": "Generate requirements first to enable uploads.",
+      "empty": "No documents uploaded yet.",
+      "centerTitle": "Requirement uploads",
+      "selectFile": "Select file",
+      "noneForRequirement": "No files uploaded for this requirement yet.",
+      "validation": "Accepted: {mimes}. Max size: {max}.",
+      "uploading": "Uploading and finalizing...",
+      "answerOnlyRequirement": "This requirement does not accept file uploads."
+    },
+    "timeline": {
+      "title": "Timeline",
+      "description": "The activity feed is read from case_events.",
+      "emptyBeforeSave": "A live timeline appears after the case exists.",
+      "empty": "No timeline events yet.",
+      "fallbackFile": "uploaded file",
+      "fallbackStatus": "updated",
+      "eventTypes": {
+        "intake_saved": {
+          "title": "Intake saved",
+          "body": "The documentary intake snapshot was saved."
+        },
+        "requirements_regenerated": {
+          "title": "Requirements regenerated",
+          "body": "{count} requirements were refreshed from the backend rules."
+        },
+        "document_upload_session_issued": {
+          "title": "Upload prepared",
+          "body": "A signed upload session was issued for {fileName}."
+        },
+        "document_uploaded": {
+          "title": "Document uploaded",
+          "body": "{fileName} was uploaded and finalized."
+        },
+        "document_deleted": {
+          "title": "Document removed",
+          "body": "{fileName} was removed from the case."
+        },
+        "document_reviewed": {
+          "title": "Document reviewed",
+          "body": "A reviewer marked the document as {status}."
+        },
+        "requirement_marked_not_available": {
+          "title": "Marked as not available",
+          "body": "The client marked the requirement as not yet available."
+        },
+        "requirement_note_added": {
+          "title": "Client note added",
+          "body": "A client note was saved on the requirement."
+        },
+        "requirement_reviewed": {
+          "title": "Requirement reviewed",
+          "body": "The requirement was marked as {status}."
+        },
+        "default": {
+          "title": "Case event",
+          "body": "The case timeline received a new event."
+        }
+      }
+    },
+    "summary": {
+      "title": "Operational summary",
+      "description": "Use the real progress data to understand what still blocks completion.",
+      "emptyBeforeSave": "A summary becomes available once the case exists.",
+      "metrics": {
+        "complete": "Complete",
+        "partial": "Partial",
+        "blocked": "Blocked",
+        "rejected": "Rejected"
+      }
+    },
+    "sidebar": {
+      "progressEyebrow": "Progress",
+      "progressTitle": "Live progress",
+      "progressDescription": "One source of truth for completion and blockers.",
+      "progressCompletion": "Completion",
+      "pendingUploads": "Uploaded waiting review",
+      "pendingReview": "Pending",
+      "rejected": "Rejected",
+      "taxSummaryEyebrow": "Tax summary",
+      "taxSummaryTitle": "Tax summary API",
+      "taxSummaryDescription": "Summary values come from the real tax summary endpoint.",
+      "box1": "Box 1",
+      "box3": "Box 3",
+      "credits": "Credits",
+      "net": "Net",
+      "pendingEyebrow": "Real pending work",
+      "pendingTitle": "Pending requirements",
+      "pendingDescription": "Open requirements from the backend.",
+      "pendingEmpty": "No open requirements."
+    },
+    "requirementStatus": {
+      "pending": "Pending",
+      "uploaded": "Uploaded",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "waived": "Waived",
+      "not_applicable": "Not applicable"
+    },
+    "documentStatus": {
+      "uploaded": "Uploaded",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "replaced": "Replaced",
+      "archived": "Archived"
+    },
+    "requirementTypes": {
+      "info": "Info",
+      "document": "Document",
+      "boolean": "Boolean",
+      "date": "Date",
+      "list": "List",
+      "confirmation": "Confirmation"
+    },
+    "sections": {
+      "identity": "Identity",
+      "residency": "Residency",
+      "household": "Household",
+      "income": "Income",
+      "housing": "Housing",
+      "debts": "Debts",
+      "assets": "Assets",
+      "deductions": "Deductions"
+    },
+    "actions": {
+      "startIntake": "Continue to intake",
+      "openCase": "Open case",
+      "generateRequirements": "Save intake and generate requirements",
+      "refreshRequirements": "Refresh requirements",
+      "addEmployer": "Add employer",
+      "remove": "Remove",
+      "saveNote": "Save note",
+      "markNotAvailable": "Mark not available",
+      "delete": "Delete",
+      "replace": "Replace"
+    },
+    "errors": {
+      "caseLoad": "Could not load the case workspace. Code: {code}."
     }
   }
 }

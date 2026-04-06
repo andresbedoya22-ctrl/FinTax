@@ -6,8 +6,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { isApiClientError } from "@/hooks/api-client";
 import { useCases } from "@/hooks/useCases";
-import { useChecklist } from "@/hooks/useChecklist";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useCaseEvents, useCaseProgress, useCaseRequirements } from "@/hooks/useTaxReturnDocFlow";
 import { useTaxSummary } from "@/hooks/useTaxSummary";
 import { cn } from "@/lib/cn";
 import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
@@ -19,11 +19,6 @@ import { HorizontalStepper } from "@/components/fintax/dashboard/HorizontalStepp
 type TimelineMilestone = {
   date: string;
   label: string;
-};
-
-type ChecklistFallbackItem = {
-  label: string;
-  done: boolean;
 };
 
 function formatDate(value: string | null | undefined, locale: string, fallbackLabel: string) {
@@ -120,25 +115,16 @@ export function DashboardOverview() {
   const cases = casesQuery.data ?? [];
   const activeCase = cases[0] ?? null;
   const hasActiveCase = activeCase !== null;
-  const checklistQuery = useChecklist(activeCase?.id ?? "");
+  const requirementsQuery = useCaseRequirements(activeCase?.id ?? "");
+  const progressQuery = useCaseProgress(activeCase?.id ?? "");
+  const eventsQuery = useCaseEvents(activeCase?.id ?? "");
   const taxSummaryQuery = useTaxSummary(activeCase?.id ?? "");
-
-  const fallbackChecklist = t.raw("checklistFallback") as ChecklistFallbackItem[];
-  const checklistItems =
-    !hasActiveCase
-      ? []
-      : checklistQuery.data && checklistQuery.data.length > 0
-      ? checklistQuery.data.map((item) => ({ label: item.label, done: item.is_completed }))
-      : fallbackChecklist;
-  const checklistCompleted = checklistItems.filter((item) => item.done).length;
-  const checklistProgress = checklistItems.length > 0 ? Math.round((checklistCompleted / checklistItems.length) * 100) : 0;
-  const documentItems =
-    hasActiveCase && checklistQuery.data && checklistQuery.data.length > 0
-      ? checklistQuery.data.filter((item) => item.is_document_upload)
-      : [];
-  const uploadedDocuments = documentItems.filter((item) => item.is_completed).length;
-  const requiredDocuments = hasActiveCase ? documentItems.length || checklistItems.length : 0;
-  const documentProgress = requiredDocuments > 0 ? Math.round((uploadedDocuments / requiredDocuments) * 100) : checklistProgress;
+  const requirements = requirementsQuery.data?.requirements ?? [];
+  const progress = progressQuery.data ?? requirementsQuery.data?.progress ?? null;
+  const checklistItems = requirements.filter((item) => item.status !== "not_applicable").map((item) => ({ label: item.title, done: ["approved", "waived"].includes(item.status) }));
+  const uploadedDocuments = progress?.uploaded ?? 0;
+  const requiredDocuments = progress?.total ?? 0;
+  const documentProgress = Math.round(progress?.completionRatio ?? 0);
   const currentStep = mapCaseStatusToStep(activeCase?.status ?? "draft");
   const taxYear = activeCase?.tax_year ?? new Date().getFullYear();
   const taxSummary = taxSummaryQuery.data ?? {
@@ -153,7 +139,7 @@ export function DashboardOverview() {
 
   const alerts: string[] = [];
   if (taxSummary.box3Assets > 59357) alerts.push(t("alerts.box3Threshold"));
-  if (hasActiveCase && checklistProgress < 100) alerts.push(t("alerts.checklistIncomplete"));
+  if (hasActiveCase && (progress?.blockingRemaining ?? 0) > 0) alerts.push(t("alerts.checklistIncomplete"));
   if (isDeadlineNear(activeCase?.deadline)) alerts.push(t("alerts.deadlineNear"));
 
   const historyItems = cases
@@ -161,21 +147,28 @@ export function DashboardOverview() {
     .sort((left, right) => new Date(right.updated_at).getTime() - new Date(left.updated_at).getTime())
     .slice(0, 5);
   const recentActivity =
-    notificationsQuery.data && notificationsQuery.data.length > 0
-      ? notificationsQuery.data.slice(0, 5).map((item) => ({
+    eventsQuery.data && eventsQuery.data.length > 0
+      ? eventsQuery.data.slice(0, 5).map((item) => ({
           id: item.id,
-          title: item.title,
-          body: item.message,
+          title: t(`docFlow.eventTypes.${item.event_type}.title`),
+          body: t(`docFlow.eventTypes.${item.event_type}.body`),
           createdAt: formatDate(item.created_at, locale, noDateLabel),
         }))
-      : cases.slice(0, 5).map((item) => ({
-          id: item.id,
-          title: t("activity.caseUpdated", {
-            caseLabel: item.display_name ?? getDeclarationTypeLabel(item.case_type, t),
-          }),
-          body: getStatusLabel(item.status, t),
-          createdAt: formatDate(item.updated_at, locale, noDateLabel),
-        }));
+      : notificationsQuery.data && notificationsQuery.data.length > 0
+        ? notificationsQuery.data.slice(0, 5).map((item) => ({
+            id: item.id,
+            title: item.title,
+            body: item.message,
+            createdAt: formatDate(item.created_at, locale, noDateLabel),
+          }))
+        : cases.slice(0, 5).map((item) => ({
+            id: item.id,
+            title: t("activity.caseUpdated", {
+              caseLabel: item.display_name ?? getDeclarationTypeLabel(item.case_type, t),
+            }),
+            body: getStatusLabel(item.status, t),
+            createdAt: formatDate(item.updated_at, locale, noDateLabel),
+          }));
 
   const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
   const showAdvisorPanel =

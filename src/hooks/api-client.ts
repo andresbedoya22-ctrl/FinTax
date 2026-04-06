@@ -83,3 +83,31 @@ export async function apiPatch<T, B>(url: string, body: B): Promise<T> {
 
   return parseEnvelope<T>(response);
 }
+
+export async function apiPut<T, B>(url: string, body: B): Promise<T> {
+  const response = await fetch(url, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  return parseEnvelope<T>(response);
+}
+
+export async function apiDelete<T>(url: string): Promise<T> {
+  const response = await fetch(url, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  return parseEnvelope<T>(response);
+}
