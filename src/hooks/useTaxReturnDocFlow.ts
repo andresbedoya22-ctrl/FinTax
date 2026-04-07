@@ -172,42 +172,42 @@ export function mergeIntakeDraftValues(input: {
   };
 }
 
-export function useCaseIntake(caseId: string) {
+export function useCaseIntake(caseId: string, enabled = true) {
   return useQuery({
     queryKey: ["case-intake", caseId],
-    enabled: Boolean(caseId),
+    enabled: Boolean(caseId) && enabled,
     queryFn: () => apiGet<CaseIntakeSnapshot | null>(`/api/cases/${caseId}/intake`),
   });
 }
 
-export function useCaseRequirements(caseId: string) {
+export function useCaseRequirements(caseId: string, enabled = true) {
   return useQuery({
     queryKey: ["case-requirements", caseId],
-    enabled: Boolean(caseId),
+    enabled: Boolean(caseId) && enabled,
     queryFn: () => apiGet<CaseRequirementsResponse>(`/api/cases/${caseId}/requirements`),
   });
 }
 
-export function useCaseProgress(caseId: string) {
+export function useCaseProgress(caseId: string, enabled = true) {
   return useQuery({
     queryKey: ["case-progress", caseId],
-    enabled: Boolean(caseId),
+    enabled: Boolean(caseId) && enabled,
     queryFn: () => apiGet<RequirementProgressSummary>(`/api/cases/${caseId}/progress`),
   });
 }
 
-export function useCaseDocuments(caseId: string) {
+export function useCaseDocuments(caseId: string, enabled = true) {
   return useQuery({
     queryKey: ["case-documents", caseId],
-    enabled: Boolean(caseId),
+    enabled: Boolean(caseId) && enabled,
     queryFn: () => apiGet<CaseDocument[]>(`/api/cases/${caseId}/documents`),
   });
 }
 
-export function useCaseEvents(caseId: string) {
+export function useCaseEvents(caseId: string, enabled = true) {
   return useQuery({
     queryKey: ["case-events", caseId],
-    enabled: Boolean(caseId),
+    enabled: Boolean(caseId) && enabled,
     queryFn: () => apiGet<CaseEvent[]>(`/api/cases/${caseId}/events`),
   });
 }
@@ -325,10 +325,11 @@ export function useCreateDraftCase() {
   });
 }
 
-export function useLatestActiveTaxCase(explicitCaseId?: string | null) {
+export function useLatestActiveTaxCase(explicitCaseId?: string | null, enabled = true) {
   const [selectedCaseId, setSelectedCaseId] = React.useState<string | null>(explicitCaseId ?? null);
   const casesQuery = useQuery({
     queryKey: ["cases"],
+    enabled,
     queryFn: () => apiGet<Case[]>("/api/cases"),
   });
 

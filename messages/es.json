@@ -377,18 +377,18 @@
     "overview": {
       "apiError": {
         "eyebrow": "API del dashboard",
-        "body": "No se pudo refrescar el resumen de la declaracion.",
+        "body": "No se pudo refrescar el resumen de la declaración.",
         "codePrefix": "Codigo:"
       },
       "header": {
         "breadcrumb": "Dashboard",
-        "declaration": "Declaracion",
+        "declaration": "Declaración",
         "noDate": "Sin fecha disponible",
         "updated": "Actualizado: {value}",
-        "deadline": "Fecha limite: {value}",
-        "primaryAction": "Anadir documento",
+        "deadline": "Fecha límite: {value}",
+        "primaryAction": "Añadir documento",
         "secondaryAction": "Descargar resumen PDF",
-        "secondaryHint": "La exportacion PDF estara disponible cuando el resumen final este generado."
+        "secondaryHint": "La exportación en PDF estará disponible cuando el resumen final esté generado."
       },
       "stepper": {
         "current": "Paso actual",
@@ -410,8 +410,8 @@
           "note": "Activos registrados en el expediente"
         },
         "credits": {
-          "title": "Creditos fiscales",
-          "note": "Creditos confirmados en el resumen actual"
+          "title": "Créditos fiscales",
+          "note": "Créditos confirmados en el resumen actual"
         },
         "netResult": {
           "title": "Resultado neto",
@@ -420,26 +420,26 @@
       },
       "documents": {
         "title": "Progreso documental",
-        "description": "Sigue las cargas y lo que falta para que el expediente pase a revision.",
+        "description": "Sigue las cargas y lo que falta para que el expediente pase a revisión.",
         "progressLabel": "Estado documental",
-        "progressCaption": "Archivos listos para revision",
-        "emptyTitle": "Todavia no hay una declaracion activa",
-        "emptyBody": "Empieza una declaracion para cargar documentos y activar el dashboard operativo.",
-        "cta": "Ver declaracion"
+        "progressCaption": "Archivos listos para revisión",
+        "emptyTitle": "Todavía no hay una declaración activa",
+        "emptyBody": "Empieza una declaración para cargar documentos y activar el dashboard operativo.",
+        "cta": "Ver declaración"
       },
       "history": {
         "title": "Historial fiscal",
-        "description": "Declaraciones recientes y puntos de control ordenados por ultima actividad.",
-        "empty": "Todavia no hay historial de declaraciones.",
-        "taxYear": "Ano fiscal {year}",
+        "description": "Declaraciones recientes y puntos de control ordenados por última actividad.",
+        "empty": "Todavía no hay historial de declaraciones.",
+        "taxYear": "Año fiscal {year}",
         "updated": "Actualizado {value}",
-        "cta": "Ver declaracion",
+        "cta": "Ver declaración",
         "types": {
-          "formP": "Declaracion de renta",
-          "formM": "Declaracion migratoria (M)",
-          "formC": "Declaracion no residente (C)",
-          "zzp": "Declaracion autonomo",
-          "vat": "Declaracion de IVA",
+          "formP": "Declaración de renta",
+          "formM": "Declaración migratoria (M)",
+          "formC": "Declaración no residente (C)",
+          "zzp": "Declaración de autónomo",
+          "vat": "Declaración de IVA",
           "healthcare": "Subsidio sanitario",
           "rent": "Subsidio de alquiler",
           "childBudget": "Ayuda por hijo",
@@ -453,7 +453,7 @@
         "rows": {
           "box1Income": "Ingresos Box 1",
           "box3Assets": "Activos Box 3",
-          "credits": "Creditos fiscales",
+          "credits": "Créditos fiscales",
           "netResult": "Resultado neto"
         },
         "sources": {
@@ -464,7 +464,7 @@
       },
       "alertsPanel": {
         "title": "Alertas y calendario",
-        "description": "Fechas criticas y elementos que aun pueden retrasar la presentacion.",
+        "description": "Fechas críticas y elementos que aún pueden retrasar la presentación.",
         "calendarTitle": "Calendario",
         "alertsTitle": "Alertas prioritarias",
         "empty": "No hay alertas prioritarias ahora mismo."
@@ -472,28 +472,28 @@
       "alerts": {
         "box3Threshold": "Los activos de Box 3 superan 59.357 EUR. Revisa la documentacion patrimonial antes de presentar.",
         "checklistIncomplete": "El checklist documental sigue incompleto. Sube la evidencia pendiente para evitar retrasos.",
-        "deadlineNear": "La fecha limite esta proxima. Completa cuanto antes los pasos de revision."
+        "deadlineNear": "La fecha límite está próxima. Completa cuanto antes los pasos de revisión."
       },
       "activity": {
         "title": "Actividad reciente",
-        "description": "Ultimos eventos y actualizaciones operativas del expediente.",
-        "empty": "Todavia no hay actividad reciente.",
-        "caseUpdated": "{caseLabel} recibio una nueva actualizacion de estado"
+        "description": "Últimos eventos y actualizaciones operativas del expediente.",
+        "empty": "Todavía no hay actividad reciente.",
+        "caseUpdated": "{caseLabel} recibió una nueva actualización de estado"
       },
       "advisor": {
         "title": "Panel del asesor",
         "description": "La capa humana permanece visible cuando realmente ayuda a mover el caso.",
-        "statusTitle": "Asignacion de asesor activa",
-        "body": "Hay un especialista asignado a esta declaracion y podra continuar la revision cuando se resuelvan los bloqueos actuales.",
+        "statusTitle": "Asignación de asesor activa",
+        "body": "Hay un especialista asignado a esta declaración y podrá continuar la revisión cuando se resuelvan los bloqueos actuales.",
         "primaryAction": "Escribir al asesor",
         "secondaryAction": "Solicitar llamada"
       },
       "status": {
         "draft": "Inicio",
         "pendingDocuments": "Documentos pendientes",
-        "inReview": "En revision",
+        "inReview": "En revisión",
         "pendingPayment": "Pago pendiente",
-        "pendingAuthorization": "Autorizacion pendiente",
+        "pendingAuthorization": "Autorización pendiente",
         "authorized": "Autorizado",
         "submitted": "Presentado",
         "completed": "Completado",
@@ -1476,305 +1476,275 @@
   },
   "DocFlow": {
     "hero": {
-      "eyebrow": "Cutover documental",
-      "title": "La documentacion de tax return ya usa el backend real del caso.",
-      "description": "Selecciona el ano fiscal, responde el intake una vez, genera solo los requisitos aplicables, sube evidencia real, corrige rechazos y termina el flujo sin correos manuales.",
+      "eyebrow": "Flujo de tax return",
+      "title": "La declaración fiscal ahora avanza por pasos cortos y guardados.",
+      "description": "El intake sigue siendo backend-driven, pero la experiencia ya es un wizard real: pasos breves, validación clara, guardado persistente y una fase documental enfocada al final.",
       "highlights": [
-        "Real requirements from the backend",
-        "Signed uploads and finalize flow",
-        "Consistent progress across wizard, case and dashboard"
-      ],
-      "progressEyebrow": "Current stage"
+        "Pasos cortos en lugar de una pantalla larguísima",
+        "Guardado real contra el backend del caso",
+        "Requisitos y cargas sólo cuando hacen falta"
+      ]
     },
-    "stages": {
-      "selection": {
-        "title": "Seleccion inicial",
-        "description": "Elige el tipo de declaracion y el ano fiscal antes del intake documental.",
-        "short": "Etapa 1"
-      },
-      "intake": {
-        "title": "Intake documental",
-        "description": "Captura los facts reales que disparan requisitos condicionales.",
-        "short": "Etapa 2"
-      },
-      "requirements": {
-        "title": "Requisitos reales",
-        "description": "Revisa los requisitos del caso agrupados por seccion.",
-        "short": "Etapa 3"
-      },
-      "uploads": {
-        "title": "Centro de subida",
-        "description": "Sube, reemplaza o elimina archivos con el flujo firmado.",
-        "short": "Etapa 4"
-      },
-      "timeline": {
-        "title": "Timeline real",
-        "description": "Lee los eventos reales emitidos por el backend.",
-        "short": "Etapa 5"
-      },
-      "summary": {
-        "title": "Resumen final",
-        "description": "Ve que esta completo, parcial, rechazado o bloqueado.",
-        "short": "Etapa 6"
-      }
+    "wizard": {
+      "currentStepLabel": "Paso actual",
+      "progressLabel": "Progreso del wizard",
+      "persistenceLabel": "Estado del borrador",
+      "saved": "Respuestas guardadas.",
+      "unsaved": "Hay cambios de este paso pendientes de guardar.",
+      "draftReady": "Puedes reabrir este borrador más tarde sin perder las respuestas guardadas.",
+      "draftNotCreated": "El borrador se creará en el primer guardado.",
+      "persistenceHint": "Atrás y Siguiente mantienen sincronizado el snapshot del backend.",
+      "saving": "Guardando paso...",
+      "readyToSave": "Este paso está listo para guardarse.",
+      "savedCopy": "No hay cambios pendientes en este paso.",
+      "saveError": "No se pudo guardar este paso ahora mismo. Inténtalo de nuevo.",
+      "refreshError": "No se pudieron refrescar los requisitos ahora mismo.",
+      "processExplainer": "FinTax guarda este intake en el caso real y sólo genera las solicitudes documentales que aplican a esta declaración."
     },
-    "caseTypes": {
-      "tax_return_p": "P form tax return",
-      "tax_return_m": "M form migration return",
-      "tax_return_c": "C form non-resident return",
-      "tax_return_w": "ZZP tax return"
-    },
-    "status": {
-      "draft": "Draft",
-      "pendingDocuments": "Pending documents",
-      "pending_documents": "Pending documents",
-      "inReview": "In review",
-      "in_review": "In review",
-      "pendingPayment": "Pending payment",
-      "pending_payment": "Pending payment",
-      "pendingAuthorization": "Pending authorization",
-      "pending_authorization": "Pending authorization",
-      "authorized": "Authorized",
-      "submitted": "Submitted",
-      "completed": "Completed",
-      "rejected": "Rejected"
-    },
-    "stepper": {
-      "draft": "Start",
-      "docs": "Documents",
-      "review": "Review",
-      "submitted": "Submitted",
-      "completed": "Completed"
-    },
-    "caseMeta": {
-      "fallbackTitle": "Tax return {year}",
-      "description": "This workspace reads the live case state. Intake, requirements, uploads, help, progress and timeline all come from the case backend.",
-      "progressEyebrow": "Progress",
-      "progressCaption": "{complete} complete of {total}. {blockers} blocking requirements remain."
-    },
-    "selection": {
-      "title": "Choose declaration and year",
-      "description": "Start with the declaration type and fiscal year. The platform will ask only the intake needed to generate the real requirements.",
-      "caseType": "Declaration type",
-      "caseTypeDescription": "Choose the backend route that matches this case.",
-      "taxYear": "Fiscal year",
-      "taxYearDescription": "Tax year must stay editable and cannot be hardcoded.",
-      "explainer": "After this, FinTax saves the intake snapshot in the case and refreshes the requirement engine so the client only sees applicable evidence.",
-      "originCountry": "Origin country"
-    },
-    "intake": {
-      "title": "Document intake",
-      "description": "These answers feed the persisted intake snapshot and regenerate the real requirements when saved.",
-      "identity": {
-        "fullName": "Full name",
-        "bsn": "BSN"
-      },
-      "filing": {
-        "originCountryCode": "Origin country code",
-        "currentCountryOfResidence": "Current country of residence",
-        "firstDeclarationWithFinTax": "First declaration with FinTax"
+    "steps": {
+      "service": {
+        "title": "Servicio y año fiscal",
+        "description": "Elige el tipo de declaración, el año fiscal y los datos base del país antes de guardar el borrador.",
+        "short": "Paso 1"
       },
       "residency": {
-        "registeredInNlFullYear": "Registered in NL for the full year",
-        "firstRegistrationInNlInTaxYear": "First NL registration happened in this tax year",
-        "hadRegistrationInterruption": "Registration was interrupted",
-        "emigratedOrDeregistered": "Emigrated or deregistered during the year",
-        "firstRegistrationDateInNl": "First registration date in NL",
-        "emigrationOrDeregistrationDate": "Emigration or deregistration date"
+        "title": "Registro y residencia",
+        "description": "Captura la línea de registro que determina qué requisitos de residencia aplican.",
+        "short": "Paso 2"
       },
-      "household": {
-        "hasChildrenRegisteredSameAddress": "Children registered at the same address",
-        "childrenCountSameAddress": "Children count at the same address"
+      "family": {
+        "title": "Familia",
+        "description": "Sólo pedimos datos de hijos cuando realmente están registrados en la misma dirección.",
+        "short": "Paso 3"
       },
-      "income": {
-        "employers": "Employers",
-        "employersHelp": "Add one employer per annual statement requirement.",
-        "employerPlaceholder": "Employer name",
-        "noEmployers": "No employers added yet.",
-        "hasUwvIncome": "UWV income",
-        "hasTransitievergoeding": "Transitievergoeding",
-        "hasZzpIncome": "ZZP income",
-        "zzpHoursOver1225": "More than 1225 ZZP hours"
+      "employment": {
+        "title": "Ingresos laborales",
+        "description": "Lista empleadores y confirma UWV o transitievergoeding sólo si corresponde.",
+        "short": "Paso 4"
+      },
+      "selfEmployment": {
+        "title": "Actividad independiente",
+        "description": "Las preguntas de ZZP quedan aisladas para no cargar el flujo general.",
+        "short": "Paso 5"
       },
       "housing": {
-        "hasMortgage": "Mortgage",
-        "hasSvnOrStarterslening": "SVN or starterslening"
+        "title": "Vivienda y préstamos",
+        "description": "Confirma vivienda, hipoteca y préstamos en un solo bloque mental.",
+        "short": "Paso 6"
       },
       "assets": {
-        "hasForeignBankAccounts": "Foreign bank or savings accounts",
-        "hasCrypto": "Crypto holdings"
-      },
-      "debts": {
-        "hasConsumerLoans": "Consumer loans"
+        "title": "Cuentas y patrimonio",
+        "description": "Confirma ahorros, cuentas extranjeras y cripto antes de regenerar los requisitos.",
+        "short": "Paso 7"
       },
       "deductions": {
-        "hasUnreimbursedDeductibleMedicalCosts": "Unreimbursed deductible medical costs"
+        "title": "Deducciones",
+        "description": "Las deducciones médicas van en un paso independiente para mantener el flujo ligero.",
+        "short": "Paso 8"
       },
-      "summary": {
-        "box1Income": "Box 1 income",
-        "box3Assets": "Box 3 assets",
-        "credits": "Credits",
-        "netResult": "Net result"
+      "review": {
+        "title": "Revisión de respuestas",
+        "description": "Revisa y edita las respuestas guardadas antes de regenerar los requisitos reales.",
+        "short": "Paso 9"
+      },
+      "requirements": {
+        "title": "Requisitos y documentos",
+        "description": "Trabaja el checklist real agrupado, la ayuda contextual, las notas y las cargas.",
+        "short": "Paso 10"
+      }
+    },
+    "serviceOptions": {
+      "tax_return_p": "Declaración P de residente para el caso anual estándar.",
+      "tax_return_m": "Declaración M de año migratorio por llegada o salida.",
+      "tax_return_c": "Declaración C de no residente con renta de origen neerlandés.",
+      "tax_return_w": "Declaración de autónomo con requisitos de ZZP."
+    },
+    "fields": {
+      "service": "Servicio",
+      "taxYear": "Año fiscal",
+      "originCountryCode": "País de origen",
+      "currentCountryOfResidence": "País de residencia actual",
+      "fullName": "Nombre completo",
+      "bsn": "BSN",
+      "childrenRegistrationDate": "Fecha de registro",
+      "ownsHome": "¿Tienes vivienda en propiedad en los Países Bajos?",
+      "hasSavingsOrAssets": "¿Tienes ahorros o patrimonio relevante?"
+    },
+    "hints": {
+      "countryCode": "Usa un código de país de 2 letras.",
+      "bsn": "Necesario para crear el borrador de forma segura."
+    },
+    "family": {
+      "emptyHint": "Si no hay hijos en la misma dirección, el flujo omite los datos adicionales."
+    },
+    "selfEmployment": {
+      "emptyHint": "Si no tienes actividad ZZP, esta rama del wizard se mantiene vacía."
+    },
+    "deductions": {
+      "note": "Incluye aquí sólo gastos médicos deducibles no reembolsados. Después se regenerará la lista documental."
+    },
+    "review": {
+      "none": "No añadido",
+      "regenerateHint": "Al continuar, FinTax regenera la lista real de requisitos a partir del intake guardado en backend."
+    },
+    "caseTypes": {
+      "tax_return_p": "Declaración P",
+      "tax_return_m": "Declaración M",
+      "tax_return_c": "Declaración C",
+      "tax_return_w": "Declaración ZZP"
+    },
+    "status": {
+      "draft": "Borrador",
+      "pending_documents": "Documentos pendientes",
+      "in_review": "En revisión",
+      "pending_payment": "Pago pendiente",
+      "pending_authorization": "Autorización pendiente",
+      "authorized": "Autorizado",
+      "submitted": "Presentado",
+      "completed": "Completado",
+      "rejected": "Requiere cambios"
+    },
+    "caseMeta": {
+      "fallbackTitle": "Declaración fiscal {year}"
+    },
+    "intake": {
+      "filing": {
+        "firstDeclarationWithFinTax": "¿Es tu primera declaración con FinTax?"
+      },
+      "residency": {
+        "registeredInNlFullYear": "¿Estuviste registrado en Países Bajos todo el año?",
+        "firstRegistrationInNlInTaxYear": "¿Tu primer registro en NL ocurrió en este año fiscal?",
+        "hadRegistrationInterruption": "¿Tu registro estuvo interrumpido durante el año?",
+        "emigratedOrDeregistered": "¿Emigraste o te diste de baja durante el año?",
+        "firstRegistrationDateInNl": "Fecha del primer registro en Países Bajos",
+        "emigrationOrDeregistrationDate": "Fecha de emigración o baja"
+      },
+      "household": {
+        "hasChildrenRegisteredSameAddress": "¿Tienes hijos registrados en la misma dirección?",
+        "childrenCountSameAddress": "¿Cuántos hijos están registrados en la misma dirección?"
+      },
+      "income": {
+        "employers": "Empleadores",
+        "employersHelp": "Añade un empleador por cada jaaropgave.",
+        "employerPlaceholder": "Nombre del empleador",
+        "noEmployers": "Todavía no has añadido empleadores.",
+        "hasUwvIncome": "¿Recibiste ingresos de UWV?",
+        "hasTransitievergoeding": "¿Recibiste transitievergoeding?",
+        "hasZzpIncome": "¿Tienes ingresos como ZZP?",
+        "zzpHoursOver1225": "¿Trabajaste más de 1.225 horas como ZZP?"
+      },
+      "housing": {
+        "hasMortgage": "¿Tienes hipoteca?",
+        "hasSvnOrStarterslening": "¿Tienes un préstamo SVN o starterslening?"
+      },
+      "assets": {
+        "hasForeignBankAccounts": "¿Tienes cuentas bancarias o de ahorro en el extranjero?",
+        "hasCrypto": "¿Tienes criptoactivos?"
+      },
+      "debts": {
+        "hasConsumerLoans": "¿Tienes préstamos al consumo?"
+      },
+      "deductions": {
+        "hasUnreimbursedDeductibleMedicalCosts": "¿Tienes gastos médicos deducibles no reembolsados?"
       }
     },
     "requirements": {
-      "title": "Backend requirements",
-      "description": "The visible checklist now comes from case_requirements only.",
-      "emptyBeforeSave": "Save the intake first to generate requirements.",
-      "empty": "No requirements are active for this case yet.",
-      "blocking": "Blocking",
-      "customerNote": "Client note",
-      "notAvailableTitle": "Still not available",
-      "howToGet": "How to get it",
-      "helpUnavailable": "Help content is not available yet for this requirement.",
-      "helpFallbackTitle": "Requirement help"
+      "empty": "Todavía no hay requisitos activos para este caso.",
+      "blocking": "Bloqueante",
+      "customerNote": "Nota del cliente",
+      "notAvailableTitle": "Aún no disponible",
+      "howToGet": "Cómo conseguirlo",
+      "helpUnavailable": "La ayuda todavía no está disponible para este requisito.",
+      "helpFallbackTitle": "Ayuda del requisito"
     },
     "uploads": {
-      "title": "Upload center",
-      "description": "Uploads now request a session, push the file to signed storage, finalize the document and refresh the requirement state.",
-      "emptyBeforeSave": "Generate requirements first to enable uploads.",
-      "empty": "No documents uploaded yet.",
-      "centerTitle": "Requirement uploads",
-      "selectFile": "Select file",
-      "noneForRequirement": "No files uploaded for this requirement yet.",
-      "validation": "Accepted: {mimes}. Max size: {max}.",
-      "uploading": "Uploading and finalizing...",
-      "answerOnlyRequirement": "This requirement does not accept file uploads."
-    },
-    "timeline": {
-      "title": "Timeline",
-      "description": "The activity feed is read from case_events.",
-      "emptyBeforeSave": "A live timeline appears after the case exists.",
-      "empty": "No timeline events yet.",
-      "fallbackFile": "uploaded file",
-      "fallbackStatus": "updated",
-      "eventTypes": {
-        "intake_saved": {
-          "title": "Intake saved",
-          "body": "The documentary intake snapshot was saved."
-        },
-        "requirements_regenerated": {
-          "title": "Requirements regenerated",
-          "body": "{count} requirements were refreshed from the backend rules."
-        },
-        "document_upload_session_issued": {
-          "title": "Upload prepared",
-          "body": "A signed upload session was issued for {fileName}."
-        },
-        "document_uploaded": {
-          "title": "Document uploaded",
-          "body": "{fileName} was uploaded and finalized."
-        },
-        "document_deleted": {
-          "title": "Document removed",
-          "body": "{fileName} was removed from the case."
-        },
-        "document_reviewed": {
-          "title": "Document reviewed",
-          "body": "A reviewer marked the document as {status}."
-        },
-        "requirement_marked_not_available": {
-          "title": "Marked as not available",
-          "body": "The client marked the requirement as not yet available."
-        },
-        "requirement_note_added": {
-          "title": "Client note added",
-          "body": "A client note was saved on the requirement."
-        },
-        "requirement_reviewed": {
-          "title": "Requirement reviewed",
-          "body": "The requirement was marked as {status}."
-        },
-        "default": {
-          "title": "Case event",
-          "body": "The case timeline received a new event."
-        }
-      }
+      "centerTitle": "Cargas del requisito",
+      "selectFile": "Seleccionar archivo",
+      "noneForRequirement": "Todavía no hay archivos subidos para este requisito.",
+      "validation": "Permitidos: {mimes}. Tamaño máximo: {max}.",
+      "uploading": "Subiendo y finalizando...",
+      "answerOnlyRequirement": "Este requisito no acepta archivos."
     },
     "summary": {
-      "title": "Operational summary",
-      "description": "Use the real progress data to understand what still blocks completion.",
-      "emptyBeforeSave": "A summary becomes available once the case exists.",
       "metrics": {
-        "complete": "Complete",
-        "partial": "Partial",
-        "blocked": "Blocked",
-        "rejected": "Rejected"
+        "complete": "Completados",
+        "blocked": "Bloqueantes",
+        "rejected": "Rechazados"
       }
     },
     "sidebar": {
-      "progressEyebrow": "Progress",
-      "progressTitle": "Live progress",
-      "progressDescription": "One source of truth for completion and blockers.",
-      "progressCompletion": "Completion",
-      "pendingUploads": "Uploaded waiting review",
-      "pendingReview": "Pending",
-      "rejected": "Rejected",
-      "taxSummaryEyebrow": "Tax summary",
-      "taxSummaryTitle": "Tax summary API",
-      "taxSummaryDescription": "Summary values come from the real tax summary endpoint.",
+      "progressEyebrow": "Progreso",
+      "progressTitle": "Progreso real",
+      "progressDescription": "La completitud y los bloqueos vienen del estado real del caso.",
+      "progressCompletion": "Completitud",
+      "taxSummaryEyebrow": "Resumen fiscal",
+      "taxSummaryTitle": "Resumen fiscal en vivo",
+      "taxSummaryDescription": "Estos valores sólo se cargan en el paso documental.",
       "box1": "Box 1",
       "box3": "Box 3",
-      "credits": "Credits",
-      "net": "Net",
-      "pendingEyebrow": "Real pending work",
-      "pendingTitle": "Pending requirements",
-      "pendingDescription": "Open requirements from the backend.",
-      "pendingEmpty": "No open requirements."
+      "credits": "Créditos",
+      "net": "Resultado neto",
+      "pendingEyebrow": "Trabajo abierto",
+      "pendingTitle": "Requisitos pendientes",
+      "pendingDescription": "Aquí sólo aparecen los requisitos pendientes del backend.",
+      "pendingEmpty": "No hay requisitos pendientes."
     },
     "requirementStatus": {
-      "pending": "Pending",
-      "uploaded": "Uploaded",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "waived": "Waived",
-      "not_applicable": "Not applicable"
+      "pending": "Pendiente",
+      "uploaded": "Subido",
+      "approved": "Aprobado",
+      "rejected": "Rechazado",
+      "waived": "Eximido",
+      "not_applicable": "No aplica"
     },
     "documentStatus": {
-      "uploaded": "Uploaded",
-      "under_review": "Under review",
-      "approved": "Approved",
-      "rejected": "Rejected",
-      "replaced": "Replaced",
-      "archived": "Archived"
-    },
-    "requirementTypes": {
-      "info": "Info",
-      "document": "Document",
-      "boolean": "Boolean",
-      "date": "Date",
-      "list": "List",
-      "confirmation": "Confirmation"
+      "uploaded": "Subido",
+      "under_review": "En revisión",
+      "approved": "Aprobado",
+      "rejected": "Rechazado",
+      "replaced": "Sustituido",
+      "archived": "Archivado"
     },
     "sections": {
-      "identity": "Identity",
-      "residency": "Residency",
-      "household": "Household",
-      "income": "Income",
-      "housing": "Housing",
-      "debts": "Debts",
-      "assets": "Assets",
-      "deductions": "Deductions"
+      "identity": "Identidad",
+      "residency": "Residencia",
+      "household": "Familia",
+      "income": "Ingresos",
+      "housing": "Vivienda",
+      "debts": "Préstamos",
+      "assets": "Patrimonio",
+      "deductions": "Deducciones"
     },
     "actions": {
-      "startIntake": "Continuar al intake",
-      "openCase": "Abrir caso",
-      "generateRequirements": "Guardar intake y generar requisitos",
-      "refreshRequirements": "Refrescar requisitos",
-      "addEmployer": "Anadir empleador",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "reviewToRequirements": "Guardar y abrir requisitos",
+      "refreshRequirements": "Actualizar requisitos",
+      "addEmployer": "Añadir empleador",
       "remove": "Eliminar",
+      "edit": "Editar",
       "saveNote": "Guardar nota",
-      "markNotAvailable": "Marcar no disponible",
-      "delete": "Borrar",
+      "markNotAvailable": "Marcar como no disponible",
+      "delete": "Eliminar",
       "replace": "Reemplazar"
     },
+    "validation": {
+      "fullName": "Introduce el nombre completo del titular antes de guardar el borrador.",
+      "bsn": "Introduce un BSN válido antes de guardar el borrador.",
+      "originCountryCode": "Usa un código de país de 2 letras para el país de origen.",
+      "firstRegistrationDate": "Añade la fecha del primer registro antes de continuar.",
+      "emigrationDate": "Añade la fecha de emigración o baja antes de continuar.",
+      "childrenCount": "Indica cuántos hijos están registrados en la misma dirección.",
+      "employers": "Completa o elimina las filas de empleador vacías antes de continuar."
+    },
     "errors": {
-      "caseLoad": "Could not load the case workspace. Code: {code}.",
-      "saveIntake": "No se pudo guardar el intake ahora mismo. Int?ntalo de nuevo."
+      "caseLoad": "No se pudo cargar el workspace del caso. Código: {code}."
     },
     "common": {
-      "yes": "S?",
-      "no": "No"
+      "yes": "Sí",
+      "no": "No",
+      "yesDescription": "Sí aplica a este caso.",
+      "noDescription": "No aplica a este caso."
     }
   }
 }
