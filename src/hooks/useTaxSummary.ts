@@ -68,10 +68,10 @@ export function deriveFallbackTaxSummary(caseItem: Case | null | undefined): Tax
   };
 }
 
-export function useTaxSummary(caseId: string) {
+export function useTaxSummary(caseId: string, enabled = true) {
   return useQuery({
     queryKey: ["tax-summary", caseId],
-    enabled: Boolean(caseId),
+    enabled: Boolean(caseId) && enabled,
     retry: false,
     queryFn: async (): Promise<TaxSummary> => {
       try {
