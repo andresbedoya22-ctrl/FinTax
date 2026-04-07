@@ -28,9 +28,11 @@ const CASE_STATUSES: CaseStatus[] = [
 export function AdminScreen() {
   const t = useTranslations("Admin");
   const queryClient = useQueryClient();
-  const casesQuery = useAdminCases();
+  const [page, setPage] = React.useState(1);
+  const casesQuery = useAdminCases(page, 25);
   const pricingQuery = useServicePricing();
-  const cases = casesQuery.data ?? [];
+  const cases = casesQuery.data?.items ?? [];
+  const pagination = casesQuery.data;
   const pricingItems = pricingQuery.data ?? [];
   const [notes, setNotes] = React.useState<Record<string, string>>({});
   const [statusOverrides, setStatusOverrides] = React.useState<Record<string, CaseStatus>>({});
@@ -158,6 +160,33 @@ export function AdminScreen() {
               </div>
             ))
           )}
+          {pagination ? (
+            <div className="flex items-center justify-between pt-2 text-xs text-muted">
+              <span>
+                Page {pagination.page} of {Math.max(1, pagination.totalPages)} · {pagination.total} total
+              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  disabled={!pagination.hasPreviousPage}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                >
+                  Previous
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  disabled={!pagination.hasNextPage}
+                  onClick={() => setPage((current) => current + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          ) : null}
         </CardBody>
       </Card>
 

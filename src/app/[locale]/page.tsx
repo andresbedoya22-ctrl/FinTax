@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 import { PremiumLandingPage } from "@/components/fintax/landing";
 import type { AppLocale } from "@/i18n/routing";
 import { getPageMetadataCopy } from "@/lib/page-metadata";
@@ -21,6 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: A
   });
 }
 
-export default function HomePage() {
-  return <PremiumLandingPage />;
+export default async function HomePage() {
+  const cspNonce = (await headers()).get("x-nonce") ?? undefined;
+  return <PremiumLandingPage cspNonce={cspNonce} />;
 }

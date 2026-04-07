@@ -12,13 +12,10 @@ export async function GET(_: Request, context: { params: Promise<{ id: string }>
   const authed = await requireAuthedUser();
   if ("errorResponse" in authed) return authed.errorResponse;
 
-  const admin = await createAdminClient().catch(() => null);
-  if (!admin) return apiError("internal", "admin_client_unavailable");
-
-  const caseRecord = await getOwnedCaseOrNull(admin, parsedParams.data.id, authed.user.id).catch(() => null);
+  const caseRecord = await getOwnedCaseOrNull(authed.supabase, parsedParams.data.id, authed.user.id).catch(() => null);
   if (!caseRecord) return apiError("not_found");
 
-  const snapshot = await getCurrentIntakeSnapshot(admin, caseRecord.id).catch(() => null);
+  const snapshot = await getCurrentIntakeSnapshot(authed.supabase, caseRecord.id).catch(() => null);
   if (!snapshot) return apiSuccess(null);
 
   return apiSuccess(snapshot);

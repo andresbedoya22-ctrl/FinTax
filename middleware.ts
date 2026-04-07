@@ -3,6 +3,11 @@ import createIntlMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { routing } from "@/i18n/routing";
+import {
+  applySecurityHeaders,
+  buildContentSecurityPolicy,
+  createCspNonce,
+} from "@/lib/security/csp";
 
 const handleI18n = createIntlMiddleware(routing);
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
@@ -85,6 +90,32 @@ function withForwardedIp(request: NextRequest): Headers {
   return headers;
 }
 
+function createRequestHeaders(request: NextRequest, nonce?: string) {
+  const headers = withForwardedIp(request);
+
+  if (nonce) {
+    headers.set("x-nonce", nonce);
+  }
+
+  return headers;
+}
+
+function isRedirectResponse(response: NextResponse) {
+  return response.status >= 300 && response.status < 400;
+}
+
+function mergeMiddlewareResponses(base: NextResponse, upstream: NextResponse) {
+  upstream.headers.forEach((value, key) => {
+    base.headers.set(key, value);
+  });
+
+  upstream.cookies.getAll().forEach((cookie) => {
+    base.cookies.set(cookie);
+  });
+
+  return base;
+}
+
 async function handleApiOriginPolicy(request: NextRequest): Promise<NextResponse | null> {
   const pathname = request.nextUrl.pathname;
   if (!pathname.startsWith("/api/")) return null;
@@ -97,14 +128,18 @@ async function handleApiOriginPolicy(request: NextRequest): Promise<NextResponse
   const allowedOrigins = collectAllowedOrigins(request);
 
   if (!requestOrigin || !allowedOrigins.has(requestOrigin)) {
-    return NextResponse.json({ error: "forbidden_origin" }, { status: 403 });
+    const response = NextResponse.json({ error: "forbidden_origin" }, { status: 403 });
+    applySecurityHeaders(response.headers);
+    return response;
   }
 
-  return NextResponse.next({
+  const response = NextResponse.next({
     request: {
       headers: withForwardedIp(request),
     },
   });
+  applySecurityHeaders(response.headers);
+  return response;
 }
 
 async function hasAdminRole(supabase: ReturnType<typeof createServerClient>, userId: string) {
@@ -138,13 +173,22 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   if (pathname.startsWith("/api/")) {
-    return NextResponse.next({
+    const response = NextResponse.next({
       request: {
         headers: withForwardedIp(request),
       },
     });
+    applySecurityHeaders(response.headers);
+    return response;
   }
 
+  const nonce = createCspNonce();
+  const csp = buildContentSecurityPolicy({
+    appUrl: process.env.NEXT_PUBLIC_APP_URL,
+    nonce,
+    isDev: process.env.NODE_ENV !== "production",
+  });
+  const requestHeaders = createRequestHeaders(request, nonce);
   const intlResponse = handleI18n(request);
 
   const supabase = createServerClient(
@@ -174,12 +218,16 @@ export async function middleware(request: NextRequest) {
   const locale = getLocaleForPath(pathname);
 
   if (isProtectedUserRoute(pathname) && !user) {
-    return NextResponse.redirect(new URL(`/${locale}/auth`, request.url));
+    const response = NextResponse.redirect(new URL(`/${locale}/auth`, request.url));
+    applySecurityHeaders(response.headers, { csp, nonce });
+    return response;
   }
 
   if (pathname.includes("/admin")) {
     if (!user) {
-      return NextResponse.redirect(new URL(`/${locale}/auth`, request.url));
+      const response = NextResponse.redirect(new URL(`/${locale}/auth`, request.url));
+      applySecurityHeaders(response.headers, { csp, nonce });
+      return response;
     }
 
     const [isAdmin, assuranceLevel] = await Promise.all([
@@ -188,23 +236,44 @@ export async function middleware(request: NextRequest) {
     ]);
 
     if (!isAdmin) {
-      return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+      const response = NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+      applySecurityHeaders(response.headers, { csp, nonce });
+      return response;
     }
 
     if (assuranceLevel !== "aal2") {
       const authUrl = new URL(`/${locale}/auth`, request.url);
       authUrl.searchParams.set("next", `/${locale}/admin`);
       authUrl.searchParams.set("reason", "mfa_required");
-      return NextResponse.redirect(authUrl);
+      const response = NextResponse.redirect(authUrl);
+      applySecurityHeaders(response.headers, { csp, nonce });
+      return response;
     }
   }
 
   const isAuthRoute = pathname.includes("/auth") && !pathname.includes("/auth/callback");
   if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+    const response = NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+    applySecurityHeaders(response.headers, { csp, nonce });
+    return response;
   }
 
-  return intlResponse;
+  if (isRedirectResponse(intlResponse)) {
+    applySecurityHeaders(intlResponse.headers, { csp, nonce });
+    return intlResponse;
+  }
+
+  const response = mergeMiddlewareResponses(
+    NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    }),
+    intlResponse
+  );
+
+  applySecurityHeaders(response.headers, { csp, nonce });
+  return response;
 }
 
 export const config = {

@@ -539,7 +539,7 @@ function LandingFooter({ content }: { content: LandingContent }) {
   );
 }
 
-export function PremiumLandingPage() {
+export function PremiumLandingPage({ cspNonce }: { cspNonce?: string } = {}) {
   const locale = useLocale() as AppLocale;
   const content = getLandingContent(locale);
   const [scrolled, setScrolled] = React.useState(false);
@@ -553,7 +553,7 @@ export function PremiumLandingPage() {
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#f7fbf8_0%,#fbf8f3_22%,#ffffff_52%,#fbfcfa_100%)] text-text">
-      <StructuredData locale={locale} faq={content.faq.items} />
+      <StructuredData locale={locale} faq={content.faq.items} nonce={cspNonce} />
 
       <header
         className={cn(

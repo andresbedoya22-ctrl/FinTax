@@ -8,6 +8,8 @@ type KeyRing = {
   keys: Map<string, Buffer>;
 };
 
+let cachedKeyRing: KeyRing | null = null;
+
 function decodeKey(raw: string) {
   const normalized = raw.trim();
   if (/^[0-9a-fA-F]{64}$/.test(normalized)) {
@@ -54,8 +56,16 @@ function parseKeyRing(): KeyRing {
   return { activeKeyId, keys: ring };
 }
 
+function getKeyRing() {
+  if (!cachedKeyRing) {
+    cachedKeyRing = parseKeyRing();
+  }
+
+  return cachedKeyRing;
+}
+
 function getKeyBuffer(keyId: string) {
-  const { keys } = parseKeyRing();
+  const { keys } = getKeyRing();
   const key = keys.get(keyId);
   if (!key) {
     throw new Error(`Missing BSN key for key_id=${keyId}`);
@@ -69,7 +79,7 @@ export type EncryptedBsn = {
 };
 
 export function encryptBsn(value: string): EncryptedBsn {
-  const { activeKeyId } = parseKeyRing();
+  const { activeKeyId } = getKeyRing();
   const key = getKeyBuffer(activeKeyId);
   const iv = randomBytes(IV_LENGTH);
   const cipher = createCipheriv(ALGO, key, iv);

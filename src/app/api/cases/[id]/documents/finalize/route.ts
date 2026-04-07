@@ -38,7 +38,11 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       message === "upload_session_invalid_state" ||
       message === "upload_session_expired" ||
       message === "uploaded_object_not_found" ||
-      message === "requirement_not_uploadable"
+      message === "requirement_not_uploadable" ||
+      message === "uploaded_object_type_mismatch" ||
+      message === "uploaded_object_size_mismatch" ||
+      message === "uploaded_object_checksum_mismatch" ||
+      message === "file_too_large"
     ) {
       return apiError("conflict", message);
     }
