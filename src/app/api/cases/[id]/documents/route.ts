@@ -1,4 +1,3 @@
-import { createAdminClient } from "@/lib/supabase/server";
 import { requireAuthedUser } from "@/lib/api/auth";
 import { parseIdParam } from "@/lib/api/contracts";
 import { apiError, apiSuccess } from "@/lib/api/response";
@@ -11,14 +10,11 @@ export async function GET(_: Request, context: { params: Promise<{ id: string }>
   const authed = await requireAuthedUser();
   if ("errorResponse" in authed) return authed.errorResponse;
 
-  const admin = await createAdminClient().catch(() => null);
-  if (!admin) return apiError("internal", "admin_client_unavailable");
-
-  const caseRecord = await getOwnedCaseOrNull(admin, parsedParams.data.id, authed.user.id).catch(() => null);
+  const caseRecord = await getOwnedCaseOrNull(authed.supabase, parsedParams.data.id, authed.user.id).catch(() => null);
   if (!caseRecord) return apiError("not_found");
 
   try {
-    return apiSuccess(await listCaseDocuments(admin, caseRecord.id));
+    return apiSuccess(await listCaseDocuments(authed.supabase, caseRecord.id));
   } catch {
     return apiError("internal", "case_documents_fetch_failed");
   }

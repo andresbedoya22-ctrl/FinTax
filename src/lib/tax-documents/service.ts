@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type {
   Case,
@@ -8,7 +9,6 @@ import type {
   Document,
   RequirementStatus,
 } from "@/types/database";
-import { createAdminClient } from "@/lib/supabase/server";
 import {
   TAX_RETURN_DOCUMENT_FLOW_RULESET_VERSION,
   type DerivedFacts,
@@ -23,8 +23,12 @@ import {
   generateRequirementDrafts,
 } from "@/lib/tax-documents/rules";
 import { getRequirementHelpContent } from "@/lib/tax-documents/help-content";
+import {
+  inspectUploadedObject,
+  verifyUploadedObjectAgainstRequirement,
+} from "@/lib/tax-documents/upload-verification";
 
-type SupabaseLike = Awaited<ReturnType<typeof createAdminClient>>;
+type SupabaseLike = SupabaseClient;
 
 const CASE_DOCUMENT_BUCKET = "case-documents";
 
@@ -638,10 +642,30 @@ export async function finalizeUpload(params: {
   );
   if (requirement.status === "not_applicable") throw new Error("requirement_not_uploadable");
 
+  const objectInfoResponse = await params.supabase.storage
+    .from(session.storage_bucket)
+    .info(session.storage_path);
+  if (objectInfoResponse.error || !objectInfoResponse.data) {
+    throw new Error("uploaded_object_not_found");
+  }
+
   const downloadAttempt = await params.supabase.storage
     .from(session.storage_bucket)
     .download(session.storage_path);
   if (downloadAttempt.error) throw new Error("uploaded_object_not_found");
+
+  const uploadedObject = await inspectUploadedObject({
+    file: downloadAttempt.data,
+    fileName: session.intended_filename,
+    storageContentType: objectInfoResponse.data.contentType ?? null,
+  });
+  verifyUploadedObjectAgainstRequirement({
+    upload: uploadedObject,
+    requirement,
+    sessionMimeType: session.mime_type,
+    sessionFileSizeBytes: session.file_size_bytes,
+    expectedChecksumSha256: params.checksumSha256,
+  });
 
   const { data: document, error: documentError } = await params.supabase
     .from("documents")
@@ -652,15 +676,24 @@ export async function finalizeUpload(params: {
       upload_session_id: session.id,
       file_name: session.intended_filename,
       file_path: session.storage_path,
-      file_size: session.file_size_bytes,
-      mime_type: session.mime_type,
+      file_size: uploadedObject.byteLength,
+      mime_type:
+        uploadedObject.inferredContentType ??
+        uploadedObject.storageContentType ??
+        session.mime_type,
       storage_provider: "supabase_storage",
       storage_bucket: session.storage_bucket,
       storage_object_key: session.storage_path,
-      sha256_checksum: params.checksumSha256 ?? null,
+      sha256_checksum: uploadedObject.checksumSha256,
       upload_state: "finalized",
       status: "uploaded",
-      metadata: {},
+      metadata: {
+        uploadVerification: {
+          storageContentType: uploadedObject.storageContentType,
+          inferredContentType: uploadedObject.inferredContentType,
+          verifiedAt: new Date().toISOString(),
+        },
+      },
     })
     .select("*")
     .single();

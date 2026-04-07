@@ -4,9 +4,10 @@ import { buildAbsoluteUrl } from "@/lib/seo";
 type StructuredDataProps = {
   locale: AppLocale;
   faq: { question: string; answer: string }[];
+  nonce?: string;
 };
 
-export function StructuredData({ locale, faq }: StructuredDataProps) {
+export function StructuredData({ locale, faq, nonce }: StructuredDataProps) {
   const url = buildAbsoluteUrl(`/${locale}`);
 
   const website = {
@@ -46,9 +47,9 @@ export function StructuredData({ locale, faq }: StructuredDataProps) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }} />
+      <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }} />
+      <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }} />
+      <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }} />
     </>
   );
 }

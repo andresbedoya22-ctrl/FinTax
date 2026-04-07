@@ -1,7 +1,6 @@
 import { parseIdParam } from "@/lib/api/contracts";
 import { requireAuthedUser } from "@/lib/api/auth";
 import { apiError, apiSuccess } from "@/lib/api/response";
-import { createAdminClient } from "@/lib/supabase/server";
 import { listCaseRequirements } from "@/lib/tax-documents/service";
 
 // Legacy compatibility endpoint. Main tax-return surfaces must read `requirements`/`progress` directly.
@@ -23,29 +22,26 @@ export async function GET(_: Request, context: { params: Promise<{ id: string }>
   if (caseError) return apiError("internal");
   if (!caseMatch) return apiError("not_found");
 
-  const admin = await createAdminClient().catch(() => null);
-  if (admin) {
-    const requirements = await listCaseRequirements(admin, parsedParams.data.id).catch(() => []);
-    if (requirements.length > 0) {
-      const mapped = requirements
-        .filter((item) => item.status !== "not_applicable")
-        .map((item) => ({
-          id: item.id,
-          case_id: item.case_id,
-          label: item.title,
-          label_key: item.requirement_code,
-          description: item.description,
-          is_document_upload: item.is_document_required,
-          is_completed: item.status === "approved" || item.status === "waived",
-          completed_at: item.first_completed_at,
-          completed_by: item.reviewed_by,
-          document_id: null,
-          sort_order: item.sort_order,
-          created_at: item.created_at,
-        }));
+  const requirements = await listCaseRequirements(authed.supabase, parsedParams.data.id).catch(() => []);
+  if (requirements.length > 0) {
+    const mapped = requirements
+      .filter((item) => item.status !== "not_applicable")
+      .map((item) => ({
+        id: item.id,
+        case_id: item.case_id,
+        label: item.title,
+        label_key: item.requirement_code,
+        description: item.description,
+        is_document_upload: item.is_document_required,
+        is_completed: item.status === "approved" || item.status === "waived",
+        completed_at: item.first_completed_at,
+        completed_by: item.reviewed_by,
+        document_id: null,
+        sort_order: item.sort_order,
+        created_at: item.created_at,
+      }));
 
-      return apiSuccess(mapped);
-    }
+    return apiSuccess(mapped);
   }
 
   const { data, error } = await authed.supabase

@@ -29,17 +29,29 @@ const ADMIN_CASE_SELECT = `
   profiles!cases_user_id_fkey(full_name,email,preferred_language)
 `;
 
-export async function GET() {
+function parsePositiveInt(value: string | null, fallback: number) {
+  const parsed = Number.parseInt(value ?? "", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+export async function GET(request: Request) {
   const admin = await requireAdminUser();
   if ("errorResponse" in admin) return admin.errorResponse;
 
   const service = await createAdminClient().catch(() => null);
   if (!service) return apiError("internal", "admin_client_unavailable");
 
-  const { data, error } = await service
+  const url = new URL(request.url);
+  const page = parsePositiveInt(url.searchParams.get("page"), 1);
+  const limit = Math.min(parsePositiveInt(url.searchParams.get("limit"), 25), 100);
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, error, count } = await service
     .from("cases")
-    .select(ADMIN_CASE_SELECT)
-    .order("created_at", { ascending: false });
+    .select(ADMIN_CASE_SELECT, { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) return apiError("internal", "admin_cases_fetch_failed");
 
@@ -57,5 +69,16 @@ export async function GET() {
     };
   });
 
-  return apiSuccess(cases);
+  const total = count ?? 0;
+  const totalPages = total === 0 ? 0 : Math.ceil(total / limit);
+
+  return apiSuccess({
+    items: cases,
+    page,
+    limit,
+    total,
+    totalPages,
+    hasNextPage: page < totalPages,
+    hasPreviousPage: page > 1,
+  });
 }

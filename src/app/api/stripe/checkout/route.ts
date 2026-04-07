@@ -23,11 +23,18 @@ export async function POST(request: Request) {
   }
 
   const ipAddress = request.headers.get("x-client-ip") ?? "unknown";
-  const rateLimit = consumeRateLimit({
-    key: `stripe_checkout:${authed.user.id}:${ipAddress}`,
-    limit: 5,
-    windowMs: 10 * 60 * 1000,
-  });
+  let rateLimit;
+  try {
+    rateLimit = await consumeRateLimit({
+      key: `stripe_checkout:${authed.user.id}:${ipAddress}`,
+      limit: 5,
+      windowMs: 10 * 60 * 1000,
+      prefix: "fintax:stripe-checkout",
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "rate_limit_failed";
+    return apiError("internal", message);
+  }
 
   if (!rateLimit.allowed) {
     return apiError("conflict", "rate_limit_exceeded", { retryAfterSeconds: rateLimit.retryAfterSeconds });

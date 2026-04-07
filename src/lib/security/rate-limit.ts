@@ -1,41 +1,85 @@
-type RateLimitEntry = {
-  count: number;
-  resetAt: number;
-};
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 type RateLimitOptions = {
   key: string;
   limit: number;
   windowMs: number;
+  prefix?: string;
 };
 
 type RateLimitResult = {
   allowed: boolean;
   remaining: number;
   retryAfterSeconds: number;
+  backend: "upstash" | "memory";
 };
 
-const rateLimitStore = new Map<string, RateLimitEntry>();
+type MemoryRateLimitEntry = {
+  count: number;
+  resetAt: number;
+};
+
+const memoryStore = new Map<string, MemoryRateLimitEntry>();
+const limiterCache = new Map<string, Ratelimit>();
 
 function now() {
   return Date.now();
 }
 
-function cleanupExpiredEntries(currentTime: number) {
-  for (const [key, entry] of rateLimitStore.entries()) {
+function buildLimiterId(options: RateLimitOptions) {
+  return `${options.prefix ?? "default"}:${options.limit}:${options.windowMs}`;
+}
+
+function getRedisClient() {
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+
+  if (url && token) {
+    return new Redis({ url, token });
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("rate_limit_backend_unconfigured");
+  }
+
+  return null;
+}
+
+function getLimiter(options: RateLimitOptions) {
+  const cacheKey = buildLimiterId(options);
+  const existing = limiterCache.get(cacheKey);
+  if (existing) return existing;
+
+  const redis = getRedisClient();
+  if (!redis) return null;
+
+  const limiter = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(options.limit, `${Math.ceil(options.windowMs / 1000)} s`),
+    prefix: options.prefix ?? "fintax:rate-limit",
+    analytics: true,
+  });
+
+  limiterCache.set(cacheKey, limiter);
+  return limiter;
+}
+
+function cleanupMemoryEntries(currentTime: number) {
+  for (const [key, entry] of memoryStore.entries()) {
     if (entry.resetAt <= currentTime) {
-      rateLimitStore.delete(key);
+      memoryStore.delete(key);
     }
   }
 }
 
-export function consumeRateLimit(options: RateLimitOptions): RateLimitResult {
+function consumeMemoryRateLimit(options: RateLimitOptions): RateLimitResult {
   const currentTime = now();
-  cleanupExpiredEntries(currentTime);
+  cleanupMemoryEntries(currentTime);
 
-  const existing = rateLimitStore.get(options.key);
+  const existing = memoryStore.get(options.key);
   if (!existing || existing.resetAt <= currentTime) {
-    rateLimitStore.set(options.key, {
+    memoryStore.set(options.key, {
       count: 1,
       resetAt: currentTime + options.windowMs,
     });
@@ -44,16 +88,33 @@ export function consumeRateLimit(options: RateLimitOptions): RateLimitResult {
       allowed: true,
       remaining: Math.max(0, options.limit - 1),
       retryAfterSeconds: Math.ceil(options.windowMs / 1000),
+      backend: "memory",
     };
   }
 
   existing.count += 1;
-  rateLimitStore.set(options.key, existing);
+  memoryStore.set(options.key, existing);
 
-  const remaining = Math.max(0, options.limit - existing.count);
   return {
     allowed: existing.count <= options.limit,
-    remaining,
+    remaining: Math.max(0, options.limit - existing.count),
     retryAfterSeconds: Math.max(1, Math.ceil((existing.resetAt - currentTime) / 1000)),
+    backend: "memory",
+  };
+}
+
+export async function consumeRateLimit(options: RateLimitOptions): Promise<RateLimitResult> {
+  const limiter = getLimiter(options);
+  if (!limiter) {
+    return consumeMemoryRateLimit(options);
+  }
+
+  const result = await limiter.limit(options.key);
+
+  return {
+    allowed: result.success,
+    remaining: result.remaining,
+    retryAfterSeconds: Math.max(1, Math.ceil((result.reset - now()) / 1000)),
+    backend: "upstash",
   };
 }

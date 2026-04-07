@@ -1,4 +1,3 @@
-import { createAdminClient } from "@/lib/supabase/server";
 import { requireAuthedUser } from "@/lib/api/auth";
 import { parseIdParam } from "@/lib/api/contracts";
 import { apiError, apiSuccess } from "@/lib/api/response";
@@ -16,16 +15,13 @@ export async function GET(_: Request, context: { params: Promise<{ id: string }>
   const authed = await requireAuthedUser();
   if ("errorResponse" in authed) return authed.errorResponse;
 
-  const admin = await createAdminClient().catch(() => null);
-  if (!admin) return apiError("internal", "admin_client_unavailable");
-
-  const caseRecord = await getOwnedCaseOrNull(admin, parsedParams.data.id, authed.user.id).catch(() => null);
+  const caseRecord = await getOwnedCaseOrNull(authed.supabase, parsedParams.data.id, authed.user.id).catch(() => null);
   if (!caseRecord) return apiError("not_found");
 
   try {
     const [requirements, snapshot] = await Promise.all([
-      listCaseRequirements(admin, caseRecord.id),
-      getCurrentIntakeSnapshot(admin, caseRecord.id),
+      listCaseRequirements(authed.supabase, caseRecord.id),
+      getCurrentIntakeSnapshot(authed.supabase, caseRecord.id),
     ]);
 
     const grouped = requirements.reduce<Record<string, typeof requirements>>((accumulator, requirement) => {

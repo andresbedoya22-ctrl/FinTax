@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -12,11 +13,13 @@ export const metadata: Metadata = {
   description: "Structured tax and benefits support for international households in the Netherlands.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await connection();
+
   return (
     <html lang="en">
       <body className="bg-bg text-text antialiased">

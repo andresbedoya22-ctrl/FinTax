@@ -1,9 +1,28 @@
+const BASE_SECURITY_HEADERS = [
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  { key: "X-DNS-Prefetch-Control", value: "off" },
+] as const;
+
 function compactSourceList(values: Array<string | null | undefined>) {
   return Array.from(new Set(values.map((value) => value?.trim()).filter(Boolean)));
 }
 
-export function buildContentSecurityPolicy(appUrl?: string) {
-  const appOrigin = appUrl?.trim() || null;
+export function createCspNonce() {
+  return btoa(crypto.randomUUID());
+}
+
+export function buildContentSecurityPolicy(input: {
+  appUrl?: string;
+  nonce: string;
+  isDev?: boolean;
+}) {
+  const appOrigin = input.appUrl?.trim() || null;
   const connectSrc = compactSourceList([
     "'self'",
     appOrigin,
@@ -22,13 +41,20 @@ export function buildContentSecurityPolicy(appUrl?: string) {
     "https://q.stripe.com",
   ]);
 
+  const scriptSrc = compactSourceList([
+    "'self'",
+    `'nonce-${input.nonce}'`,
+    "https://js.stripe.com",
+    input.isDev ? "'unsafe-eval'" : null,
+  ]);
+
   const directives = [
     "default-src 'self'",
     "base-uri 'self'",
     "form-action 'self' https://checkout.stripe.com",
     "frame-ancestors 'none'",
     "object-src 'none'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
+    `script-src ${scriptSrc.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
     `img-src ${imgSrc.join(" ")}`,
     "font-src 'self' data:",
@@ -41,4 +67,18 @@ export function buildContentSecurityPolicy(appUrl?: string) {
   ];
 
   return directives.join("; ");
+}
+
+export function applySecurityHeaders(headers: Headers, input?: { csp?: string; nonce?: string }) {
+  for (const header of BASE_SECURITY_HEADERS) {
+    headers.set(header.key, header.value);
+  }
+
+  if (input?.csp) {
+    headers.set("Content-Security-Policy", input.csp);
+  }
+
+  if (input?.nonce) {
+    headers.set("x-nonce", input.nonce);
+  }
 }
