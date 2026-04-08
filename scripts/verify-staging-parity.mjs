@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import fs from "node:fs";
+import path from "node:path";
 
 function fail(message) {
   throw new Error(message);
@@ -97,6 +99,8 @@ async function verifyMigrationsIfConfigured() {
 }
 
 async function main() {
+  loadLocalEnv();
+
   const stagingUrl = process.env.STAGING_URL;
   const stagingSupabaseUrl = process.env.STAGING_SUPABASE_URL;
   const stagingAnonKey = process.env.STAGING_SUPABASE_ANON_KEY;
@@ -119,3 +123,36 @@ main().catch((error) => {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
 });
+
+function loadLocalEnv(cwd = process.cwd()) {
+  for (const fileName of [".env.local", ".env"]) {
+    const filePath = path.join(cwd, fileName);
+    if (!fs.existsSync(filePath)) continue;
+
+    const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+
+      const separatorIndex = trimmed.indexOf("=");
+      if (separatorIndex <= 0) continue;
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      if (!key || process.env[key] !== undefined) continue;
+
+      const rawValue = trimmed.slice(separatorIndex + 1).trim();
+      process.env[key] = stripQuotes(rawValue);
+    }
+  }
+}
+
+function stripQuotes(value) {
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1);
+  }
+
+  return value;
+}
