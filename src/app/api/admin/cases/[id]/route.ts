@@ -48,7 +48,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
 
   const { data: existingCase, error: lookupError } = await service
     .from("cases")
-    .select("id,user_id,status,display_name,assigned_admin,notes_internal")
+    .select("id,user_id,status,display_name,assigned_admin,notes_internal,paid_at")
     .eq("id", parsedParams.data.id)
     .maybeSingle();
 
@@ -66,7 +66,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
 
   if (nextStatus) {
     updates.status = nextStatus;
-    if (nextStatus === "paid" && !("paid_at" in existingCase)) {
+    if (nextStatus === "paid" && !existingCase.paid_at) {
       updates.paid_at = new Date().toISOString();
     }
   }

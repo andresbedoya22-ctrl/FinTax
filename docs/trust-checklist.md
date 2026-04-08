@@ -3,7 +3,7 @@
 ## Scope
 
 - Public: landing pages, pricing summaries, legal placeholders (`/[locale]/legal/privacy`, `/[locale]/legal/terms`)
-- Authenticated: profiles, cases, checklist items, documents, notifications, payments
+- Authenticated: profiles, cases, case requirements, documents, notifications, payments, DSAR requests
 - Admin only: `admin_activity_log` and admin case operations
 
 ## Privacy
@@ -33,6 +33,7 @@
 - Checkout route requires an authenticated user, validates case ownership, and resolves pricing server-side
 - Checkout route applies in-process rate limiting before creating Stripe sessions
 - Payment inserts are idempotent via `stripe_checkout_session_id` unique index and duplicate checks
+- `stripe_events` stores webhook idempotency locks and processing status
 - Case status transitions to `paid` on successful checkout completion
 
 ## Audit / Operations

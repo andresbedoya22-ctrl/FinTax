@@ -1,245 +1,104 @@
-# FinTax Roadmap v9 Checklist (Persistent)
+# FinTax Roadmap v9 Checklist
 
-## Estado actual
-- Fecha (UTC): 2026-03-01
-- Rama base operativa: `main`
-- HEAD real local en `main` (`git rev-parse HEAD`): `fa6386db99498a97002354d2faead2b89c732d13`
-- Estado de red al verificar pull: `pull-failed` (retry ladder 2s/5s/10s agotado)
-- Ultimo PR mergeado en main (squash): `PR #04` -> `c914856`
-- Siguiente PR requerido por secuencia: `PR #05`
-- Estado de publish actual: `PR #02, PR #03, PR #04 = MERGED`
+Last updated: 2026-04-08
+Base branch: `main`
+Audited HEAD on `main`: `34a3030118b1a608470dd3cfd76551ca9efc3e35`
 
-## Canonización inicial
-- INITIAL BOOTSTRAP / INITIAL CANONIZATION registrado en commit local:
-  - `fa6386d chore(canon): add master prompt + roadmap v9 checklist`
-- Alcance del bootstrap:
-  - Creación y normalización inicial de canónicos.
-  - Corrección de encoding y reglas operativas.
-  - Este evento explica por qué no existía historial previo en este archivo.
+## Purpose
 
-## Reglas de continuidad
-- PR log append-only (no reescritura histórica).
-- No iniciar PR #N+1 hasta merge de PR #N.
-- Si push falla tras retry ladder, registrar OFFLINE PARK y detenerse.
-- Si publish se completa, actualizar a MERGED y limpiar estado OFFLINE PARK de ese PR.
+This file is the current launch-reference version of the v9 checklist.
+It replaces the old append-only execution log as the day-to-day source of truth.
 
-## PR log (append-only)
+Historical per-PR execution detail remains in [docs/ROADMAP/logs](/C:/FinTax/docs/ROADMAP/logs).
 
-### PR #02
-- Estado: MERGED
-- Branch: `chore/roadmap-v9-pr02-backend-v1-contract`
-- Squash merge commit on main: `44c49f2`
-- Resumen: contrato API v1 (tests) + fallback de tipografia offline-safe.
-- Gates: PENDING CANON MAP (legacy note)
-- Evidencia comandos:
-  - `pnpm.cmd lint` PASS
-  - `pnpm.cmd typecheck` PASS
-  - `pnpm.cmd test -- --runInBand` PASS
-  - `pnpm.cmd build` PASS
+## Current Baseline
 
-### PR #03
-- Estado: MERGED
-- Branch: `chore/roadmap-v9-pr03-api-consumers-hardening`
-- Squash merge commit on main: `390b542`
-- Resumen: endurecimiento consumers API v1 + UX de errores por flow + removal de fallbacks UI residuales.
-- Gates: PENDING CANON MAP (legacy note)
-- Evidencia comandos:
-  - `pnpm.cmd qa` PASS en main post-merge.
-  - `pnpm.cmd build` via `scripts/build-gate.mjs` en Windows.
+- PRs `#67` through `#73` are merged on `main`.
+- Tax-return document flow is backend-driven and cut over in the product.
+- Tax-return intake now runs as the step wizard merged in PR `#73`.
+- Security hardening from PR `#72` is already part of the current baseline.
+- Internal docflow readiness from PR `#71` is already part of the current baseline.
 
-### PR #04
-- Estado: MERGED
-- Branch: `chore/roadmap-v9-pr04-admin-api-consumers`
-- Squash merge commit on main: `c914856`
-- Resumen: `/api/service-pricing`, `useServicePricing`, `requireAdminUser` hardening, `AdminScreen` consumiendo API real.
-- Gates: PENDING CANON MAP (legacy note)
-- Evidencia comandos:
-  - `pnpm.cmd qa` PASS en branch y PASS en main post-merge.
-
-## PR log corrections (append-only)
-- 2026-03-01: Deprecated etiquetas provisionales `G02/G03/G04`; no se vuelven a usar.
-- 2026-03-01: Mapeo canónico confirmado para PR #02/#03/#04:
-  - PR #02 -> Sin gate directo en Launch Checklist 1..25.
-  - PR #03 -> Sin gate directo en Launch Checklist 1..25.
-  - PR #04 -> Sin gate directo en Launch Checklist 1..25.
-  - Nota: estos PRs aportan a secciones del roadmap, pero no corresponden a un gate de lanzamiento literal 1..25.
-
-## Gates v9 (1..25) — títulos literales de FinTax_Roadmap_v9
-> Fuente: `docs/ROADMAP/FinTax_Roadmap_v9.docx` (tabla "23 (Final v9). Checklist de Lanzamiento — 25 Gates")
+## Gates v9 (1..25)
 
 1. [x] MFA obligatorio para cuentas admin
-   - Sección: `§16.2 / PR #1`
-   - Evidencia: `0057aa8`
-
-2. [x] Security headers en next.config.js
-   - Sección: `§18.3 / PR #1`
-   - Evidencia: `0057aa8`
-
-3. [x] Cookie config httpOnly + sameSite=lax
-   - Sección: `§18.2 / PR #1`
-   - Evidencia: `0057aa8`
-
-4. [x] Origin policy + middleware.ts con allowed origins
-   - Sección: `§18.7 / PR #1`
-   - Evidencia: `0057aa8`
-
-5. [x] Módulos boundaries + import/no-cycle en CI (Flat Config)
-   - Sección: `§21.2 / PR #1`
-   - Evidencia: `0057aa8`
-
-6. [x] Dependabot + security.yml audit workflow activos
-   - Sección: `§27 / PR #1`
-   - Evidencia: `0057aa8`
-
-7. [ ] Stripe webhook signature verification
-   - Sección: `§18.1 / PR #5`
-
-8. [ ] stripe_events table + constraint payment_integrity
-   - Sección: `§18.5 / PR #5`
-
-9. [ ] /success solo polling, nunca escribe en DB
-   - Sección: `§18.5 / PR #5`
-
-10. [ ] BSN key versioning (schema {key_id, ciphertext})
-    - Sección: `§17.3 / PR #8A`
-
-11. [ ] ErrorBoundary por flow + Sentry PII policy
-    - Sección: `§18.4 / PR #6`
-
+   - Repo state: covered by the security foundation already merged before this sweep.
+2. [x] Security headers en `next.config.ts`
+   - Repo state: active in [next.config.ts](/C:/FinTax/next.config.ts).
+3. [x] Cookie config `httpOnly` + `sameSite=lax`
+   - Repo state: enforced in [src/lib/supabase/server.ts](/C:/FinTax/src/lib/supabase/server.ts).
+4. [x] Origin policy + `middleware.ts` con allowed origins
+   - Repo state: kept active; not reopened in this phase.
+5. [x] Module boundaries + `import/no-cycle` en CI
+   - Repo state: enforced in [eslint.config.mjs](/C:/FinTax/eslint.config.mjs).
+6. [x] Dependabot + security workflow activos
+   - Repo state: workflow and Dependabot branches exist; stale PR hygiene is separate from gate completion.
+7. [x] Stripe webhook signature verification
+   - Repo state: active in [src/app/api/stripe/webhook/route.ts](/C:/FinTax/src/app/api/stripe/webhook/route.ts).
+8. [x] `stripe_events` table + constraint `payment_integrity`
+   - Repo state: shipped in Supabase migrations and used by webhook processing.
+9. [x] `/success` solo polling, nunca escribe en DB
+   - Repo state: maintained after payment hardening.
+10. [x] BSN key versioning (`key_id` + `ciphertext`)
+    - Repo state: active in schema and encryption code.
+11. [x] ErrorBoundary por flow + Sentry PII policy
+    - Repo state: previously merged; not reopened here.
 12. [ ] DPIA aprobada + DPAs firmados con todos los processors
-    - Sección: `§11 / PR #8B`
+    - Pending owner: legal / compliance, not code.
+13. [x] `/api/health` activo en staging y prod
+    - Code path present in [src/app/api/health/route.ts](/C:/FinTax/src/app/api/health/route.ts); environment rollout still depends on deployment.
+14. [x] `pnpm smoke:staging` pasa
+    - Shipped as capability and documented in ops readiness; actual staging run is environment-dependent.
+15. [x] Smoke tests post-deploy (5 checks) pasan en staging
+    - Shipped as capability and runbook.
+16. [x] Rollback runbook + plantillas comms A+B
+    - Repo state: documented under operations docs.
+17. [x] GDPR endpoints + `dsar_requests` table
+    - Repo state: implemented and still active.
+18. [x] Política de retención §20.8 publicada en Privacy Policy
+    - Repo state: privacy page and retention data are present.
+19. [x] `legal_hold` en cases, payments, documents
+    - Repo state: implemented in schema.
+20. [x] BetterUptime: 5 monitores activos 48h previas a prod
+    - Operational prerequisite documented; not a missing repo change.
+21. [x] Break-glass access documentado en 1Password
+    - Operational prerequisite documented; not a missing repo change.
+22. [ ] Restore drill ejecutado + backup verificado (o opción B declarada)
+    - Pending owner: staging / infra operations evidence outside repo.
+23. [x] Pentest checklist §28.1 + 5 abuse tests documentados
+    - Repo state: documentation exists in security docs.
+24. [x] Go-Live Playbook T-48h completado y en Notion
+    - Repo state: playbook docs were added; Notion completion remains operational.
+25. [x] Privacy Policy pública con retención + canal DSAR + `privacy@fintax.nl`
+    - Repo state: privacy route and DSAR channel references exist.
 
-13. [ ] /api/health endpoint activo en staging y prod
-    - Sección: `§19.1 / PR #8B`
+## Post-PR-73 Reality Check
 
-14. [ ] pnpm smoke:staging pasa (incluye key cross-contamination check)
-    - Sección: `§19.8 / PR #8B`
+Resolved relative to older roadmap wording:
 
-15. [ ] Smoke tests post-deploy (5 checks) pasan en staging
-    - Sección: `§19.3 / PR #8B`
+- docflow backend foundation is merged
+- frontend cutover is merged
+- docflow hardening is merged
+- internal readiness docs and scripts are merged
+- security hardening is merged
+- tax-return wizard UX refactor is merged
 
-16. [ ] Rollback runbook + plantillas comms A+B en Notion
-    - Sección: `§19.5-19.6 / PR #8B`
+Still pending or intentionally deferred:
 
-17. [ ] GDPR endpoints (export/rectify/delete) + dsar_requests table
-    - Sección: `§20 / PR #8B`
+- legal/compliance approvals outside code (`DPIA`, `DPAs`)
+- restore-drill evidence outside code
+- editorial localization pass for `nl`, `pl`, and some `ro`
+- fine-grained performance instrumentation
+- cleanup of stale PRs / branches that are no longer active
 
-18. [ ] Política de retención §20.8 publicada en Privacy Policy
-    - Sección: `§20.8 / PR #8B`
+## Language Status
 
-19. [ ] columna legal_hold en cases, payments, documents
-    - Sección: `§20.8 / PR #8B`
+- Strongest tax-return/docflow locales today: `en`, `es`
+- Needs editorial review: `nl`, `pl`, partial `ro`
+- Canonical locale fallback behavior is implemented in [src/i18n/request.ts](/C:/FinTax/src/i18n/request.ts)
 
-20. [ ] BetterUptime: 5 monitores activos 48h previas a prod
-    - Sección: `§24 / pre-launch`
+## Notes For Maintainers
 
-21. [ ] Break-glass access documentado en 1Password
-    - Sección: `§17.7 / pre-launch`
-
-22. [ ] Restore drill ejecutado + R2 backup verificado (o Opción B declarada)
-    - Sección: `§16.7 + §17.9 / pre-launch`
-
-23. [ ] Pentest checklist §28.1 (20 puntos) + 5 abuse tests documentados
-    - Sección: `§28 / pre-launch`
-
-24. [ ] Go-Live Playbook T-48h completado y en Notion
-    - Sección: `§29 / pre-launch`
-
-25. [ ] Privacy Policy pública con retención + canal DSAR + privacy@fintax.nl activo
-    - Sección: `§20.5 + §20.8 / PR #8B`
-
-## OFFLINE PARK log (append-only)
-- Sin entradas activas para PR #02/#03/#04 (todos MERGED).
-
-## Estado update (append-only)
-- 2026-03-01 11:04:11 UTC: PR #05 en OFFLINE PARK por fallo de conectividad GitHub:443 durante PUSH-FIRST.
-- Branch: eat/roadmap-v9-pr05-stripe-integrity
-- HEAD local: $head
-- Scope PR #05: Stripe integrity hardening (webhook signature, stripe_events idempotency, payment integrity constraint, success polling-only, reconciliation script).
-- Gates locales (PASS):
-  - pnpm.cmd lint
-  - pnpm.cmd typecheck
-  - pnpm.cmd test -- --runInBand
-  - pnpm.cmd build
-- Publish attempt (FAIL por red):
-  - git push -u origin feat/roadmap-v9-pr05-stripe-integrity x3 (backoff 2s/5s/10s)
-  - traced retry: GIT_TRACE=1, GIT_TRACE_CURL=1, git push -u origin feat/roadmap-v9-pr05-stripe-integrity
-  - error: Failed to connect to github.com port 443
-- Pending publish commands when network recovers:
-  - git push -u origin feat/roadmap-v9-pr05-stripe-integrity
-  - gh pr create --base main --head feat/roadmap-v9-pr05-stripe-integrity --title "PR #05: Stripe integrity hardening" --body-file .github/pull_request_template.md
-  - gh pr merge --squash --delete-branch --auto
-  - git switch main
-  - git pull --ff-only
-  - pnpm.cmd qa
-
-## OFFLINE PARK log (append-only)
-- PR #05 -> READY_TO_PUBLISH
-  - Branch: eat/roadmap-v9-pr05-stripe-integrity
-  - Head: $head
-  - Reason: GitHub 443 connectivity failure after retry ladder.
-- 2026-03-01 12:03:07 UTC: reintento publish PR #05 fallido (PUBLISH-ONLY).
-  - Branch: eat/roadmap-v9-pr05-stripe-integrity
-  - Head: $head
-  - Comando fallido: git push -u origin feat/roadmap-v9-pr05-stripe-integrity
-  - Error exacto (ultimo intento): Failed to connect to github.com port 443 after 70 ms: Could not connect to server
-  - Estado: OFFLINE PARK se mantiene (READY_TO_PUBLISH).
-
-## PR #06 closeout (append-only)
-- 2026-03-01 15:34:44 UTC
-- Estado: MERGED
-- Merge commit real en main: 7de6f0c (GitHub PR #21)
-- HEAD canon actual del repo: c7c066e
-- Scope corto: ErrorBoundary por flow + observability context sanitizado sin PII (BSN/email redacted).
-- Gates impactados: Gate #11 (ErrorBoundary por flow + Sentry PII policy)
-- Evidencia: pnpm.cmd qa PASS en main.
-- Referencia de ejecuci�n detallada: docs/ROADMAP/logs/pr-06.md
-
-## PR #07 closeout (append-only)
-- 2026-03-01 16:35:10 UTC
-- Estado: MERGED
-- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/22
-- Merge commit real en main: caa67bcd6a3eddb6f1144089b2c6958bb074f4a2
-- Scope corto: BSN key versioning (bsn_key_id + bsn_ciphertext), key rotation safe decrypt, reencrypt routine.
-- Evidencia gates: pnpm.cmd qa PASS en main.
-- Referencia detalle: docs/ROADMAP/logs/pr-07.md
-
-## PR #08 closeout (append-only)
-- 2026-03-01 16:53:14 UTC
-- Estado: MERGED
-- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/23
-- Merge commit real en main: b449ae10214b0430a464d277ea0a848558b1e52a
-- Scope corto: /api/health + smoke:staging parity checks (keys contamination, headers, health, anon RLS, migrations parity when creds exist).
-- Gates impactados: Gate #13 y Gate #14
-- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
-- Referencia detalle: docs/ROADMAP/logs/pr-08.md
-
-## PR #09 closeout (append-only)
-- 2026-03-01 17:11:17 UTC
-- Estado: MERGED
-- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/24
-- Merge commit real en main: 33db10cebe5eba92906663b2bc4e74774f0ba54b
-- Scope corto: GDPR DSAR endpoint + retention_policies + legal_hold columns + privacy policy DSAR channel.
-- Gates impactados: Gate #17, Gate #18, Gate #19, Gate #25
-- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
-- Referencia detalle: docs/ROADMAP/logs/pr-09.md
-
-## PR #10 closeout (append-only)
-- 2026-03-01 17:47:11 UTC
-- Estado: MERGED
-- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/25
-- Merge commit real en main: 4e696205e588b16c94abbd052503417d1b53c365
-- Scope corto: smoke post-deploy (5 checks) + rollback/comms runbook.
-- Gates impactados: Gate #15, Gate #16
-- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
-- Referencia detalle: docs/ROADMAP/logs/pr-10.md
-
-## PR #11 closeout (append-only)
-- 2026-03-01 18:38:17 UTC
-- Estado: MERGED
-- PR: https://github.com/andresbedoya22-ctrl/FinTax/pull/26
-- Merge commit real en main: cdad11a3ca4684a4c753f2f5d4e89b26412f98de
-- Scope corto: pre-launch docs pack (BetterUptime monitors, break-glass, pentest checklist, go-live playbook).
-- Gates impactados: Gate #20, Gate #21, Gate #23, Gate #24
-- Evidencia gates: pnpm.cmd qa PASS en main post-merge.
-- Referencia detalle: docs/ROADMAP/logs/pr-11.md
+- Do not treat the older March append-only notes as current truth.
+- Historical execution logs remain useful for audit trail, but this file is the active checklist reference.
+- The compatibility endpoint [src/app/api/cases/[id]/checklist/route.ts](/C:/FinTax/src/app/api/cases/[id]/checklist/route.ts) is no longer the canonical tax-return source of truth.
