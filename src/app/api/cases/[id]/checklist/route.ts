@@ -3,7 +3,8 @@ import { requireAuthedUser } from "@/lib/api/auth";
 import { apiError, apiSuccess } from "@/lib/api/response";
 import { listCaseRequirements } from "@/lib/tax-documents/service";
 
-// Legacy compatibility endpoint. Main tax-return surfaces must read `requirements`/`progress` directly.
+// Compatibility endpoint for older consumers. The step wizard and current dashboard
+// must read `requirements`/`progress` directly; `checklist_items` remains fallback-only.
 export async function GET(_: Request, context: { params: Promise<{ id: string }> }) {
   const rawParams = await context.params;
   const parsedParams = parseIdParam(rawParams);
