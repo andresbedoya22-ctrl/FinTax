@@ -129,7 +129,8 @@ Inputs required:
 
 - a real `profiles.id` for a client user,
 - a real `profiles.id` for an admin user,
-- valid `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+- valid Supabase admin credentials via `DOCFLOW_SUPABASE_URL` + `DOCFLOW_SUPABASE_SERVICE_ROLE_KEY`,
+  or fallback `SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`.
 
 Safety note:
 
@@ -203,12 +204,15 @@ Use this when a full scripted run is blocked or when product QA wants UI evidenc
 ## Release Checklist
 
 1. Apply migrations.
-2. Run `pnpm docflow:bootstrap`.
-3. Run `pnpm docflow:backfill` in dry-run mode and review skipped cases.
-4. Manually refresh or resave intake for skipped active legacy cases before using them internally.
-5. Run `pnpm docflow:e2e` against QA profiles or complete the manual validation checklist.
-6. Run `pnpm lint`.
-7. Run `pnpm typecheck`.
-8. Run `pnpm test`.
-9. Run `pnpm build`.
-10. Run `pnpm audit --audit-level=high` and confirm only accepted residuals remain, if any.
+2. Confirm the target Supabase host resolves in DNS before any bootstrap run.
+3. Set `DOCFLOW_SUPABASE_URL` + `DOCFLOW_SUPABASE_SERVICE_ROLE_KEY` when staging validation should not reuse the local runtime project.
+4. Run `pnpm docflow:bootstrap`.
+5. Run `pnpm docflow:backfill` in dry-run mode and review skipped cases.
+6. Manually refresh or resave intake for skipped active legacy cases before using them internally.
+7. Run `pnpm docflow:e2e` against QA profiles or complete the manual validation checklist.
+8. Set `STAGING_URL`, `STAGING_SUPABASE_URL`, and `STAGING_SUPABASE_ANON_KEY`, then run `pnpm smoke:staging`.
+9. Run `pnpm lint`.
+10. Run `pnpm typecheck`.
+11. Run `pnpm test`.
+12. Run `pnpm build`.
+13. Run `pnpm audit --audit-level=high` and confirm only accepted residuals remain, if any.
