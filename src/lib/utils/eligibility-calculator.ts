@@ -1,9 +1,9 @@
-import { getToeslagenRules, type HouseholdType } from "../constants/toeslagen-rules";
+import { evaluateToeslagen, type BenefitKey, type HouseholdSnapshot, type ToeslagenEvaluation } from "@/lib/toeslagen";
 
 export interface BenefitsWizardInput {
   benefitsYear?: 2025 | 2026;
   age: number;
-  householdType: HouseholdType;
+  householdType: "single" | "partners";
   annualIncome: number;
   assets: number;
   nlResident: boolean;
@@ -23,11 +23,17 @@ export interface BenefitsWizardInput {
 
 export interface BenefitResult {
   eligible: boolean;
+  manualReviewRequired: boolean;
   estimatedAnnualAmount: number;
+  estimatedMonthlyAmount: number;
   reasons: string[];
   reasoning: string[];
+  warningReasons: string[];
   nextStep: string;
   priority: number;
+  calculationSteps: ToeslagenEvaluation["results"][BenefitKey]["calculationSteps"];
+  requiredDocuments: ToeslagenEvaluation["results"][BenefitKey]["requiredDocuments"];
+  optionalDocuments: ToeslagenEvaluation["results"][BenefitKey]["optionalDocuments"];
 }
 
 export interface EligibilityResults {
@@ -36,115 +42,196 @@ export interface EligibilityResults {
   kindgebondenBudget: BenefitResult;
   kinderopvangtoeslag: BenefitResult;
   totalEstimatedAnnualAmount: number;
+  totalEstimatedMonthlyAmount: number;
+  manualReviewRequired: boolean;
+  year: 2026;
+  parameterSetVersion: "NL_TOESLAGEN_2026_V1";
 }
 
-function roundCurrency(value: number): number {
-  return Math.max(0, Math.round(value * 100) / 100);
+function birthDateFromAge(age: number) {
+  const year = 2026 - Math.max(0, Math.floor(age));
+  return `${year}-01-01`;
 }
 
-function inThreshold(value: number, max: number): boolean {
-  return value <= max;
+function buildLegacySnapshot(input: BenefitsWizardInput): HouseholdSnapshot {
+  const hasPartner = input.householdType === "partners";
+  const hasChildren = input.childrenUnder18 > 0;
+
+  return {
+    year: 2026,
+    selectedBenefits: [
+      "zorgtoeslag",
+      "huurtoeslag",
+      ...(hasChildren ? (["kindgebondenBudget"] as const) : []),
+      ...(input.usesChildcare ? (["kinderopvangtoeslag"] as const) : []),
+    ],
+    applicant: {
+      id: "applicant",
+      birthDate: birthDateFromAge(input.age),
+      countryOfResidence: input.nlResident ? "NL" : "UNKNOWN",
+      nlResident: input.nlResident,
+      bsnKnown: true,
+      annualIncome: input.annualIncome,
+      assets1Jan: input.assets,
+      hasDutchHealthInsurance: input.hasHealthInsurance,
+      activityStatus: input.bothParentsWork ? ["employed"] : ["none"],
+    },
+    partner: hasPartner
+      ? {
+          id: "partner",
+          birthDate: birthDateFromAge(Math.max(18, input.age - 1)),
+          countryOfResidence: input.nlResident ? "NL" : "UNKNOWN",
+          nlResident: input.nlResident,
+          bsnKnown: true,
+          annualIncome: 0,
+          assets1Jan: 0,
+          hasDutchHealthInsurance: input.hasHealthInsurance,
+          activityStatus: input.bothParentsWork ? ["employed"] : ["none"],
+          sameAddress: true,
+          isToeslagPartner: true,
+        }
+      : null,
+    children: Array.from({ length: input.childrenUnder18 }).map((_, index) => ({
+      id: `child-${index + 1}`,
+      birthDate: `${2026 - Math.max(1, 8 + index)}-01-01`,
+      livesWithApplicant: true,
+      isCoParentingChild: false,
+      daysPerYearWithApplicant: 365,
+      receivesKinderbijslag: input.receivesKinderbijslag,
+      hasIncome: false,
+      annualIncome: 0,
+      assets1Jan: 0,
+      goesToChildcare: input.usesChildcare,
+      bsnKnown: true,
+      childcareArrangements: input.usesChildcare
+        ? [
+            {
+              id: `arrangement-${index + 1}`,
+              childcareKind:
+                input.childcareType === "daycare"
+                  ? "dagopvang"
+                  : input.childcareType === "outOfSchoolCare"
+                    ? "buitenschoolseOpvang"
+                    : "dagopvang",
+              providerType: input.childcareType === "childminder" ? "gastouder" : "kindercentrum",
+              registeredLrk: input.registeredChildcare,
+              lrkNumber: input.registeredChildcare ? "123456789" : undefined,
+              monthlyHours: input.childcareHoursPerMonth,
+              hourlyRate: input.childcareHourlyRate,
+              hasContract: true,
+              parentsPayContribution: true,
+            },
+          ]
+        : [],
+    })),
+    residents: [],
+    housing: {
+      rentsRoom: !input.hasIndependentHome,
+      independentHome: input.hasIndependentHome,
+      groupHousingForElderlyOrAssistedLiving: false,
+      recognizedException: false,
+      hasRentalContract: input.hasRentalContract,
+      basicMonthlyRent: input.monthlyRent,
+      isWoonwagen: false,
+      monthlyStandplaatsCost: 0,
+      serviceCostsIncludedButIgnoredFrom2026: 0,
+    },
+    assets: {
+      applicantAssets1Jan: input.assets,
+      partnerAssets1Jan: 0,
+      childAssets1Jan: 0,
+      residentAssets1Jan: 0,
+      hasSpecialAssets: false,
+    },
+    specialSituations: {
+      foreignResidence: !input.nlResident,
+      foreignWork: false,
+      childAbroad: false,
+      childcareAbroad: false,
+      cakInsured: false,
+      military: false,
+      detained: false,
+      gemoedsbezwaarde: false,
+      noFixedAddress: false,
+      bijzondereVermogen: false,
+      bijzonderInkomen: false,
+      longAbsenceFromHome: false,
+      homeCareSituation: false,
+      composedFamily: false,
+      adoptionFosterStepChild: false,
+      manualReviewNotes: "",
+    },
+  };
+}
+
+function nextStepForBenefit(benefit: BenefitKey, eligible: boolean, manualReviewRequired: boolean) {
+  if (manualReviewRequired) {
+    return "manualReview";
+  }
+  if (!eligible) {
+    switch (benefit) {
+      case "zorgtoeslag":
+        return "reviewHealthConditions";
+      case "huurtoeslag":
+        return "reviewHousingConditions";
+      case "kindgebondenBudget":
+        return "reviewChildrenConditions";
+      case "kinderopvangtoeslag":
+        return "reviewChildcareConditions";
+    }
+  }
+
+  switch (benefit) {
+    case "zorgtoeslag":
+      return "collectHealthPolicy";
+    case "huurtoeslag":
+      return "prepareRentalDocuments";
+    case "kindgebondenBudget":
+      return "confirmChildBenefit";
+    case "kinderopvangtoeslag":
+      return "prepareChildcareInvoices";
+  }
+}
+
+function toLegacyBenefitResult(
+  benefit: BenefitKey,
+  result: ToeslagenEvaluation["results"][BenefitKey],
+  priority: number,
+): BenefitResult {
+  const reasoning = result.eligible
+    ? result.calculationSteps.slice(0, 3).map((step) => step.code)
+    : result.blockingReasons;
+
+  return {
+    eligible: result.eligible,
+    manualReviewRequired: result.manualReviewRequired,
+    estimatedAnnualAmount: result.estimatedAnnualAmount ?? 0,
+    estimatedMonthlyAmount: result.estimatedMonthlyAmount ?? 0,
+    reasons: result.blockingReasons,
+    reasoning,
+    warningReasons: result.warningReasons,
+    nextStep: nextStepForBenefit(benefit, result.eligible, result.manualReviewRequired),
+    priority,
+    calculationSteps: result.calculationSteps,
+    requiredDocuments: result.requiredDocuments,
+    optionalDocuments: result.optionalDocuments,
+  };
 }
 
 export function calculateEligibility(input: BenefitsWizardInput): EligibilityResults {
-  const rules = getToeslagenRules(input.benefitsYear ?? 2026);
-  const household = input.householdType;
+  const evaluation = evaluateToeslagen(buildLegacySnapshot(input));
 
-  const zorgReasons: string[] = [];
-  if (input.age < rules.zorgtoeslag.minAge) zorgReasons.push("min_age");
-  if (!input.nlResident) zorgReasons.push("nl_resident_required");
-  if (!input.hasHealthInsurance) zorgReasons.push("health_insurance_required");
-  if (!inThreshold(input.annualIncome, rules.zorgtoeslag.maxIncome[household])) zorgReasons.push("income_too_high");
-  if (!inThreshold(input.assets, rules.zorgtoeslag.maxAssets[household])) zorgReasons.push("assets_too_high");
-
-  const zorgEligible = zorgReasons.length === 0;
-  const zorgIncomeRatio = Math.min(1, input.annualIncome / rules.zorgtoeslag.maxIncome[household]);
-  const zorgEstimate = zorgEligible
-    ? roundCurrency(rules.zorgtoeslag.maxAnnualAmount[household] * (1 - zorgIncomeRatio * 0.7))
-    : 0;
-  const zorgReasoning = zorgEligible
-    ? ["resident_and_insured", "income_within_threshold", "assets_within_threshold"]
-    : zorgReasons;
-
-  const huurReasons: string[] = [];
-  if (input.age < rules.huurtoeslag.minAge) huurReasons.push("min_age");
-  if (!input.hasIndependentHome) huurReasons.push("independent_home_required");
-  if (!input.hasRentalContract) huurReasons.push("rental_contract_required");
-  if (!inThreshold(input.assets, rules.huurtoeslag.maxAssets[household])) huurReasons.push("assets_too_high");
-
-  const huurEligible = huurReasons.length === 0;
-  const rentCap = input.age < 23 ? rules.huurtoeslag.maxRentConsidered.under23 : rules.huurtoeslag.maxRentConsidered.standard;
-  const rentForCalc = Math.min(input.monthlyRent, rentCap);
-  const annualRentForCalc = rentForCalc * 12;
-  const incomeFactor = Math.max(0.18, 1 - input.annualIncome / 90000);
-  const huurEstimate = huurEligible ? roundCurrency(annualRentForCalc * 0.32 * incomeFactor) : 0;
-  const huurReasoning = huurEligible ? ["independent_rental_home", "assets_within_huur_threshold"] : huurReasons;
-
-  const kgbReasons: string[] = [];
-  if (input.childrenUnder18 < 1) kgbReasons.push("children_required");
-  if (!input.receivesKinderbijslag) kgbReasons.push("kinderbijslag_required");
-  if (!inThreshold(input.assets, rules.kindgebondenBudget.maxAssets[household])) kgbReasons.push("assets_too_high");
-
-  const kgbEligible = kgbReasons.length === 0;
-  const baseKgb = input.childrenUnder18 * 1650;
-  const threshold = rules.kindgebondenBudget.fullAmountIncomeThreshold[household];
-  const incomeExcess = Math.max(0, input.annualIncome - threshold);
-  const kgbReduction = incomeExcess * rules.kindgebondenBudget.reductionRate;
-  const kgbEstimate = kgbEligible ? roundCurrency(baseKgb - kgbReduction) : 0;
-  const kgbReasoning = kgbEligible ? ["children_declared", "kinderbijslag_confirmed", "assets_within_threshold"] : kgbReasons;
-
-  const kotReasons: string[] = [];
-  if (!input.usesChildcare) kotReasons.push("childcare_not_needed");
-  if (!input.registeredChildcare) kotReasons.push("registered_childcare_required");
-  if (!input.bothParentsWork) kotReasons.push("working_parents_required");
-  if (input.childcareHoursPerMonth <= 0) kotReasons.push("childcare_hours_required");
-  if (input.childrenUnder18 < 1) kotReasons.push("children_required");
-
-  const kotEligible = kotReasons.length === 0;
-  const maxRate = rules.kinderopvangtoeslag.maxHourlyRate[input.childcareType];
-  const eligibleHourlyRate = Math.min(input.childcareHourlyRate, maxRate);
-  const yearlyChildcareCost = eligibleHourlyRate * input.childcareHoursPerMonth * 12;
-  const coverageRate = input.annualIncome <= rules.kinderopvangtoeslag.highCoverageIncomeThreshold
-    ? rules.kinderopvangtoeslag.highCoverageRate
-    : Math.max(0.33, 0.96 - (input.annualIncome - rules.kinderopvangtoeslag.highCoverageIncomeThreshold) / 220000);
-  const kotEstimate = kotEligible ? roundCurrency(yearlyChildcareCost * coverageRate) : 0;
-  const kotReasoning = kotEligible ? ["childcare_requirements_met", "childcare_costs_capped"] : kotReasons;
-
-  const results: EligibilityResults = {
-    zorgtoeslag: {
-      eligible: zorgEligible,
-      estimatedAnnualAmount: zorgEstimate,
-      reasons: zorgReasons,
-      reasoning: zorgReasoning,
-      nextStep: zorgEligible ? "collectHealthPolicy" : "reviewHealthConditions",
-      priority: zorgEligible ? 1 : 4,
-    },
-    huurtoeslag: {
-      eligible: huurEligible,
-      estimatedAnnualAmount: huurEstimate,
-      reasons: huurReasons,
-      reasoning: huurReasoning,
-      nextStep: huurEligible ? "prepareRentalDocuments" : "reviewHousingConditions",
-      priority: huurEligible ? 2 : 5,
-    },
-    kindgebondenBudget: {
-      eligible: kgbEligible,
-      estimatedAnnualAmount: kgbEstimate,
-      reasons: kgbReasons,
-      reasoning: kgbReasoning,
-      nextStep: kgbEligible ? "confirmChildBenefit" : "reviewChildrenConditions",
-      priority: kgbEligible ? 3 : 6,
-    },
-    kinderopvangtoeslag: {
-      eligible: kotEligible,
-      estimatedAnnualAmount: kotEstimate,
-      reasons: kotReasons,
-      reasoning: kotReasoning,
-      nextStep: kotEligible ? "prepareChildcareInvoices" : "reviewChildcareConditions",
-      priority: kotEligible ? 4 : 7,
-    },
-    totalEstimatedAnnualAmount: roundCurrency(zorgEstimate + huurEstimate + kgbEstimate + kotEstimate),
+  return {
+    zorgtoeslag: toLegacyBenefitResult("zorgtoeslag", evaluation.results.zorgtoeslag, 1),
+    huurtoeslag: toLegacyBenefitResult("huurtoeslag", evaluation.results.huurtoeslag, 2),
+    kindgebondenBudget: toLegacyBenefitResult("kindgebondenBudget", evaluation.results.kindgebondenBudget, 3),
+    kinderopvangtoeslag: toLegacyBenefitResult("kinderopvangtoeslag", evaluation.results.kinderopvangtoeslag, 4),
+    totalEstimatedAnnualAmount: evaluation.totalEstimatedAnnualAmount,
+    totalEstimatedMonthlyAmount: evaluation.totalEstimatedMonthlyAmount,
+    manualReviewRequired: evaluation.manualReviewRequired,
+    year: evaluation.year,
+    parameterSetVersion: evaluation.parameterSetVersion,
   };
-
-  return results;
 }
+
+export { buildLegacySnapshot };

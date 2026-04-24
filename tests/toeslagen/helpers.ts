@@ -1,0 +1,63 @@
+import type { HouseholdSnapshot } from "@/lib/toeslagen";
+
+export function createBaseHousehold(): HouseholdSnapshot {
+  return {
+    year: 2026,
+    selectedBenefits: [
+      "zorgtoeslag",
+      "huurtoeslag",
+      "kindgebondenBudget",
+      "kinderopvangtoeslag",
+    ],
+    applicant: {
+      id: "applicant",
+      birthDate: "1995-06-01",
+      countryOfResidence: "NL",
+      nlResident: true,
+      bsnKnown: true,
+      annualIncome: 19000,
+      assets1Jan: 10000,
+      hasDutchHealthInsurance: true,
+      activityStatus: ["employed"],
+    },
+    partner: null,
+    children: [],
+    residents: [],
+    housing: {
+      rentsRoom: false,
+      independentHome: true,
+      groupHousingForElderlyOrAssistedLiving: false,
+      recognizedException: false,
+      hasRentalContract: true,
+      basicMonthlyRent: 700,
+      isWoonwagen: false,
+      monthlyStandplaatsCost: 0,
+      serviceCostsIncludedButIgnoredFrom2026: 0,
+    },
+    assets: {
+      applicantAssets1Jan: 10000,
+      partnerAssets1Jan: 0,
+      childAssets1Jan: 0,
+      residentAssets1Jan: 0,
+      hasSpecialAssets: false,
+    },
+    specialSituations: {
+      foreignResidence: false,
+      foreignWork: false,
+      childAbroad: false,
+      childcareAbroad: false,
+      cakInsured: false,
+      military: false,
+      detained: false,
+      gemoedsbezwaarde: false,
+      noFixedAddress: false,
+      bijzondereVermogen: false,
+      bijzonderInkomen: false,
+      longAbsenceFromHome: false,
+      homeCareSituation: false,
+      composedFamily: false,
+      adoptionFosterStepChild: false,
+      manualReviewNotes: "",
+    },
+  };
+}

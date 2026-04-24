@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowRight, CheckCircle2, CircleX } from "lucide-react";
+import { ArrowRight, CheckCircle2, CircleX, FileWarning } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/fintax/Button";
 import { Badge } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import type { BenefitResult } from "@/lib/utils/eligibility-calculator";
+import type { BenefitEvaluationResult } from "@/lib/toeslagen";
 
 import type { BenefitCardKey } from "./wizard";
 
@@ -17,11 +17,14 @@ export function BenefitsEligibilityCard({
   onToggleSelected,
 }: {
   benefitKey: BenefitCardKey;
-  result: BenefitResult;
+  result: BenefitEvaluationResult;
   selected: boolean;
   onToggleSelected: () => void;
 }) {
   const t = useTranslations("Benefits");
+  const topReasons = [...result.blockingReasons, ...result.warningReasons].slice(0, 3);
+  const amount = result.estimatedAnnualAmount ?? 0;
+  const monthlyAmount = result.estimatedMonthlyAmount ?? 0;
 
   return (
     <article
@@ -38,8 +41,8 @@ export function BenefitsEligibilityCard({
           <h4 className="text-sm font-semibold text-text">{t(`results.cards.${benefitKey}.title`)}</h4>
           <p className="mt-1 text-sm text-secondary">{t(`results.cards.${benefitKey}.subtitle`)}</p>
         </div>
-        <Badge variant={result.eligible ? "success" : "outline"}>
-          {result.eligible ? t("results.eligible") : t("results.notEligible")}
+        <Badge variant={result.eligible ? "success" : result.manualReviewRequired ? "copper" : "outline"}>
+          {result.manualReviewRequired ? t("results.manualReview") : result.eligible ? t("results.eligible") : t("results.notEligible")}
         </Badge>
       </div>
 
@@ -54,26 +57,46 @@ export function BenefitsEligibilityCard({
         </div>
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.estimatedAnnualLabel")}</p>
-          <p className="font-heading text-3xl tracking-[-0.03em] text-text">EUR {result.estimatedAnnualAmount.toFixed(2)}</p>
+          <p className="font-heading text-3xl tracking-[-0.03em] text-text">EUR {amount.toFixed(2)}</p>
+          <p className="mt-1 text-sm text-secondary">EUR {monthlyAmount.toFixed(2)} / {t("results.month")}</p>
         </div>
       </div>
 
       <div className="mt-4 rounded-[20px] border border-border/35 bg-white/70 p-4 sm:mt-5 sm:rounded-[22px]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.whyLabel")}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.topReasonsLabel")}</p>
         <ul className="mt-3 space-y-2 text-sm leading-6 text-secondary">
-          {result.reasoning.map((reason) => (
+          {topReasons.map((reason) => (
             <li key={reason} className="flex gap-2">
               <span className="mt-2 size-1.5 rounded-full bg-copper/85" />
-              <span>{t(`results.reasonCodes.${reason}`)}</span>
+              <span>{t(`reasonCodes.${reason}`)}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="mt-4 rounded-[20px] border border-border/35 bg-surface2/40 p-4 sm:rounded-[22px]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.nextStepLabel")}</p>
-        <p className="mt-2 text-sm leading-6 text-text">{t(`results.nextSteps.${result.nextStep}`)}</p>
-      </div>
+      <details className="mt-4 rounded-[20px] border border-border/35 bg-surface2/40 p-4 sm:rounded-[22px]">
+        <summary className="cursor-pointer text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.calculationTraceLabel")}</summary>
+        <ul className="mt-3 space-y-2 text-sm leading-6 text-text">
+          {result.calculationSteps.map((step) => (
+            <li key={step.code} className="rounded-[14px] border border-border/30 bg-white/70 px-3 py-2">
+              <span className="font-medium">{t(step.labelKey.replace(/^Benefits\./, ""))}</span>: {String(step.value)}
+              {step.formula ? <span className="block text-xs text-secondary">{step.formula}</span> : null}
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <details className="mt-4 rounded-[20px] border border-border/35 bg-surface2/40 p-4 sm:rounded-[22px]">
+        <summary className="cursor-pointer text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.documentsLabel")}</summary>
+        <ul className="mt-3 space-y-2 text-sm leading-6 text-text">
+          {[...result.requiredDocuments, ...result.optionalDocuments].map((document) => (
+            <li key={document.code} className="flex items-start gap-2">
+              <FileWarning className="mt-1 size-4 text-copper" />
+              <span>{t(document.labelKey.replace(/^Benefits\./, ""))}</span>
+            </li>
+          ))}
+        </ul>
+      </details>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
         {result.eligible ? (
@@ -83,7 +106,7 @@ export function BenefitsEligibilityCard({
         ) : null}
         <div className="inline-flex items-center gap-1 text-sm text-secondary">
           <ArrowRight className="size-4 text-copper" />
-          {t("results.reviewNotice")}
+          {result.manualReviewRequired ? t("results.manualReviewNotice") : t("results.reviewNotice")}
         </div>
       </div>
     </article>

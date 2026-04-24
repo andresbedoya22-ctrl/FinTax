@@ -295,289 +295,359 @@
     }
   },
   "Benefits": {
-    "heroTitle": "See which Dutch benefits may actually fit your case.",
-    "heroSubtitle": "A premium eligibility intake for 2026 toeslagen. The flow adapts to your situation, keeps the questions focused and finishes with a clear estimate, reasoning and recommended next step per benefit.",
-    "wizardTitle": "Benefits eligibility wizard",
-    "back": "Back",
-    "next": "Continue",
+    "heroTitle": "[TODO] Benefits / Toeslagen 2026 check",
+    "heroSubtitle": "[TODO] Structured estimate aligned to the 2026 public rules, document matrix and manual-review branches. Final entitlement is always determined by Dienst Toeslagen.",
+    "wizardTitle": "[TODO] Benefits eligibility wizard",
+    "back": "[TODO] Back",
+    "next": "[TODO] Next",
     "intro": {
-      "eyebrow": "Benefits review",
+      "eyebrow": "[TODO] Proefberekening 2026",
       "highlights": {
-        "rulesLabel": "Rule set",
-        "rulesValue": "2026 thresholds mapped into the wizard",
-        "scopeLabel": "Scope",
-        "scopeValue": "Only relevant questions, grouped by topic",
-        "reviewLabel": "Output",
-        "reviewValue": "Clear estimate plus documentary next steps"
+        "rulesLabel": "[TODO] Rules engine",
+        "rulesValue": "[TODO] Official 2026 parameters with per-benefit calculators.",
+        "scopeLabel": "[TODO] Scope",
+        "scopeValue": "[TODO] Eligibility, monthly and annual estimates, documents and review flags.",
+        "reviewLabel": "[TODO] Output posture",
+        "reviewValue": "[TODO] Estimated only, never a definitive entitlement decision."
       }
     },
     "progress": {
-      "badge": "Contextual intake",
-      "stepCount": "{current} / {total}",
-      "completionLabel": "Progress",
-      "currentStepLabel": "Current focus: {step}"
-    },
-    "options": {
-      "single": "Single",
-      "partners": "Partners",
-      "daycare": "Daycare",
-      "outOfSchoolCare": "Out-of-school care",
-      "childminder": "Childminder"
-    },
-    "optionsDescriptions": {
-      "single": "One adult household assessed under single thresholds.",
-      "partners": "Two adult household assessed with partner thresholds."
-    },
-    "fields": {
-      "age": "Age",
-      "householdType": "Household type",
-      "nlResident": "Resident in the Netherlands",
-      "annualIncome": "Annual income",
-      "assets": "Assets",
-      "hasIndependentHome": "Independent home",
-      "hasRentalContract": "Rental contract",
-      "monthlyRent": "Monthly rent",
-      "hasHealthInsurance": "Dutch health insurance",
-      "childrenUnder18": "Children under 18",
-      "receivesKinderbijslag": "Receiving kinderbijslag",
-      "usesChildcare": "Needs childcare support",
-      "childcareHoursPerMonth": "Childcare hours per month",
-      "childcareType": "Childcare type",
-      "childcareHourlyRate": "Hourly childcare rate",
-      "registeredChildcare": "Registered childcare provider",
-      "bothParentsWork": "Parents work or qualify"
-    },
-    "fieldsHelp": {
-      "nlResident": "Residency is a core condition for zorgtoeslag and affects the rest of the review.",
-      "hasIndependentHome": "Huurtoeslag only makes sense if you rent an independent living space.",
-      "hasRentalContract": "We only ask for rent details when there is a formal rental relationship.",
-      "hasHealthInsurance": "Zorgtoeslag requires Dutch basic health insurance.",
-      "receivesKinderbijslag": "Kindgebonden budget depends on child benefit being in place.",
-      "usesChildcare": "Only continue with childcare questions if paid childcare is relevant.",
-      "registeredChildcare": "Kinderopvangtoeslag requires a registered provider.",
-      "bothParentsWork": "The childcare benefit usually depends on work or an equivalent qualifying status."
-    },
-    "fieldsHint": {
-      "annualIncome": "Gross household income for the year.",
-      "assets": "Savings and other relevant assets used for the benefits test.",
-      "monthlyRent": "Use the contract rent before service charges when possible.",
-      "childrenUnder18": "Only children under 18 count for this estimate.",
-      "childcareHoursPerMonth": "Average paid hours per month.",
-      "childcareType": "Provider category affects the hourly cap.",
-      "childcareHourlyRate": "Use the rate actually paid per hour."
-    },
-    "hints": {
-      "zorgIncomeMax": "2026 zorgtoeslag income threshold",
-      "assetThresholds": "2026 asset thresholds",
-      "huurRentCap": "Monthly rent cap used in the estimate",
-      "zorgMax": "Maximum annual zorgtoeslag"
-    },
-    "sections": {
-      "household": {
-        "title": "Household setup",
-        "description": "Start with the household structure that applies to the claim."
-      },
-      "identity": {
-        "title": "Personal baseline",
-        "description": "Age influences some thresholds, especially for housing support."
-      },
-      "residency": {
-        "title": "Residency check",
-        "description": "We use this to adapt the rest of the wizard and avoid irrelevant health questions."
-      },
-      "income": {
-        "title": "Income picture",
-        "description": "A single income figure lets us compare your case to the main 2026 limits."
-      },
-      "assets": {
-        "title": "Assets and reserves",
-        "description": "Some benefits stop when assets exceed the allowed ceiling."
-      },
-      "housing": {
-        "title": "Rental situation",
-        "description": "Only huurtoeslag-relevant housing questions stay visible."
-      },
-      "health": {
-        "title": "Health coverage",
-        "description": "This step only validates the conditions that matter for zorgtoeslag."
-      },
-      "children": {
-        "title": "Children and childcare",
-        "description": "The flow simplifies heavily when there are no children or no childcare costs."
-      }
-    },
-    "stepAside": {
-      "personal": {
-        "label": "Why this matters",
-        "value": "The household baseline controls the thresholds used in the estimate."
-      },
-      "income": {
-        "label": "Review note",
-        "value": "Income drives the largest swings in zorgtoeslag and childcare support."
-      },
-      "assets": {
-        "label": "Review note",
-        "value": "Asset limits are strict. We surface them early so the result stays honest."
-      },
-      "children": {
-        "label": "Review note",
-        "value": "We only collect childcare details if they can materially change the outcome."
-      }
+      "badge": "[TODO] Guided intake",
+      "stepCount": "[TODO] Step {current} of {total}",
+      "completionLabel": "[TODO] Progress",
+      "currentStepLabel": "[TODO] Current step: {step}"
     },
     "steps": {
-      "personal": {
-        "title": "Personal context",
-        "short": "Personal",
-        "description": "Define the household and residency baseline before anything else."
+      "start": {
+        "short": "[TODO] Start",
+        "title": "[TODO] Select benefits",
+        "description": "[TODO] Choose the benefits you want to evaluate in this intake."
+      },
+      "applicant": {
+        "short": "[TODO] Applicant",
+        "title": "[TODO] Applicant details",
+        "description": "[TODO] Capture residency, identity and residence context for the main applicant."
+      },
+      "partner": {
+        "short": "[TODO] Partner",
+        "title": "[TODO] Partner situation",
+        "description": "[TODO] Confirm whether there is a toeslagpartner and capture the partner facts when applicable."
       },
       "income": {
-        "title": "Income",
-        "short": "Income",
-        "description": "Capture the annual income used for the first pass estimate."
-      },
-      "assets": {
-        "title": "Assets",
-        "short": "Assets",
-        "description": "Check whether savings and assets change eligibility."
-      },
-      "housing": {
-        "title": "Housing",
-        "short": "Housing",
-        "description": "Only huurtoeslag-relevant housing details stay in view."
+        "short": "[TODO] Income",
+        "title": "[TODO] Income and activity",
+        "description": "[TODO] Enter income and work or study statuses used by the 2026 rules engine."
       },
       "health": {
-        "title": "Health",
-        "short": "Health",
-        "description": "Confirm the health coverage conditions tied to zorgtoeslag."
+        "short": "[TODO] Health",
+        "title": "[TODO] Health insurance",
+        "description": "[TODO] Record Dutch health insurance and CAK-related exceptions."
       },
       "children": {
-        "title": "Children",
-        "short": "Children",
-        "description": "Open child-related questions only if the household needs them."
+        "short": "[TODO] Children",
+        "title": "[TODO] Children and family facts",
+        "description": "[TODO] Add children, kinderbijslag, co-parenting and child-level income details."
+      },
+      "childcare": {
+        "short": "[TODO] Childcare",
+        "title": "[TODO] Childcare arrangements",
+        "description": "[TODO] Capture LRK registration, hours, rates and contract facts per arrangement."
+      },
+      "residents": {
+        "short": "[TODO] Residents",
+        "title": "[TODO] Medebewoners and subtenants",
+        "description": "[TODO] Add extra household members who may affect rent eligibility and income aggregation."
+      },
+      "housing": {
+        "short": "[TODO] Housing",
+        "title": "[TODO] Housing facts",
+        "description": "[TODO] Capture rent, independent home status and housing exceptions for huurtoeslag."
+      },
+      "assets": {
+        "short": "[TODO] Assets",
+        "title": "[TODO] Assets at 1 January",
+        "description": "[TODO] Enter applicant, partner and special-asset details used in 2026 thresholds."
+      },
+      "specialSituations": {
+        "short": "[TODO] Special",
+        "title": "[TODO] Special situations",
+        "description": "[TODO] Mark scenarios that require manual review or special evidence."
       },
       "results": {
-        "title": "Results",
-        "short": "Results",
-        "description": "See which benefits may fit, why, and what to prepare next."
+        "short": "[TODO] Results",
+        "title": "[TODO] Estimated results",
+        "description": "[TODO] Review eligibility, reasons, calculation trace and documents."
       }
     },
-    "conditional": {
-      "nonResident": {
-        "title": "Residency affects the rest of the review.",
-        "copy": "Without Dutch residency, zorgtoeslag usually does not apply. The flow will keep the estimate honest and avoid implying guaranteed entitlement."
-      },
-      "housingSimplified": {
-        "title": "Housing questions simplified.",
-        "noRentalContract": "Without a rental contract, the wizard does not ask for detailed huurtoeslag rent values.",
-        "noIndependentHome": "Without an independent home, huurtoeslag is unlikely, so we skip rent questions that would not change the outcome."
-      },
-      "healthBlocked": {
-        "title": "Health check shortened.",
-        "copy": "Because residency is not currently confirmed, the wizard does not keep asking health insurance follow-up questions for zorgtoeslag."
-      },
-      "noInsurance": {
-        "title": "Zorgtoeslag remains unlikely in the current scenario.",
-        "copy": "Dutch basic health insurance is normally required. The result will show this clearly together with the next documentary step."
-      },
-      "noChildren": {
-        "title": "Children section simplified.",
-        "copy": "With no children under 18, child benefit and childcare questions are skipped."
-      },
-      "noChildcare": {
-        "title": "Childcare section shortened.",
-        "copy": "No childcare support was marked as relevant, so the wizard skips provider and invoice details."
-      }
+    "fields": {
+      "applicantBirthDate": "[TODO] Applicant birth date",
+      "applicantCountryOfResidence": "[TODO] Country of residence",
+      "applicantNlResident": "[TODO] Applicant is resident in the Netherlands",
+      "applicantBsnKnown": "[TODO] Applicant BSN is known",
+      "hasPartner": "[TODO] There is a partner to assess",
+      "partnerBirthDate": "[TODO] Partner birth date",
+      "partnerCountryOfResidence": "[TODO] Partner country of residence",
+      "partnerSameAddress": "[TODO] Partner lives at the same address",
+      "partnerIsToeslagPartner": "[TODO] Partner is a toeslagpartner",
+      "applicantAnnualIncome": "[TODO] Applicant estimated 2026 income",
+      "partnerAnnualIncome": "[TODO] Partner estimated 2026 income",
+      "applicantHasDutchHealthInsurance": "[TODO] Applicant has Dutch health insurance",
+      "partnerHasDutchHealthInsurance": "[TODO] Partner has Dutch health insurance",
+      "cakInsured": "[TODO] CAK or treaty-insured situation",
+      "childLabel": "[TODO] Child {index}",
+      "childBirthDate": "[TODO] Child birth date",
+      "childDaysPerYearWithApplicant": "[TODO] Days per year with applicant",
+      "childLivesWithApplicant": "[TODO] Child lives with applicant",
+      "childIsCoParenting": "[TODO] Co-parenting child",
+      "childReceivesKinderbijslag": "[TODO] Kinderbijslag is received for this child",
+      "childBsnKnown": "[TODO] Child BSN is known",
+      "childHasIncome": "[TODO] Child has income",
+      "childGoesToChildcare": "[TODO] Child goes to childcare",
+      "childAnnualIncome": "[TODO] Child annual income",
+      "childAssets1Jan": "[TODO] Child assets on 1 January",
+      "arrangementLabel": "[TODO] Arrangement {index}",
+      "childcareKind": "[TODO] Childcare type",
+      "providerType": "[TODO] Provider type",
+      "monthlyHours": "[TODO] Monthly hours",
+      "hourlyRate": "[TODO] Hourly rate",
+      "lrkNumber": "[TODO] LRK number",
+      "registeredLrk": "[TODO] Registered in LRK",
+      "hasContract": "[TODO] Contract available",
+      "parentsPayContribution": "[TODO] Parents pay own contribution",
+      "residentLabel": "[TODO] Resident {index}",
+      "residentBirthDate": "[TODO] Resident birth date",
+      "residentRelationship": "[TODO] Relationship",
+      "residentAnnualIncome": "[TODO] Resident annual income",
+      "residentAssets1Jan": "[TODO] Resident assets on 1 January",
+      "sameAddressRegistered": "[TODO] Registered at same address",
+      "isSubtenant": "[TODO] Resident is a subtenant",
+      "hasSubrentContract": "[TODO] Subrent contract available",
+      "basicMonthlyRent": "[TODO] Basic monthly rent",
+      "monthlyStandplaatsCost": "[TODO] Monthly standplaats cost",
+      "independentHome": "[TODO] Independent home",
+      "hasRentalContract": "[TODO] Rental contract available",
+      "rentsRoom": "[TODO] Room rental / kamerhuur",
+      "groupHousing": "[TODO] Group housing / assisted-living setting",
+      "recognizedException": "[TODO] Recognized exception applies",
+      "isWoonwagen": "[TODO] Woonwagen / standplaats situation",
+      "applicantAssets1Jan": "[TODO] Applicant assets on 1 January",
+      "partnerAssets1Jan": "[TODO] Partner assets on 1 January",
+      "hasSpecialAssets": "[TODO] Special assets / bijzondere vermogen",
+      "foreignResidence": "[TODO] Foreign residence context",
+      "foreignWork": "[TODO] Foreign work context",
+      "childAbroad": "[TODO] Child abroad",
+      "childcareAbroad": "[TODO] Childcare abroad",
+      "military": "[TODO] Military status",
+      "detained": "[TODO] Detention",
+      "gemoedsbezwaarde": "[TODO] Gemoedsbezwaarde status",
+      "noFixedAddress": "[TODO] No fixed address",
+      "bijzondereVermogen": "[TODO] Special assets / bijzondere vermogen",
+      "bijzonderInkomen": "[TODO] Special income / bijzonder inkomen",
+      "longAbsenceFromHome": "[TODO] Long absence from home",
+      "homeCareSituation": "[TODO] Home care situation",
+      "composedFamily": "[TODO] Composed family situation",
+      "adoptionFosterStepChild": "[TODO] Adoption / foster / stepchild situation",
+      "manualReviewNotes": "[TODO] Manual review notes"
+    },
+    "actions": {
+      "addChild": "[TODO] Add child",
+      "addArrangement": "[TODO] Add arrangement",
+      "addResident": "[TODO] Add resident"
+    },
+    "emptyStates": {
+      "noChildcareChildren": "[TODO] No childcare arrangements are needed unless at least one child is marked as going to childcare."
+    },
+    "activityStatus": {
+      "employed": "[TODO] Employed",
+      "selfEmployed": "[TODO] Self-employed",
+      "studentRecognized": "[TODO] Recognized student",
+      "inburgeringCourse": "[TODO] Inburgering course",
+      "workReintegration": "[TODO] Work reintegration",
+      "trajectoryToWork": "[TODO] Trajectory to work"
+    },
+    "reasonCodes": {
+      "ZORG_UNDER_18": "[TODO] Applicant is younger than 18.",
+      "ZORG_NO_DUTCH_HEALTH_INSURANCE": "[TODO] Applicant does not have Dutch health insurance.",
+      "ZORG_PARTNER_NO_DUTCH_HEALTH_INSURANCE": "[TODO] Partner is not insured under the Dutch health-insurance rules; pair amount is reduced.",
+      "ZORG_INCOME_TOO_HIGH": "[TODO] Income is above the 2026 zorgtoeslag threshold.",
+      "ZORG_ASSETS_TOO_HIGH": "[TODO] Assets are above the 2026 zorgtoeslag threshold.",
+      "ZORG_FOREIGN_CASE_MANUAL_REVIEW": "[TODO] Foreign or CAK context requires manual review.",
+      "ZORG_SPECIAL_STATUS_MANUAL_REVIEW": "[TODO] Special status requires manual review.",
+      "HUUR_UNDER_18": "[TODO] Applicant is younger than 18.",
+      "HUUR_NO_RENTAL_CONTRACT": "[TODO] A rental contract is required.",
+      "HUUR_NOT_INDEPENDENT_HOME": "[TODO] The home is not independent and no recognized exception is marked.",
+      "HUUR_KAMERHUUR": "[TODO] Ordinary room rental is not eligible.",
+      "HUUR_GROUP_HOUSING_UNRECOGNIZED": "[TODO] Group housing is not marked as a recognized exception.",
+      "HUUR_APPLICANT_ASSETS_TOO_HIGH": "[TODO] Applicant assets exceed the 2026 huurtoeslag threshold.",
+      "HUUR_PARTNER_ASSETS_TOO_HIGH": "[TODO] Joint applicant-partner assets exceed the 2026 huurtoeslag threshold.",
+      "HUUR_MEDEBEWONER_ASSETS_TOO_HIGH": "[TODO] A medebewoner exceeds the allowed asset threshold.",
+      "HUUR_INCOME_TOO_HIGH": "[TODO] Income is too high for a positive huurtoeslag outcome.",
+      "HUUR_AMOUNT_ZERO": "[TODO] The formula produces zero huurtoeslag.",
+      "HUUR_SPECIAL_CASE_MANUAL_REVIEW": "[TODO] A special rent situation requires manual review.",
+      "YOUNG_HOUSEHOLD_HUUR_FORMULA_REQUIRES_CONFIRMATION": "[TODO] Young-household path was applied and should be reviewed in context.",
+      "KGB_NO_CHILD_UNDER_18": "[TODO] No child under 18 is present.",
+      "KGB_NO_KINDERBIJSLAG": "[TODO] No eligible child with kinderbijslag was found.",
+      "KGB_KINDERBIJSLAG_EXCEPTION_MANUAL_REVIEW": "[TODO] Kinderbijslag exception for older children requires manual review.",
+      "KGB_ASSETS_TOO_HIGH": "[TODO] Assets are above the 2026 kindgebonden budget threshold.",
+      "KGB_INCOME_TOO_HIGH": "[TODO] Income is too high for a positive kindgebonden budget outcome.",
+      "KGB_AMOUNT_ZERO": "[TODO] The formula produces zero kindgebonden budget.",
+      "KGB_FOREIGN_CHILD_MANUAL_REVIEW": "[TODO] Child abroad requires woonlandfactor review.",
+      "KGB_COMPOSED_FAMILY_MANUAL_REVIEW": "[TODO] Composed family situation requires manual review.",
+      "KGB_CO_PARENTING_MANUAL_REVIEW": "[TODO] Co-parenting situation requires manual review.",
+      "KOT_NO_VALID_ACTIVITY_APPLICANT": "[TODO] Applicant does not have a valid childcare-activity status.",
+      "KOT_NO_VALID_ACTIVITY_PARTNER": "[TODO] Partner does not have a valid childcare-activity status.",
+      "KOT_CHILD_NOT_LIVING_WITH_APPLICANT": "[TODO] Child does not live with the applicant and no valid co-parenting branch is marked.",
+      "KOT_NOT_REGISTERED_LRK": "[TODO] Childcare is not registered in the LRK.",
+      "KOT_NO_LRK_NUMBER": "[TODO] LRK number is missing.",
+      "KOT_TUSSENSCHOOLSE_OPVANG_NOT_ELIGIBLE": "[TODO] Tussenschoolse opvang is not eligible.",
+      "KOT_NO_CONTRACT": "[TODO] A childcare contract is required.",
+      "KOT_NO_EIGEN_BIJDRAGE": "[TODO] Parents must pay part of the childcare costs.",
+      "KOT_NO_HOURS": "[TODO] Eligible childcare hours are missing.",
+      "KOT_NO_RATE": "[TODO] Hourly rate is missing.",
+      "KOT_CHILD_BSN_REQUIRED": "[TODO] Child BSN is required.",
+      "KOT_FOREIGN_CHILDCARE_MANUAL_REVIEW": "[TODO] Childcare abroad requires manual review.",
+      "KOT_PERCENTAGE_TABLE_INCOMPLETE": "[TODO] The official percentage table is incomplete for this scenario.",
+      "GENERAL_SELECTED_BENEFIT_NOT_EVALUATED": "[TODO] Benefit was not selected for evaluation."
+    },
+    "documents": {
+      "identity_document": "[TODO] Identity document",
+      "bsn_applicant": "[TODO] Applicant BSN proof",
+      "iban": "[TODO] IBAN / bank account proof",
+      "estimated_income_2026": "[TODO] Estimated 2026 income statement",
+      "recent_payslip_or_income_proof": "[TODO] Recent payslip or income proof",
+      "authorization_or_machtiging_if_assisted": "[TODO] Authorization / machtiging if assisted",
+      "partner_details_if_applicable": "[TODO] Partner details",
+      "health_insurance_policy_applicant": "[TODO] Dutch health insurance policy for applicant",
+      "health_insurance_policy_partner": "[TODO] Dutch health insurance policy for partner",
+      "income_proof": "[TODO] Income proof",
+      "assets_statement_if_near_limit": "[TODO] Assets statement if near threshold",
+      "cak_or_verdragsgerechtigde_proof": "[TODO] CAK or treaty-insured proof",
+      "special_status_evidence": "[TODO] Special-status evidence",
+      "rental_contract": "[TODO] Rental contract",
+      "basic_rent_proof": "[TODO] Basic rent / kale huur proof",
+      "landlord_rent_change_letter": "[TODO] Landlord rent-change letter",
+      "brp_registration_proof": "[TODO] BRP registration proof",
+      "rent_payment_proof": "[TODO] Rent payment proof",
+      "partner_income_assets_proof": "[TODO] Partner income and asset proof",
+      "resident_income_assets_proof": "[TODO] Medebewoner income and asset proof",
+      "subtenant_contract_and_bank_statements": "[TODO] Subtenant contract and bank statements",
+      "woonwagen_standplaats_proof": "[TODO] Woonwagen / standplaats proof",
+      "group_housing_recognition_proof": "[TODO] Group-housing recognition proof",
+      "co_parenting_agreement": "[TODO] Co-parenting agreement",
+      "special_income_assets_manual_review_proof": "[TODO] Special income or assets review proof",
+      "child_bsn": "[TODO] Child BSN proof",
+      "child_birth_date": "[TODO] Child birth-date proof",
+      "svb_kinderbijslag_proof": "[TODO] SVB kinderbijslag proof",
+      "assets_1_january": "[TODO] Assets on 1 January proof",
+      "partner_income_proof": "[TODO] Partner income proof",
+      "composed_family_documents": "[TODO] Composed-family documents",
+      "child_abroad_residence_and_woonlandfactor_documents": "[TODO] Child abroad and woonlandfactor documents",
+      "foster_step_adoption_documents": "[TODO] Adoption, foster or stepchild documents",
+      "child_assets_proof": "[TODO] Child asset proof",
+      "childcare_contract": "[TODO] Childcare contract",
+      "lrk_number": "[TODO] LRK number proof",
+      "provider_name_address": "[TODO] Provider name and address",
+      "childcare_type": "[TODO] Childcare type evidence",
+      "start_end_date": "[TODO] Start and end dates",
+      "monthly_hours": "[TODO] Monthly hours overview",
+      "hourly_rate": "[TODO] Hourly rate proof",
+      "invoices": "[TODO] Invoices",
+      "bank_payment_proof": "[TODO] Bank payment proof",
+      "applicant_income_proof": "[TODO] Applicant income proof",
+      "partner_income_activity_proof": "[TODO] Partner income and activity proof",
+      "employment_contract_or_payslip": "[TODO] Employment contract, payslip or jaaropgave",
+      "zzp_kvk_invoices_bookkeeping_hours": "[TODO] KvK, invoices, bookkeeping and hours administration",
+      "education_enrollment_proof": "[TODO] Education enrollment proof",
+      "inburgering_course_proof": "[TODO] Inburgering course proof",
+      "uwv_or_municipality_trajectory_proof": "[TODO] UWV or municipality trajectory proof",
+      "foreign_childcare_registration": "[TODO] Foreign childcare registration proof",
+      "gastouderbureau_contract_and_invoices": "[TODO] Gastouderbureau contract and invoices",
+      "change_letter_for_hours_or_rate": "[TODO] Change letter for hours or rate"
     },
     "results": {
-      "summaryBadge": "Eligibility summary",
       "summary": {
-        "none": "No clear benefit match appears from this first estimate.",
-        "one": "One benefit looks potentially relevant from this intake.",
-        "multiple": "Several benefits look potentially relevant from this intake."
+        "none": "[TODO] No benefit currently passes the core 2026 checks.",
+        "one": "[TODO] One benefit currently passes the core 2026 checks.",
+        "multiple": "[TODO] Multiple benefits currently pass the core 2026 checks."
       },
-      "disclaimer": "This is an estimate, not an official decision. Final approval depends on official review, documentary evidence and the definitive government assessment.",
-      "totalLabel": "Estimated annual total",
-      "totalCaption": "Combined estimate across all potentially relevant benefits.",
-      "eligibleCountLabel": "Potentially eligible benefits",
-      "eligibleCountCaption": "Benefits that currently pass the main visible conditions.",
-      "noneEligibleTitle": "No benefit currently clears the visible conditions.",
-      "noneEligibleCopy": "That does not always mean the case is closed. Residency, insurance, housing setup or child-related registration details often need to be clarified before a second pass.",
-      "honestyTitle": "Keep this result in the right context.",
-      "honestyCopy": "Some cases still require supporting documents, official registration checks or manual review before an application should be filed.",
-      "eligible": "Eligible",
-      "notEligible": "Not eligible",
-      "estimatedAnnualLabel": "Estimated annual amount",
-      "whyLabel": "Why this result",
-      "nextStepLabel": "Recommended next step",
-      "reviewNotice": "FinTax can review the estimate against documents before any application is submitted.",
-      "addToPlan": "Add to support plan",
-      "removeFromPlan": "Remove from support plan",
+      "summaryBadge": "[TODO] Estimated 2026 outcome",
+      "disclaimer": "[TODO] Estimated, not definitive. Final entitlement is determined by Dienst Toeslagen after the official assessment and supporting evidence.",
+      "totalLabel": "[TODO] Estimated annual total",
+      "totalCaption": "[TODO] Sum of all selected benefits with a calculable estimate.",
+      "eligibleCountLabel": "[TODO] Eligible benefits",
+      "eligibleCountCaption": "[TODO] Benefits that currently pass the main visible conditions.",
+      "noneEligibleTitle": "[TODO] No direct entitlement found",
+      "noneEligibleCopy": "[TODO] Review the blocking reasons and manual-review branches before advising the client to apply or not apply.",
+      "honestyTitle": "[TODO] Professional use note",
+      "honestyCopy": "[TODO] This module mirrors public-rule logic where official data is available, but it does not replace the definitive assessment from Dienst Toeslagen.",
+      "manualReviewTitle": "[TODO] Manual review required",
+      "manualReviewCopy": "[TODO] At least one selected benefit enters a branch that needs document review or specialist handling before any advice should be treated as reliable.",
+      "eligible": "[TODO] Eligible",
+      "notEligible": "[TODO] Not eligible",
+      "manualReview": "[TODO] Manual review",
+      "estimatedAnnualLabel": "[TODO] Estimated annual amount",
+      "topReasonsLabel": "[TODO] Top reasons",
+      "calculationTraceLabel": "[TODO] Calculation trace",
+      "documentsLabel": "[TODO] Documents checklist",
+      "removeFromPlan": "[TODO] Remove from plan",
+      "addToPlan": "[TODO] Add to plan",
+      "reviewNotice": "[TODO] Review with the client before submitting.",
+      "manualReviewNotice": "[TODO] Manual review is required before relying on this outcome.",
+      "month": "[TODO] month",
       "cards": {
         "zorgtoeslag": {
-          "title": "Zorgtoeslag",
-          "subtitle": "Health insurance allowance"
+          "title": "[TODO] Zorgtoeslag",
+          "subtitle": "[TODO] Dutch health-insurance allowance."
         },
         "huurtoeslag": {
-          "title": "Huurtoeslag",
-          "subtitle": "Rent support"
+          "title": "[TODO] Huurtoeslag",
+          "subtitle": "[TODO] Rent allowance based on rent, income and household facts."
         },
         "kindgebondenBudget": {
-          "title": "Kindgebonden budget",
-          "subtitle": "Income-related child budget"
+          "title": "[TODO] Kindgebonden budget",
+          "subtitle": "[TODO] Income-related child budget for children under 18."
         },
         "kinderopvangtoeslag": {
-          "title": "Kinderopvangtoeslag",
-          "subtitle": "Childcare cost support"
+          "title": "[TODO] Kinderopvangtoeslag",
+          "subtitle": "[TODO] Childcare allowance based on valid activity, LRK and official percentage bands."
         }
       },
-      "reasonCodes": {
-        "min_age": "The age baseline is below the usual threshold for this benefit.",
-        "nl_resident_required": "Dutch residency is generally required.",
-        "health_insurance_required": "Dutch basic health insurance is generally required.",
-        "income_too_high": "Current income appears above the main threshold used in this estimate.",
-        "assets_too_high": "Current assets appear above the main threshold used in this estimate.",
-        "resident_and_insured": "Residency and health insurance currently align with the main zorgtoeslag conditions.",
-        "income_within_threshold": "Income stays within the visible threshold used for this estimate.",
-        "assets_within_threshold": "Assets remain within the visible threshold used for this estimate.",
-        "independent_home_required": "An independent home is usually required for huurtoeslag.",
-        "rental_contract_required": "A rental contract is usually required for huurtoeslag.",
-        "independent_rental_home": "The housing setup matches the core independent rental condition.",
-        "assets_within_huur_threshold": "Assets remain within the main housing support threshold.",
-        "children_required": "At least one child under 18 is required for this benefit.",
-        "kinderbijslag_required": "Receiving kinderbijslag is usually required.",
-        "children_declared": "The household includes children under 18.",
-        "kinderbijslag_confirmed": "Kinderbijslag is currently marked as received.",
-        "childcare_not_needed": "No relevant childcare support was indicated in the intake.",
-        "registered_childcare_required": "The childcare provider must usually be registered.",
-        "working_parents_required": "Work or an equivalent qualifying status is usually required.",
-        "childcare_hours_required": "Paid childcare hours must be present to estimate this benefit.",
-        "childcare_requirements_met": "The current childcare answers support a first estimate.",
-        "childcare_costs_capped": "The estimate already applies the published hourly rate cap."
-      },
-      "nextSteps": {
-        "collectHealthPolicy": "Prepare your health insurance policy details and recent income evidence before filing.",
-        "reviewHealthConditions": "Review residency and health insurance status first, then reassess the estimate.",
-        "prepareRentalDocuments": "Prepare the rental contract, rent amount and address registration documents.",
-        "reviewHousingConditions": "Clarify whether the home is independent and whether a rental contract can be documented.",
-        "confirmChildBenefit": "Confirm kinderbijslag status and gather the child-related support documents.",
-        "reviewChildrenConditions": "Check child benefit status and the age or registration details for the children involved.",
-        "prepareChildcareInvoices": "Prepare childcare invoices, provider registration details and work-status evidence.",
-        "reviewChildcareConditions": "Check whether childcare is registered, paid and linked to qualifying work or status."
+      "calculation": {
+        "income": "[TODO] Income used",
+        "assets": "[TODO] Assets used",
+        "normPremie": "[TODO] Norm premium",
+        "annualAmount": "[TODO] Annual amount",
+        "monthlyAmount": "[TODO] Monthly amount",
+        "rekenhuur": "[TODO] Rakenhuur",
+        "cappedRent": "[TODO] Rent used after cap",
+        "basishuur": "[TODO] Basishuur",
+        "partA": "[TODO] Part A",
+        "partB": "[TODO] Part B",
+        "partC": "[TODO] Part C",
+        "rekeninkomen": "[TODO] Rakeninkomen",
+        "incomeCorrection": "[TODO] Income correction",
+        "childrenCount": "[TODO] Children count",
+        "baseAmount": "[TODO] Base amount",
+        "ageAdditions": "[TODO] Age additions",
+        "reduction": "[TODO] Income reduction",
+        "firstChild": "[TODO] First child used for KOT",
+        "firstChildRate": "[TODO] First child rate",
+        "nextChildRate": "[TODO] Next child rate"
       }
     },
     "bundle": {
-      "eyebrow": "Support plan",
-      "title": "Turn the estimate into a clean next step.",
-      "copy": "Choose the benefits you want to move forward with. We keep the action focused on review and application support, not an improvised checkout.",
-      "selectedServicesLabel": "Selected services",
-      "empty": "No benefits selected yet.",
-      "recommendedNextLabel": "Recommended next step",
-      "recommendedNextSelected": "Continue with a document review so the selected benefits can be checked against official evidence before any filing.",
-      "recommendedNextNone": "If you are unsure, request help first and we can review whether any benefit deserves a second pass.",
-      "annualImpactLabel": "Selected annual estimate",
-      "annualImpactCopy": "Combined estimate for the benefits currently included in your support plan.",
-      "continue": "Continue",
-      "askHelp": "Request help"
+      "eyebrow": "[TODO] Operational summary",
+      "title": "[TODO] Selected benefits package",
+      "copy": "[TODO] Use this selection as the working shortlist for document collection and case advice.",
+      "selectedServicesLabel": "[TODO] Selected benefits",
+      "empty": "[TODO] No benefits selected.",
+      "recommendedNextLabel": "[TODO] Recommended next step",
+      "recommendedNextSelected": "[TODO] Collect the required documents, confirm assumptions and review manual-review branches before any application is filed.",
+      "recommendedNextNone": "[TODO] Select the relevant benefits or review the intake facts first.",
+      "annualImpactLabel": "[TODO] Annual impact",
+      "annualImpactCopy": "[TODO] Estimated annual total for the currently selected benefits.",
+      "continue": "[TODO] Continue workflow",
+      "askHelp": "[TODO] Ask for review"
     }
   },
   "PaymentSuccess": {
