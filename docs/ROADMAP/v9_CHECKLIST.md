@@ -121,6 +121,27 @@ Still pending or intentionally deferred:
 - Manual review policy:
   - Any scenario with foreign factors, special assets/income, composed-family ambiguity, co-parenting ambiguity, childcare abroad or other public-tool exclusions is surfaced explicitly as `manualReviewRequired`
 
+## Benefits Freemium Application Flow
+
+- Branch name: `feature/benefits-freemium-application-flow`
+- Date: `2026-04-24`
+- Implemented:
+  - pre-payment results now show eligibility plus rounded estimated ranges only
+  - post-payment mode unlocks exact estimated amounts, calculation trace and document guidance
+  - benefits checkout now creates a benefits case before calling Stripe checkout
+  - success and benefits routes now direct paid benefits cases back into the benefits post-payment experience
+- Checkout integration added/verified:
+  - real endpoint added at [src/app/api/benefits/draft/route.ts](/C:/FinTax/src/app/api/benefits/draft/route.ts)
+  - development fallback preserved for Stripe/pricing gaps without changing production strictness
+- Tests added:
+  - [tests/toeslagen/estimate-range.test.ts](/C:/FinTax/tests/toeslagen/estimate-range.test.ts)
+  - [tests/ui/benefits-flow.test.tsx](/C:/FinTax/tests/ui/benefits-flow.test.tsx)
+  - [tests/ui/benefits-draft-route.test.ts](/C:/FinTax/tests/ui/benefits-draft-route.test.ts)
+- Gates run:
+  - Pending final full-gate run in this branch before merge decision
+- Remaining limitation:
+  - benefits post-payment document collection is staged with checklist guidance and existing case endpoints, but a dedicated benefits upload workspace is still a follow-up item
+
 ## Notes For Maintainers
 
 - Do not treat the older March append-only notes as current truth.

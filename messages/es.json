@@ -1290,7 +1290,11 @@
       "uwv_or_municipality_trajectory_proof": "UWV or municipality trajectory proof",
       "foreign_childcare_registration": "Foreign childcare registration proof",
       "gastouderbureau_contract_and_invoices": "Gastouderbureau contract and invoices",
-      "change_letter_for_hours_or_rate": "Change letter for hours or rate"
+      "change_letter_for_hours_or_rate": "Change letter for hours or rate",
+      "uploadNext": "Subir documentos",
+      "readyForReview": "{completed} de {total} documentos ya están completos.",
+      "connectedFlow": "Flujo documental conectado",
+      "stagedFlow": "Checklist preparada"
     },
     "results": {
       "summary": {
@@ -1314,6 +1318,7 @@
       "notEligible": "No elegible",
       "manualReview": "Revisi?n manual",
       "estimatedAnnualLabel": "Importe anual estimado",
+      "statusLabel": "Estado actual",
       "topReasonsLabel": "Principales razones",
       "calculationTraceLabel": "Traza de c?lculo",
       "documentsLabel": "Checklist documental",
@@ -1322,6 +1327,30 @@
       "reviewNotice": "Rev?salo con el cliente antes de presentar.",
       "manualReviewNotice": "Se requiere revisi?n manual antes de confiar en este resultado.",
       "month": "mes",
+      "range": {
+        "monthly": "Rango estimado mensual",
+        "annual": "Rango estimado anual"
+      },
+      "mode": {
+        "prePayment": {
+          "title": "Resultado preliminar de tus toeslagen",
+          "eligibleCount": "Según tus respuestas, podrías aplicar a {count} subsidio(s).",
+          "rangeLabel": "Rango estimado",
+          "cta": "Continuar y dejar que FinTax prepare mi solicitud",
+          "supportingTitle": "Cómo continúa FinTax",
+          "supporting": "Revisamos tus datos, te pedimos solo los documentos necesarios y preparamos la solicitud para reducir errores y complicaciones.",
+          "disclaimer": "Esta estimación se basa en reglas 2026. El importe definitivo lo determina Dienst Toeslagen.",
+          "manualReview": "Tu caso tiene una situación especial. Podemos revisarlo antes de preparar la solicitud.",
+          "amountHidden": "Los importes estimados exactos se desbloquean después del pago."
+        },
+        "postPayment": {
+          "title": "Cálculo detallado desbloqueado",
+          "status": "Pago recibido",
+          "nextStep": "Sube los documentos requeridos. Cuando estén completos, revisaremos tu caso y prepararemos la solicitud.",
+          "documentsIntro": "Solo pedimos los documentos necesarios para los subsidios que parecen aplicar a tu situación.",
+          "reviewPromise": "Revisaremos tus datos y prepararemos la solicitud, pero el importe final siempre lo decide Dienst Toeslagen."
+        }
+      },
       "cards": {
         "zorgtoeslag": {
           "title": "Zorgtoeslag",
@@ -1366,7 +1395,7 @@
     "bundle": {
       "eyebrow": "Resumen operativo",
       "title": "Paquete de subsidios seleccionados",
-      "copy": "Usa esta selecci?n como shortlist operativa para recogida documental y asesoramiento.",
+      "copy": "Usa esta selección como shortlist de los subsidios que parecen relevantes para tu caso.",
       "selectedServicesLabel": "Subsidios seleccionados",
       "empty": "No hay subsidios seleccionados.",
       "recommendedNextLabel": "Siguiente paso recomendado",
@@ -1375,7 +1404,13 @@
       "annualImpactLabel": "Impacto anual",
       "annualImpactCopy": "Total anual estimado para los subsidios seleccionados.",
       "continue": "Continuar flujo",
-      "askHelp": "Pedir revisi?n"
+      "askHelp": "Pedir revisión"
+    },
+    "checkout": {
+      "loading": "Cargando tu caso de benefits...",
+      "error": "No pudimos iniciar el checkout para este caso de benefits. Inténtalo de nuevo.",
+      "requiresAuth": "Inicia sesión para continuar con el checkout de benefits.",
+      "caseLoadError": "No pudimos cargar los detalles del caso de benefits ya pagado."
     }
   },
   "CaseDetail": {

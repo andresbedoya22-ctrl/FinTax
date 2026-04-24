@@ -562,7 +562,11 @@
       "uwv_or_municipality_trajectory_proof": "[TODO] UWV or municipality trajectory proof",
       "foreign_childcare_registration": "[TODO] Foreign childcare registration proof",
       "gastouderbureau_contract_and_invoices": "[TODO] Gastouderbureau contract and invoices",
-      "change_letter_for_hours_or_rate": "[TODO] Change letter for hours or rate"
+      "change_letter_for_hours_or_rate": "[TODO] Change letter for hours or rate",
+      "uploadNext": "[TODO] Upload documents",
+      "readyForReview": "[TODO] {completed} of {total} documents are already complete.",
+      "connectedFlow": "[TODO] Connected document flow",
+      "stagedFlow": "[TODO] Checklist staged"
     },
     "results": {
       "summary": {
@@ -586,6 +590,7 @@
       "notEligible": "[TODO] Not eligible",
       "manualReview": "[TODO] Manual review",
       "estimatedAnnualLabel": "[TODO] Estimated annual amount",
+      "statusLabel": "[TODO] Current status",
       "topReasonsLabel": "[TODO] Top reasons",
       "calculationTraceLabel": "[TODO] Calculation trace",
       "documentsLabel": "[TODO] Documents checklist",
@@ -594,6 +599,30 @@
       "reviewNotice": "[TODO] Review with the client before submitting.",
       "manualReviewNotice": "[TODO] Manual review is required before relying on this outcome.",
       "month": "[TODO] month",
+      "range": {
+        "monthly": "[TODO] Estimated monthly range",
+        "annual": "[TODO] Estimated annual range"
+      },
+      "mode": {
+        "prePayment": {
+          "title": "[TODO] Preliminary result for your toeslagen",
+          "eligibleCount": "[TODO] Based on your answers, you could potentially apply for {count} benefit(s).",
+          "rangeLabel": "[TODO] Estimated range",
+          "cta": "[TODO] Continue and let FinTax prepare my application",
+          "supportingTitle": "[TODO] How FinTax helps next",
+          "supporting": "[TODO] We review your data, ask only for the documents that are needed and prepare the application to reduce the risk of errors and complications.",
+          "disclaimer": "[TODO] This estimate is based on 2026 rules. The final amount is determined by Dienst Toeslagen.",
+          "manualReview": "[TODO] Your case has a special situation. We can review it before preparing the application.",
+          "amountHidden": "[TODO] Exact estimated amounts unlock after payment."
+        },
+        "postPayment": {
+          "title": "[TODO] Detailed calculation unlocked",
+          "status": "[TODO] Payment received",
+          "nextStep": "[TODO] Upload the required documents. When they are complete, we will review your case and prepare the application.",
+          "documentsIntro": "[TODO] We only ask for the documents needed for the benefits that appear relevant to your situation.",
+          "reviewPromise": "[TODO] We will review your data and prepare the application, but the final amount is always decided by Dienst Toeslagen."
+        }
+      },
       "cards": {
         "zorgtoeslag": {
           "title": "[TODO] Zorgtoeslag",
@@ -648,6 +677,12 @@
       "annualImpactCopy": "[TODO] Estimated annual total for the currently selected benefits.",
       "continue": "[TODO] Continue workflow",
       "askHelp": "[TODO] Ask for review"
+    },
+    "checkout": {
+      "loading": "[TODO] Loading your benefits case...",
+      "error": "[TODO] We could not start checkout for this benefits case. Please try again.",
+      "requiresAuth": "[TODO] Sign in to continue with benefits checkout.",
+      "caseLoadError": "[TODO] We could not load the paid benefits case details."
     }
   },
   "PaymentSuccess": {

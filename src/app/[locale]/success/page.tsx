@@ -46,7 +46,7 @@ export default async function SuccessPage({
 
   const { data: caseRecord } = await supabase
     .from("cases")
-    .select("id,status,paid_at")
+    .select("id,status,paid_at,case_type")
     .eq("id", caseId)
     .eq("user_id", user.id)
     .maybeSingle();
@@ -67,6 +67,7 @@ export default async function SuccessPage({
       caseId={caseId}
       initialStatus={initialStatus}
       initialCaseStatus={caseRecord.status}
+      initialCaseType={caseRecord.case_type}
       sessionId={sessionId}
     />
   );

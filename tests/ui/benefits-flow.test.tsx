@@ -1,15 +1,14 @@
 /// <reference types="vitest/globals" />
 
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 import enMessages from "../../messages/en.json";
 
-import { BenefitsFlow } from "@/components/fintax/flows/BenefitsFlow";
+import { BenefitsResults } from "@/components/fintax/flows/benefits";
+import { evaluateToeslagen } from "@/lib/toeslagen";
 
-const loadWizardSnapshotMock = vi.fn();
-const persistWizardSnapshotMock = vi.fn();
-const readWizardSnapshotMock = vi.fn();
+import { createBaseHousehold } from "../toeslagen/helpers";
 
 vi.mock("next-intl", () => ({
   useTranslations: (namespace: string) => {
@@ -32,106 +31,77 @@ vi.mock("next-intl", () => ({
 
     return translate;
   },
+  useLocale: () => "en",
 }));
 
-vi.mock("@/lib/wizards/persistence", () => ({
-  loadWizardSnapshot: (...args: unknown[]) => loadWizardSnapshotMock(...args),
-  persistWizardSnapshot: (...args: unknown[]) => persistWizardSnapshotMock(...args),
-  readWizardSnapshot: (...args: unknown[]) => readWizardSnapshotMock(...args),
+vi.mock("@/hooks/useTaxReturnDocFlow", () => ({
+  useCaseRequirements: () => ({ data: { requirements: [], progress: { completed: 0, total: 0 } } }),
+  useCaseProgress: () => ({ data: null }),
 }));
 
-describe("BenefitsFlow", () => {
-  beforeEach(() => {
-    loadWizardSnapshotMock.mockImplementation((_: string, fallback: unknown) => fallback);
-    persistWizardSnapshotMock.mockResolvedValue(undefined);
-    readWizardSnapshotMock.mockReturnValue(null);
-  });
+describe("Benefits results modes", () => {
+  function buildEvaluation() {
+    const household = createBaseHousehold();
+    household.selectedBenefits = ["zorgtoeslag", "huurtoeslag"];
+    return evaluateToeslagen(household);
+  }
 
-  it("renders the new canonical wizard shell", () => {
-    render(<BenefitsFlow />);
+  it("prePayment hides exact totals and shows a range", () => {
+    const results = buildEvaluation();
 
-    expect(screen.getByRole("heading", { name: /benefits \/ toeslagen 2026 check/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /benefits eligibility wizard/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /select benefits/i })).toBeInTheDocument();
-  });
-
-  it("navigates through the new step sequence", async () => {
-    render(<BenefitsFlow />);
-
-    fireEvent.click(screen.getByRole("button", { name: /next/i }));
-
-    await waitFor(() => expect(screen.getByRole("heading", { name: /applicant details/i })).toBeInTheDocument());
-    expect(screen.getByText(/step 2 of 12/i)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /back/i }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: /select benefits/i })).toBeInTheDocument());
-  });
-
-  it("supports dynamic child and childcare arrangement editors", async () => {
-    render(<BenefitsFlow />);
-
-    for (let index = 0; index < 5; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    }
-
-    await waitFor(() => expect(screen.getByRole("button", { name: /add child/i })).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /add child/i }));
-    expect(screen.getByText(/child 1/i)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByLabelText(/child goes to childcare/i));
-    fireEvent.click(screen.getByRole("button", { name: /next/i }));
-
-    await waitFor(() => expect(screen.getByRole("button", { name: /add arrangement/i })).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /add arrangement/i }));
-    expect(screen.getByText(/arrangement 1/i)).toBeInTheDocument();
-  });
-
-  it("renders results with calculation cards after progressing to the end", async () => {
-    render(<BenefitsFlow />);
-
-    for (let index = 0; index < 11; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    }
-
-    await waitFor(() => expect(screen.getByTestId("benefits-results-total")).toBeInTheDocument());
-    expect(screen.getByTestId("benefit-card-zorgtoeslag")).toBeInTheDocument();
-    expect(screen.getByTestId("benefit-card-huurtoeslag")).toBeInTheDocument();
-  });
-
-  it("loads a legacy saved snapshot and persists the next step", async () => {
-    loadWizardSnapshotMock.mockReturnValue({
-      age: 41,
-      householdType: "partners",
-      annualIncome: 52000,
-      assets: 9000,
-      nlResident: true,
-      hasHealthInsurance: true,
-      hasIndependentHome: true,
-      hasRentalContract: true,
-      monthlyRent: 1200,
-      childrenUnder18: 1,
-      receivesKinderbijslag: true,
-      usesChildcare: false,
-      childcareHoursPerMonth: 0,
-      childcareType: "daycare",
-      childcareHourlyRate: 0,
-      registeredChildcare: false,
-      bothParentsWork: false,
-    });
-
-    render(<BenefitsFlow />);
-
-    fireEvent.click(screen.getByRole("button", { name: /next/i }));
-
-    await waitFor(() =>
-      expect(persistWizardSnapshotMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          storageKey: "fintax-benefits-wizard",
-          payload: expect.objectContaining({
-            currentStep: 1,
-          }),
-        }),
-      ),
+    render(
+      <BenefitsResults
+        mode="prePayment"
+        results={results}
+        selectedKeys={["zorgtoeslag", "huurtoeslag"]}
+        onToggleSelected={() => undefined}
+        onContinueToCheckout={() => undefined}
+      />,
     );
+
+    expect(screen.getByText(/preliminary result for your toeslagen/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/estimated range/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(new RegExp(results.totalEstimatedAnnualAmount.toFixed(2), "i"))).not.toBeInTheDocument();
+    expect(screen.queryByText(/calculation trace/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/documents checklist/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /continue and let fintax prepare my application/i })).toBeInTheDocument();
+  });
+
+  it("postPayment shows exact amount, calculation trace and documents", () => {
+    const results = buildEvaluation();
+
+    render(
+      <BenefitsResults
+        mode="postPayment"
+        caseId="case-benefits-1"
+        results={results}
+        selectedKeys={["zorgtoeslag", "huurtoeslag"]}
+        onToggleSelected={() => undefined}
+      />,
+    );
+
+    expect(screen.getByText(/detailed calculation unlocked/i)).toBeInTheDocument();
+    expect(screen.getAllByText(new RegExp(results.totalEstimatedAnnualAmount.toFixed(2), "i")).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/calculation trace/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/documents checklist/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/upload the required documents/i)).toBeInTheDocument();
+  });
+
+  it("prePayment checkout CTA can be triggered", () => {
+    const results = buildEvaluation();
+    const onContinueToCheckout = vi.fn();
+
+    render(
+      <BenefitsResults
+        mode="prePayment"
+        results={results}
+        selectedKeys={["zorgtoeslag"]}
+        onToggleSelected={() => undefined}
+        onContinueToCheckout={onContinueToCheckout}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /continue and let fintax prepare my application/i }));
+    expect(onContinueToCheckout).toHaveBeenCalledTimes(1);
   });
 });

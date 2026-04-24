@@ -217,6 +217,10 @@ export const mockServicePricing: ServicePricing[] = [
   { id: "sp3", case_type: "tax_return_c", name: "Form C", description: "Non-resident", price: 99, is_active: true, created_at: now },
   { id: "sp4", case_type: "tax_return_w", name: "ZZP", description: "Self-employed", price: 149, is_active: true, created_at: now },
   { id: "sp5", case_type: "btw_declaration", name: "BTW", description: "VAT declaration", price: 59, is_active: true, created_at: now },
+  { id: "sp6", case_type: "zorgtoeslag", name: "Benefits filing", description: "Benefits bundle filing and preparation", price: 39, is_active: true, created_at: now },
+  { id: "sp7", case_type: "huurtoeslag", name: "Benefits filing", description: "Benefits bundle filing and preparation", price: 39, is_active: true, created_at: now },
+  { id: "sp8", case_type: "kindgebonden_budget", name: "Benefits filing", description: "Benefits bundle filing and preparation", price: 39, is_active: true, created_at: now },
+  { id: "sp9", case_type: "kinderopvangtoeslag", name: "Benefits filing", description: "Benefits bundle filing and preparation", price: 39, is_active: true, created_at: now },
 ];
 
 export function getMockCase(caseId: string) {
