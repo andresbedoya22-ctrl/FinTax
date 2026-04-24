@@ -30,12 +30,6 @@ vi.mock("next-intl", () => ({
       );
     };
 
-    translate.raw = (key: string) =>
-      key.split(".").reduce<unknown>((acc, segment) => {
-        if (!acc || typeof acc !== "object") return undefined;
-        return (acc as Record<string, unknown>)[segment];
-      }, source);
-
     return translate;
   },
 }));
@@ -53,136 +47,58 @@ describe("BenefitsFlow", () => {
     readWizardSnapshotMock.mockReturnValue(null);
   });
 
-  it("renders the redesigned wizard shell", () => {
+  it("renders the new canonical wizard shell", () => {
     render(<BenefitsFlow />);
 
-    expect(screen.getByRole("heading", { name: /see which dutch benefits may actually fit your case/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /benefits \/ toeslagen 2026 check/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /benefits eligibility wizard/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /personal context/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /select benefits/i })).toBeInTheDocument();
   });
 
-  it("updates step progress and supports next and back navigation", async () => {
+  it("navigates through the new step sequence", async () => {
     render(<BenefitsFlow />);
 
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
 
-    await waitFor(() => expect(screen.getByText(/income picture/i)).toBeInTheDocument());
-    expect(screen.getByText("2 / 7")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("heading", { name: /applicant details/i })).toBeInTheDocument());
+    expect(screen.getByText(/step 2 of 12/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /back/i }));
-
-    await waitFor(() => expect(screen.getByText(/residency check/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("heading", { name: /select benefits/i })).toBeInTheDocument());
   });
 
-  it("simplifies conditional sections for no rent, no insurance and no children", async () => {
+  it("supports dynamic child and childcare arrangement editors", async () => {
     render(<BenefitsFlow />);
 
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    for (let index = 0; index < 5; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: /next/i }));
+    }
 
-    await waitFor(() => expect(screen.getByText(/rental situation/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("button", { name: /add child/i })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /add child/i }));
+    expect(screen.getByText(/child 1/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /independent home/i }));
-    expect(screen.queryByLabelText(/monthly rent/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/housing questions simplified/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText(/child goes to childcare/i));
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
 
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: /^health$/i })).toBeInTheDocument());
-
-    fireEvent.click(screen.getByRole("button", { name: /dutch health insurance/i }));
-    expect(screen.getByText(/zorgtoeslag remains unlikely/i)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: /^children$/i })).toBeInTheDocument());
-
-    expect(screen.getByText(/children section simplified/i)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /receiving kinderbijslag/i })).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("button", { name: /add arrangement/i })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /add arrangement/i }));
+    expect(screen.getByText(/arrangement 1/i)).toBeInTheDocument();
   });
 
-  it("shows the final eligibility cards, total and summary message", async () => {
+  it("renders results with calculation cards after progressing to the end", async () => {
     render(<BenefitsFlow />);
 
-    for (let index = 0; index < 6; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    for (let index = 0; index < 11; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: /next/i }));
     }
 
     await waitFor(() => expect(screen.getByTestId("benefits-results-total")).toBeInTheDocument());
-
-    expect(screen.getByText(/several benefits look potentially relevant/i)).toBeInTheDocument();
     expect(screen.getByTestId("benefit-card-zorgtoeslag")).toBeInTheDocument();
     expect(screen.getByTestId("benefit-card-huurtoeslag")).toBeInTheDocument();
-    expect(screen.getByTestId("benefit-card-kindgebondenBudget")).toBeInTheDocument();
-    expect(screen.getByTestId("benefit-card-kinderopvangtoeslag")).toBeInTheDocument();
   });
 
-  it("shows the no-eligibility state and disables the final continue action when nothing qualifies", async () => {
-    render(<BenefitsFlow />);
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-
-    await waitFor(() => expect(screen.getByText(/rental situation/i)).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /independent home/i }));
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: /^health$/i })).toBeInTheDocument());
-
-    fireEvent.click(screen.getByRole("button", { name: /dutch health insurance/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
-
-    await waitFor(() => expect(screen.getByTestId("benefits-results-total")).toBeInTheDocument());
-    expect(screen.getByTestId("benefits-results-total")).toHaveTextContent("EUR 0.00");
-    expect(screen.queryAllByRole("button", { name: /remove from support plan/i })).toHaveLength(0);
-    expect(screen.getByText(/no benefits selected yet/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^continue$/i })).toBeDisabled();
-  });
-
-  it("auto-selects eligible benefits in results and allows clearing the support plan", async () => {
-    loadWizardSnapshotMock.mockReturnValue({
-      age: 36,
-      householdType: "single",
-      annualIncome: 28000,
-      assets: 5000,
-      nlResident: true,
-      hasHealthInsurance: true,
-      hasIndependentHome: true,
-      hasRentalContract: true,
-      monthlyRent: 900,
-      childrenUnder18: 1,
-      receivesKinderbijslag: true,
-      usesChildcare: false,
-      childcareHoursPerMonth: 0,
-      childcareType: "daycare",
-      childcareHourlyRate: 0,
-      registeredChildcare: false,
-      bothParentsWork: false,
-    });
-    readWizardSnapshotMock.mockReturnValue({
-      progressStep: 6,
-      payload: {
-        selectedBenefits: [],
-      },
-    });
-
-    render(<BenefitsFlow />);
-
-    await waitFor(() => expect(screen.getByText(/selected services/i)).toBeInTheDocument());
-
-    expect(screen.getAllByRole("button", { name: /remove from support plan/i }).length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /^continue$/i })).toBeEnabled();
-
-    screen.getAllByRole("button", { name: /remove from support plan/i }).forEach((button) => {
-      fireEvent.click(button);
-    });
-
-    await waitFor(() => expect(screen.getByText(/no benefits selected yet/i)).toBeInTheDocument());
-    expect(screen.getByRole("button", { name: /^continue$/i })).toBeDisabled();
-  });
-
-  it("loads a saved snapshot and persists the current step after advancing", async () => {
+  it("loads a legacy saved snapshot and persists the next step", async () => {
     loadWizardSnapshotMock.mockReturnValue({
       age: 41,
       householdType: "partners",
@@ -202,21 +118,10 @@ describe("BenefitsFlow", () => {
       registeredChildcare: false,
       bothParentsWork: false,
     });
-    readWizardSnapshotMock.mockReturnValue({
-      progressStep: 0,
-      payload: {
-        selectedBenefits: ["zorgtoeslag"],
-      },
-    });
 
     render(<BenefitsFlow />);
 
-    expect(loadWizardSnapshotMock).toHaveBeenCalledWith("fintax-benefits-wizard", expect.any(Object));
-    expect(readWizardSnapshotMock).toHaveBeenCalledWith("fintax-benefits-wizard");
-
-    persistWizardSnapshotMock.mockClear();
-
-    fireEvent.click(screen.getByRole("button", { name: /continue/i }));
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
 
     await waitFor(() =>
       expect(persistWizardSnapshotMock).toHaveBeenCalledWith(

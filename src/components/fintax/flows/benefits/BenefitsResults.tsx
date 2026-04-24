@@ -3,25 +3,31 @@
 import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import type { EligibilityResults } from "@/lib/utils/eligibility-calculator";
+import type { ToeslagenEvaluation } from "@/lib/toeslagen";
 
 import { BenefitsBundleSummary } from "./BenefitsBundleSummary";
 import { BenefitsEligibilityCard } from "./BenefitsEligibilityCard";
 import type { BenefitCardKey } from "./wizard";
-import { benefitCardOrder } from "./wizard";
+
+const benefitCardOrder: BenefitCardKey[] = [
+  "zorgtoeslag",
+  "huurtoeslag",
+  "kindgebondenBudget",
+  "kinderopvangtoeslag",
+];
 
 export function BenefitsResults({
   results,
   selectedKeys,
   onToggleSelected,
 }: {
-  results: EligibilityResults;
+  results: ToeslagenEvaluation;
   selectedKeys: BenefitCardKey[];
   onToggleSelected: (key: BenefitCardKey) => void;
 }) {
   const t = useTranslations("Benefits");
-  const eligibleCount = benefitCardOrder.filter((key) => results[key].eligible).length;
-  const selectedAmount = selectedKeys.reduce((sum, key) => sum + results[key].estimatedAnnualAmount, 0);
+  const eligibleCount = benefitCardOrder.filter((key) => results.results[key].eligible).length;
+  const selectedAmount = selectedKeys.reduce((sum, key) => sum + (results.results[key].estimatedAnnualAmount ?? 0), 0);
 
   const summaryMessage =
     eligibleCount === 0
@@ -46,6 +52,7 @@ export function BenefitsResults({
           <div className="rounded-[24px] border border-border/40 bg-white/85 p-4" data-testid="benefits-results-total">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.totalLabel")}</p>
             <p className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">EUR {results.totalEstimatedAnnualAmount.toFixed(2)}</p>
+            <p className="mt-1 text-sm text-secondary">EUR {results.totalEstimatedMonthlyAmount.toFixed(2)} / {t("results.month")}</p>
             <p className="mt-2 text-sm text-secondary">{t("results.totalCaption")}</p>
           </div>
 
@@ -74,6 +81,13 @@ export function BenefitsResults({
             </div>
           </div>
         </div>
+
+        {results.manualReviewRequired ? (
+          <div className="mt-5 rounded-[24px] border border-copper/25 bg-copper/10 p-4">
+            <p className="text-sm font-semibold text-text">{t("results.manualReviewTitle")}</p>
+            <p className="mt-1 text-sm leading-6 text-secondary">{t("results.manualReviewCopy")}</p>
+          </div>
+        ) : null}
       </section>
 
       <div className="grid gap-4 xl:grid-cols-2">
@@ -81,7 +95,7 @@ export function BenefitsResults({
           <BenefitsEligibilityCard
             key={key}
             benefitKey={key}
-            result={results[key]}
+            result={results.results[key]}
             selected={selectedKeys.includes(key)}
             onToggleSelected={() => onToggleSelected(key)}
           />

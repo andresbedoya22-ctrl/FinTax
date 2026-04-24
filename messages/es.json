@@ -1023,289 +1023,359 @@
     }
   },
   "Benefits": {
-    "heroTitle": "Descubre qué subsidios de NL pueden encajar realmente con tu caso.",
-    "heroSubtitle": "Un intake premium de elegibilidad para toeslagen 2026. El flujo se adapta a tu situación, mantiene las preguntas enfocadas y termina con una estimación clara, explicación y siguiente paso recomendado por subsidio.",
-    "wizardTitle": "Wizard de elegibilidad de subsidios",
-    "back": "Atrás",
-    "next": "Continuar",
+    "heroTitle": "Chequeo Benefits / Toeslagen 2026",
+    "heroSubtitle": "Estimaci?n estructurada alineada con las reglas p?blicas 2026, la matriz documental y las ramas de revisi?n manual. El derecho final siempre lo determina Dienst Toeslagen.",
+    "wizardTitle": "Benefits eligibility wizard",
+    "back": "Atr?s",
+    "next": "Siguiente",
     "intro": {
-      "eyebrow": "Revisión de subsidios",
+      "eyebrow": "Proefberekening 2026",
       "highlights": {
-        "rulesLabel": "Marco de reglas",
-        "rulesValue": "Umbrales 2026 integrados en el wizard",
-        "scopeLabel": "Alcance",
-        "scopeValue": "Solo preguntas relevantes, agrupadas por tema",
-        "reviewLabel": "Resultado",
-        "reviewValue": "Estimación clara y próximos pasos documentales"
+        "rulesLabel": "Motor de reglas",
+        "rulesValue": "Par?metros oficiales 2026 con calculadoras por subsidio.",
+        "scopeLabel": "Cobertura",
+        "scopeValue": "Elegibilidad, importes mensuales y anuales, documentos y flags de revisi?n.",
+        "reviewLabel": "Postura del resultado",
+        "reviewValue": "Estimado, nunca resoluci?n definitiva."
       }
     },
     "progress": {
-      "badge": "Intake contextual",
-      "stepCount": "{current} / {total}",
+      "badge": "Intake guiado",
+      "stepCount": "Paso {current} de {total}",
       "completionLabel": "Progreso",
-      "currentStepLabel": "Foco actual: {step}"
-    },
-    "options": {
-      "single": "Una persona",
-      "partners": "Pareja",
-      "daycare": "Guardería",
-      "outOfSchoolCare": "Extraescolar",
-      "childminder": "Cuidador/a"
-    },
-    "optionsDescriptions": {
-      "single": "Hogar de un adulto evaluado con umbrales de persona sola.",
-      "partners": "Hogar de dos adultos evaluado con umbrales de pareja."
-    },
-    "fields": {
-      "age": "Edad",
-      "householdType": "Tipo de hogar",
-      "nlResident": "Residencia en Países Bajos",
-      "annualIncome": "Ingresos anuales",
-      "assets": "Patrimonio",
-      "hasIndependentHome": "Vivienda independiente",
-      "hasRentalContract": "Contrato de alquiler",
-      "monthlyRent": "Alquiler mensual",
-      "hasHealthInsurance": "Seguro médico holandés",
-      "childrenUnder18": "Hijos menores de 18",
-      "receivesKinderbijslag": "Recibe kinderbijslag",
-      "usesChildcare": "Necesita apoyo por childcare",
-      "childcareHoursPerMonth": "Horas de childcare al mes",
-      "childcareType": "Tipo de childcare",
-      "childcareHourlyRate": "Tarifa por hora",
-      "registeredChildcare": "Proveedor registrado",
-      "bothParentsWork": "Los padres trabajan o califican"
-    },
-    "fieldsHelp": {
-      "nlResident": "La residencia es una condición base para zorgtoeslag y afecta el resto de la revisión.",
-      "hasIndependentHome": "Huurtoeslag solo tiene sentido si alquilas una vivienda independiente.",
-      "hasRentalContract": "Solo pedimos el detalle del alquiler cuando existe una relación formal de arrendamiento.",
-      "hasHealthInsurance": "Zorgtoeslag requiere normalmente seguro médico básico holandés.",
-      "receivesKinderbijslag": "Kindgebonden budget depende de que el kinderbijslag esté activo.",
-      "usesChildcare": "Solo seguimos con preguntas de childcare si el gasto realmente aplica.",
-      "registeredChildcare": "Kinderopvangtoeslag requiere normalmente un proveedor registrado.",
-      "bothParentsWork": "La ayuda por childcare suele depender de trabajo o de un estatus equivalente."
-    },
-    "fieldsHint": {
-      "annualIncome": "Ingreso bruto del hogar para el año.",
-      "assets": "Ahorros y otros activos relevantes usados en la prueba de subsidios.",
-      "monthlyRent": "Usa el alquiler del contrato antes de cargos de servicio si es posible.",
-      "childrenUnder18": "Solo cuentan hijos menores de 18 para esta estimación.",
-      "childcareHoursPerMonth": "Horas pagadas promedio por mes.",
-      "childcareType": "La categoría del proveedor afecta el tope por hora.",
-      "childcareHourlyRate": "Usa la tarifa realmente pagada por hora."
-    },
-    "hints": {
-      "zorgIncomeMax": "Umbral de ingresos 2026 para zorgtoeslag",
-      "assetThresholds": "Umbrales de patrimonio 2026",
-      "huurRentCap": "Tope de alquiler usado en la estimación",
-      "zorgMax": "Máximo anual de zorgtoeslag"
-    },
-    "sections": {
-      "household": {
-        "title": "Configuración del hogar",
-        "description": "Empieza por la estructura del hogar que aplica a la solicitud."
-      },
-      "identity": {
-        "title": "Base personal",
-        "description": "La edad influye en algunos umbrales, sobre todo en vivienda."
-      },
-      "residency": {
-        "title": "Chequeo de residencia",
-        "description": "Esto adapta el resto del wizard y evita preguntas de salud irrelevantes."
-      },
-      "income": {
-        "title": "Panorama de ingresos",
-        "description": "Un solo dato de ingresos nos permite comparar tu caso con los principales límites 2026."
-      },
-      "assets": {
-        "title": "Patrimonio y reservas",
-        "description": "Algunos subsidios se cortan cuando el patrimonio supera el techo permitido."
-      },
-      "housing": {
-        "title": "Situación de vivienda",
-        "description": "Solo se mantienen visibles las preguntas relevantes para huurtoeslag."
-      },
-      "health": {
-        "title": "Cobertura sanitaria",
-        "description": "Este paso solo valida las condiciones que importan para zorgtoeslag."
-      },
-      "children": {
-        "title": "Hijos y childcare",
-        "description": "El flujo se simplifica mucho cuando no hay hijos o no hay coste de childcare."
-      }
-    },
-    "stepAside": {
-      "personal": {
-        "label": "Por qué importa",
-        "value": "La base del hogar controla los umbrales que usa la estimación."
-      },
-      "income": {
-        "label": "Nota de revisión",
-        "value": "Los ingresos mueven gran parte de la variación en zorgtoeslag y childcare."
-      },
-      "assets": {
-        "label": "Nota de revisión",
-        "value": "Los límites de patrimonio son estrictos. Los mostramos pronto para mantener el resultado honesto."
-      },
-      "children": {
-        "label": "Nota de revisión",
-        "value": "Solo recogemos detalles de childcare si pueden cambiar el resultado de forma material."
-      }
+      "currentStepLabel": "Paso actual: {step}"
     },
     "steps": {
-      "personal": {
-        "title": "Contexto personal",
-        "short": "Personal",
-        "description": "Define la base de hogar y residencia antes de todo lo demás."
+      "start": {
+        "short": "Inicio",
+        "title": "Selecciona subsidios",
+        "description": "Elige los subsidios que quieres evaluar en este intake."
+      },
+      "applicant": {
+        "short": "Solicitante",
+        "title": "Datos del solicitante",
+        "description": "Captura residencia, identidad y contexto de residencia del solicitante principal."
+      },
+      "partner": {
+        "short": "Partner",
+        "title": "Situaci?n de partner",
+        "description": "Confirma si existe toeslagpartner y captura los datos cuando aplique."
       },
       "income": {
-        "title": "Ingresos",
         "short": "Ingresos",
-        "description": "Captura los ingresos anuales usados para la primera estimación."
-      },
-      "assets": {
-        "title": "Patrimonio",
-        "short": "Patrimonio",
-        "description": "Comprueba si ahorros y activos cambian la elegibilidad."
-      },
-      "housing": {
-        "title": "Vivienda",
-        "short": "Vivienda",
-        "description": "Solo quedan visibles los detalles de vivienda que afectan a huurtoeslag."
+        "title": "Ingresos y actividad",
+        "description": "Introduce ingresos y estados de trabajo o estudio usados por el motor 2026."
       },
       "health": {
-        "title": "Salud",
         "short": "Salud",
-        "description": "Confirma las condiciones de cobertura ligadas a zorgtoeslag."
+        "title": "Seguro de salud",
+        "description": "Registra seguro neerland?s y excepciones relacionadas con CAK."
       },
       "children": {
-        "title": "Hijos",
         "short": "Hijos",
-        "description": "Abre preguntas de hijos solo cuando el hogar realmente las necesita."
+        "title": "Hijos y hechos familiares",
+        "description": "A?ade hijos, kinderbijslag, co-ouderschap e ingresos a nivel hijo."
+      },
+      "childcare": {
+        "short": "Guarder?a",
+        "title": "Acuerdos de childcare",
+        "description": "Captura LRK, horas, tarifas y contrato por arreglo."
+      },
+      "residents": {
+        "short": "Residentes",
+        "title": "Medebewoners y subtenants",
+        "description": "A?ade miembros extra del hogar que puedan afectar huurtoeslag e ingresos."
+      },
+      "housing": {
+        "short": "Vivienda",
+        "title": "Datos de vivienda",
+        "description": "Captura renta, vivienda independiente y excepciones para huurtoeslag."
+      },
+      "assets": {
+        "short": "Patrimonio",
+        "title": "Patrimonio a 1 de enero",
+        "description": "Introduce patrimonio del solicitante, partner y activos especiales."
+      },
+      "specialSituations": {
+        "short": "Especial",
+        "title": "Situaciones especiales",
+        "description": "Marca escenarios que requieren revisi?n manual o evidencia especial."
       },
       "results": {
-        "title": "Resultados",
         "short": "Resultados",
-        "description": "Mira qué subsidios podrían encajar, por qué y qué preparar después."
+        "title": "Resultados estimados",
+        "description": "Revisa elegibilidad, razones, trazas y documentos."
       }
     },
-    "conditional": {
-      "nonResident": {
-        "title": "La residencia cambia el resto de la revisión.",
-        "copy": "Sin residencia holandesa, zorgtoeslag normalmente no aplica. El flujo mantendrá la estimación honesta y evitará sugerir un derecho garantizado."
-      },
-      "housingSimplified": {
-        "title": "Preguntas de vivienda simplificadas.",
-        "noRentalContract": "Sin contrato de alquiler, el wizard no pide valores detallados de renta para huurtoeslag.",
-        "noIndependentHome": "Sin vivienda independiente, huurtoeslag es poco probable, así que omitimos preguntas de renta que no cambiarían el resultado."
-      },
-      "healthBlocked": {
-        "title": "Chequeo de salud acortado.",
-        "copy": "Como la residencia no está confirmada, el wizard no sigue pidiendo preguntas adicionales de seguro para zorgtoeslag."
-      },
-      "noInsurance": {
-        "title": "Zorgtoeslag sigue siendo poco probable en este escenario.",
-        "copy": "El seguro básico holandés suele ser obligatorio. El resultado lo mostrará claramente junto con el siguiente paso documental."
-      },
-      "noChildren": {
-        "title": "Sección de hijos simplificada.",
-        "copy": "Sin hijos menores de 18, se omiten las preguntas de child benefit y childcare."
-      },
-      "noChildcare": {
-        "title": "Sección de childcare acortada.",
-        "copy": "No se marcó apoyo por childcare como relevante, así que el wizard omite proveedor y facturas."
-      }
+    "fields": {
+      "applicantBirthDate": "Applicant birth date",
+      "applicantCountryOfResidence": "Country of residence",
+      "applicantNlResident": "Applicant is resident in the Netherlands",
+      "applicantBsnKnown": "Applicant BSN is known",
+      "hasPartner": "There is a partner to assess",
+      "partnerBirthDate": "Partner birth date",
+      "partnerCountryOfResidence": "Partner country of residence",
+      "partnerSameAddress": "Partner lives at the same address",
+      "partnerIsToeslagPartner": "Partner is a toeslagpartner",
+      "applicantAnnualIncome": "Applicant estimated 2026 income",
+      "partnerAnnualIncome": "Partner estimated 2026 income",
+      "applicantHasDutchHealthInsurance": "Applicant has Dutch health insurance",
+      "partnerHasDutchHealthInsurance": "Partner has Dutch health insurance",
+      "cakInsured": "CAK or treaty-insured situation",
+      "childLabel": "Child {index}",
+      "childBirthDate": "Child birth date",
+      "childDaysPerYearWithApplicant": "Days per year with applicant",
+      "childLivesWithApplicant": "Child lives with applicant",
+      "childIsCoParenting": "Co-parenting child",
+      "childReceivesKinderbijslag": "Kinderbijslag is received for this child",
+      "childBsnKnown": "Child BSN is known",
+      "childHasIncome": "Child has income",
+      "childGoesToChildcare": "Child goes to childcare",
+      "childAnnualIncome": "Child annual income",
+      "childAssets1Jan": "Child assets on 1 January",
+      "arrangementLabel": "Arrangement {index}",
+      "childcareKind": "Childcare type",
+      "providerType": "Provider type",
+      "monthlyHours": "Monthly hours",
+      "hourlyRate": "Hourly rate",
+      "lrkNumber": "LRK number",
+      "registeredLrk": "Registered in LRK",
+      "hasContract": "Contract available",
+      "parentsPayContribution": "Parents pay own contribution",
+      "residentLabel": "Resident {index}",
+      "residentBirthDate": "Resident birth date",
+      "residentRelationship": "Relationship",
+      "residentAnnualIncome": "Resident annual income",
+      "residentAssets1Jan": "Resident assets on 1 January",
+      "sameAddressRegistered": "Registered at same address",
+      "isSubtenant": "Resident is a subtenant",
+      "hasSubrentContract": "Subrent contract available",
+      "basicMonthlyRent": "Basic monthly rent",
+      "monthlyStandplaatsCost": "Monthly standplaats cost",
+      "independentHome": "Independent home",
+      "hasRentalContract": "Rental contract available",
+      "rentsRoom": "Room rental / kamerhuur",
+      "groupHousing": "Group housing / assisted-living setting",
+      "recognizedException": "Recognized exception applies",
+      "isWoonwagen": "Woonwagen / standplaats situation",
+      "applicantAssets1Jan": "Applicant assets on 1 January",
+      "partnerAssets1Jan": "Partner assets on 1 January",
+      "hasSpecialAssets": "Special assets / bijzondere vermogen",
+      "foreignResidence": "Foreign residence context",
+      "foreignWork": "Foreign work context",
+      "childAbroad": "Child abroad",
+      "childcareAbroad": "Childcare abroad",
+      "military": "Military status",
+      "detained": "Detention",
+      "gemoedsbezwaarde": "Gemoedsbezwaarde status",
+      "noFixedAddress": "No fixed address",
+      "bijzondereVermogen": "Special assets / bijzondere vermogen",
+      "bijzonderInkomen": "Special income / bijzonder inkomen",
+      "longAbsenceFromHome": "Long absence from home",
+      "homeCareSituation": "Home care situation",
+      "composedFamily": "Composed family situation",
+      "adoptionFosterStepChild": "Adoption / foster / stepchild situation",
+      "manualReviewNotes": "Manual review notes"
+    },
+    "actions": {
+      "addChild": "A?adir hijo",
+      "addArrangement": "A?adir arreglo",
+      "addResident": "A?adir residente"
+    },
+    "emptyStates": {
+      "noChildcareChildren": "No hacen falta arreglos de childcare salvo que al menos un hijo est? marcado como usuario de childcare."
+    },
+    "activityStatus": {
+      "employed": "Employed",
+      "selfEmployed": "Self-employed",
+      "studentRecognized": "Recognized student",
+      "inburgeringCourse": "Inburgering course",
+      "workReintegration": "Work reintegration",
+      "trajectoryToWork": "Trajectory to work"
+    },
+    "reasonCodes": {
+      "ZORG_UNDER_18": "Applicant is younger than 18.",
+      "ZORG_NO_DUTCH_HEALTH_INSURANCE": "Applicant does not have Dutch health insurance.",
+      "ZORG_PARTNER_NO_DUTCH_HEALTH_INSURANCE": "Partner is not insured under the Dutch health-insurance rules; pair amount is reduced.",
+      "ZORG_INCOME_TOO_HIGH": "Income is above the 2026 zorgtoeslag threshold.",
+      "ZORG_ASSETS_TOO_HIGH": "Assets are above the 2026 zorgtoeslag threshold.",
+      "ZORG_FOREIGN_CASE_MANUAL_REVIEW": "Foreign or CAK context requires manual review.",
+      "ZORG_SPECIAL_STATUS_MANUAL_REVIEW": "Special status requires manual review.",
+      "HUUR_UNDER_18": "Applicant is younger than 18.",
+      "HUUR_NO_RENTAL_CONTRACT": "A rental contract is required.",
+      "HUUR_NOT_INDEPENDENT_HOME": "The home is not independent and no recognized exception is marked.",
+      "HUUR_KAMERHUUR": "Ordinary room rental is not eligible.",
+      "HUUR_GROUP_HOUSING_UNRECOGNIZED": "Group housing is not marked as a recognized exception.",
+      "HUUR_APPLICANT_ASSETS_TOO_HIGH": "Applicant assets exceed the 2026 huurtoeslag threshold.",
+      "HUUR_PARTNER_ASSETS_TOO_HIGH": "Joint applicant-partner assets exceed the 2026 huurtoeslag threshold.",
+      "HUUR_MEDEBEWONER_ASSETS_TOO_HIGH": "A medebewoner exceeds the allowed asset threshold.",
+      "HUUR_INCOME_TOO_HIGH": "Income is too high for a positive huurtoeslag outcome.",
+      "HUUR_AMOUNT_ZERO": "The formula produces zero huurtoeslag.",
+      "HUUR_SPECIAL_CASE_MANUAL_REVIEW": "A special rent situation requires manual review.",
+      "YOUNG_HOUSEHOLD_HUUR_FORMULA_REQUIRES_CONFIRMATION": "Young-household path was applied and should be reviewed in context.",
+      "KGB_NO_CHILD_UNDER_18": "No child under 18 is present.",
+      "KGB_NO_KINDERBIJSLAG": "No eligible child with kinderbijslag was found.",
+      "KGB_KINDERBIJSLAG_EXCEPTION_MANUAL_REVIEW": "Kinderbijslag exception for older children requires manual review.",
+      "KGB_ASSETS_TOO_HIGH": "Assets are above the 2026 kindgebonden budget threshold.",
+      "KGB_INCOME_TOO_HIGH": "Income is too high for a positive kindgebonden budget outcome.",
+      "KGB_AMOUNT_ZERO": "The formula produces zero kindgebonden budget.",
+      "KGB_FOREIGN_CHILD_MANUAL_REVIEW": "Child abroad requires woonlandfactor review.",
+      "KGB_COMPOSED_FAMILY_MANUAL_REVIEW": "Composed family situation requires manual review.",
+      "KGB_CO_PARENTING_MANUAL_REVIEW": "Co-parenting situation requires manual review.",
+      "KOT_NO_VALID_ACTIVITY_APPLICANT": "Applicant does not have a valid childcare-activity status.",
+      "KOT_NO_VALID_ACTIVITY_PARTNER": "Partner does not have a valid childcare-activity status.",
+      "KOT_CHILD_NOT_LIVING_WITH_APPLICANT": "Child does not live with the applicant and no valid co-parenting branch is marked.",
+      "KOT_NOT_REGISTERED_LRK": "Childcare is not registered in the LRK.",
+      "KOT_NO_LRK_NUMBER": "LRK number is missing.",
+      "KOT_TUSSENSCHOOLSE_OPVANG_NOT_ELIGIBLE": "Tussenschoolse opvang is not eligible.",
+      "KOT_NO_CONTRACT": "A childcare contract is required.",
+      "KOT_NO_EIGEN_BIJDRAGE": "Parents must pay part of the childcare costs.",
+      "KOT_NO_HOURS": "Eligible childcare hours are missing.",
+      "KOT_NO_RATE": "Hourly rate is missing.",
+      "KOT_CHILD_BSN_REQUIRED": "Child BSN is required.",
+      "KOT_FOREIGN_CHILDCARE_MANUAL_REVIEW": "Childcare abroad requires manual review.",
+      "KOT_PERCENTAGE_TABLE_INCOMPLETE": "The official percentage table is incomplete for this scenario.",
+      "GENERAL_SELECTED_BENEFIT_NOT_EVALUATED": "Benefit was not selected for evaluation."
+    },
+    "documents": {
+      "identity_document": "Identity document",
+      "bsn_applicant": "Applicant BSN proof",
+      "iban": "IBAN / bank account proof",
+      "estimated_income_2026": "Estimated 2026 income statement",
+      "recent_payslip_or_income_proof": "Recent payslip or income proof",
+      "authorization_or_machtiging_if_assisted": "Authorization / machtiging if assisted",
+      "partner_details_if_applicable": "Partner details",
+      "health_insurance_policy_applicant": "Dutch health insurance policy for applicant",
+      "health_insurance_policy_partner": "Dutch health insurance policy for partner",
+      "income_proof": "Income proof",
+      "assets_statement_if_near_limit": "Assets statement if near threshold",
+      "cak_or_verdragsgerechtigde_proof": "CAK or treaty-insured proof",
+      "special_status_evidence": "Special-status evidence",
+      "rental_contract": "Rental contract",
+      "basic_rent_proof": "Basic rent / kale huur proof",
+      "landlord_rent_change_letter": "Landlord rent-change letter",
+      "brp_registration_proof": "BRP registration proof",
+      "rent_payment_proof": "Rent payment proof",
+      "partner_income_assets_proof": "Partner income and asset proof",
+      "resident_income_assets_proof": "Medebewoner income and asset proof",
+      "subtenant_contract_and_bank_statements": "Subtenant contract and bank statements",
+      "woonwagen_standplaats_proof": "Woonwagen / standplaats proof",
+      "group_housing_recognition_proof": "Group-housing recognition proof",
+      "co_parenting_agreement": "Co-parenting agreement",
+      "special_income_assets_manual_review_proof": "Special income or assets review proof",
+      "child_bsn": "Child BSN proof",
+      "child_birth_date": "Child birth-date proof",
+      "svb_kinderbijslag_proof": "SVB kinderbijslag proof",
+      "assets_1_january": "Assets on 1 January proof",
+      "partner_income_proof": "Partner income proof",
+      "composed_family_documents": "Composed-family documents",
+      "child_abroad_residence_and_woonlandfactor_documents": "Child abroad and woonlandfactor documents",
+      "foster_step_adoption_documents": "Adoption, foster or stepchild documents",
+      "child_assets_proof": "Child asset proof",
+      "childcare_contract": "Childcare contract",
+      "lrk_number": "LRK number proof",
+      "provider_name_address": "Provider name and address",
+      "childcare_type": "Childcare type evidence",
+      "start_end_date": "Start and end dates",
+      "monthly_hours": "Monthly hours overview",
+      "hourly_rate": "Hourly rate proof",
+      "invoices": "Invoices",
+      "bank_payment_proof": "Bank payment proof",
+      "applicant_income_proof": "Applicant income proof",
+      "partner_income_activity_proof": "Partner income and activity proof",
+      "employment_contract_or_payslip": "Employment contract, payslip or jaaropgave",
+      "zzp_kvk_invoices_bookkeeping_hours": "KvK, invoices, bookkeeping and hours administration",
+      "education_enrollment_proof": "Education enrollment proof",
+      "inburgering_course_proof": "Inburgering course proof",
+      "uwv_or_municipality_trajectory_proof": "UWV or municipality trajectory proof",
+      "foreign_childcare_registration": "Foreign childcare registration proof",
+      "gastouderbureau_contract_and_invoices": "Gastouderbureau contract and invoices",
+      "change_letter_for_hours_or_rate": "Change letter for hours or rate"
     },
     "results": {
-      "summaryBadge": "Resumen de elegibilidad",
       "summary": {
-        "none": "No aparece un encaje claro de subsidios en esta primera estimación.",
-        "one": "Un subsidio parece potencialmente relevante en este intake.",
-        "multiple": "Varios subsidios parecen potencialmente relevantes en este intake."
+        "none": "Ning?n subsidio supera hoy los chequeos base 2026.",
+        "one": "Un subsidio supera hoy los chequeos base 2026.",
+        "multiple": "Varios subsidios superan hoy los chequeos base 2026."
       },
-      "disclaimer": "Esto es una estimación, no una decisión oficial. La aprobación final depende de revisión oficial, documentos y evaluación definitiva de la autoridad.",
+      "summaryBadge": "Resultado estimado 2026",
+      "disclaimer": "Estimado, no definitivo. El derecho final lo determina Dienst Toeslagen tras la evaluaci?n oficial y la evidencia aportada.",
       "totalLabel": "Total anual estimado",
-      "totalCaption": "Estimación combinada de todos los subsidios potencialmente relevantes.",
-      "eligibleCountLabel": "Subsidios potencialmente elegibles",
-      "eligibleCountCaption": "Subsidios que ahora mismo cumplen las condiciones visibles principales.",
-      "noneEligibleTitle": "Ningún subsidio supera ahora mismo las condiciones visibles.",
-      "noneEligibleCopy": "Eso no siempre significa que el caso esté cerrado. La residencia, el seguro, la situación de vivienda o algunos registros relacionados con hijos pueden requerir aclaración antes de una segunda revisión.",
-      "honestyTitle": "Pon este resultado en contexto.",
-      "honestyCopy": "Algunos casos aún requieren documentos de soporte, comprobaciones oficiales de registro o revisión manual antes de presentar una solicitud.",
+      "totalCaption": "Suma de todos los subsidios seleccionados con c?lculo disponible.",
+      "eligibleCountLabel": "Subsidios elegibles",
+      "eligibleCountCaption": "Subsidios que hoy superan las condiciones principales visibles.",
+      "noneEligibleTitle": "No se detecta derecho directo",
+      "noneEligibleCopy": "Revisa las razones de bloqueo y las ramas de revisi?n manual antes de aconsejar solicitar o no solicitar.",
+      "honestyTitle": "Nota de uso profesional",
+      "honestyCopy": "Este m?dulo replica la l?gica p?blica cuando hay datos oficiales, pero no sustituye la resoluci?n definitiva de Dienst Toeslagen.",
+      "manualReviewTitle": "Revisi?n manual requerida",
+      "manualReviewCopy": "Al menos un subsidio seleccionado entra en una rama que exige revisi?n documental o manejo especializado antes de confiar en el resultado.",
       "eligible": "Elegible",
       "notEligible": "No elegible",
+      "manualReview": "Revisi?n manual",
       "estimatedAnnualLabel": "Importe anual estimado",
-      "whyLabel": "Por qué sale así",
-      "nextStepLabel": "Siguiente paso recomendado",
-      "reviewNotice": "FinTax puede revisar la estimación contra documentos antes de presentar cualquier solicitud.",
-      "addToPlan": "Añadir al plan",
+      "topReasonsLabel": "Principales razones",
+      "calculationTraceLabel": "Traza de c?lculo",
+      "documentsLabel": "Checklist documental",
       "removeFromPlan": "Quitar del plan",
+      "addToPlan": "A?adir al plan",
+      "reviewNotice": "Rev?salo con el cliente antes de presentar.",
+      "manualReviewNotice": "Se requiere revisi?n manual antes de confiar en este resultado.",
+      "month": "mes",
       "cards": {
         "zorgtoeslag": {
           "title": "Zorgtoeslag",
-          "subtitle": "Ayuda por seguro médico"
+          "subtitle": "Dutch health-insurance allowance."
         },
         "huurtoeslag": {
           "title": "Huurtoeslag",
-          "subtitle": "Ayuda al alquiler"
+          "subtitle": "Rent allowance based on rent, income and household facts."
         },
         "kindgebondenBudget": {
           "title": "Kindgebonden budget",
-          "subtitle": "Apoyo por hijos vinculado a ingresos"
+          "subtitle": "Income-related child budget for children under 18."
         },
         "kinderopvangtoeslag": {
           "title": "Kinderopvangtoeslag",
-          "subtitle": "Apoyo a costes de childcare"
+          "subtitle": "Childcare allowance based on valid activity, LRK and official percentage bands."
         }
       },
-      "reasonCodes": {
-        "min_age": "La edad actual está por debajo del umbral habitual para este subsidio.",
-        "nl_resident_required": "La residencia en Países Bajos suele ser obligatoria.",
-        "health_insurance_required": "El seguro básico holandés suele ser obligatorio.",
-        "income_too_high": "Los ingresos actuales parecen superar el umbral principal usado en esta estimación.",
-        "assets_too_high": "El patrimonio actual parece superar el umbral principal usado en esta estimación.",
-        "resident_and_insured": "Residencia y seguro encajan actualmente con las condiciones principales de zorgtoeslag.",
-        "income_within_threshold": "Los ingresos quedan dentro del umbral visible usado para esta estimación.",
-        "assets_within_threshold": "El patrimonio queda dentro del umbral visible usado para esta estimación.",
-        "independent_home_required": "Huurtoeslag suele requerir vivienda independiente.",
-        "rental_contract_required": "Huurtoeslag suele requerir contrato de alquiler.",
-        "independent_rental_home": "La situación de vivienda cumple la condición base de alquiler independiente.",
-        "assets_within_huur_threshold": "El patrimonio sigue dentro del umbral principal de ayuda de vivienda.",
-        "children_required": "Se requiere al menos un hijo menor de 18 años para este subsidio.",
-        "kinderbijslag_required": "Normalmente es necesario recibir kinderbijslag.",
-        "children_declared": "El hogar incluye hijos menores de 18 años.",
-        "kinderbijslag_confirmed": "Actualmente se ha marcado que se recibe kinderbijslag.",
-        "childcare_not_needed": "No se indicó childcare relevante en el intake.",
-        "registered_childcare_required": "El proveedor de childcare suele tener que estar registrado.",
-        "working_parents_required": "Suele requerirse trabajo o un estatus equivalente.",
-        "childcare_hours_required": "Deben existir horas pagadas de childcare para estimar este subsidio.",
-        "childcare_requirements_met": "Las respuestas actuales de childcare permiten una primera estimación.",
-        "childcare_costs_capped": "La estimación ya aplica el tope oficial por hora."
-      },
-      "nextSteps": {
-        "collectHealthPolicy": "Prepara los datos de tu póliza sanitaria y pruebas recientes de ingresos antes de solicitar.",
-        "reviewHealthConditions": "Revisa primero residencia y seguro médico, y luego vuelve a evaluar la estimación.",
-        "prepareRentalDocuments": "Prepara contrato de alquiler, importe de renta y documentos de empadronamiento o registro de dirección.",
-        "reviewHousingConditions": "Aclara si la vivienda es independiente y si el contrato de alquiler puede documentarse.",
-        "confirmChildBenefit": "Confirma el estado de kinderbijslag y reúne la documentación relacionada con los hijos.",
-        "reviewChildrenConditions": "Verifica el estado del child benefit y los datos de edad o registro de los hijos implicados.",
-        "prepareChildcareInvoices": "Prepara facturas de childcare, datos de registro del proveedor y prueba de situación laboral.",
-        "reviewChildcareConditions": "Comprueba si el childcare está registrado, es de pago y está vinculado a trabajo o estatus válido."
+      "calculation": {
+        "income": "Income used",
+        "assets": "Assets used",
+        "normPremie": "Norm premium",
+        "annualAmount": "Annual amount",
+        "monthlyAmount": "Monthly amount",
+        "rekenhuur": "Rakenhuur",
+        "cappedRent": "Rent used after cap",
+        "basishuur": "Basishuur",
+        "partA": "Part A",
+        "partB": "Part B",
+        "partC": "Part C",
+        "rekeninkomen": "Rakeninkomen",
+        "incomeCorrection": "Income correction",
+        "childrenCount": "Children count",
+        "baseAmount": "Base amount",
+        "ageAdditions": "Age additions",
+        "reduction": "Income reduction",
+        "firstChild": "First child used for KOT",
+        "firstChildRate": "First child rate",
+        "nextChildRate": "Next child rate"
       }
     },
     "bundle": {
-      "eyebrow": "Plan de apoyo",
-      "title": "Convierte la estimación en un siguiente paso limpio.",
-      "copy": "Elige los subsidios con los que quieres avanzar. Integramos la acción como revisión y soporte de solicitud, no como un checkout improvisado.",
-      "selectedServicesLabel": "Servicios seleccionados",
-      "empty": "Todavía no hay subsidios seleccionados.",
+      "eyebrow": "Resumen operativo",
+      "title": "Paquete de subsidios seleccionados",
+      "copy": "Usa esta selecci?n como shortlist operativa para recogida documental y asesoramiento.",
+      "selectedServicesLabel": "Subsidios seleccionados",
+      "empty": "No hay subsidios seleccionados.",
       "recommendedNextLabel": "Siguiente paso recomendado",
-      "recommendedNextSelected": "Continúa con una revisión documental para validar los subsidios seleccionados frente a evidencia oficial antes de presentar.",
-      "recommendedNextNone": "Si tienes dudas, pide ayuda primero y revisamos si algún subsidio merece una segunda pasada.",
-      "annualImpactLabel": "Estimación anual seleccionada",
-      "annualImpactCopy": "Estimación combinada de los subsidios actualmente incluidos en tu plan.",
-      "continue": "Continuar",
-      "askHelp": "Solicitar ayuda"
+      "recommendedNextSelected": "Re?ne los documentos requeridos, confirma supuestos y revisa las ramas manuales antes de presentar ninguna solicitud.",
+      "recommendedNextNone": "Selecciona los subsidios relevantes o revisa primero los datos del intake.",
+      "annualImpactLabel": "Impacto anual",
+      "annualImpactCopy": "Total anual estimado para los subsidios seleccionados.",
+      "continue": "Continuar flujo",
+      "askHelp": "Pedir revisi?n"
     }
   },
   "CaseDetail": {

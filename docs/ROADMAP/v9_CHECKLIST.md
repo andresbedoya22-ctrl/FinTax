@@ -97,6 +97,30 @@ Still pending or intentionally deferred:
 - Needs editorial review: `nl`, `pl`, partial `ro`
 - Canonical locale fallback behavior is implemented in [src/i18n/request.ts](/C:/FinTax/src/i18n/request.ts)
 
+## Benefits / Toeslagen 2026 Official Engine
+
+- Branch name: `feature/toeslagen-2026-official-engine`
+- Date: `2026-04-24`
+- Implemented files:
+  - [src/lib/toeslagen/index.ts](/C:/FinTax/src/lib/toeslagen/index.ts)
+  - [src/lib/toeslagen/types.ts](/C:/FinTax/src/lib/toeslagen/types.ts)
+  - [src/lib/toeslagen/reasons.ts](/C:/FinTax/src/lib/toeslagen/reasons.ts)
+  - [src/lib/toeslagen/documents.ts](/C:/FinTax/src/lib/toeslagen/documents.ts)
+  - [src/lib/toeslagen/parameters/nl-toeslagen-2026.ts](/C:/FinTax/src/lib/toeslagen/parameters/nl-toeslagen-2026.ts)
+  - [src/lib/toeslagen/parameters/kinderopvangtoeslag-2026-table.ts](/C:/FinTax/src/lib/toeslagen/parameters/kinderopvangtoeslag-2026-table.ts)
+  - [src/lib/toeslagen/engine/evaluate-toeslagen.ts](/C:/FinTax/src/lib/toeslagen/engine/evaluate-toeslagen.ts)
+  - [src/lib/utils/eligibility-calculator.ts](/C:/FinTax/src/lib/utils/eligibility-calculator.ts)
+  - [src/components/fintax/flows/BenefitsFlow.tsx](/C:/FinTax/src/components/fintax/flows/BenefitsFlow.tsx)
+  - [tests/toeslagen](/C:/FinTax/tests/toeslagen)
+- Gates run:
+  - Pending final full-gate run in this branch before merge decision
+- KOT full table complete: `yes`
+- Known limitations:
+  - KGB child-abroad scenarios remain manual-review only until woonlandfactor logic is implemented
+  - UI delivery is functionally aligned to the new canonical model, but still needs future editorial polish
+- Manual review policy:
+  - Any scenario with foreign factors, special assets/income, composed-family ambiguity, co-parenting ambiguity, childcare abroad or other public-tool exclusions is surfaced explicitly as `manualReviewRequired`
+
 ## Notes For Maintainers
 
 - Do not treat the older March append-only notes as current truth.
