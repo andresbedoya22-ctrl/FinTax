@@ -17,11 +17,13 @@ export function StripeSuccessScreen({
   caseId,
   initialStatus,
   initialCaseStatus,
+  initialCaseType,
   sessionId,
 }: {
   caseId: string | null;
   initialStatus: "paid" | "pending" | "invalid";
   initialCaseStatus?: string | null;
+  initialCaseType?: Case["case_type"] | null;
   sessionId?: string | null;
 }) {
   const t = useTranslations("PaymentSuccess");
@@ -29,8 +31,14 @@ export function StripeSuccessScreen({
     initialStatus === "paid" ? "paid" : initialStatus === "pending" ? "pending" : "error",
   );
   const [currentCase, setCurrentCase] = React.useState<Case | null>(
-    initialCaseStatus ? ({ status: initialCaseStatus } as Case) : null,
+    initialCaseStatus ? ({ status: initialCaseStatus, case_type: initialCaseType } as Case) : null,
   );
+  const caseHref =
+    caseId && currentCase?.case_type && !currentCase.case_type.startsWith("tax_return") && currentCase.case_type !== "btw_declaration"
+      ? `/benefits/${caseId}`
+      : caseId
+        ? `/tax-return/${caseId}`
+        : "/tax-return";
 
   React.useEffect(() => {
     if (!caseId || initialStatus !== "pending") {
@@ -113,7 +121,7 @@ export function StripeSuccessScreen({
             <Link href="/dashboard">
               <Button type="button">{t("dashboardCta")}</Button>
             </Link>
-            <Link href={caseId ? `/tax-return/${caseId}` : "/tax-return"}>
+            <Link href={caseHref}>
               <Button type="button" variant="secondary">{t("caseCta")}</Button>
             </Link>
           </div>

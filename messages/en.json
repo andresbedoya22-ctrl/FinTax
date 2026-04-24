@@ -1290,7 +1290,11 @@
       "uwv_or_municipality_trajectory_proof": "UWV or municipality trajectory proof",
       "foreign_childcare_registration": "Foreign childcare registration proof",
       "gastouderbureau_contract_and_invoices": "Gastouderbureau contract and invoices",
-      "change_letter_for_hours_or_rate": "Change letter for hours or rate"
+      "change_letter_for_hours_or_rate": "Change letter for hours or rate",
+      "uploadNext": "Upload documents",
+      "readyForReview": "{completed} of {total} documents are already complete.",
+      "connectedFlow": "Connected document flow",
+      "stagedFlow": "Checklist staged"
     },
     "results": {
       "summary": {
@@ -1314,6 +1318,7 @@
       "notEligible": "Not eligible",
       "manualReview": "Manual review",
       "estimatedAnnualLabel": "Estimated annual amount",
+      "statusLabel": "Current status",
       "topReasonsLabel": "Top reasons",
       "calculationTraceLabel": "Calculation trace",
       "documentsLabel": "Documents checklist",
@@ -1322,6 +1327,30 @@
       "reviewNotice": "Review with the client before submitting.",
       "manualReviewNotice": "Manual review is required before relying on this outcome.",
       "month": "month",
+      "range": {
+        "monthly": "Estimated monthly range",
+        "annual": "Estimated annual range"
+      },
+      "mode": {
+        "prePayment": {
+          "title": "Preliminary result for your toeslagen",
+          "eligibleCount": "Based on your answers, you could potentially apply for {count} benefit(s).",
+          "rangeLabel": "Estimated range",
+          "cta": "Continue and let FinTax prepare my application",
+          "supportingTitle": "How FinTax helps next",
+          "supporting": "We review your data, ask only for the documents that are needed and prepare the application to reduce the risk of errors and complications.",
+          "disclaimer": "This estimate is based on 2026 rules. The final amount is determined by Dienst Toeslagen.",
+          "manualReview": "Your case has a special situation. We can review it before preparing the application.",
+          "amountHidden": "Exact estimated amounts unlock after payment."
+        },
+        "postPayment": {
+          "title": "Detailed calculation unlocked",
+          "status": "Payment received",
+          "nextStep": "Upload the required documents. When they are complete, we will review your case and prepare the application.",
+          "documentsIntro": "We only ask for the documents needed for the benefits that appear relevant to your situation.",
+          "reviewPromise": "We will review your data and prepare the application, but the final amount is always decided by Dienst Toeslagen."
+        }
+      },
       "cards": {
         "zorgtoeslag": {
           "title": "Zorgtoeslag",
@@ -1366,7 +1395,7 @@
     "bundle": {
       "eyebrow": "Operational summary",
       "title": "Selected benefits package",
-      "copy": "Use this selection as the working shortlist for document collection and case advice.",
+      "copy": "Use this selection as the shortlist for the benefits that seem relevant to your situation.",
       "selectedServicesLabel": "Selected benefits",
       "empty": "No benefits selected.",
       "recommendedNextLabel": "Recommended next step",
@@ -1376,6 +1405,12 @@
       "annualImpactCopy": "Estimated annual total for the currently selected benefits.",
       "continue": "Continue workflow",
       "askHelp": "Ask for review"
+    },
+    "checkout": {
+      "loading": "Loading your benefits case...",
+      "error": "We could not start checkout for this benefits case. Please try again.",
+      "requiresAuth": "Sign in to continue with benefits checkout.",
+      "caseLoadError": "We could not load the paid benefits case details."
     }
   },
   "CaseDetail": {

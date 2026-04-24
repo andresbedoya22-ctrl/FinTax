@@ -4,15 +4,34 @@ import { ArrowRight, LifeBuoy } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/fintax/Button";
+import type { BenefitsResultsMode, EstimateRange } from "@/lib/toeslagen";
 
 import type { BenefitCardKey } from "./wizard";
+
+function formatRange(range: EstimateRange) {
+  const formatter = new Intl.NumberFormat("nl-NL", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  });
+
+  return `${formatter.format(range.minMonthly)} - ${formatter.format(range.maxMonthly)}`;
+}
 
 export function BenefitsBundleSummary({
   selectedKeys,
   selectedAmount,
+  mode,
+  range,
+  onContinueToCheckout,
+  isCheckoutLoading,
 }: {
   selectedKeys: BenefitCardKey[];
   selectedAmount: number;
+  mode: BenefitsResultsMode;
+  range?: EstimateRange | null;
+  onContinueToCheckout?: () => void;
+  isCheckoutLoading?: boolean;
 }) {
   const t = useTranslations("Benefits");
 
@@ -47,22 +66,34 @@ export function BenefitsBundleSummary({
         </div>
 
         <div className="rounded-[22px] border border-green/18 bg-[linear-gradient(180deg,rgba(19,78,50,0.97),rgba(30,97,63,0.93))] p-4 text-white sm:rounded-[24px]">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/68">{t("bundle.annualImpactLabel")}</p>
-          <p className="mt-2 font-heading text-3xl tracking-[-0.03em]">EUR {selectedAmount.toFixed(2)}</p>
-          <p className="mt-2 text-sm leading-6 text-white/80">{t("bundle.annualImpactCopy")}</p>
+          {mode === "postPayment" ? (
+            <>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/68">{t("bundle.annualImpactLabel")}</p>
+              <p className="mt-2 font-heading text-3xl tracking-[-0.03em]">EUR {selectedAmount.toFixed(2)}</p>
+              <p className="mt-2 text-sm leading-6 text-white/80">{t("bundle.annualImpactCopy")}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/68">{t("results.range.monthly")}</p>
+              <p className="mt-2 font-heading text-3xl tracking-[-0.03em]">{range ? formatRange(range) : "EUR 0 - EUR 0"}</p>
+              <p className="mt-2 text-sm leading-6 text-white/80">{t("results.mode.prePayment.disclaimer")}</p>
+            </>
+          )}
 
           <div className="mt-5 grid gap-3">
             <Button
               type="button"
               disabled={selectedKeys.length === 0}
+              loading={Boolean(isCheckoutLoading)}
               className="justify-center bg-white text-green hover:bg-white/95"
               rightIcon={<ArrowRight className="size-4" />}
+              onClick={onContinueToCheckout}
             >
-              {t("bundle.continue")}
+              {mode === "prePayment" ? t("results.mode.prePayment.cta") : t("bundle.continue")}
             </Button>
             <Button type="button" variant="secondary" className="justify-center border-white/20 bg-white/8 text-white hover:bg-white/12">
               <LifeBuoy className="size-4" />
-              {t("bundle.askHelp")}
+              {mode === "prePayment" ? t("bundle.askHelp") : t("bundle.askHelp")}
             </Button>
           </div>
         </div>

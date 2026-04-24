@@ -43,3 +43,39 @@ Branch: `feature/toeslagen-2026-official-engine`
 
 - No critical 2026 parameter gap remains in the implemented set for the encoded benefits
 - KOT 2026 percentage table status: complete and imported from the public Rijksoverheid table on 2026-04-24
+
+## Freemium Disclosure And Payment Gating
+
+- Free diagnosis now shows:
+  - benefit-level eligibility / not eligible / manual review
+  - a rounded estimated monthly range
+  - commercial next-step copy and legal disclaimer
+- Free diagnosis does not show:
+  - exact annual or monthly amounts
+  - calculation trace
+  - detailed document checklist
+  - full self-service filing instructions
+- Post-payment unlocks:
+  - exact estimated annual and monthly amounts from the existing official 2026 engine
+  - calculation trace
+  - benefit-level reasons
+  - document checklist and post-payment next steps
+- Legal/commercial wording was tightened:
+  - no guaranteed-outcome language
+  - no promise of error-free filing
+  - all estimate surfaces keep the statement that Dienst Toeslagen determines the final amount
+- Funnel states implemented in code:
+  - `free_diagnosis`
+  - `checkout_required`
+  - `payment_pending`
+  - `paid_document_collection`
+  - `documents_incomplete`
+  - `ready_for_review`
+  - `application_preparation`
+  - `submitted`
+  - `completed`
+- Checkout integration:
+  - benefits wizard creates or updates a benefits draft case before Stripe checkout
+  - unauthenticated users are redirected to auth and local wizard state is preserved for resume
+- Current limitation:
+  - post-payment document collection is staged on top of the existing generic case/docflow endpoints, but benefits-specific upload orchestration still needs a dedicated follow-up to make the upload CTA fully operational end-to-end

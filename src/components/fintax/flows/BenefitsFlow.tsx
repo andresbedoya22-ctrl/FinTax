@@ -1,9 +1,8 @@
 "use client";
-/* eslint-disable react-hooks/incompatible-library */
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
 import { useFieldArray, useForm, type UseFormReturn } from "react-hook-form";
 
@@ -25,7 +24,11 @@ import {
   type BenefitsFormValues,
   type BenefitCardKey,
 } from "@/components/fintax/flows/benefits";
-import { evaluateToeslagen } from "@/lib/toeslagen";
+import { apiGet, apiPost, isApiClientError } from "@/hooks/api-client";
+import { useRouter } from "@/i18n/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { evaluateToeslagen, parseStoredBenefitsCasePayload, type BenefitsResultsMode } from "@/lib/toeslagen";
+import type { Case } from "@/types/database";
 import { loadWizardSnapshot, persistWizardSnapshot, readWizardSnapshot } from "@/lib/wizards/persistence";
 
 const storageKey = "fintax-benefits-wizard";
@@ -37,13 +40,29 @@ const benefitKeys: BenefitCardKey[] = [
   "kinderopvangtoeslag",
 ];
 
-export function BenefitsFlow() {
+export function BenefitsFlow({
+  initialMode = "prePayment",
+  initialCaseId = null,
+}: {
+  initialMode?: BenefitsResultsMode;
+  initialCaseId?: string | null;
+}) {
   const t = useTranslations("Benefits");
+  const locale = useLocale();
+  const router = useRouter();
   const form = useForm<BenefitsFormValues>({
     resolver: zodResolver(benefitsWizardSchema),
     defaultValues: benefitsDefaultValues,
   });
   const [currentStep, setCurrentStep] = React.useState(0);
+  const [mode, setMode] = React.useState<BenefitsResultsMode>(initialMode);
+  const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
+  const [isCheckoutLoading, setIsCheckoutLoading] = React.useState(false);
+  const [postPaymentCaseId, setPostPaymentCaseId] = React.useState<string | null>(initialCaseId);
+  const [postPaymentEvaluation, setPostPaymentEvaluation] = React.useState<ReturnType<typeof evaluateToeslagen> | null>(null);
+  const [postPaymentSelectedBenefits, setPostPaymentSelectedBenefits] = React.useState<BenefitCardKey[] | null>(null);
+  const [postPaymentLoading, setPostPaymentLoading] = React.useState(false);
+  const hasAutoCheckoutRef = React.useRef(false);
 
   const values = form.watch();
   const normalizedValues = React.useMemo(() => normalizeBenefitsValues(values), [values]);
@@ -56,6 +75,17 @@ export function BenefitsFlow() {
     const snapshot = readWizardSnapshot<Record<string, unknown>>(storageKey);
     const nextValues = loadWizardSnapshot(storageKey, benefitsDefaultValues);
     form.reset(nextValues);
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const requestedMode = searchParams?.get("mode");
+    const requestedCaseId = searchParams?.get("caseId");
+
+    if (requestedMode === "postPayment" && requestedCaseId) {
+      setMode("postPayment");
+      setPostPaymentCaseId(requestedCaseId);
+      setCurrentStep(benefitStepKeys.length - 1);
+      return;
+    }
+
     setCurrentStep(
       typeof snapshot?.progressStep === "number"
         ? Math.max(0, Math.min(snapshot.progressStep, benefitStepKeys.length - 1))
@@ -66,18 +96,158 @@ export function BenefitsFlow() {
   React.useEffect(() => {
     void persistWizardSnapshot({
       storageKey,
+      caseId: postPaymentCaseId ?? undefined,
       payload: {
         ...normalizedValues,
         currentStep,
+        draftStatus: mode === "postPayment" ? "paid_document_collection" : null,
       },
     });
-  }, [currentStep, normalizedValues]);
+  }, [currentStep, mode, normalizedValues, postPaymentCaseId]);
 
   React.useEffect(() => {
     if (JSON.stringify(normalizedValues) !== JSON.stringify(values)) {
       form.reset(normalizedValues, { keepDirtyValues: true });
     }
   }, [form, normalizedValues, values]);
+
+  React.useEffect(() => {
+    if (mode !== "postPayment" || !postPaymentCaseId) {
+      return;
+    }
+
+    let active = true;
+    setPostPaymentLoading(true);
+    setCheckoutError(null);
+
+    void apiGet<Case>(`/api/cases/${postPaymentCaseId}`)
+      .then((caseRecord) => {
+        if (!active) {
+          return;
+        }
+
+        const parsed = parseStoredBenefitsCasePayload(caseRecord.wizard_data);
+        if (!parsed.success) {
+          setCheckoutError(t("checkout.caseLoadError"));
+          return;
+        }
+
+        setPostPaymentEvaluation(parsed.data.evaluation);
+        setPostPaymentSelectedBenefits(parsed.data.selectedBenefits);
+      })
+      .catch(() => {
+        if (active) {
+          setCheckoutError(t("checkout.caseLoadError"));
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setPostPaymentLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [mode, postPaymentCaseId, t]);
+
+  const continueToCheckout = React.useCallback(async () => {
+    if (normalizedValues.selectedBenefits.length === 0) {
+      return;
+    }
+
+    setCheckoutError(null);
+    setIsCheckoutLoading(true);
+
+    try {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+
+      if (!user) {
+        await persistWizardSnapshot({
+          storageKey,
+          payload: {
+            ...normalizedValues,
+            currentStep: benefitStepKeys.length - 1,
+            draftStatus: "checkout_pending",
+          },
+        });
+        window.location.assign(`/${locale}/auth?intent=benefits&next=/${locale}/benefits`);
+        return;
+      }
+
+      const snapshot = toHouseholdSnapshot(normalizedValues);
+      const draft = await apiPost<{ caseId: string }, { locale: string; selectedBenefits: BenefitCardKey[]; snapshot: typeof snapshot; evaluation: typeof evaluation }>(
+        "/api/benefits/draft",
+        {
+          locale,
+          selectedBenefits: normalizedValues.selectedBenefits,
+          snapshot,
+          evaluation,
+        },
+      );
+
+      await persistWizardSnapshot({
+        storageKey,
+        caseId: draft.caseId,
+        payload: {
+          ...normalizedValues,
+          currentStep: benefitStepKeys.length - 1,
+          draftStatus: "payment_pending",
+        },
+      });
+
+      const checkout = await apiPost<{ checkoutUrl: string }, { caseId: string; locale: string }>("/api/stripe/checkout", {
+        caseId: draft.caseId,
+        locale,
+      });
+
+      window.location.assign(checkout.checkoutUrl);
+    } catch (error) {
+      if (isApiClientError(error) && error.code === "unauthorized") {
+        router.push("/auth?intent=benefits");
+        return;
+      }
+
+      setCheckoutError(t("checkout.error"));
+    } finally {
+      setIsCheckoutLoading(false);
+    }
+  }, [evaluation, locale, normalizedValues, router, t]);
+
+  React.useEffect(() => {
+    const snapshot = readWizardSnapshot<Record<string, unknown>>(storageKey);
+    if (
+      hasAutoCheckoutRef.current ||
+      mode !== "prePayment" ||
+      benefitStepKeys[currentStep] !== "results" ||
+      snapshot?.draftStatus !== "checkout_pending"
+    ) {
+      return;
+    }
+
+    const supabase = createClient();
+    if (!supabase) {
+      return;
+    }
+
+    let active = true;
+
+    void supabase.auth.getUser().then(({ data }) => {
+      if (!active || !data.user) {
+        return;
+      }
+
+      hasAutoCheckoutRef.current = true;
+      void continueToCheckout();
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [continueToCheckout, currentStep, mode]);
 
   const nextStep = async () => {
     if (benefitStepKeys[currentStep] === "results") return;
@@ -89,6 +259,10 @@ export function BenefitsFlow() {
   const prevStep = () => setCurrentStep((step) => Math.max(step - 1, 0));
 
   const toggleBundleSelection = (key: BenefitCardKey) => {
+    if (mode === "postPayment") {
+      return;
+    }
+
     const selected = normalizedValues.selectedBenefits.includes(key);
     form.setValue(
       "selectedBenefits",
@@ -109,44 +283,71 @@ export function BenefitsFlow() {
         </CardHeader>
 
         <CardBody className="space-y-6">
-          <form onSubmit={form.handleSubmit(() => undefined)} className="space-y-6" noValidate>
-            {benefitStepKeys[currentStep] === "start" ? <StartStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "applicant" ? <ApplicantStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "partner" ? <PartnerStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "income" ? <IncomeStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "health" ? <HealthStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "children" ? <ChildrenStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "childcare" ? <ChildcareStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "residents" ? <ResidentsStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "housing" ? <HousingStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "assets" ? <AssetsStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "specialSituations" ? <SpecialSituationsStep form={form} /> : null}
-            {benefitStepKeys[currentStep] === "results" ? (
+          {checkoutError ? (
+            <div className="rounded-[20px] border border-copper/25 bg-copper/10 px-4 py-3 text-sm text-secondary">
+              {checkoutError}
+            </div>
+          ) : null}
+
+          {mode === "postPayment" ? (
+            postPaymentLoading || !postPaymentEvaluation || !postPaymentSelectedBenefits ? (
+              <div className="rounded-[20px] border border-border/35 bg-surface2/30 px-4 py-5 text-sm text-secondary">
+                {t("checkout.loading")}
+              </div>
+            ) : (
               <BenefitsResults
-                results={evaluation}
-                selectedKeys={normalizedValues.selectedBenefits}
+                mode="postPayment"
+                caseId={postPaymentCaseId}
+                results={postPaymentEvaluation}
+                selectedKeys={postPaymentSelectedBenefits}
                 onToggleSelected={toggleBundleSelection}
               />
-            ) : null}
-          </form>
+            )
+          ) : (
+            <>
+              <form onSubmit={form.handleSubmit(() => undefined)} className="space-y-6" noValidate>
+                {benefitStepKeys[currentStep] === "start" ? <StartStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "applicant" ? <ApplicantStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "partner" ? <PartnerStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "income" ? <IncomeStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "health" ? <HealthStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "children" ? <ChildrenStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "childcare" ? <ChildcareStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "residents" ? <ResidentsStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "housing" ? <HousingStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "assets" ? <AssetsStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "specialSituations" ? <SpecialSituationsStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "results" ? (
+                  <BenefitsResults
+                    mode="prePayment"
+                    results={evaluation}
+                    selectedKeys={normalizedValues.selectedBenefits}
+                    onToggleSelected={toggleBundleSelection}
+                    onContinueToCheckout={continueToCheckout}
+                    isCheckoutLoading={isCheckoutLoading}
+                  />
+                ) : null}
+              </form>
 
-          <div className="flex items-center justify-between border-t border-border/35 pt-5">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={prevStep}
-              disabled={currentStep === 0}
-              leftIcon={<ChevronLeft className="size-4" />}
-            >
-              {t("back")}
-            </Button>
+              <div className="flex items-center justify-between border-t border-border/35 pt-5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={prevStep}
+                  disabled={currentStep === 0}
+                  leftIcon={<ChevronLeft className="size-4" />}
+                >
+                  {t("back")}
+                </Button>
 
-            {benefitStepKeys[currentStep] !== "results" ? (
-              <Button type="button" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />}>
-                {t("next")}
-              </Button>
-            ) : null}
-          </div>
+                {benefitStepKeys[currentStep] !== "results" ? (
+                  <Button type="button" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />}>
+                    {t("next")}
+                  </Button>
+                ) : null}
+              </div>
+            </>
+          )}
         </CardBody>
       </Card>
     </div>

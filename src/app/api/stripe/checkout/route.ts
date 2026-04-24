@@ -72,12 +72,20 @@ export async function POST(request: Request) {
     return apiError("internal", "service_pricing_lookup_failed");
   }
 
-  if (!pricing) {
-    return apiError("conflict", "service_pricing_missing");
-  }
-
   const stripe = getStripeServerClient();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+  if (!pricing) {
+    if (process.env.NODE_ENV === "production") {
+      return apiError("conflict", "service_pricing_missing");
+    }
+
+    return apiSuccess({
+      checkoutUrl: `${appUrl}/${parsed.data.locale}/dashboard?mockCheckout=1&caseId=${parsed.data.caseId}`,
+      id: null,
+      mock: true,
+    });
+  }
 
   if (!stripe) {
     if (process.env.NODE_ENV === "production") {
