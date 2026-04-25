@@ -43,7 +43,7 @@
     "hero": {
       "eyebrow": "FinTax for internationals in NL",
       "title": "Dutch taxes & benefits explained in your language.",
-      "subtitle": "File your tax return (P/M/C), manage ZZP + VAT, apply for toeslagen, and understand government letters. Automation + human review. Fixed pricing.",
+      "subtitle": "File your tax return (P/M/C), manage ZZP + VAT, apply for benefits, and understand government letters. Automation + human review. Fixed pricing.",
       "primaryCta": "Start free precheck",
       "secondaryCta": "Explore services",
       "trustBadges": [
@@ -97,7 +97,7 @@
           "copy": "Registration, quarterly VAT and deductible guidance."
         },
         {
-          "title": "Toeslagen Applications",
+          "title": "Benefits Applications",
           "copy": "Healthcare, rent and childcare benefit applications."
         },
         {
@@ -226,7 +226,7 @@
           "summary": "Most common cases incl. migration and benefits",
           "features": [
             "P/M/C filing support",
-            "Toeslagen review",
+            "Benefits review",
             "Case dashboard",
             "Priority review"
           ]
@@ -262,7 +262,7 @@
           "a": "We handle P-form, M-form and C-form workflows, plus related letters and follow-up actions."
         },
         {
-          "q": "Can I get help with toeslagen?",
+          "q": "Can I get help with benefits?",
           "a": "Yes, we review eligibility and help with aanvragen for zorgtoeslag, huurtoeslag and other relevant allowances."
         },
         {
@@ -1023,8 +1023,8 @@
     }
   },
   "Benefits": {
-    "heroTitle": "Benefits / Toeslagen 2026 check",
-    "heroSubtitle": "Structured estimate aligned to the 2026 public rules, document matrix and manual-review branches. Final entitlement is always determined by Dienst Toeslagen.",
+    "heroTitle": "Benefits 2026",
+    "heroSubtitle": "This is an estimated calculation based on 2026 rules and the information you provided. The final amount depends on official review.",
     "wizardTitle": "Benefits eligibility wizard",
     "back": "Back",
     "next": "Next",
@@ -1306,7 +1306,7 @@
       "disclaimer": "Estimated, not definitive. Final entitlement is determined by Dienst Toeslagen after the official assessment and supporting evidence.",
       "totalLabel": "Estimated annual total",
       "totalCaption": "Sum of all selected benefits with a calculable estimate.",
-      "eligibleCountLabel": "Eligible benefits",
+      "eligibleCountLabel": "Benefits",
       "eligibleCountCaption": "Benefits that currently pass the main visible conditions.",
       "noneEligibleTitle": "No direct entitlement found",
       "noneEligibleCopy": "Review the blocking reasons and manual-review branches before advising the client to apply or not apply.",
@@ -1333,13 +1333,13 @@
       },
       "mode": {
         "prePayment": {
-          "title": "Preliminary result for your toeslagen",
+          "title": "Preliminary result for your benefits",
           "eligibleCount": "Based on your answers, you could potentially apply for {count} benefit(s).",
           "rangeLabel": "Estimated range",
           "cta": "Continue and let FinTax prepare my application",
           "supportingTitle": "How FinTax helps next",
           "supporting": "We review your data, ask only for the documents that are needed and prepare the application to reduce the risk of errors and complications.",
-          "disclaimer": "This estimate is based on 2026 rules. The final amount is determined by Dienst Toeslagen.",
+          "disclaimer": "This is an estimated calculation based on 2026 rules and the information you provided. The final amount depends on official review.",
           "manualReview": "Your case has a special situation. We can review it before preparing the application.",
           "amountHidden": "Exact estimated amounts unlock after payment."
         },
@@ -1353,19 +1353,19 @@
       },
       "cards": {
         "zorgtoeslag": {
-          "title": "Zorgtoeslag",
+          "title": "Health benefit",
           "subtitle": "Dutch health-insurance allowance."
         },
         "huurtoeslag": {
-          "title": "Huurtoeslag",
+          "title": "Rent benefit",
           "subtitle": "Rent allowance based on rent, income and household facts."
         },
         "kindgebondenBudget": {
-          "title": "Kindgebonden budget",
+          "title": "Family support",
           "subtitle": "Income-related child budget for children under 18."
         },
         "kinderopvangtoeslag": {
-          "title": "Kinderopvangtoeslag",
+          "title": "Childcare benefit",
           "subtitle": "Childcare allowance based on valid activity, LRK and official percentage bands."
         }
       },
@@ -1411,6 +1411,58 @@
       "error": "We could not start checkout for this benefits case. Please try again.",
       "requiresAuth": "Sign in to continue with benefits checkout.",
       "caseLoadError": "We could not load the paid benefits case details."
+    },
+    "premium": {
+      "stepper": [
+        "Diagnosis",
+        "Result",
+        "Payment",
+        "Documents",
+        "Application"
+      ],
+      "prePaymentSubtitle": "This is an estimated calculation based on 2026 rules and the information you provided. The final amount depends on official review.",
+      "postPaymentSubtitle": "Your payment is confirmed. Detailed calculations, documents and next steps are now available for expert preparation.",
+      "totalEstimateLabel": "Your total monthly estimate",
+      "between": "Between",
+      "potentialCount": "{count} potential benefits",
+      "manualReviewCount": "{count} case with manual review",
+      "action": {
+        "title": "Let us prepare your application",
+        "postTitle": "Continue document preparation",
+        "copy": "We review your data, prepare the necessary documentation and help maximize your chances of receiving the benefits you may qualify for.",
+        "postCopy": "Your detailed estimate is unlocked. Continue with the document checklist so FinTax can prepare the application file.",
+        "footer": "Secure encrypted payment"
+      },
+      "process": {
+        "title": "How it works",
+        "steps": [
+          {
+            "title": "Free diagnosis",
+            "body": "We analyze your information and calculate possible benefits."
+          },
+          {
+            "title": "Secure payment",
+            "body": "Choose your plan and complete payment securely."
+          },
+          {
+            "title": "Document upload",
+            "body": "Upload documents and we prepare them for review."
+          },
+          {
+            "title": "Application preparation",
+            "body": "We prepare your application file and follow up on the case."
+          }
+        ]
+      },
+      "unlocks": {
+        "title": "What you unlock after payment",
+        "items": [
+          "Detailed calculation by benefit",
+          "Personalized document checklist",
+          "Expert case review",
+          "Application preparation for submission"
+        ]
+      }
     }
   },
   "CaseDetail": {

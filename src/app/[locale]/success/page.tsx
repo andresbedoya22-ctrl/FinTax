@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { StripeSuccessScreen } from "@/components/fintax/flows/StripeSuccessScreen";
+import { AppShell } from "@/components/fintax/layout";
 import { createClient } from "@/lib/supabase/server";
 import { getStripeServerClient } from "@/lib/stripe/server";
 
@@ -33,7 +34,7 @@ export default async function SuccessPage({
 
   const sessionId = typeof resolvedSearchParams.session_id === "string" ? resolvedSearchParams.session_id : null;
   if (!sessionId || !stripe || !supabase) {
-    return <StripeSuccessScreen caseId={null} initialStatus="invalid" initialCaseStatus={null} sessionId={sessionId} />;
+    return <AppShell><StripeSuccessScreen caseId={null} initialStatus="invalid" initialCaseStatus={null} sessionId={sessionId} /></AppShell>;
   }
 
   const session = await stripe.checkout.sessions.retrieve(sessionId).catch(() => null);
@@ -41,7 +42,7 @@ export default async function SuccessPage({
   const metadataUserId = session?.metadata?.user_id ?? null;
 
   if (!session || !caseId || metadataUserId !== user.id) {
-    return <StripeSuccessScreen caseId={caseId} initialStatus="invalid" initialCaseStatus={null} sessionId={sessionId} />;
+    return <AppShell><StripeSuccessScreen caseId={caseId} initialStatus="invalid" initialCaseStatus={null} sessionId={sessionId} /></AppShell>;
   }
 
   const { data: caseRecord } = await supabase
@@ -52,7 +53,7 @@ export default async function SuccessPage({
     .maybeSingle();
 
   if (!caseRecord) {
-    return <StripeSuccessScreen caseId={caseId} initialStatus="invalid" initialCaseStatus={null} sessionId={sessionId} />;
+    return <AppShell><StripeSuccessScreen caseId={caseId} initialStatus="invalid" initialCaseStatus={null} sessionId={sessionId} /></AppShell>;
   }
 
   const initialStatus =
@@ -63,12 +64,14 @@ export default async function SuccessPage({
         : "invalid";
 
   return (
-    <StripeSuccessScreen
-      caseId={caseId}
-      initialStatus={initialStatus}
-      initialCaseStatus={caseRecord.status}
-      initialCaseType={caseRecord.case_type}
-      sessionId={sessionId}
-    />
+    <AppShell>
+      <StripeSuccessScreen
+        caseId={caseId}
+        initialStatus={initialStatus}
+        initialCaseStatus={caseRecord.status}
+        initialCaseType={caseRecord.case_type}
+        sessionId={sessionId}
+      />
+    </AppShell>
   );
 }

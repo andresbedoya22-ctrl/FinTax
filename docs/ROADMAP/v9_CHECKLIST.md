@@ -135,6 +135,23 @@ Still pending or intentionally deferred:
   - development fallback preserved for Stripe/pricing gaps without changing production strictness
 - Tests added:
   - [tests/toeslagen/estimate-range.test.ts](/C:/FinTax/tests/toeslagen/estimate-range.test.ts)
+
+## Premium Global UI Redesign
+
+- Branch name: `feature/premium-global-ui-redesign`
+- Status:
+  - [x] Premium global app shell updated
+  - [x] Logo and top navigation refreshed
+  - [x] Landing, auth, dashboard, success and benefits pages aligned to navy/green fintech direction
+  - [x] Benefits/Subsidios pre-payment UI redesigned with range-only disclosure
+  - [x] Benefits/Subsidios post-payment UI redesigned with accordions, documents and next steps
+  - [x] Localized benefits terminology applied: Benefits, Subsidios, Toeslagen, Świadczenia, Beneficii
+  - [x] Tests updated for pre-payment, post-payment, navigation labels and route rendering
+  - [x] `pnpm lint`
+  - [x] `pnpm typecheck`
+  - [x] `pnpm test`
+  - [x] `pnpm build`
+  - [x] `pnpm qa`
   - [tests/ui/benefits-flow.test.tsx](/C:/FinTax/tests/ui/benefits-flow.test.tsx)
   - [tests/ui/benefits-draft-route.test.ts](/C:/FinTax/tests/ui/benefits-draft-route.test.ts)
 - Gates run:

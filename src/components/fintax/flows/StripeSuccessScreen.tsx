@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, LoaderCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, LoaderCircle, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 
@@ -83,11 +83,14 @@ export function StripeSuccessScreen({
   }, [caseId, initialStatus]);
 
   return (
-    <div className="mx-auto max-w-3xl py-16">
-      <Card>
+    <div className="mx-auto max-w-4xl py-16">
+      <Card className="overflow-hidden rounded-[30px] border-white/70 bg-white shadow-[0_30px_80px_rgba(0,0,0,0.18)]">
         <CardHeader>
-          <p className="text-xs uppercase tracking-[0.16em] text-copper">{t("eyebrow")}</p>
-          <h1 className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">{t("title")}</h1>
+          <div className="grid size-16 place-items-center rounded-[20px] bg-[#EAF7EC] text-[#3F9E48]">
+            <ShieldCheck className="size-8" />
+          </div>
+          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-[#3F9E48]">{t("eyebrow")}</p>
+          <h1 className="mt-2 text-[clamp(2.2rem,4vw,3.4rem)] font-bold leading-tight tracking-[-0.03em] text-[#102033]">{t("title")}</h1>
           <p className="mt-2 text-sm text-secondary">{t("subtitle")}</p>
         </CardHeader>
         <CardBody className="space-y-5">
@@ -119,7 +122,7 @@ export function StripeSuccessScreen({
 
           <div className="flex flex-wrap gap-3">
             <Link href="/dashboard">
-              <Button type="button">{t("dashboardCta")}</Button>
+              <Button type="button" rightIcon={<ArrowRight className="size-4" />}>{t("dashboardCta")}</Button>
             </Link>
             <Link href={caseHref}>
               <Button type="button" variant="secondary">{t("caseCta")}</Button>

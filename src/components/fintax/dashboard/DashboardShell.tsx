@@ -1,24 +1,17 @@
 "use client";
 
-import { X } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
-import { cn } from "@/lib/cn";
+import { AppShell } from "@/components/fintax/layout";
 import { createClient } from "@/lib/supabase/client";
-import { DashboardSidebar } from "@/components/fintax/dashboard/DashboardSidebar";
-import { DashboardTopbar } from "@/components/fintax/dashboard/DashboardTopbar";
-import { Button, SidebarShell } from "@/components/ui";
 
 export interface DashboardShellProps {
   children: React.ReactNode;
 }
 
 export function DashboardShell({ children }: DashboardShellProps) {
-  const t = useTranslations("Dashboard.topbar");
   const router = useRouter();
-  const [isMobileOpen, setIsMobileOpen] = React.useState(false);
   const shellRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -89,36 +82,8 @@ export function DashboardShell({ children }: DashboardShellProps) {
   }, [router]);
 
   return (
-    <SidebarShell
-      ref={shellRef}
-      data-dashboard-shell="true"
-      className="min-h-screen bg-bg"
-      sidebar={<DashboardSidebar />}
-      header={<DashboardTopbar onOpenSidebar={() => setIsMobileOpen(true)} />}
-      mobileOverlay={
-        <div className={cn("lg:hidden", isMobileOpen ? "block" : "hidden")}>
-          <button
-            type="button"
-            className="fixed inset-0 z-40 bg-[#0f1912]/40"
-            onClick={() => setIsMobileOpen(false)}
-            aria-label={t("closeOverlay")}
-          />
-        </div>
-      }
-      mobileSidebar={
-        <div className={cn("lg:hidden", isMobileOpen ? "block" : "hidden")}>
-          <div className="fixed inset-y-0 left-0 z-50 flex w-[84%] max-w-80 flex-col bg-[#0f1914] shadow-floating">
-            <div className="flex items-center justify-end border-b border-[#23362a] p-3">
-              <Button type="button" size="icon" variant="ghost" onClick={() => setIsMobileOpen(false)} aria-label={t("closeSidebar")}>
-                <X className="size-4" />
-              </Button>
-            </div>
-            <DashboardSidebar className="w-full flex-1" onNavigate={() => setIsMobileOpen(false)} />
-          </div>
-        </div>
-      }
-    >
-      {children}
-    </SidebarShell>
+    <div ref={shellRef} data-dashboard-shell="true">
+      <AppShell>{children}</AppShell>
+    </div>
   );
 }
