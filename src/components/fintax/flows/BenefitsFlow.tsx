@@ -1,16 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
+import { BriefcaseBusiness, ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
 import { useFieldArray, useForm, type UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/fintax/Button";
-import { Card, CardBody, CardHeader } from "@/components/fintax/Card";
 import {
-  BenefitsIntro,
-  BenefitsProgressHeader,
   BenefitsResults,
   benefitsDefaultValues,
   benefitsWizardSchema,
@@ -24,6 +21,8 @@ import {
   type BenefitsFormValues,
   type BenefitCardKey,
 } from "@/components/fintax/flows/benefits";
+import { PremiumStepper, benefitIcons } from "@/components/fintax/ui";
+import { cn } from "@/lib/cn";
 import { apiGet, apiPost, isApiClientError } from "@/hooks/api-client";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -275,26 +274,22 @@ export function BenefitsFlow({
   const isResultsStage = mode === "postPayment" || benefitStepKeys[currentStep] === "results";
 
   return (
-    <div className="space-y-6">
-      {!isResultsStage ? <BenefitsIntro /> : null}
-
-      <Card className={isResultsStage ? "border-0 bg-transparent p-0 shadow-none" : "overflow-hidden border border-border/55 bg-white shadow-[0_26px_80px_rgba(18,38,28,0.08)]"}>
-        {!isResultsStage ? (
-          <CardHeader className="space-y-5 border-b border-border/45 bg-[linear-gradient(180deg,rgba(250,252,249,0.98),rgba(245,248,243,0.92))]">
-            <BenefitsProgressHeader currentStep={currentStep} steps={benefitStepKeys} />
-          </CardHeader>
-        ) : null}
-
-        <CardBody className={isResultsStage ? "space-y-6 p-0" : "space-y-6"}>
+    <div className="space-y-6" data-testid="benefits-wizard-shell">
+      <BenefitsWizardShell
+        isResultsStage={isResultsStage}
+        currentStep={currentStep}
+        stepTitle={t(`steps.${benefitStepKeys[currentStep]}.title`)}
+        stepDescription={t(`steps.${benefitStepKeys[currentStep]}.description`)}
+      >
           {checkoutError ? (
-            <div className="rounded-[20px] border border-copper/25 bg-copper/10 px-4 py-3 text-sm text-secondary">
+            <div className="rounded-[20px] border border-[#D97706]/25 bg-[#FFF4E5] px-4 py-3 text-sm text-[#8A4B0B]">
               {checkoutError}
             </div>
           ) : null}
 
           {mode === "postPayment" ? (
             postPaymentLoading || !postPaymentEvaluation || !postPaymentSelectedBenefits ? (
-              <div className="rounded-[20px] border border-border/35 bg-surface2/30 px-4 py-5 text-sm text-secondary">
+              <div className="rounded-[20px] border border-white/10 bg-white/[0.05] px-4 py-5 text-sm text-[#C8D2DF]">
                 {t("checkout.loading")}
               </div>
             ) : (
@@ -332,10 +327,11 @@ export function BenefitsFlow({
                 ) : null}
               </form>
 
-              <div className="flex items-center justify-between border-t border-border/35 pt-5">
+              <div className="flex items-center justify-between border-t border-white/10 pt-5">
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="secondary"
+                  className="rounded-[16px] border-white/[0.15] bg-white/[0.07] text-white hover:bg-white/[0.1]"
                   onClick={prevStep}
                   disabled={currentStep === 0}
                   leftIcon={<ChevronLeft className="size-4" />}
@@ -344,16 +340,67 @@ export function BenefitsFlow({
                 </Button>
 
                 {benefitStepKeys[currentStep] !== "results" ? (
-                  <Button type="button" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />}>
+                  <Button type="button" className="rounded-[16px] px-6" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />}>
                     {t("next")}
                   </Button>
                 ) : null}
               </div>
             </>
           )}
-        </CardBody>
-      </Card>
+      </BenefitsWizardShell>
     </div>
+  );
+}
+
+function BenefitsWizardShell({
+  isResultsStage,
+  currentStep,
+  stepTitle,
+  stepDescription,
+  children,
+}: {
+  isResultsStage: boolean;
+  currentStep: number;
+  stepTitle: string;
+  stepDescription: string;
+  children: React.ReactNode;
+}) {
+  const t = useTranslations("Benefits");
+  const steps = benefitStepKeys.map((step) => t(`steps.${step}.short`));
+
+  if (isResultsStage) {
+    return <div className="space-y-6">{children}</div>;
+  }
+
+  return (
+    <section className="space-y-7">
+      <PremiumStepper steps={steps} currentStep={currentStep} />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#0B2340]/[0.86] shadow-[0_28px_70px_rgba(0,0,0,0.22)] backdrop-blur" data-testid="benefits-step-card">
+          <div className="border-b border-white/10 px-5 py-5 sm:px-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#74cf7a]">
+              {t("progress.stepCount", { current: currentStep + 1, total: benefitStepKeys.length })}
+            </p>
+            <h1 className="mt-2 text-[clamp(1.8rem,3vw,2.7rem)] font-bold tracking-normal text-white">{stepTitle}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#C8D2DF]">{stepDescription}</p>
+          </div>
+          <div className="space-y-6 px-5 py-5 sm:px-7 sm:py-7">{children}</div>
+        </div>
+        <aside className="rounded-[30px] border border-white/10 bg-white/[0.045] p-6 text-white shadow-[0_24px_64px_rgba(0,0,0,0.16)]">
+          <div className="grid size-12 place-items-center rounded-[18px] bg-[#4CAF50]/[0.18] text-[#74cf7a]">
+            <BriefcaseBusiness className="size-6" />
+          </div>
+          <h2 className="mt-5 text-2xl font-bold">{t("intro.highlights.reviewLabel")}</h2>
+          <p className="mt-3 text-sm leading-6 text-[#C8D2DF]">{t("intro.highlights.reviewValue")}</p>
+          <div className="mt-6 rounded-[20px] border border-white/10 bg-white/[0.05] p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#74cf7a]">{t("progress.completionLabel")}</p>
+            <div className="mt-3 h-2 rounded-full bg-white/10">
+              <div className="h-full rounded-full bg-[#4CAF50]" style={{ width: `${Math.round(((currentStep + 1) / benefitStepKeys.length) * 100)}%` }} />
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
   );
 }
 
@@ -367,10 +414,10 @@ function StepShell({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-4">
+    <section className="space-y-5">
       <div className="space-y-2">
-        <h3 className="font-heading text-[clamp(1.6rem,3vw,2.1rem)] tracking-[-0.03em] text-text">{title}</h3>
-        <p className="max-w-3xl text-sm leading-6 text-secondary">{description}</p>
+        <h3 className="text-2xl font-bold tracking-normal text-white">{title}</h3>
+        <p className="max-w-3xl text-sm leading-6 text-[#C8D2DF]">{description}</p>
       </div>
       <div className="grid gap-4">{children}</div>
     </section>
@@ -378,15 +425,15 @@ function StepShell({
 }
 
 function Panel({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-[24px] border border-border/45 bg-white/80 p-4 sm:p-5">{children}</div>;
+  return <div className="rounded-[24px] border border-white/10 bg-white/[0.06] p-4 text-white sm:p-5">{children}</div>;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{children}</span>;
+  return <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9FB0C4]">{children}</span>;
 }
 
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return <input {...props} className="h-11 w-full rounded-[16px] border border-border/45 bg-white px-3 text-sm text-text" />;
+  return <input {...props} className="h-12 w-full rounded-[16px] border border-white/[0.12] bg-[#061426]/70 px-4 text-sm text-white outline-none transition focus:border-[#4CAF50] focus:ring-4 focus:ring-[#4CAF50]/[0.15]" />;
 }
 
 function CheckboxRow({
@@ -399,8 +446,14 @@ function CheckboxRow({
   onChange: (next: boolean) => void;
 }) {
   return (
-    <label className="flex items-center gap-3 rounded-[18px] border border-border/35 bg-surface2/40 px-3 py-3 text-sm text-text">
-      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />
+    <label
+      className={cn(
+        "flex cursor-pointer items-center gap-3 rounded-[18px] border px-4 py-4 text-sm text-white transition",
+        checked ? "border-[#4CAF50]/50 bg-[#4CAF50]/[0.14] shadow-[0_14px_34px_rgba(76,175,80,0.08)]" : "border-white/10 bg-white/[0.045] hover:border-white/[0.18] hover:bg-white/[0.07]",
+      )}
+      data-testid="benefits-option-card"
+    >
+      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="size-4 accent-[#4CAF50]" />
       <span>{label}</span>
     </label>
   );
@@ -414,17 +467,39 @@ function StartStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
     <StepShell title={t("steps.start.title")} description={t("steps.start.description")}>
       <Panel>
         <div className="grid gap-3 md:grid-cols-2">
-          {benefitKeys.map((key) => (
-            <CheckboxRow
-              key={key}
-              checked={selected.includes(key)}
-              label={t(`results.cards.${key}.title`)}
-              onChange={(checked) => {
-                const next = checked ? [...selected, key] : selected.filter((value) => value !== key);
-                form.setValue("selectedBenefits", Array.from(new Set(next)), { shouldDirty: true, shouldValidate: true });
-              }}
-            />
-          ))}
+          {benefitKeys.map((key) => {
+            const Icon = benefitIcons[key];
+            return (
+              <label
+                key={key}
+                data-testid="benefits-option-card"
+                className={cn(
+                  "flex cursor-pointer items-start gap-4 rounded-[22px] border p-5 transition",
+                  selected.includes(key)
+                    ? "border-[#4CAF50]/55 bg-[#4CAF50]/[0.14]"
+                    : "border-white/10 bg-white/[0.045] hover:border-white/[0.18] hover:bg-white/[0.07]",
+                )}
+              >
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={selected.includes(key)}
+                  onChange={(event) => {
+                    const checked = event.target.checked;
+                    const next = checked ? [...selected, key] : selected.filter((value) => value !== key);
+                    form.setValue("selectedBenefits", Array.from(new Set(next)), { shouldDirty: true, shouldValidate: true });
+                  }}
+                />
+                <span className="grid size-12 shrink-0 place-items-center rounded-[18px] bg-[#EAF7EC] text-[#3F9E48]">
+                  <Icon className="size-6" />
+                </span>
+                <span>
+                  <span className="block text-base font-bold text-white">{t(`results.cards.${key}.title`)}</span>
+                  <span className="mt-1 block text-sm leading-6 text-[#C8D2DF]">{t(`results.cards.${key}.subtitle`)}</span>
+                </span>
+              </label>
+            );
+          })}
         </div>
       </Panel>
     </StepShell>
@@ -565,7 +640,7 @@ function ChildrenStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
       {fields.map((field, index) => (
         <Panel key={field.id}>
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-text">{t("fields.childLabel", { index: index + 1 })}</h4>
+            <h4 className="text-sm font-semibold text-white">{t("fields.childLabel", { index: index + 1 })}</h4>
             <Button type="button" variant="ghost" onClick={() => remove(index)}><Trash2 className="size-4" /></Button>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -642,16 +717,16 @@ function ChildcareChildEditor({
   return (
     <Panel>
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-semibold text-text">{t("fields.childLabel", { index: childIndex + 1 })}</h4>
+        <h4 className="text-sm font-semibold text-white">{t("fields.childLabel", { index: childIndex + 1 })}</h4>
         <Button type="button" variant="secondary" onClick={() => append(createDefaultChildcareArrangement(fields.length))} leftIcon={<Plus className="size-4" />}>
           {t("actions.addArrangement")}
         </Button>
       </div>
       <div className="mt-4 space-y-4">
         {fields.map((field, arrangementIndex) => (
-          <div key={field.id} className="rounded-[18px] border border-border/35 p-4">
+          <div key={field.id} className="rounded-[18px] border border-white/10 bg-white/[0.04] p-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-text">{t("fields.arrangementLabel", { index: arrangementIndex + 1 })}</p>
+              <p className="text-sm font-medium text-white">{t("fields.arrangementLabel", { index: arrangementIndex + 1 })}</p>
               <Button type="button" variant="ghost" onClick={() => remove(arrangementIndex)}><Trash2 className="size-4" /></Button>
             </div>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -697,7 +772,7 @@ function ResidentsStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
       {fields.map((field, index) => (
         <Panel key={field.id}>
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-text">{t("fields.residentLabel", { index: index + 1 })}</h4>
+            <h4 className="text-sm font-semibold text-white">{t("fields.residentLabel", { index: index + 1 })}</h4>
             <Button type="button" variant="ghost" onClick={() => remove(index)}><Trash2 className="size-4" /></Button>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2">

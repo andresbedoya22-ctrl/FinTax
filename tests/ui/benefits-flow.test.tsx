@@ -5,6 +5,7 @@ import { vi } from "vitest";
 
 import enMessages from "../../messages/en.json";
 
+import { BenefitsFlow } from "@/components/fintax/flows";
 import { BenefitsResults } from "@/components/fintax/flows/benefits";
 import { evaluateToeslagen } from "@/lib/toeslagen";
 
@@ -42,6 +43,14 @@ vi.mock("next-intl", () => ({
 vi.mock("@/hooks/useTaxReturnDocFlow", () => ({
   useCaseRequirements: () => ({ data: { requirements: [], progress: { completed: 0, total: 0 } } }),
   useCaseProgress: () => ({ data: null }),
+}));
+
+vi.mock("@/i18n/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock("@/lib/supabase/client", () => ({
+  createClient: () => null,
 }));
 
 describe("Benefits results modes", () => {
@@ -108,5 +117,15 @@ describe("Benefits results modes", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /continue and let fintax prepare my application/i }));
     expect(onContinueToCheckout).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("Benefits wizard premium shell", () => {
+  it("renders the start step as premium option cards", () => {
+    render(<BenefitsFlow />);
+
+    expect(screen.getByTestId("benefits-wizard-shell")).toBeInTheDocument();
+    expect(screen.getByTestId("benefits-step-card")).toBeInTheDocument();
+    expect(screen.getAllByTestId("benefits-option-card").length).toBeGreaterThanOrEqual(4);
   });
 });

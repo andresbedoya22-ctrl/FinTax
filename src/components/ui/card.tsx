@@ -9,6 +9,10 @@ const cardVariants = cva("rounded-[var(--radius-xl)] border text-text", {
       panel: "surface-panel",
       soft: "surface-panel-soft",
       outline: "bg-transparent border-border/85",
+      dark: "border-white/10 bg-white/[0.045] text-white shadow-[0_22px_56px_rgba(0,0,0,0.18)]",
+      darkSoft: "border-white/[0.12] bg-white/[0.075] text-white shadow-[0_18px_44px_rgba(0,0,0,0.14)]",
+      premiumLight: "border-white/70 bg-white text-[#102033] shadow-[0_28px_70px_rgba(0,0,0,0.16)]",
+      glass: "border-white/10 bg-[#0B2340]/80 text-white shadow-[0_22px_56px_rgba(0,0,0,0.16)] backdrop-blur",
     },
     padding: {
       none: "p-0",
@@ -37,7 +41,7 @@ CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("font-body text-xl font-semibold tracking-[-0.01em] text-text", className)} {...props} />
+    <h3 ref={ref} className={cn("font-body text-xl font-semibold tracking-normal text-text", className)} {...props} />
   ),
 );
 CardTitle.displayName = "CardTitle";

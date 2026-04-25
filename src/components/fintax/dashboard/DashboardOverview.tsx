@@ -13,7 +13,8 @@ import { useTaxSummary } from "@/hooks/useTaxSummary";
 import { cn } from "@/lib/cn";
 import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
 import type { Case, CaseType } from "@/types/database";
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
+import { PageHeader, StatusBadge } from "@/components/fintax/ui";
 import { DeclarationHeader } from "@/components/fintax/dashboard/DeclarationHeader";
 import { HorizontalStepper } from "@/components/fintax/dashboard/HorizontalStepper";
 
@@ -94,7 +95,7 @@ function getStatusLabel(status: string, t: ReturnType<typeof useTranslations<"Da
 
 function getStatusTone(status: string) {
   if (status === "completed" || status === "submitted" || status === "authorized") return "success" as const;
-  if (status === "pending_documents" || status === "pending_payment" || status === "rejected") return "copper" as const;
+  if (status === "pending_documents" || status === "pending_payment" || status === "rejected") return "warning" as const;
   return "neutral" as const;
 }
 
@@ -179,16 +180,22 @@ export function DashboardOverview() {
     ["in_review", "pending_authorization", "authorized", "submitted", "completed"].includes(activeCase.status);
 
   return (
-    <section className="space-y-5">
+    <section className="space-y-7">
       {casesQuery.isError ? (
-        <div className="rounded-2xl border border-copper/30 bg-copper/10 p-4">
-          <p className="text-xs uppercase tracking-[0.14em] text-copper">{t("apiError.eyebrow")}</p>
-          <p className="mt-1 text-sm text-secondary">
+        <div className="rounded-2xl border border-[#D97706]/30 bg-[#FFF4E5] p-4">
+          <p className="text-xs uppercase tracking-[0.14em] text-[#B45309]">{t("apiError.eyebrow")}</p>
+          <p className="mt-1 text-sm text-[#102033]">
             {t("apiError.body")}
             {casesErrorCode ? ` ${t("apiError.codePrefix")} ${casesErrorCode}.` : ""}
           </p>
         </div>
       ) : null}
+
+      <PageHeader
+        eyebrow={t("header.breadcrumb")}
+        title={t("header.breadcrumb")}
+        description={`${t("header.declaration")} ${taxYear} · ${t("header.updated", { value: formatDate(activeCase?.updated_at, locale, noDateLabel) })} · ${t("header.deadline", { value: formatDate(activeCase?.deadline, locale, noDateLabel) })}`}
+      />
 
       <DeclarationHeader
         breadcrumbLabel={t("header.breadcrumb")}
@@ -220,52 +227,52 @@ export function DashboardOverview() {
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.92fr)]">
         <div className="space-y-5">
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+          <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-panel">
             <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("documents.title")}</CardTitle>
-              <CardDescription>{t("documents.description")}</CardDescription>
+              <CardTitle className="text-[1.7rem] text-white">{t("documents.title")}</CardTitle>
+              <CardDescription className="text-[#C8D2DF]">{t("documents.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {hasActiveCase ? (
                 <>
-                  <div className="rounded-[1.35rem] border border-border/45 bg-surface2/20 p-4">
+                  <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("documents.progressLabel")}</p>
-                        <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-text">{documentProgress}%</p>
+                        <p className="text-[11px] uppercase tracking-[0.16em] text-[#9FB0C4]">{t("documents.progressLabel")}</p>
+                        <p className="mt-1 text-2xl font-semibold tracking-normal text-white">{documentProgress}%</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-mono text-sm text-text">
+                        <p className="font-mono text-sm text-white">
                           {uploadedDocuments}/{requiredDocuments}
                         </p>
-                        <p className="text-xs text-secondary">{t("documents.progressCaption")}</p>
+                        <p className="text-xs text-[#C8D2DF]">{t("documents.progressCaption")}</p>
                       </div>
                     </div>
-                    <div className="mt-4 h-2 overflow-hidden rounded-full bg-border/40">
-                      <div className="h-full rounded-full bg-gradient-to-r from-green to-copper transition-all" style={{ width: `${documentProgress}%` }} />
+                    <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
+                      <div className="h-full rounded-full bg-[#4CAF50] transition-all" style={{ width: `${documentProgress}%` }} />
                     </div>
                   </div>
                   <ul className="grid gap-2">
                     {checklistItems.slice(0, 6).map((item) => (
                       <li
                         key={item.label}
-                        className="flex items-center gap-3 rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/25 hover:bg-green/5"
+                        className="flex items-center gap-3 rounded-[1.15rem] border border-white/10 bg-white/[0.045] px-4 py-3 transition-colors hover:border-[#4CAF50]/35 hover:bg-[#4CAF50]/10"
                       >
-                        {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
-                        <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
+                        {item.done ? <CheckCircle2 className="h-4 w-4 text-[#4CAF50]" /> : <Circle className="h-4 w-4 text-[#9FB0C4]" />}
+                        <span className={cn("text-sm", item.done ? "text-[#9FB0C4] line-through" : "text-[#C8D2DF]")}>{item.label}</span>
                       </li>
                     ))}
                   </ul>
                 </>
               ) : (
-                <div className="rounded-[1.35rem] border border-dashed border-border/55 bg-surface2/18 p-5">
-                  <p className="text-sm font-semibold text-text">{t("documents.emptyTitle")}</p>
-                  <p className="mt-2 text-sm leading-6 text-secondary">{t("documents.emptyBody")}</p>
+                <div className="rounded-[1.35rem] border border-dashed border-white/[0.15] bg-white/[0.04] p-5">
+                  <p className="text-sm font-semibold text-white">{t("documents.emptyTitle")}</p>
+                  <p className="mt-2 text-sm leading-6 text-[#C8D2DF]">{t("documents.emptyBody")}</p>
                 </div>
               )}
 
               <div className="flex justify-end">
-                <Link href={getCaseHref(activeCase)} className="inline-flex items-center gap-2 text-sm font-semibold text-green transition-colors hover:text-text">
+                <Link href={getCaseHref(activeCase)} className="inline-flex items-center gap-2 text-sm font-semibold text-[#74D07B] transition-colors hover:text-white">
                   {t("documents.cta")}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -273,14 +280,14 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+          <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-panel">
             <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("history.title")}</CardTitle>
-              <CardDescription>{t("history.description")}</CardDescription>
+              <CardTitle className="text-[1.7rem] text-white">{t("history.title")}</CardTitle>
+              <CardDescription className="text-[#C8D2DF]">{t("history.description")}</CardDescription>
             </CardHeader>
             <CardContent>
               {historyItems.length === 0 ? (
-                <div className="rounded-[1.2rem] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">{t("history.empty")}</div>
+                <div className="rounded-[1.2rem] border border-white/10 bg-white/[0.045] px-4 py-3 text-sm text-[#C8D2DF]">{t("history.empty")}</div>
               ) : (
                 <ul className="space-y-3">
                   {historyItems.map((item) => {
@@ -289,26 +296,26 @@ export function DashboardOverview() {
                     return (
                       <li
                         key={item.id}
-                        className="rounded-[1.3rem] border border-border/35 bg-surface px-4 py-4 transition-colors hover:border-green/20 hover:bg-green/5"
+                        className="rounded-[1.3rem] border border-white/10 bg-white/[0.045] px-4 py-4 transition-colors hover:border-[#4CAF50]/30 hover:bg-[#4CAF50]/10"
                       >
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                           <div className="min-w-0 space-y-1">
-                            <p className="truncate text-base font-semibold text-text">{item.display_name ?? getDeclarationTypeLabel(item.case_type, t)}</p>
-                            <div className="flex flex-wrap items-center gap-2 text-xs text-secondary">
+                            <p className="truncate text-base font-semibold text-white">{item.display_name ?? getDeclarationTypeLabel(item.case_type, t)}</p>
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-[#C8D2DF]">
                               <span>{t("history.taxYear", { year: item.tax_year ?? "—" })}</span>
-                              <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
+                              <span className="h-1 w-1 rounded-full bg-white/30" aria-hidden="true" />
                               <span>{getDeclarationTypeLabel(item.case_type, t)}</span>
-                              <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
+                              <span className="h-1 w-1 rounded-full bg-white/30" aria-hidden="true" />
                               <span>{t("history.updated", { value: formatDate(item.updated_at, locale, noDateLabel) })}</span>
                             </div>
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant={statusTone === "success" ? "success" : statusTone === "copper" ? "copper" : "neutral"}>
+                            <StatusBadge tone={statusTone}>
                               {getStatusLabel(item.status, t)}
-                            </Badge>
+                            </StatusBadge>
                             <Link
                               href={getCaseHref(item)}
-                              className="inline-flex h-10 items-center justify-center rounded-full border border-green/30 bg-white/80 px-4 text-sm font-semibold text-green transition-colors hover:bg-green/5 hover:text-text"
+                              className="inline-flex h-10 items-center justify-center rounded-full border border-[#4CAF50]/35 bg-[#4CAF50]/[0.14] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#4CAF50]/[0.22]"
                             >
                               {t("history.cta")}
                             </Link>
@@ -324,18 +331,18 @@ export function DashboardOverview() {
         </div>
 
         <div className="space-y-5">
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+          <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-panel">
             <CardHeader className="mb-4">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant={taxSummary.isFallback ? "copper" : "success"}>{t(`summary.sources.${taxSummary.sourceLabel}`)}</Badge>
+                <StatusBadge tone={taxSummary.isFallback ? "warning" : "success"}>{t(`summary.sources.${taxSummary.sourceLabel}`)}</StatusBadge>
               </div>
-              <CardTitle className="text-[1.7rem]">{t("summary.title")}</CardTitle>
-              <CardDescription>{t("summary.description")}</CardDescription>
+              <CardTitle className="text-[1.7rem] text-white">{t("summary.title")}</CardTitle>
+              <CardDescription className="text-[#C8D2DF]">{t("summary.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-[1.35rem] border border-border/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.02),rgba(21,128,61,0.06))] p-4">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("summary.netResultLabel")}</p>
-                <p className="mt-2 font-mono text-[2.6rem] font-semibold leading-none tracking-[-0.05em] text-text">
+              <div className="rounded-[1.35rem] border border-[#4CAF50]/25 bg-[#4CAF50]/10 p-4">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#9FB0C4]">{t("summary.netResultLabel")}</p>
+                <p className="mt-2 font-mono text-[2.6rem] font-semibold leading-none tracking-normal text-white">
                   {formatMoney(taxSummary.netResult, locale)}
                 </p>
               </div>
@@ -349,38 +356,38 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+          <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-panel">
             <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("alertsPanel.title")}</CardTitle>
-              <CardDescription>{t("alertsPanel.description")}</CardDescription>
+              <CardTitle className="text-[1.7rem] text-white">{t("alertsPanel.title")}</CardTitle>
+              <CardDescription className="text-[#C8D2DF]">{t("alertsPanel.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <div className="mb-3 flex items-center gap-2 text-text">
-                  <CalendarClock className="h-4 w-4 text-green" />
+                <div className="mb-3 flex items-center gap-2 text-white">
+                  <CalendarClock className="h-4 w-4 text-[#4CAF50]" />
                   <p className="text-sm font-semibold">{t("alertsPanel.calendarTitle")}</p>
                 </div>
                 <ul className="space-y-2">
                   {milestoneItems.map((milestone) => (
-                    <li key={`${milestone.date}-${milestone.label}`} className="rounded-[1.1rem] border border-border/35 bg-surface2/20 px-4 py-3">
-                      <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">{milestone.date}</p>
-                      <p className="mt-1 text-sm text-text">{milestone.label}</p>
+                    <li key={`${milestone.date}-${milestone.label}`} className="rounded-[1.1rem] border border-white/10 bg-white/[0.045] px-4 py-3">
+                      <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#9FB0C4]">{milestone.date}</p>
+                      <p className="mt-1 text-sm text-white">{milestone.label}</p>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div>
-                <div className="mb-3 flex items-center gap-2 text-text">
-                  <AlertTriangle className="h-4 w-4 text-copper" />
+                <div className="mb-3 flex items-center gap-2 text-white">
+                  <AlertTriangle className="h-4 w-4 text-[#D97706]" />
                   <p className="text-sm font-semibold">{t("alertsPanel.alertsTitle")}</p>
                 </div>
                 {alerts.length === 0 ? (
-                  <div className="rounded-[1.1rem] border border-green/20 bg-green/5 px-4 py-3 text-sm text-secondary">{t("alertsPanel.empty")}</div>
+                  <div className="rounded-[1.1rem] border border-[#4CAF50]/25 bg-[#4CAF50]/10 px-4 py-3 text-sm text-[#C8D2DF]">{t("alertsPanel.empty")}</div>
                 ) : (
                   <ul className="space-y-2">
                     {alerts.map((alert) => (
-                      <li key={alert} className="rounded-[1.1rem] border border-copper/20 bg-copper/8 px-4 py-3 text-sm text-secondary">
+                      <li key={alert} className="rounded-[1.1rem] border border-[#D97706]/25 bg-[#D97706]/10 px-4 py-3 text-sm text-[#FBE3C4]">
                         {alert}
                       </li>
                     ))}
@@ -390,24 +397,24 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+          <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-panel">
             <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("activity.title")}</CardTitle>
-              <CardDescription>{t("activity.description")}</CardDescription>
+              <CardTitle className="text-[1.7rem] text-white">{t("activity.title")}</CardTitle>
+              <CardDescription className="text-[#C8D2DF]">{t("activity.description")}</CardDescription>
             </CardHeader>
             <CardContent>
               {recentActivity.length === 0 ? (
-                <div className="rounded-[1.2rem] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">{t("activity.empty")}</div>
+                <div className="rounded-[1.2rem] border border-white/10 bg-white/[0.045] px-4 py-3 text-sm text-[#C8D2DF]">{t("activity.empty")}</div>
               ) : (
                 <ul className="space-y-3">
                   {recentActivity.map((activity) => (
-                    <li key={activity.id} className="rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/20 hover:bg-green/5">
+                    <li key={activity.id} className="rounded-[1.15rem] border border-white/10 bg-white/[0.045] px-4 py-3 transition-colors hover:border-[#4CAF50]/30 hover:bg-[#4CAF50]/10">
                       <div className="flex items-start gap-3">
-                        <Clock3 className="mt-0.5 h-4 w-4 text-copper" />
+                        <Clock3 className="mt-0.5 h-4 w-4 text-[#D97706]" />
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-text">{activity.title}</p>
-                          <p className="mt-1 text-sm text-secondary">{activity.body}</p>
-                          <p className="mt-2 text-xs text-muted">{activity.createdAt}</p>
+                          <p className="text-sm font-semibold text-white">{activity.title}</p>
+                          <p className="mt-1 text-sm text-[#C8D2DF]">{activity.body}</p>
+                          <p className="mt-2 text-xs text-[#9FB0C4]">{activity.createdAt}</p>
                         </div>
                       </div>
                     </li>
@@ -418,24 +425,24 @@ export function DashboardOverview() {
           </Card>
 
           {showAdvisorPanel ? (
-            <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
+            <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-panel">
               <CardHeader className="mb-4">
-                <CardTitle className="text-[1.7rem]">{t("advisor.title")}</CardTitle>
-                <CardDescription>{t("advisor.description")}</CardDescription>
+                <CardTitle className="text-[1.7rem] text-white">{t("advisor.title")}</CardTitle>
+                <CardDescription className="text-[#C8D2DF]">{t("advisor.description")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="rounded-[1.2rem] border border-green/20 bg-green/5 p-4">
-                  <div className="flex items-center gap-2 text-text">
-                    <ShieldCheck className="h-4 w-4 text-green" />
+                <div className="rounded-[1.2rem] border border-[#4CAF50]/25 bg-[#4CAF50]/10 p-4">
+                  <div className="flex items-center gap-2 text-white">
+                    <ShieldCheck className="h-4 w-4 text-[#4CAF50]" />
                     <p className="text-sm font-semibold">{t("advisor.statusTitle")}</p>
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-secondary">{t("advisor.body")}</p>
+                  <p className="mt-2 text-sm leading-6 text-[#C8D2DF]">{t("advisor.body")}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <button type="button" className="rounded-full border border-green/30 bg-white px-4 py-2 text-sm font-semibold text-green transition-colors hover:bg-green/5 hover:text-text">
+                  <button type="button" className="rounded-full border border-[#4CAF50]/40 bg-[#4CAF50] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#3F9E48]">
                     {t("advisor.primaryAction")}
                   </button>
-                  <button type="button" className="rounded-full border border-border/45 bg-surface px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-green/20 hover:bg-green/5">
+                  <button type="button" className="rounded-full border border-white/[0.15] bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-[#4CAF50]/30 hover:bg-white/[0.1]">
                     {t("advisor.secondaryAction")}
                   </button>
                 </div>
@@ -461,25 +468,26 @@ function KpiCard({
 }) {
   return (
     <Card
-      variant="soft"
+      variant={highlight ? "darkSoft" : "dark"}
       padding="sm"
+      data-testid="dashboard-metric-card"
       className={cn(
-        "min-h-[132px] rounded-[1.4rem] border transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(15,23,42,0.08)]",
-        highlight ? "border-green/25 bg-[linear-gradient(135deg,rgba(21,128,61,0.08),rgba(195,145,91,0.08))]" : "border-border/35 bg-surface",
+        "min-h-[132px] rounded-[1.4rem] border transition-all hover:-translate-y-0.5 hover:border-[#4CAF50]/35",
+        highlight && "border-[#4CAF50]/30 bg-[#4CAF50]/[0.14]",
       )}
     >
-      <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{title}</p>
-      <p className="mt-3 font-mono text-[1.8rem] font-semibold tracking-[-0.04em] text-text">{value}</p>
-      <p className="mt-1.5 text-xs text-secondary">{note}</p>
+      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9FB0C4]">{title}</p>
+      <p className="mt-3 font-mono text-[1.8rem] font-semibold tracking-normal text-white">{value}</p>
+      <p className="mt-1.5 text-xs text-[#C8D2DF]">{note}</p>
     </Card>
   );
 }
 
 function SummaryRow({ label, value, emphasized = false }: { label: string; value: string; emphasized?: boolean }) {
   return (
-    <div className={cn("flex items-center justify-between rounded-[1rem] border px-4 py-3", emphasized ? "border-green/25 bg-green/5" : "border-border/35 bg-surface")}>
-      <dt className="text-sm text-secondary">{label}</dt>
-      <dd className={cn("font-mono text-sm font-semibold", emphasized ? "text-green" : "text-text")}>{value}</dd>
+    <div className={cn("flex items-center justify-between rounded-[1rem] border px-4 py-3", emphasized ? "border-[#4CAF50]/30 bg-[#4CAF50]/10" : "border-white/10 bg-white/[0.045]")}>
+      <dt className="text-sm text-[#C8D2DF]">{label}</dt>
+      <dd className={cn("font-mono text-sm font-semibold", emphasized ? "text-[#74D07B]" : "text-white")}>{value}</dd>
     </div>
   );
 }

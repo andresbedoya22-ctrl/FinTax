@@ -266,6 +266,9 @@ describe("DashboardOverview", () => {
   it("renders declaration KPIs and alerts", () => {
     render(<DashboardOverview />);
 
+    expect(screen.getAllByTestId("dashboard-metric-card")).toHaveLength(4);
+    expect(screen.getAllByTestId("dashboard-panel").length).toBeGreaterThan(0);
+
     expect(screen.getByRole("heading", { name: "Declaración 2025" })).toBeInTheDocument();
     expect(screen.getAllByText("Ingresos Box 1").length).toBeGreaterThan(0);
     expect(screen.getByText(/Los activos de Box 3 superan 59.357 EUR/i)).toBeInTheDocument();

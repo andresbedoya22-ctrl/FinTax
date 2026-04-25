@@ -5,6 +5,7 @@ import * as React from "react";
 import { vi } from "vitest";
 
 import { TopNav } from "@/components/fintax/layout";
+import { AppShell } from "@/components/fintax/layout/AppShell";
 
 let currentLocale = "en";
 
@@ -27,7 +28,7 @@ vi.mock("@/i18n/navigation", () => ({
 
 describe("Premium navigation terminology", () => {
   it.each([
-    ["es", "Beneficios / Subsidios"],
+    ["es", "Subsidios"],
     ["en", "Benefits"],
     ["nl", "Toeslagen"],
     ["pl", "Świadczenia"],
@@ -37,5 +38,19 @@ describe("Premium navigation terminology", () => {
     render(<TopNav />);
 
     expect(screen.getByRole("link", { name: label })).toBeInTheDocument();
+  });
+
+  it("renders the premium shell and navigation landmarks", () => {
+    currentLocale = "es";
+
+    render(
+      <AppShell>
+        <main>Contenido de la app</main>
+      </AppShell>,
+    );
+
+    expect(screen.getByTestId("premium-app-shell")).toBeInTheDocument();
+    expect(screen.getByTestId("premium-top-nav")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Subsidios" })).toBeInTheDocument();
   });
 });

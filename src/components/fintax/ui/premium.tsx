@@ -65,7 +65,7 @@ export function PageHeader({
     <header className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
       <div className="max-w-4xl">
         {eyebrow ? <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#74cf7a]">{eyebrow}</p> : null}
-        <h1 className="mt-3 max-w-[18ch] text-[clamp(2.1rem,4vw,3.6rem)] font-bold leading-[1.02] tracking-[-0.03em] text-white">
+        <h1 className="mt-3 max-w-[18ch] text-[clamp(2.1rem,4vw,3.6rem)] font-bold leading-[1.02] tracking-normal text-white">
           {title}
         </h1>
         {description ? <p className="mt-4 max-w-3xl text-base leading-7 text-[#C8D2DF]">{description}</p> : null}
@@ -94,7 +94,7 @@ export function PremiumStepper({
                 <span
                   className={cn(
                     "grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold",
-                    completed || current ? "bg-[#4CAF50] text-white" : "bg-white/12 text-[#C8D2DF]",
+                    completed || current ? "bg-[#4CAF50] text-white" : "bg-white/[0.12] text-[#C8D2DF]",
                   )}
                 >
                   {completed ? <Check className="size-4" /> : index + 1}
@@ -104,7 +104,7 @@ export function PremiumStepper({
                 </span>
               </div>
               {index < steps.length - 1 ? (
-                <span className={cn("h-px flex-1", completed ? "bg-[#4CAF50]" : "bg-white/14")} aria-hidden="true" />
+                <span className={cn("h-px flex-1", completed ? "bg-[#4CAF50]" : "bg-white/[0.14]")} aria-hidden="true" />
               ) : null}
             </li>
           );
@@ -137,7 +137,7 @@ export function HeroSummaryCard({
         </div>
         <div>
           <p className="text-lg font-semibold text-[#344054]">{label}</p>
-          <p className="mt-3 text-[clamp(2.4rem,5vw,4rem)] font-bold leading-none tracking-[-0.04em] text-[#3F9E48]">
+          <p className="mt-3 text-[clamp(2.4rem,5vw,4rem)] font-bold leading-none tracking-normal text-[#3F9E48]">
             {amount} <span className="text-2xl text-[#102033]">{caption}</span>
           </p>
           {badges ? <div className="mt-5 flex flex-wrap gap-3">{badges}</div> : null}
@@ -195,13 +195,13 @@ export function ActionPanel({
   loading?: boolean;
 }) {
   return (
-    <aside className="relative overflow-hidden rounded-[30px] border border-white/12 bg-[linear-gradient(145deg,#0B2340,#061426)] p-7 text-white shadow-[0_26px_70px_rgba(0,0,0,0.24)] lg:p-9">
+    <aside className="relative overflow-hidden rounded-[30px] border border-white/[0.12] bg-[linear-gradient(145deg,#0B2340,#061426)] p-7 text-white shadow-[0_26px_70px_rgba(0,0,0,0.24)] lg:p-9">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_86%_18%,rgba(76,175,80,0.14),transparent_36%)]" />
       <div className="relative">
-        <span className="grid size-16 place-items-center rounded-[18px] bg-[#4CAF50]/18 text-[#EAF7EC]">
+        <span className="grid size-16 place-items-center rounded-[18px] bg-[#4CAF50]/[0.18] text-[#EAF7EC]">
           <Sparkles className="size-8" />
         </span>
-        <h2 className="mt-8 max-w-[12ch] text-[clamp(2rem,3vw,3rem)] font-bold leading-[1.06] tracking-[-0.03em]">{title}</h2>
+        <h2 className="mt-8 max-w-[12ch] text-[clamp(2rem,3vw,3rem)] font-bold leading-[1.06] tracking-normal">{title}</h2>
         <p className="mt-5 max-w-[42ch] text-base leading-7 text-[#C8D2DF]">{copy}</p>
         <Button
           type="button"
@@ -224,7 +224,7 @@ export function ActionPanel({
 
 export function ProcessTimeline({ title, steps }: { title: string; steps: { title: string; body: string; icon?: LucideIcon }[] }) {
   return (
-    <section className="rounded-[24px] border border-white/12 bg-white/[0.035] p-6 text-white">
+    <section className="rounded-[24px] border border-white/[0.12] bg-white/[0.035] p-6 text-white">
       <h2 className="text-2xl font-bold">{title}</h2>
       <ol className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {steps.map((step, index) => {
@@ -248,7 +248,7 @@ export function ProcessTimeline({ title, steps }: { title: string; steps: { titl
 export function UnlocksCard({ title, items }: { title: string; items: string[] }) {
   const icons = [Calculator, ListChecks, Users, FileCheck2];
   return (
-    <section className="rounded-[24px] border border-white/12 bg-white/[0.035] p-6 text-white">
+    <section className="rounded-[24px] border border-white/[0.12] bg-white/[0.035] p-6 text-white">
       <h2 className="text-2xl font-bold">{title}</h2>
       <ul className="mt-5 grid gap-4">
         {items.map((item, index) => {
