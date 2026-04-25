@@ -39,6 +39,7 @@ import {
   Tooltip,
   buttonVariants,
 } from "@/components/ui";
+import { FinTaxLogo } from "@/components/fintax/brand";
 import { useEncryptedFormDraft } from "@/hooks/useEncryptedFormDraft";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
@@ -1264,19 +1265,18 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
   const intentTitle = pendingIntent ? (pendingIntent.intent === "tax-return" ? copy.intent.taxReturn : copy.intent.benefits) : null;
 
   return (
-    <div className="min-h-screen bg-mesh">
+    <div className="min-h-screen bg-[#061426]">
       <div className="mx-auto grid min-h-screen max-w-[1460px] lg:grid-cols-[minmax(0,1.02fr)_minmax(360px,0.82fr)]">
         <section className="flex justify-center px-4 pb-8 pt-4 sm:px-6 sm:pt-5 lg:px-8 lg:pt-6 xl:px-12 xl:pt-7">
           <div className="w-full max-w-[640px]">
             <div className="mb-6 flex items-center justify-between lg:hidden">
-              <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-text">
-                <span className="grid h-8 w-8 place-items-center rounded-lg border border-green/25 bg-green/10 font-heading text-sm text-green">F</span>
-                <span className="font-heading text-lg tracking-tight">FinTax</span>
+              <Link href="/" className="focus-ring rounded-md">
+                <FinTaxLogo markClassName="size-8 rounded-lg" wordmarkClassName="text-lg" />
               </Link>
               <Badge variant="neutral">{ui.eyebrow}</Badge>
             </div>
 
-            <Card variant="panel" padding="none" className="overflow-hidden border-border/70 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+            <Card variant="panel" padding="none" className="overflow-hidden rounded-[28px] border-white/70 shadow-[0_24px_70px_rgba(0,0,0,0.22)]">
               <div className="border-b border-border/35 bg-surface/80 px-5 py-4 sm:px-7 sm:py-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -1485,11 +1485,10 @@ export function AuthScreen({ initialSearchParams = {} }: { initialSearchParams?:
           </div>
         </section>
 
-        <aside className="hidden border-l border-border/35 bg-[radial-gradient(circle_at_top,rgba(109,155,126,0.22),transparent_32%),linear-gradient(180deg,#122018_0%,#14231b_45%,#17271e_100%)] px-8 py-8 text-white lg:flex lg:flex-col lg:gap-7 xl:px-12 xl:py-10">
+        <aside className="hidden border-l border-white/10 bg-[radial-gradient(circle_at_top,rgba(76,175,80,0.18),transparent_32%),linear-gradient(180deg,#0B2340_0%,#081B33_45%,#061426_100%)] px-8 py-8 text-white lg:flex lg:flex-col lg:gap-7 xl:px-12 xl:py-10">
           <div>
-            <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-white">
-              <span className="grid h-8 w-8 place-items-center rounded-lg border border-white/15 bg-white/10 font-heading text-sm text-white">F</span>
-              <span className="font-heading text-lg tracking-tight">FinTax</span>
+            <Link href="/" className="focus-ring rounded-md">
+              <FinTaxLogo markClassName="size-9" wordmarkClassName="text-xl" />
             </Link>
           </div>
 

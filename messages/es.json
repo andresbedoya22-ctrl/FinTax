@@ -43,7 +43,7 @@
     "hero": {
       "eyebrow": "FinTax para internacionales en NL",
       "title": "Impuestos holandeses explicados en tu idioma.",
-      "subtitle": "Presenta tu declaración (P/M/C), gestiona ZZP + IVA, solicita toeslagen y entiende cartas del gobierno. Automatización + revisión humana. Precio fijo.",
+      "subtitle": "Presenta tu declaraci?n (P/M/C), gestiona ZZP + IVA, solicita subsidios y entiende cartas del gobierno. Automatizaci?n + revisi?n humana. Precio fijo.",
       "primaryCta": "Iniciar precheck gratuito",
       "secondaryCta": "Ver servicios",
       "trustBadges": [
@@ -97,7 +97,7 @@
           "copy": "Registro, declaración trimestral de IVA y orientación sobre deducciones."
         },
         {
-          "title": "Solicitudes de toeslagen",
+          "title": "Solicitudes de subsidios",
           "copy": "Solicitudes de subsidios de salud, alquiler y guardería."
         },
         {
@@ -226,7 +226,7 @@
           "summary": "Los casos más comunes incl. migración y prestaciones",
           "features": [
             "Soporte P/M/C",
-            "Revisión de toeslagen",
+            "Revisión de subsidios",
             "Panel de seguimiento de casos",
             "Revisión prioritaria"
           ]
@@ -262,7 +262,7 @@
           "a": "Gestionamos formularios P, M y C, además de cartas relacionadas y acciones de seguimiento."
         },
         {
-          "q": "¿Puedo obtener ayuda con toeslagen?",
+          "q": "¿Puedo obtener ayuda con subsidios?",
           "a": "Sí, verificamos la elegibilidad y ayudamos con las solicitudes de zorgtoeslag, huurtoeslag y otras prestaciones relevantes."
         },
         {
@@ -1023,9 +1023,9 @@
     }
   },
   "Benefits": {
-    "heroTitle": "Chequeo Benefits / Toeslagen 2026",
-    "heroSubtitle": "Estimaci?n estructurada alineada con las reglas p?blicas 2026, la matriz documental y las ramas de revisi?n manual. El derecho final siempre lo determina Dienst Toeslagen.",
-    "wizardTitle": "Benefits eligibility wizard",
+    "heroTitle": "Subsidios 2026",
+    "heroSubtitle": "Este es un c?lculo estimado seg?n las reglas 2026 y la informaci?n que nos has proporcionado. El importe final depender? de la revisi?n oficial.",
+    "wizardTitle": "Subsidios eligibility wizard",
     "back": "Atr?s",
     "next": "Siguiente",
     "intro": {
@@ -1306,7 +1306,7 @@
       "disclaimer": "Estimado, no definitivo. El derecho final lo determina Dienst Toeslagen tras la evaluaci?n oficial y la evidencia aportada.",
       "totalLabel": "Total anual estimado",
       "totalCaption": "Suma de todos los subsidios seleccionados con c?lculo disponible.",
-      "eligibleCountLabel": "Subsidios elegibles",
+      "eligibleCountLabel": "Subsidios",
       "eligibleCountCaption": "Subsidios que hoy superan las condiciones principales visibles.",
       "noneEligibleTitle": "No se detecta derecho directo",
       "noneEligibleCopy": "Revisa las razones de bloqueo y las ramas de revisi?n manual antes de aconsejar solicitar o no solicitar.",
@@ -1333,18 +1333,18 @@
       },
       "mode": {
         "prePayment": {
-          "title": "Resultado preliminar de tus toeslagen",
+          "title": "Resultado preliminar de tus subsidios",
           "eligibleCount": "Según tus respuestas, podrías aplicar a {count} subsidio(s).",
           "rangeLabel": "Rango estimado",
           "cta": "Continuar y dejar que FinTax prepare mi solicitud",
           "supportingTitle": "Cómo continúa FinTax",
           "supporting": "Revisamos tus datos, te pedimos solo los documentos necesarios y preparamos la solicitud para reducir errores y complicaciones.",
-          "disclaimer": "Esta estimación se basa en reglas 2026. El importe definitivo lo determina Dienst Toeslagen.",
+          "disclaimer": "Este es un c?lculo estimado seg?n las reglas 2026 y la informaci?n que nos has proporcionado. El importe final depender? de la revisi?n oficial.",
           "manualReview": "Tu caso tiene una situación especial. Podemos revisarlo antes de preparar la solicitud.",
           "amountHidden": "Los importes estimados exactos se desbloquean después del pago."
         },
         "postPayment": {
-          "title": "Cálculo detallado desbloqueado",
+          "title": "C?lculo detallado desbloqueado",
           "status": "Pago recibido",
           "nextStep": "Sube los documentos requeridos. Cuando estén completos, revisaremos tu caso y prepararemos la solicitud.",
           "documentsIntro": "Solo pedimos los documentos necesarios para los subsidios que parecen aplicar a tu situación.",
@@ -1353,19 +1353,19 @@
       },
       "cards": {
         "zorgtoeslag": {
-          "title": "Zorgtoeslag",
+          "title": "Subsidio de salud",
           "subtitle": "Dutch health-insurance allowance."
         },
         "huurtoeslag": {
-          "title": "Huurtoeslag",
+          "title": "Subsidio de alquiler",
           "subtitle": "Rent allowance based on rent, income and household facts."
         },
         "kindgebondenBudget": {
-          "title": "Kindgebonden budget",
+          "title": "Apoyo familiar",
           "subtitle": "Income-related child budget for children under 18."
         },
         "kinderopvangtoeslag": {
-          "title": "Kinderopvangtoeslag",
+          "title": "Subsidio de guarder?a",
           "subtitle": "Childcare allowance based on valid activity, LRK and official percentage bands."
         }
       },
@@ -1411,6 +1411,58 @@
       "error": "No pudimos iniciar el checkout para este caso de benefits. Inténtalo de nuevo.",
       "requiresAuth": "Inicia sesión para continuar con el checkout de benefits.",
       "caseLoadError": "No pudimos cargar los detalles del caso de benefits ya pagado."
+    },
+    "premium": {
+      "stepper": [
+        "Diagn?stico",
+        "Resultado",
+        "Pago",
+        "Documentos",
+        "Solicitud"
+      ],
+      "prePaymentSubtitle": "Este es un c?lculo estimado seg?n las reglas 2026 y la informaci?n que nos has proporcionado. El importe final depender? de la revisi?n oficial.",
+      "postPaymentSubtitle": "Tu pago est? confirmado. Ya puedes ver c?lculos detallados, documentos y siguientes pasos para la preparaci?n experta.",
+      "totalEstimateLabel": "Tu estimaci?n mensual total",
+      "between": "Entre",
+      "potentialCount": "{count} subsidios potenciales",
+      "manualReviewCount": "{count} caso con revisi?n manual",
+      "action": {
+        "title": "D?janos preparar tu solicitud",
+        "postTitle": "Contin?a la preparaci?n documental",
+        "copy": "Revisamos tus datos, preparamos la documentaci?n necesaria y maximizamos tus posibilidades de obtener los subsidios a los que puedes optar.",
+        "postCopy": "Tu estimaci?n detallada est? desbloqueada. Contin?a con el checklist documental para que FinTax prepare la solicitud.",
+        "footer": "Pago seguro y cifrado"
+      },
+      "process": {
+        "title": "C?mo funciona",
+        "steps": [
+          {
+            "title": "Diagn?stico gratis",
+            "body": "Analizamos tu informaci?n y calculamos tus posibles subsidios."
+          },
+          {
+            "title": "Pago seguro",
+            "body": "Elige tu plan y realiza el pago de forma segura."
+          },
+          {
+            "title": "Subida de documentos",
+            "body": "Subes tus documentos y nosotros los preparamos para la revisi?n."
+          },
+          {
+            "title": "Preparaci?n de solicitud",
+            "body": "Preparamos tu solicitud para enviarla y hacemos seguimiento de tu caso."
+          }
+        ]
+      },
+      "unlocks": {
+        "title": "Qu? desbloqueas despu?s del pago",
+        "items": [
+          "C?lculo detallado por subsidio",
+          "Checklist documental personalizado",
+          "Revisi?n del caso por expertos",
+          "Preparaci?n de tu solicitud para env?o"
+        ]
+      }
     }
   },
   "CaseDetail": {

@@ -79,3 +79,24 @@ Branch: `feature/toeslagen-2026-official-engine`
   - unauthenticated users are redirected to auth and local wizard state is preserved for resume
 - Current limitation:
   - post-payment document collection is staged on top of the existing generic case/docflow endpoints, but benefits-specific upload orchestration still needs a dedicated follow-up to make the upload CTA fully operational end-to-end
+
+## Premium Benefits UI Redesign
+
+- The Benefits/Subsidios flow now uses the premium global FinTax language: deep navy shell, modern green accent, large white summary cards, professional icon containers, and a single dominant checkout CTA.
+- Pre-payment results follow progressive disclosure:
+  - show only monthly ranges;
+  - show potential benefits and manual-review status;
+  - hide exact totals, calculation trace, and full document checklist;
+  - focus the user on continuing to secure payment and expert preparation.
+- Post-payment results keep the same visual language but unlock:
+  - detailed annual and monthly estimates;
+  - calculation trace inside closed accordions;
+  - document checklist and next steps;
+  - case-specific preparation guidance.
+- Localized terminology is now user-facing by locale:
+  - English: Benefits
+  - Spanish: Subsidios
+  - Dutch: Toeslagen
+  - Polish: Świadczenia
+  - Romanian: Beneficii
+- The Dutch term remains in domain code, official-source references, and `docs/toeslagen` because the canonical engine models Dutch Toeslagen rules.

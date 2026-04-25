@@ -1,8 +1,21 @@
 "use client";
 
-import { FileText, Sparkles } from "lucide-react";
+import { FileCheck2, Search, ShieldCheck, UploadCloud } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import {
+  ActionPanel,
+  BenefitSummaryCard,
+  DetailAccordion,
+  HeroSummaryCard,
+  InfoBanner,
+  PageHeader,
+  PremiumStepper,
+  ProcessTimeline,
+  StatusBadge,
+  UnlocksCard,
+  benefitIcons,
+} from "@/components/fintax/ui";
 import {
   buildBenefitEstimateRange,
   buildPrePaymentEstimateRange,
@@ -10,8 +23,6 @@ import {
   type ToeslagenEvaluation,
 } from "@/lib/toeslagen";
 
-import { BenefitsBundleSummary } from "./BenefitsBundleSummary";
-import { BenefitsEligibilityCard } from "./BenefitsEligibilityCard";
 import { BenefitsPostPaymentNextSteps } from "./BenefitsPostPaymentNextSteps";
 import type { BenefitCardKey } from "./wizard";
 
@@ -31,10 +42,23 @@ function formatCompactAmount(value: number, exact = false) {
   }).format(value);
 }
 
+function formatRange(range: { minMonthly: number; maxMonthly: number }) {
+  return `${formatCompactAmount(range.minMonthly)} - ${formatCompactAmount(range.maxMonthly)}`;
+}
+
+function asStringArray(value: unknown, fallback: string[]) {
+  return Array.isArray(value) && value.every((item) => typeof item === "string") ? value : fallback;
+}
+
+function asProcessSteps(value: unknown, fallback: { title: string; body: string }[]) {
+  return Array.isArray(value) && value.every((item) => item && typeof item === "object" && "title" in item && "body" in item)
+    ? (value as { title: string; body: string }[])
+    : fallback;
+}
+
 export function BenefitsResults({
   results,
   selectedKeys,
-  onToggleSelected,
   mode = "prePayment",
   caseId = null,
   onContinueToCheckout,
@@ -50,118 +74,135 @@ export function BenefitsResults({
 }) {
   const t = useTranslations("Benefits");
   const eligibleCount = benefitCardOrder.filter((key) => results.results[key].eligible).length;
-  const selectedAmount = selectedKeys.reduce((sum, key) => sum + (results.results[key].estimatedAnnualAmount ?? 0), 0);
   const totalRange = buildPrePaymentEstimateRange(results);
   const allRequiredDocuments = benefitCardOrder.flatMap((key) => results.results[key].requiredDocuments);
-
-  const summaryMessage =
-    eligibleCount === 0
-      ? t("results.summary.none")
-      : eligibleCount === 1
-        ? t("results.summary.one")
-        : t("results.summary.multiple");
+  const manualReviewCount = benefitCardOrder.filter((key) => results.results[key].manualReviewRequired).length;
+  const stepLabels = asStringArray(t.raw("premium.stepper"), ["Diagnosis", "Result", "Payment", "Documents", "Application"]);
+  const processSteps = asProcessSteps(t.raw("premium.process.steps"), [
+    { title: "Free diagnosis", body: "We analyze your information and calculate possible benefits." },
+    { title: "Secure payment", body: "Choose your plan and complete payment securely." },
+    { title: "Document upload", body: "Upload documents and we prepare them for review." },
+    { title: "Application preparation", body: "We prepare your application file and follow up on the case." },
+  ]);
+  const unlocks = asStringArray(t.raw("premium.unlocks.items"), [
+    "Detailed calculation by benefit",
+    "Personalized document checklist",
+    "Expert case review",
+    "Application preparation for submission",
+  ]);
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-[24px] border border-border/50 bg-[linear-gradient(135deg,rgba(250,252,249,0.98),rgba(242,246,240,0.88))] p-4 shadow-[0_24px_70px_rgba(17,36,26,0.08)] sm:rounded-[30px] sm:p-6">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_17rem_17rem]">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-copper/20 bg-copper/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-copper">
-              <Sparkles className="size-3.5" />
-              {t("results.summaryBadge")}
-            </div>
-            <h3 className="font-heading text-[clamp(1.9rem,3vw,2.7rem)] leading-tight tracking-[-0.04em] text-text">
-              {mode === "prePayment" ? t("results.mode.prePayment.title") : t("results.mode.postPayment.title")}
-            </h3>
-            <p className="max-w-2xl text-sm leading-6 text-secondary">
-              {mode === "prePayment"
-                ? t("results.mode.prePayment.eligibleCount", { count: eligibleCount })
-                : summaryMessage}
-            </p>
-          </div>
+    <div className="space-y-8">
+      <PremiumStepper steps={stepLabels} currentStep={mode === "prePayment" ? 1 : 3} />
 
-          <div className="rounded-[24px] border border-border/40 bg-white/85 p-4" data-testid="benefits-results-total">
-            {mode === "prePayment" ? (
-              <>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.mode.prePayment.rangeLabel")}</p>
-                <p className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">
-                  {formatCompactAmount(totalRange.minMonthly)} - {formatCompactAmount(totalRange.maxMonthly)}
-                </p>
-                <p className="mt-1 text-sm text-secondary">{t("results.range.monthly")}</p>
-                <p className="mt-2 text-sm text-secondary">{t("results.mode.prePayment.disclaimer")}</p>
-              </>
-            ) : (
-              <>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.totalLabel")}</p>
-                <p className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">EUR {results.totalEstimatedAnnualAmount.toFixed(2)}</p>
-                <p className="mt-1 text-sm text-secondary">EUR {results.totalEstimatedMonthlyAmount.toFixed(2)} / {t("results.month")}</p>
-                <p className="mt-2 text-sm text-secondary">{t("results.totalCaption")}</p>
-              </>
-            )}
-          </div>
+      <PageHeader
+        title={mode === "prePayment" ? t("results.mode.prePayment.title") : t("results.mode.postPayment.title")}
+        description={mode === "prePayment" ? t("premium.prePaymentSubtitle") : t("premium.postPaymentSubtitle")}
+      />
 
-          <div className="rounded-[24px] border border-border/40 bg-white/85 p-4 md:col-span-2 xl:col-span-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">{t("results.eligibleCountLabel")}</p>
-            <p className="mt-2 font-heading text-3xl tracking-[-0.03em] text-text">{eligibleCount}</p>
-            <p className="mt-2 text-sm text-secondary">{t("results.eligibleCountCaption")}</p>
-          </div>
-        </div>
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(330px,0.46fr)]">
+        <HeroSummaryCard
+          testId="benefits-results-total"
+          label={mode === "prePayment" ? t("premium.totalEstimateLabel") : t("results.totalLabel")}
+          amount={mode === "prePayment" ? `${t("premium.between")} ${formatRange(totalRange)}` : formatCompactAmount(results.totalEstimatedMonthlyAmount, true)}
+          caption={mode === "prePayment" ? t("results.range.monthly") : `/ ${t("results.month")}`}
+          badges={
+            <>
+              <StatusBadge tone="success">{t("premium.potentialCount", { count: eligibleCount })}</StatusBadge>
+              {manualReviewCount > 0 ? <StatusBadge tone="warning">{t("premium.manualReviewCount", { count: manualReviewCount })}</StatusBadge> : null}
+            </>
+          }
+        >
+          {benefitCardOrder.map((key) => {
+            const result = results.results[key];
+            const range = buildBenefitEstimateRange(result);
+            const showRange = mode === "prePayment" && range.maxMonthly > 0 && (result.eligible || result.manualReviewRequired);
+            const value = mode === "postPayment"
+              ? `${formatCompactAmount(result.estimatedMonthlyAmount ?? 0, true)} / ${t("results.month")}`
+              : showRange
+                ? `${formatRange(range)}/${t("results.month")}`
+                : undefined;
+            return (
+              <BenefitSummaryCard
+                key={key}
+                icon={benefitIcons[key]}
+                title={t(`results.cards.${key}.title`)}
+                status={result.manualReviewRequired ? t("results.manualReview") : result.eligible ? t("results.eligible") : t("results.notEligible")}
+                statusTone={result.manualReviewRequired ? "warning" : result.eligible ? "success" : "neutral"}
+                value={value}
+              />
+            );
+          })}
+        </HeroSummaryCard>
 
-        {eligibleCount === 0 ? (
-          <div className="mt-5 rounded-[24px] border border-copper/25 bg-copper/8 p-4">
-            <p className="text-sm font-semibold text-text">{t("results.noneEligibleTitle")}</p>
-            <p className="mt-1 text-sm leading-6 text-secondary">{t("results.noneEligibleCopy")}</p>
-          </div>
-        ) : null}
-
-        <div className="mt-5 rounded-[24px] border border-border/35 bg-white/75 p-4">
-          <div className="flex items-start gap-3">
-            <div className="inline-flex size-10 items-center justify-center rounded-2xl border border-border/35 bg-surface2/50 text-copper">
-              <FileText className="size-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-text">
-                {mode === "prePayment" ? t("results.mode.prePayment.supportingTitle") : t("results.honestyTitle")}
-              </p>
-              <p className="mt-1 text-sm leading-6 text-secondary">
-                {mode === "prePayment" ? t("results.mode.prePayment.supporting") : t("results.honestyCopy")}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {results.manualReviewRequired ? (
-          <div className="mt-5 rounded-[24px] border border-copper/25 bg-copper/10 p-4">
-            <p className="text-sm font-semibold text-text">{t("results.manualReviewTitle")}</p>
-            <p className="mt-1 text-sm leading-6 text-secondary">
-              {mode === "prePayment" ? t("results.mode.prePayment.manualReview") : t("results.manualReviewCopy")}
-            </p>
-          </div>
-        ) : null}
-      </section>
-
-      <div className="grid gap-4 xl:grid-cols-2">
-        {benefitCardOrder.map((key) => (
-          <BenefitsEligibilityCard
-            key={key}
-            benefitKey={key}
-            result={results.results[key]}
-            selected={selectedKeys.includes(key)}
-            onToggleSelected={() => onToggleSelected(key)}
-            mode={mode}
-            range={mode === "prePayment" ? buildBenefitEstimateRange(results.results[key]) : null}
-          />
-        ))}
+        <ActionPanel
+          title={mode === "prePayment" ? t("premium.action.title") : t("premium.action.postTitle")}
+          copy={mode === "prePayment" ? t("premium.action.copy") : t("premium.action.postCopy")}
+          cta={mode === "prePayment" ? t("results.mode.prePayment.cta") : t("bundle.continue")}
+          footer={t("premium.action.footer")}
+          onClick={mode === "prePayment" ? onContinueToCheckout : undefined}
+          disabled={mode === "prePayment" && selectedKeys.length === 0}
+          loading={isCheckoutLoading}
+        />
       </div>
 
-      <BenefitsBundleSummary
-        selectedKeys={selectedKeys}
-        selectedAmount={selectedAmount}
-        mode={mode}
-        range={mode === "prePayment" ? totalRange : null}
-        onContinueToCheckout={onContinueToCheckout}
-        isCheckoutLoading={isCheckoutLoading}
-      />
+      <InfoBanner tone={results.manualReviewRequired ? "warning" : "info"}>
+        {mode === "prePayment" ? t("results.mode.prePayment.disclaimer") : t("results.honestyCopy")}
+      </InfoBanner>
+
+      {mode === "postPayment" ? (
+        <section className="grid gap-4 rounded-[28px] bg-white p-6 text-[#102033] shadow-[0_30px_80px_rgba(0,0,0,0.16)] lg:p-8">
+          <h2 className="text-2xl font-bold">{t("results.mode.postPayment.nextStep")}</h2>
+          <div className="grid gap-4 xl:grid-cols-2">
+            {benefitCardOrder.map((key) => {
+              const result = results.results[key];
+              return (
+                <article key={key} className="rounded-[22px] border border-slate-200 bg-white p-5">
+                  <h3 className="text-lg font-bold">{t(`results.cards.${key}.title`)}</h3>
+                  <p className="mt-1 text-sm text-[#667085]">{t(`results.cards.${key}.subtitle`)}</p>
+                  <p className="mt-4 font-mono text-2xl font-bold text-[#3F9E48]">
+                    {formatCompactAmount(result.estimatedAnnualAmount ?? 0, true)}
+                  </p>
+                  <p className="text-sm text-[#667085]">{formatCompactAmount(result.estimatedMonthlyAmount ?? 0, true)} / {t("results.month")}</p>
+                  <div className="mt-5 grid gap-3">
+                    <DetailAccordion title={t("results.calculationTraceLabel")}>
+                      <ul className="space-y-2 text-sm leading-6">
+                        {result.calculationSteps.map((step) => (
+                          <li key={step.code} className="rounded-[14px] border border-slate-200 bg-white px-3 py-2">
+                            <span className="font-semibold">{t(step.labelKey.replace(/^Benefits\./, ""))}</span>: {String(step.value)}
+                            {step.formula ? <span className="block text-xs text-[#667085]">{step.formula}</span> : null}
+                          </li>
+                        ))}
+                      </ul>
+                    </DetailAccordion>
+                    <DetailAccordion title={t("results.documentsLabel")}>
+                      <ul className="space-y-2 text-sm leading-6">
+                        {[...result.requiredDocuments, ...result.optionalDocuments].map((document) => (
+                          <li key={document.code} className="flex items-start gap-2">
+                            <FileCheck2 className="mt-1 size-4 text-[#4CAF50]" />
+                            <span>{t(document.labelKey.replace(/^Benefits\./, ""))}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </DetailAccordion>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1.45fr)_minmax(330px,0.68fr)]">
+        <ProcessTimeline
+          title={t("premium.process.title")}
+          steps={processSteps.map((step, index) => ({
+            ...step,
+            icon: [Search, ShieldCheck, UploadCloud, FileCheck2][index],
+          }))}
+        />
+        <UnlocksCard title={t("premium.unlocks.title")} items={unlocks} />
+      </div>
 
       {mode === "postPayment" ? <BenefitsPostPaymentNextSteps caseId={caseId} documents={allRequiredDocuments} /> : null}
     </div>

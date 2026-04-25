@@ -272,17 +272,20 @@ export function BenefitsFlow({
       { shouldDirty: true, shouldValidate: true },
     );
   };
+  const isResultsStage = mode === "postPayment" || benefitStepKeys[currentStep] === "results";
 
   return (
     <div className="space-y-6">
-      <BenefitsIntro />
+      {!isResultsStage ? <BenefitsIntro /> : null}
 
-      <Card className="overflow-hidden border border-border/55 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,249,245,0.92))] shadow-[0_26px_80px_rgba(18,38,28,0.08)]">
-        <CardHeader className="space-y-5 border-b border-border/45 bg-[linear-gradient(180deg,rgba(250,252,249,0.98),rgba(245,248,243,0.92))]">
-          <BenefitsProgressHeader currentStep={currentStep} steps={benefitStepKeys} />
-        </CardHeader>
+      <Card className={isResultsStage ? "border-0 bg-transparent p-0 shadow-none" : "overflow-hidden border border-border/55 bg-white shadow-[0_26px_80px_rgba(18,38,28,0.08)]"}>
+        {!isResultsStage ? (
+          <CardHeader className="space-y-5 border-b border-border/45 bg-[linear-gradient(180deg,rgba(250,252,249,0.98),rgba(245,248,243,0.92))]">
+            <BenefitsProgressHeader currentStep={currentStep} steps={benefitStepKeys} />
+          </CardHeader>
+        ) : null}
 
-        <CardBody className="space-y-6">
+        <CardBody className={isResultsStage ? "space-y-6 p-0" : "space-y-6"}>
           {checkoutError ? (
             <div className="rounded-[20px] border border-copper/25 bg-copper/10 px-4 py-3 text-sm text-secondary">
               {checkoutError}

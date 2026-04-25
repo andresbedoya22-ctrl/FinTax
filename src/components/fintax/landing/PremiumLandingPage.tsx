@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { FinTaxLogo } from "@/components/fintax/brand";
 import { LanguageSwitcher } from "@/components/fintax/LanguageSwitcher";
 import { StructuredData } from "@/components/fintax/landing/StructuredData";
 import { getLandingContent, type LandingIntent, type LandingContent } from "@/components/fintax/landing/content";
@@ -87,7 +88,7 @@ function LandingNavLink({ href, children }: { href: string; children: React.Reac
     <a
       href={href}
       onClick={(event) => smoothAnchorNavigate(event, href)}
-      className="focus-ring rounded-md px-3 py-2 text-sm text-secondary transition-colors duration-200 hover:text-text motion-safe:hover:-translate-y-0.5 motion-safe:transition-transform motion-reduce:transform-none"
+      className="focus-ring rounded-md px-3 py-2 text-sm text-[#C8D2DF] transition-colors duration-200 hover:text-white motion-safe:hover:-translate-y-0.5 motion-safe:transition-transform motion-reduce:transform-none"
     >
       {children}
     </a>
@@ -96,9 +97,9 @@ function LandingNavLink({ href, children }: { href: string; children: React.Reac
 
 function LandingHero({ content }: { content: LandingContent }) {
   return (
-    <section className="relative overflow-hidden border-b border-border/65 px-0 pb-10 pt-10 sm:pb-12 sm:pt-14 lg:pb-14 lg:pt-16">
+    <section className="relative overflow-hidden border-b border-white/10 bg-[#061426] px-0 pb-10 pt-10 text-white sm:pb-12 sm:pt-14 lg:pb-14 lg:pt-16">
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[30rem] bg-[radial-gradient(circle_at_top_left,rgba(21,84,56,0.12),transparent_42%),radial-gradient(circle_at_78%_24%,rgba(180,138,92,0.12),transparent_28%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[30rem] bg-[radial-gradient(circle_at_top_left,rgba(76,175,80,0.16),transparent_42%)]"
         aria-hidden="true"
       />
       <Container className="relative">
@@ -107,11 +108,11 @@ function LandingHero({ content }: { content: LandingContent }) {
             <Badge variant="success">{content.hero.eyebrow}</Badge>
             <h1
               id="landing-title"
-              className="mt-5 max-w-[13.2ch] font-heading text-[3.1rem] leading-[0.95] tracking-[-0.055em] text-text sm:text-[3.95rem] lg:max-w-[13.8ch] lg:text-[4.6rem] xl:text-[4.9rem]"
+              className="mt-5 max-w-[13.2ch] font-heading text-[3.1rem] leading-[0.95] tracking-[-0.055em] text-white sm:text-[3.95rem] lg:max-w-[13.8ch] lg:text-[4.6rem] xl:text-[4.9rem]"
             >
               {content.hero.title}
             </h1>
-            <p className="mt-6 max-w-[58ch] text-[1.02rem] leading-8 text-secondary sm:text-[1.08rem]">
+            <p className="mt-6 max-w-[58ch] text-[1.02rem] leading-8 text-[#C8D2DF] sm:text-[1.08rem]">
               {content.hero.body}
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -127,7 +128,7 @@ function LandingHero({ content }: { content: LandingContent }) {
                 {content.hero.secondaryCta}
               </a>
             </div>
-            <p className="mt-4 max-w-[56ch] text-sm leading-6 text-secondary">{content.hero.microcopy}</p>
+            <p className="mt-4 max-w-[56ch] text-sm leading-6 text-[#C8D2DF]">{content.hero.microcopy}</p>
 
             <dl className="mt-7 grid gap-3 sm:grid-cols-3">
               {content.hero.stats.map((stat) => (
@@ -552,21 +553,18 @@ export function PremiumLandingPage({ cspNonce }: { cspNonce?: string } = {}) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#f7fbf8_0%,#fbf8f3_22%,#ffffff_52%,#fbfcfa_100%)] text-text">
+    <div className="min-h-screen bg-[#061426] text-text">
       <StructuredData locale={locale} faq={content.faq.items} nonce={cspNonce} />
 
       <header
         className={cn(
           "sticky top-0 z-40 border-b border-border/70 transition-colors",
-          scrolled ? "bg-[rgba(252,251,248,0.96)] backdrop-blur" : "bg-[rgba(252,251,248,0.86)]",
+          scrolled ? "bg-[#061426]/96 backdrop-blur" : "bg-[#061426]/90",
         )}
       >
         <Container className="flex h-[4.5rem] items-center gap-4">
-          <Link href="/" className="focus-ring inline-flex items-center gap-3 rounded-md text-text">
-            <span className="grid h-8 w-8 place-items-center rounded-xl border border-green/25 bg-green/10 font-mono text-sm font-semibold text-green">
-              FT
-            </span>
-            <span className="font-heading text-2xl font-semibold tracking-[-0.03em]">FinTax</span>
+          <Link href="/" className="focus-ring rounded-md">
+            <FinTaxLogo />
           </Link>
 
           <nav className="ml-4 hidden items-center gap-1 lg:flex" aria-label="Landing sections">
@@ -579,7 +577,7 @@ export function PremiumLandingPage({ cspNonce }: { cspNonce?: string } = {}) {
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher compact />
-            <Link href="/auth" className="focus-ring rounded-md px-2 py-2 text-sm text-secondary transition-colors duration-200 hover:text-text motion-safe:hover:-translate-y-0.5 motion-safe:transition-transform motion-reduce:transform-none">
+            <Link href="/auth" className="focus-ring rounded-md px-2 py-2 text-sm text-[#C8D2DF] transition-colors duration-200 hover:text-white motion-safe:hover:-translate-y-0.5 motion-safe:transition-transform motion-reduce:transform-none">
               {content.actions.signIn}
             </Link>
             <Link href={buildAuthIntentHref("tax-return")} className={cn(buttonVariants({ size: "sm" }), "px-4")}>

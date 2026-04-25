@@ -2,18 +2,18 @@
   color-scheme: light;
 
   /* Color tokens */
-  --bg: 245 247 244;
-  --bg-elevated: 255 255 255;
+  --bg: 6 20 38;
+  --bg-elevated: 8 27 51;
   --surface: 255 255 255;
-  --surface-2: 242 246 242;
-  --surface-3: 234 240 234;
-  --border: 194 207 193;
-  --border-soft: 212 222 211;
-  --text: 22 33 24;
-  --text-secondary: 56 78 60;
-  --text-muted: 88 106 92;
-  --accent-green: 23 109 61;
-  --accent-green-strong: 16 87 49;
+  --surface-2: 246 248 245;
+  --surface-3: 234 247 236;
+  --border: 209 219 228;
+  --border-soft: 226 232 238;
+  --text: 16 32 51;
+  --text-secondary: 102 112 133;
+  --text-muted: 132 145 160;
+  --accent-green: 76 175 80;
+  --accent-green-strong: 63 158 72;
   --accent-teal: 34 126 104;
   --accent-copper: 148 116 78;
   --accent-copper-soft: 117 92 61;
@@ -27,9 +27,9 @@
   --green-hover: rgb(var(--accent-green-strong));
   --teal: rgb(var(--accent-teal));
   --green-glow: rgb(var(--accent-green) / 0.14);
-  --card: rgb(255 255 255 / 0.92);
-  --card-hover: rgb(249 252 249);
-  --navy-3: rgb(var(--surface-2));
+  --card: rgb(255 255 255 / 0.96);
+  --card-hover: rgb(246 248 245);
+  --navy-3: #0b2340;
 
   /* Typography tokens */
   --font-display: "Fraunces", "Iowan Old Style", "Georgia", serif;
@@ -67,7 +67,9 @@
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 1.75rem;
+  --radius-panel: 1.875rem;
   --radius-pill: 999px;
   --radius-12: 12px;
   --radius-16: 16px;
@@ -76,10 +78,10 @@
   /* Border and shadow tokens */
   --border-width-thin: 1px;
   --border-width-strong: 2px;
-  --shadow-glass: 0 12px 26px rgb(11 28 15 / 0.08);
-  --shadow-glass-soft: 0 6px 16px rgb(11 28 15 / 0.06);
-  --shadow-panel: 0 14px 30px rgb(11 28 15 / 0.1);
-  --shadow-floating: 0 22px 42px rgb(11 28 15 / 0.12);
+  --shadow-glass: 0 18px 46px rgb(3 10 20 / 0.16);
+  --shadow-glass-soft: 0 10px 24px rgb(3 10 20 / 0.1);
+  --shadow-panel: 0 22px 56px rgb(3 10 20 / 0.14);
+  --shadow-floating: 0 28px 70px rgb(3 10 20 / 0.22);
 
   /* Focus tokens */
   --focus-ring-color: rgb(var(--accent-green));
