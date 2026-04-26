@@ -61,3 +61,12 @@
 - Prefer reusable components under `src/components/fintax/ui`, `layout`, and `brand`.
 - Add tokens to `src/styles/tokens.css` before introducing new color literals broadly.
 - Keep tests focused on behavior and text, not exact Tailwind class strings.
+
+## Premium UI Application Fix
+
+PR #79 created premium primitives, but this follow-up applies them to actual routes and replaces legacy panels.
+
+- Benefits, dashboard, success, and case detail routes render through the premium app shell/navigation layer.
+- The Benefits wizard uses premium option-card inputs, dark contextual panels, and the premium stepper from the first step onward.
+- Dashboard cards use explicit dark, glass, and premium variants instead of generic white `surface-panel` cards.
+- New UI tests assert stable intent with `premium-app-shell`, `premium-top-nav`, `benefits-wizard-shell`, `benefits-step-card`, `benefits-option-card`, `dashboard-metric-card`, and `dashboard-panel`.

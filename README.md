@@ -15,16 +15,36 @@ FinTax is a Next.js App Router platform for multilingual Dutch tax and benefits 
 - Stripe test account for checkout/webhook testing
 
 ## Environment variables
-Copy `.env.example` to `.env.local` and fill values.
+Copy `.env.local.example` to `.env.local` and fill values.
 
-Security-critical variables:
-- `BSN_ENCRYPTION_KEY` / `BSN_ENCRYPTION_KEYS` must stay server-only
-- `SUPABASE_SERVICE_ROLE_KEY` must stay server-only
-- `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` must stay server-only
-- `RESEND_API_KEY` must stay server-only
+Required for local app runtime:
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
 
-Public variables:
-- `NEXT_PUBLIC_*`
+Required when using payments:
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+
+Required when using email notifications:
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+
+Required when using encryption-backed personal data flows:
+- `BSN_ENCRYPTION_KEY` or `BSN_ENCRYPTION_KEYS`
+- Optional rotation aliases: `BSN_ENCRYPTION_KEY_CURRENT`, `BSN_ENCRYPTION_KEY_PREVIOUS`, `BSN_ENCRYPTION_ACTIVE_KEY_ID`
+
+Optional / operational:
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
+- `DOCFLOW_*`, `STAGING_*`, `PROD_*`
+- `STRIPE_PRICE_*` reserved for a future Stripe price-id checkout path; current checkout pricing resolves from the `service_pricing` table
+
+Validation:
+- `src/lib/env.ts` is the central env contract.
+- In production, missing critical Stripe/Supabase envs fail explicitly.
+- Client code only consumes public env helpers; server secrets are not exposed through the public env object.
 
 ## Local development
 1. Install dependencies:

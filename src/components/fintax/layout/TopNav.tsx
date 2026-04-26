@@ -13,7 +13,7 @@ const navByLocale = {
     ["Inicio", "/dashboard"],
     ["Ingresos", "/tax-return"],
     ["Gastos", "/tax-return"],
-    ["Beneficios / Subsidios", "/benefits"],
+    ["Subsidios", "/benefits"],
     ["Documentos", "/dashboard"],
     ["Historial", "/dashboard"],
   ],
@@ -57,11 +57,11 @@ export function TopNav({ onOpenMenu }: { onOpenMenu?: () => void }) {
   const navItems = navByLocale[locale] ?? navByLocale.en;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#061426]/96 backdrop-blur">
+    <header data-testid="premium-top-nav" className="sticky top-0 z-40 border-b border-white/10 bg-[#061426]/96 backdrop-blur">
       <div className="mx-auto flex h-[5.25rem] max-w-[1840px] items-center gap-5 px-5 sm:px-8">
         <button
           type="button"
-          className="focus-ring grid size-10 place-items-center rounded-full border border-white/12 text-white lg:hidden"
+          className="focus-ring grid size-10 place-items-center rounded-full border border-white/[0.12] text-white lg:hidden"
           onClick={onOpenMenu}
           aria-label="Open navigation"
         >
@@ -89,10 +89,10 @@ export function TopNav({ onOpenMenu }: { onOpenMenu?: () => void }) {
         </nav>
         <div className="ml-auto flex items-center gap-3">
           <LanguageSwitcher compact />
-          <button type="button" className="focus-ring hidden size-10 place-items-center rounded-full border border-white/14 text-[#C8D2DF] hover:text-white sm:grid" aria-label="Help">
+          <button type="button" className="focus-ring hidden size-10 place-items-center rounded-full border border-white/[0.14] text-[#C8D2DF] hover:text-white sm:grid" aria-label="Help">
             <HelpCircle className="size-5" />
           </button>
-          <button type="button" className="focus-ring relative hidden size-10 place-items-center rounded-full border border-white/14 text-[#C8D2DF] hover:text-white sm:grid" aria-label="Notifications">
+          <button type="button" className="focus-ring relative hidden size-10 place-items-center rounded-full border border-white/[0.14] text-[#C8D2DF] hover:text-white sm:grid" aria-label="Notifications">
             <Bell className="size-5" />
             <span className="absolute right-2 top-2 size-2.5 rounded-full bg-[#4CAF50]" />
           </button>

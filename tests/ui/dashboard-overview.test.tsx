@@ -8,30 +8,30 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DashboardOverview } from "@/components/fintax/dashboard/DashboardOverview";
 
+const baseCase = {
+  id: "case-1",
+  user_id: "user-1",
+  case_type: "tax_return_p",
+  status: "pending_documents",
+  display_name: "Declaración 2025",
+  tax_year: 2025,
+  deadline: "2099-04-20T00:00:00.000Z",
+  estimated_refund: 1500,
+  actual_refund: null,
+  wizard_data: {},
+  wizard_completed: false,
+  machtiging_status: "requested",
+  machtiging_code: null,
+  stripe_payment_id: null,
+  assigned_admin: null,
+  notes_internal: null,
+  created_at: "2099-01-12T00:00:00.000Z",
+  updated_at: "2099-03-10T00:00:00.000Z",
+} as const;
+
 const mockState = vi.hoisted(() => ({
-  profile: { id: "user-1" },
-  cases: [
-    {
-      id: "case-1",
-      user_id: "user-1",
-      case_type: "tax_return_p",
-      status: "pending_documents",
-      display_name: "Declaración 2025",
-      tax_year: 2025,
-      deadline: "2099-04-20T00:00:00.000Z",
-      estimated_refund: 1500,
-      actual_refund: null,
-      wizard_data: {},
-      wizard_completed: false,
-      machtiging_status: "requested",
-      machtiging_code: null,
-      stripe_payment_id: null,
-      assigned_admin: null,
-      notes_internal: null,
-      created_at: "2099-01-12T00:00:00.000Z",
-      updated_at: "2099-03-10T00:00:00.000Z",
-    },
-  ],
+  profile: { id: "user-1", full_name: "María López" },
+  cases: [] as Array<typeof baseCase>,
   requirements: [
     { id: "1", title: "Pasaporte", status: "approved", requirement_type: "document", is_document_required: true },
     { id: "2", title: "Contrato de alquiler", status: "pending", requirement_type: "document", is_document_required: true },
@@ -53,63 +53,45 @@ const mockState = vi.hoisted(() => ({
       created_at: "2099-03-12T00:00:00.000Z",
     },
   ],
-  taxSummary: {
-    box1Income: 48000,
-    box3Assets: 70000,
-    credits: 2100,
-    netResult: 1650,
-    isFallback: true,
-    sourceLabel: "case_data_fallback",
-  },
 }));
 
 const useNotificationsMock = vi.fn();
 const useCasesMock = vi.fn();
 
 const translations = {
-  apiError: { eyebrow: "API del dashboard", body: "No se pudo refrescar el resumen de la declaración.", codePrefix: "Código:" },
-  header: {
-    breadcrumb: "Dashboard",
-    declaration: "Declaración",
-    noDate: "Sin fecha disponible",
-    updated: "Actualizado: {value}",
-    deadline: "Fecha límite: {value}",
-    primaryAction: "Añadir documento",
-    secondaryAction: "Descargar resumen PDF",
-    secondaryHint: "Pendiente",
+  home: {
+    eyebrow: "Centro de control",
+    fallbackName: "cliente",
+    greeting: "Hola, {name}",
+    subtitle: "Este es el estado actual de tus trámites.",
+    taxReturnCta: "Iniciar declaración",
+    benefitsCta: "Calcular subsidios",
+    emptyTitle: "Aún no tienes trámites activos",
+    emptyBody: "Empieza con una estimación de subsidios o inicia una declaración.",
+    continueCta: "Continuar",
+    updated: "Actualizado {value}",
+    nextStep: "Siguiente paso: {step}",
+    progress: "Progreso",
+    documentsAction: "Documentos pendientes",
+    pendingDocuments: "{count} documento(s) requieren atención",
+    noPendingDocuments: "No hay bloqueos documentales ahora",
+    paymentAction: "Pagos",
+    paymentPending: "El pago sigue pendiente",
+    paymentClear: "No hay acciones de pago",
+    reviewAction: "Revisión",
+    reviewNeeded: "La revisión manual o autorización requiere atención",
+    reviewClear: "No hay bloqueos de revisión",
   },
+  apiError: { eyebrow: "API del dashboard", body: "No se pudo refrescar el resumen.", codePrefix: "Código:" },
+  header: { noDate: "Sin fecha disponible" },
   stepper: {
-    current: "Paso actual",
-    completedLabel: "Completado",
-    pendingLabel: "Pendiente",
-    draft: "Inicio",
+    draft: "Diagnóstico",
     docs: "Documentos",
     review: "Revisión",
-    submitted: "Presentado",
+    submitted: "Solicitud",
     completed: "Completado",
   },
-  kpis: {
-    box1Income: { title: "Ingresos Box 1", note: "Ingresos laborales declarados" },
-    box3Assets: { title: "Activos Box 3", note: "Activos registrados en el expediente" },
-    credits: { title: "Créditos fiscales", note: "Créditos confirmados en el resumen actual" },
-    netResult: { title: "Resultado neto", note: "Estimación actual tras ajustes" },
-  },
-  documents: {
-    title: "Progreso documental",
-    description: "Sigue las cargas y lo que falta para que el expediente pase a revisión.",
-    progressLabel: "Estado documental",
-    progressCaption: "Archivos listos para revisión",
-    emptyTitle: "Todavía no hay una declaración activa",
-    emptyBody: "Empieza una declaración para cargar documentos y activar el dashboard operativo.",
-    cta: "Ver declaración",
-  },
   history: {
-    title: "Historial fiscal",
-    description: "Declaraciones recientes y puntos de control ordenados por última actividad.",
-    empty: "Sin historial",
-    taxYear: "Año fiscal {year}",
-    updated: "Actualizado {value}",
-    cta: "Ver declaración",
     types: {
       formP: "Declaración de renta",
       formM: "Declaración M",
@@ -122,47 +104,10 @@ const translations = {
       childcare: "Subsidio de guardería",
     },
   },
-  summary: {
-    title: "Resumen fiscal",
-    description: "Vista operativa del expediente fiscal activo.",
-    netResultLabel: "Resultado neto",
-    rows: {
-      box1Income: "Ingresos Box 1",
-      box3Assets: "Activos Box 3",
-      credits: "Créditos fiscales",
-      netResult: "Resultado neto",
-    },
-    sources: {
-      tax_summary_api: "Resumen fiscal en vivo",
-      case_data_fallback: "Fallback desde datos del caso",
-      summary_unavailable: "Resumen no disponible",
-    },
-  },
-  alertsPanel: {
-    title: "Alertas y calendario",
-    description: "Fechas críticas y elementos que aún pueden retrasar la presentación.",
-    calendarTitle: "Calendario",
-    alertsTitle: "Alertas prioritarias",
-    empty: "Sin alertas",
-  },
-  alerts: {
-    box3Threshold: "Los activos de Box 3 superan 59.357 EUR. Revisa la documentación patrimonial antes de presentar.",
-    checklistIncomplete: "El checklist documental sigue incompleto. Sube la evidencia pendiente para evitar retrasos.",
-    deadlineNear: "La fecha límite está próxima. Completa cuanto antes los pasos de revisión.",
-  },
   activity: {
     title: "Actividad reciente",
-    description: "Últimos eventos y actualizaciones operativas del expediente.",
-    empty: "Sin actividad",
+    description: "Últimos eventos y actualizaciones operativas.",
     caseUpdated: "{caseLabel} recibió una nueva actualización de estado",
-  },
-  advisor: {
-    title: "Panel del asesor",
-    description: "La capa humana permanece visible cuando realmente ayuda a mover el caso.",
-    statusTitle: "Asignación de asesor activa",
-    body: "Hay un especialista asignado a esta declaración y podrá continuar la revisión cuando se resuelvan los bloqueos actuales.",
-    primaryAction: "Escribir al asesor",
-    secondaryAction: "Solicitar llamada",
   },
   status: {
     draft: "Inicio",
@@ -180,11 +125,6 @@ const translations = {
       document_uploaded: { title: "Documento subido", body: "El documento fue subido." },
     },
   },
-  calendarMilestones: [
-    { date: "01/03/2027", label: "Inicio del periodo de declaración" },
-    { date: "01/05/2027", label: "Fecha límite estándar" },
-    { date: "01/07/2027", label: "Revisión tardía o correcciones si aplica" },
-  ],
 };
 
 function getValue(path: string, source: Record<string, unknown>): unknown {
@@ -245,14 +185,17 @@ vi.mock("@/hooks/useNotifications", () => ({
   useNotifications: (limit?: number, enabled?: boolean) => useNotificationsMock(limit, enabled),
 }));
 
-vi.mock("@/hooks/useTaxSummary", () => ({
-  useTaxSummary: () => ({
-    data: mockState.taxSummary,
-  }),
-}));
-
 describe("DashboardOverview", () => {
   beforeEach(() => {
+    mockState.cases = [{ ...baseCase }];
+    mockState.events = [
+      {
+        id: "evt-1",
+        event_type: "document_uploaded",
+        created_at: "2099-03-12T00:00:00.000Z",
+        payload: { fileName: "passport.pdf" },
+      },
+    ];
     useCasesMock.mockImplementation(() => ({
       data: mockState.cases,
       isError: false,
@@ -263,13 +206,30 @@ describe("DashboardOverview", () => {
     }));
   });
 
-  it("renders declaration KPIs and alerts", () => {
+  it("shows a focused active-case dashboard without fallback Box KPIs", () => {
     render(<DashboardOverview />);
 
+    expect(screen.getByText("Hola, María")).toBeInTheDocument();
+    expect(screen.getByTestId("dashboard-primary-case-card")).toBeInTheDocument();
+    expect(screen.getAllByTestId("dashboard-quick-action-card")).toHaveLength(3);
+    expect(screen.getByTestId("dashboard-simple-timeline")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Declaración 2025" })).toBeInTheDocument();
-    expect(screen.getAllByText("Ingresos Box 1").length).toBeGreaterThan(0);
-    expect(screen.getByText(/Los activos de Box 3 superan 59.357 EUR/i)).toBeInTheDocument();
-    expect(screen.getByText("Fallback desde datos del caso")).toBeInTheDocument();
+    expect(screen.queryByText("Ingresos Box 1")).not.toBeInTheDocument();
+    expect(screen.queryByText("Activos Box 3")).not.toBeInTheDocument();
+  });
+
+  it("limits recent activity to max 3 items", () => {
+    mockState.events = Array.from({ length: 5 }, (_, index) => ({
+      id: `evt-${index}`,
+      event_type: "document_uploaded",
+      created_at: "2099-03-12T00:00:00.000Z",
+      payload: { fileName: `file-${index}.pdf` },
+    }));
+
+    render(<DashboardOverview />);
+
+    expect(screen.getByTestId("dashboard-recent-activity")).toBeInTheDocument();
+    expect(screen.getAllByText("Documento subido")).toHaveLength(3);
   });
 
   it("does not enable notifications when case events already exist", () => {
@@ -279,12 +239,14 @@ describe("DashboardOverview", () => {
     expect(useNotificationsMock).toHaveBeenCalledWith(6, false);
   });
 
-  it("keeps notifications disabled when there is no active case", () => {
+  it("shows empty state with two CTAs when there is no active case", () => {
     mockState.cases = [];
 
     render(<DashboardOverview />);
 
     expect(useNotificationsMock).toHaveBeenCalledWith(6, false);
-    expect(screen.getByText("Todavía no hay una declaración activa")).toBeInTheDocument();
+    expect(screen.getByTestId("dashboard-empty-state")).toBeInTheDocument();
+    expect(screen.getAllByTestId("dashboard-main-cta-benefits").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("dashboard-main-cta-tax-return").length).toBeGreaterThan(0);
   });
 });

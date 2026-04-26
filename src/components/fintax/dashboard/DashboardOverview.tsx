@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { AlertTriangle, ArrowRight, CalendarClock, CheckCircle2, Circle, Clock3, ShieldCheck } from "lucide-react";
+import type * as React from "react";
+import { AlertTriangle, ArrowRight, CheckCircle2, Clock3, CreditCard, FileText, Gift, UploadCloud } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
@@ -9,32 +10,17 @@ import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 import { useCases } from "@/hooks/useCases";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useCaseEvents, useCaseProgress, useCaseRequirements } from "@/hooks/useTaxReturnDocFlow";
-import { useTaxSummary } from "@/hooks/useTaxSummary";
 import { cn } from "@/lib/cn";
 import { CASE_STEPPER_STEPS, mapCaseStatusToStep } from "@/domain/cases/status-stepper";
 import type { Case, CaseType } from "@/types/database";
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
-import { DeclarationHeader } from "@/components/fintax/dashboard/DeclarationHeader";
-import { HorizontalStepper } from "@/components/fintax/dashboard/HorizontalStepper";
-
-type TimelineMilestone = {
-  date: string;
-  label: string;
-};
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
+import { StatusBadge } from "@/components/fintax/ui";
 
 function formatDate(value: string | null | undefined, locale: string, fallbackLabel: string) {
   if (!value) return fallbackLabel;
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   return new Intl.DateTimeFormat(locale, { year: "numeric", month: "short", day: "2-digit" }).format(parsed);
-}
-
-function formatMoney(value: number, locale: string) {
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0,
-  }).format(value);
 }
 
 function isTaxCase(caseType: CaseType) {
@@ -94,17 +80,8 @@ function getStatusLabel(status: string, t: ReturnType<typeof useTranslations<"Da
 
 function getStatusTone(status: string) {
   if (status === "completed" || status === "submitted" || status === "authorized") return "success" as const;
-  if (status === "pending_documents" || status === "pending_payment" || status === "rejected") return "copper" as const;
+  if (status === "pending_documents" || status === "pending_payment" || status === "rejected") return "warning" as const;
   return "neutral" as const;
-}
-
-function isDeadlineNear(deadline: string | null | undefined) {
-  if (!deadline) return false;
-  const parsed = new Date(deadline);
-  if (Number.isNaN(parsed.getTime())) return false;
-  const now = new Date();
-  const diff = parsed.getTime() - now.getTime();
-  return diff >= 0 && diff <= 1000 * 60 * 60 * 24 * 30;
 }
 
 export function DashboardOverview() {
@@ -121,34 +98,17 @@ export function DashboardOverview() {
   const progressQuery = useCaseProgress(activeCase?.id ?? "", canLoadDashboardData && hasActiveCase);
   const eventsQuery = useCaseEvents(activeCase?.id ?? "", canLoadDashboardData && hasActiveCase);
   const notificationsQuery = useNotifications(6, canLoadDashboardData && hasActiveCase && !eventsQuery.data?.length);
-  const taxSummaryQuery = useTaxSummary(activeCase?.id ?? "", canLoadDashboardData && hasActiveCase);
-  const requirements = requirementsQuery.data?.requirements ?? [];
   const progress = progressQuery.data ?? requirementsQuery.data?.progress ?? null;
-  const checklistItems = requirements.filter((item) => item.status !== "not_applicable").map((item) => ({ label: item.title, done: ["approved", "waived"].includes(item.status) }));
   const uploadedDocuments = progress?.uploaded ?? 0;
   const requiredDocuments = progress?.total ?? 0;
   const documentProgress = Math.round(progress?.completionRatio ?? 0);
   const currentStep = mapCaseStatusToStep(activeCase?.status ?? "draft");
-  const taxYear = activeCase?.tax_year ?? new Date().getFullYear();
-  const taxSummary = taxSummaryQuery.data ?? {
-    box1Income: 0,
-    box3Assets: 0,
-    credits: 0,
-    netResult: activeCase?.estimated_refund ?? 0,
-    isFallback: true,
-    sourceLabel: "summary_unavailable" as const,
-  };
-  const milestoneItems = t.raw("calendarMilestones") as TimelineMilestone[];
-
-  const alerts: string[] = [];
-  if (taxSummary.box3Assets > 59357) alerts.push(t("alerts.box3Threshold"));
-  if (hasActiveCase && (progress?.blockingRemaining ?? 0) > 0) alerts.push(t("alerts.checklistIncomplete"));
-  if (isDeadlineNear(activeCase?.deadline)) alerts.push(t("alerts.deadlineNear"));
-
-  const historyItems = cases
-    .slice()
-    .sort((left, right) => new Date(right.updated_at).getTime() - new Date(left.updated_at).getTime())
-    .slice(0, 5);
+  const profileName = profileQuery.profile?.full_name?.split(" ")[0] ?? t("home.fallbackName");
+  const activeCaseTitle = activeCase?.display_name ?? (activeCase ? getDeclarationTypeLabel(activeCase.case_type, t) : "");
+  const nextStepLabel = activeCase ? t(`stepper.${CASE_STEPPER_STEPS[Math.max(0, Math.min(currentStep - 1, CASE_STEPPER_STEPS.length - 1))]?.id ?? "draft"}`) : "";
+  const pendingDocuments = Math.max(0, requiredDocuments - uploadedDocuments);
+  const needsPayment = activeCase?.status === "pending_payment";
+  const needsReview = Boolean(activeCase && ["in_review", "rejected", "pending_authorization"].includes(activeCase.status));
   const recentActivity =
     eventsQuery.data && eventsQuery.data.length > 0
       ? eventsQuery.data.slice(0, 5).map((item) => ({
@@ -164,7 +124,7 @@ export function DashboardOverview() {
             body: item.message,
             createdAt: formatDate(item.created_at, locale, noDateLabel),
           }))
-        : cases.slice(0, 5).map((item) => ({
+        : cases.slice(0, 3).map((item) => ({
             id: item.id,
             title: t("activity.caseUpdated", {
               caseLabel: item.display_name ?? getDeclarationTypeLabel(item.case_type, t),
@@ -174,312 +134,223 @@ export function DashboardOverview() {
           }));
 
   const casesErrorCode = casesQuery.error && isApiClientError(casesQuery.error) ? casesQuery.error.code : null;
-  const showAdvisorPanel =
-    activeCase !== null &&
-    ["in_review", "pending_authorization", "authorized", "submitted", "completed"].includes(activeCase.status);
+  const visibleActivity = recentActivity.slice(0, 3);
 
   return (
-    <section className="space-y-5">
+    <section className="space-y-7">
       {casesQuery.isError ? (
-        <div className="rounded-2xl border border-copper/30 bg-copper/10 p-4">
-          <p className="text-xs uppercase tracking-[0.14em] text-copper">{t("apiError.eyebrow")}</p>
-          <p className="mt-1 text-sm text-secondary">
+        <div className="rounded-2xl border border-[#D97706]/30 bg-[#FFF4E5] p-4">
+          <p className="text-xs uppercase tracking-[0.14em] text-[#B45309]">{t("apiError.eyebrow")}</p>
+          <p className="mt-1 text-sm text-[#102033]">
             {t("apiError.body")}
             {casesErrorCode ? ` ${t("apiError.codePrefix")} ${casesErrorCode}.` : ""}
           </p>
         </div>
       ) : null}
 
-      <DeclarationHeader
-        breadcrumbLabel={t("header.breadcrumb")}
-        declarationLabel={t("header.declaration")}
-        taxYear={taxYear}
-        updatedLabel={t("header.updated", { value: formatDate(activeCase?.updated_at, locale, noDateLabel) })}
-        deadlineLabel={t("header.deadline", { value: formatDate(activeCase?.deadline, locale, noDateLabel) })}
-        primaryHref={getCaseHref(activeCase)}
-        primaryLabel={t("header.primaryAction")}
-        secondaryLabel={t("header.secondaryAction")}
-        secondaryHint={t("header.secondaryHint")}
-        secondaryDisabled
-      />
-
-      <HorizontalStepper
-        currentStep={currentStep}
-        steps={CASE_STEPPER_STEPS.map((step) => ({ ...step, label: t(`stepper.${step.id}`) }))}
-        currentStepLabel={t("stepper.current")}
-        completedStepLabel={t("stepper.completedLabel")}
-        pendingStepLabel={t("stepper.pendingLabel")}
-      />
-
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <KpiCard title={t("kpis.box1Income.title")} value={formatMoney(taxSummary.box1Income, locale)} note={t("kpis.box1Income.note")} />
-        <KpiCard title={t("kpis.box3Assets.title")} value={formatMoney(taxSummary.box3Assets, locale)} note={t("kpis.box3Assets.note")} />
-        <KpiCard title={t("kpis.credits.title")} value={formatMoney(taxSummary.credits, locale)} note={t("kpis.credits.note")} />
-        <KpiCard title={t("kpis.netResult.title")} value={formatMoney(taxSummary.netResult, locale)} note={t("kpis.netResult.note")} highlight />
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.92fr)]">
-        <div className="space-y-5">
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
-            <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("documents.title")}</CardTitle>
-              <CardDescription>{t("documents.description")}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {hasActiveCase ? (
-                <>
-                  <div className="rounded-[1.35rem] border border-border/45 bg-surface2/20 p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("documents.progressLabel")}</p>
-                        <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-text">{documentProgress}%</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-mono text-sm text-text">
-                          {uploadedDocuments}/{requiredDocuments}
-                        </p>
-                        <p className="text-xs text-secondary">{t("documents.progressCaption")}</p>
-                      </div>
-                    </div>
-                    <div className="mt-4 h-2 overflow-hidden rounded-full bg-border/40">
-                      <div className="h-full rounded-full bg-gradient-to-r from-green to-copper transition-all" style={{ width: `${documentProgress}%` }} />
-                    </div>
-                  </div>
-                  <ul className="grid gap-2">
-                    {checklistItems.slice(0, 6).map((item) => (
-                      <li
-                        key={item.label}
-                        className="flex items-center gap-3 rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/25 hover:bg-green/5"
-                      >
-                        {item.done ? <CheckCircle2 className="h-4 w-4 text-green" /> : <Circle className="h-4 w-4 text-muted" />}
-                        <span className={cn("text-sm", item.done ? "text-muted line-through" : "text-secondary")}>{item.label}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <div className="rounded-[1.35rem] border border-dashed border-border/55 bg-surface2/18 p-5">
-                  <p className="text-sm font-semibold text-text">{t("documents.emptyTitle")}</p>
-                  <p className="mt-2 text-sm leading-6 text-secondary">{t("documents.emptyBody")}</p>
-                </div>
-              )}
-
-              <div className="flex justify-end">
-                <Link href={getCaseHref(activeCase)} className="inline-flex items-center gap-2 text-sm font-semibold text-green transition-colors hover:text-text">
-                  {t("documents.cta")}
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
-            <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("history.title")}</CardTitle>
-              <CardDescription>{t("history.description")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {historyItems.length === 0 ? (
-                <div className="rounded-[1.2rem] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">{t("history.empty")}</div>
-              ) : (
-                <ul className="space-y-3">
-                  {historyItems.map((item) => {
-                    const statusTone = getStatusTone(item.status);
-
-                    return (
-                      <li
-                        key={item.id}
-                        className="rounded-[1.3rem] border border-border/35 bg-surface px-4 py-4 transition-colors hover:border-green/20 hover:bg-green/5"
-                      >
-                        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                          <div className="min-w-0 space-y-1">
-                            <p className="truncate text-base font-semibold text-text">{item.display_name ?? getDeclarationTypeLabel(item.case_type, t)}</p>
-                            <div className="flex flex-wrap items-center gap-2 text-xs text-secondary">
-                              <span>{t("history.taxYear", { year: item.tax_year ?? "—" })}</span>
-                              <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
-                              <span>{getDeclarationTypeLabel(item.case_type, t)}</span>
-                              <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
-                              <span>{t("history.updated", { value: formatDate(item.updated_at, locale, noDateLabel) })}</span>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant={statusTone === "success" ? "success" : statusTone === "copper" ? "copper" : "neutral"}>
-                              {getStatusLabel(item.status, t)}
-                            </Badge>
-                            <Link
-                              href={getCaseHref(item)}
-                              className="inline-flex h-10 items-center justify-center rounded-full border border-green/30 bg-white/80 px-4 text-sm font-semibold text-green transition-colors hover:bg-green/5 hover:text-text"
-                            >
-                              {t("history.cta")}
-                            </Link>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#74D07B]">{t("home.eyebrow")}</p>
+          <h1 className="mt-3 text-[clamp(2.2rem,4vw,3.4rem)] font-bold leading-tight text-white">
+            {t("home.greeting", { name: profileName })}
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-[#C8D2DF]">{t("home.subtitle")}</p>
         </div>
-
-        <div className="space-y-5">
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
-            <CardHeader className="mb-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant={taxSummary.isFallback ? "copper" : "success"}>{t(`summary.sources.${taxSummary.sourceLabel}`)}</Badge>
-              </div>
-              <CardTitle className="text-[1.7rem]">{t("summary.title")}</CardTitle>
-              <CardDescription>{t("summary.description")}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-[1.35rem] border border-border/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.02),rgba(21,128,61,0.06))] p-4">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{t("summary.netResultLabel")}</p>
-                <p className="mt-2 font-mono text-[2.6rem] font-semibold leading-none tracking-[-0.05em] text-text">
-                  {formatMoney(taxSummary.netResult, locale)}
-                </p>
-              </div>
-
-              <dl className="grid gap-2">
-                <SummaryRow label={t("summary.rows.box1Income")} value={formatMoney(taxSummary.box1Income, locale)} />
-                <SummaryRow label={t("summary.rows.box3Assets")} value={formatMoney(taxSummary.box3Assets, locale)} />
-                <SummaryRow label={t("summary.rows.credits")} value={formatMoney(taxSummary.credits, locale)} />
-                <SummaryRow label={t("summary.rows.netResult")} value={formatMoney(taxSummary.netResult, locale)} emphasized />
-              </dl>
-            </CardContent>
-          </Card>
-
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
-            <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("alertsPanel.title")}</CardTitle>
-              <CardDescription>{t("alertsPanel.description")}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <div className="mb-3 flex items-center gap-2 text-text">
-                  <CalendarClock className="h-4 w-4 text-green" />
-                  <p className="text-sm font-semibold">{t("alertsPanel.calendarTitle")}</p>
-                </div>
-                <ul className="space-y-2">
-                  {milestoneItems.map((milestone) => (
-                    <li key={`${milestone.date}-${milestone.label}`} className="rounded-[1.1rem] border border-border/35 bg-surface2/20 px-4 py-3">
-                      <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">{milestone.date}</p>
-                      <p className="mt-1 text-sm text-text">{milestone.label}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <div className="mb-3 flex items-center gap-2 text-text">
-                  <AlertTriangle className="h-4 w-4 text-copper" />
-                  <p className="text-sm font-semibold">{t("alertsPanel.alertsTitle")}</p>
-                </div>
-                {alerts.length === 0 ? (
-                  <div className="rounded-[1.1rem] border border-green/20 bg-green/5 px-4 py-3 text-sm text-secondary">{t("alertsPanel.empty")}</div>
-                ) : (
-                  <ul className="space-y-2">
-                    {alerts.map((alert) => (
-                      <li key={alert} className="rounded-[1.1rem] border border-copper/20 bg-copper/8 px-4 py-3 text-sm text-secondary">
-                        {alert}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
-            <CardHeader className="mb-4">
-              <CardTitle className="text-[1.7rem]">{t("activity.title")}</CardTitle>
-              <CardDescription>{t("activity.description")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {recentActivity.length === 0 ? (
-                <div className="rounded-[1.2rem] border border-border/35 bg-surface2/20 px-4 py-3 text-sm text-secondary">{t("activity.empty")}</div>
-              ) : (
-                <ul className="space-y-3">
-                  {recentActivity.map((activity) => (
-                    <li key={activity.id} className="rounded-[1.15rem] border border-border/35 bg-surface px-4 py-3 transition-colors hover:border-green/20 hover:bg-green/5">
-                      <div className="flex items-start gap-3">
-                        <Clock3 className="mt-0.5 h-4 w-4 text-copper" />
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-text">{activity.title}</p>
-                          <p className="mt-1 text-sm text-secondary">{activity.body}</p>
-                          <p className="mt-2 text-xs text-muted">{activity.createdAt}</p>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
-
-          {showAdvisorPanel ? (
-            <Card variant="panel" padding="md" className="shadow-[0_14px_28px_rgba(15,23,42,0.04)]">
-              <CardHeader className="mb-4">
-                <CardTitle className="text-[1.7rem]">{t("advisor.title")}</CardTitle>
-                <CardDescription>{t("advisor.description")}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="rounded-[1.2rem] border border-green/20 bg-green/5 p-4">
-                  <div className="flex items-center gap-2 text-text">
-                    <ShieldCheck className="h-4 w-4 text-green" />
-                    <p className="text-sm font-semibold">{t("advisor.statusTitle")}</p>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-secondary">{t("advisor.body")}</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <button type="button" className="rounded-full border border-green/30 bg-white px-4 py-2 text-sm font-semibold text-green transition-colors hover:bg-green/5 hover:text-text">
-                    {t("advisor.primaryAction")}
-                  </button>
-                  <button type="button" className="rounded-full border border-border/45 bg-surface px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-green/20 hover:bg-green/5">
-                    {t("advisor.secondaryAction")}
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : null}
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Link href="/tax-return" data-testid="dashboard-main-cta-tax-return" className="inline-flex h-12 items-center justify-center rounded-[16px] bg-[#4CAF50] px-5 text-sm font-semibold text-white shadow-[0_16px_28px_rgba(76,175,80,0.22)] transition hover:bg-[#3F9E48]">
+            <FileText className="mr-2 size-4" />
+            {t("home.taxReturnCta")}
+          </Link>
+          <Link href="/benefits" data-testid="dashboard-main-cta-benefits" className="inline-flex h-12 items-center justify-center rounded-[16px] border border-white/[0.15] bg-white/[0.06] px-5 text-sm font-semibold text-white transition hover:border-[#4CAF50]/35 hover:bg-white/[0.1]">
+            <Gift className="mr-2 size-4" />
+            {t("home.benefitsCta")}
+          </Link>
         </div>
       </div>
+
+      {hasActiveCase ? (
+        <DashboardPrimaryCaseCard
+          title={activeCaseTitle}
+          status={getStatusLabel(activeCase.status, t)}
+          statusTone={getStatusTone(activeCase.status)}
+          nextStep={nextStepLabel}
+          progress={documentProgress}
+          href={getCaseHref(activeCase)}
+          cta={t("home.continueCta")}
+          updated={formatDate(activeCase.updated_at, locale, noDateLabel)}
+        />
+      ) : (
+        <DashboardEmptyState benefitsLabel={t("home.benefitsCta")} taxReturnLabel={t("home.taxReturnCta")} />
+      )}
+
+      {hasActiveCase ? (
+        <div className="grid gap-4 md:grid-cols-3">
+          <DashboardQuickActionCard
+            icon={<UploadCloud className="size-5" />}
+            title={t("home.documentsAction")}
+            value={pendingDocuments > 0 ? t("home.pendingDocuments", { count: pendingDocuments }) : t("home.noPendingDocuments")}
+            href={getCaseHref(activeCase)}
+          />
+          <DashboardQuickActionCard
+            icon={<CreditCard className="size-5" />}
+            title={t("home.paymentAction")}
+            value={needsPayment ? t("home.paymentPending") : t("home.paymentClear")}
+            href={getCaseHref(activeCase)}
+          />
+          <DashboardQuickActionCard
+            icon={<AlertTriangle className="size-5" />}
+            title={t("home.reviewAction")}
+            value={needsReview ? t("home.reviewNeeded") : t("home.reviewClear")}
+            href={getCaseHref(activeCase)}
+          />
+        </div>
+      ) : null}
+
+      {hasActiveCase ? (
+        <DashboardSimpleTimeline
+          steps={CASE_STEPPER_STEPS.map((step) => t(`stepper.${step.id}`))}
+          currentStep={currentStep}
+        />
+      ) : null}
+
+      {visibleActivity.length > 0 ? (
+        <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-recent-activity">
+          <CardHeader>
+            <CardTitle className="text-white">{t("activity.title")}</CardTitle>
+            <CardDescription className="text-[#C8D2DF]">{t("activity.description")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3">
+              {visibleActivity.map((activity) => (
+                <li key={activity.id} className="flex items-start gap-3 rounded-[18px] border border-white/10 bg-white/[0.045] px-4 py-3">
+                  <Clock3 className="mt-0.5 size-4 text-[#74D07B]" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-white">{activity.title}</p>
+                    <p className="mt-1 text-sm text-[#C8D2DF]">{activity.body}</p>
+                    <p className="mt-2 text-xs text-[#9FB0C4]">{activity.createdAt}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      ) : null}
     </section>
   );
 }
 
-function KpiCard({
-  title,
-  value,
-  note,
-  highlight = false,
-}: {
-  title: string;
-  value: string;
-  note: string;
-  highlight?: boolean;
-}) {
+function DashboardEmptyState({ benefitsLabel, taxReturnLabel }: { benefitsLabel: string; taxReturnLabel: string }) {
+  const t = useTranslations("Dashboard.overview");
+
   return (
-    <Card
-      variant="soft"
-      padding="sm"
-      className={cn(
-        "min-h-[132px] rounded-[1.4rem] border transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(15,23,42,0.08)]",
-        highlight ? "border-green/25 bg-[linear-gradient(135deg,rgba(21,128,61,0.08),rgba(195,145,91,0.08))]" : "border-border/35 bg-surface",
-      )}
-    >
-      <p className="text-[11px] uppercase tracking-[0.16em] text-muted">{title}</p>
-      <p className="mt-3 font-mono text-[1.8rem] font-semibold tracking-[-0.04em] text-text">{value}</p>
-      <p className="mt-1.5 text-xs text-secondary">{note}</p>
+    <Card variant="glass" padding="lg" className="rounded-[30px]" data-testid="dashboard-empty-state">
+      <CardContent className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-2xl">
+          <div className="grid size-14 place-items-center rounded-[20px] bg-[#4CAF50]/[0.14] text-[#74D07B]">
+            <FileText className="size-7" />
+          </div>
+          <h2 className="mt-5 text-3xl font-bold text-white">{t("home.emptyTitle")}</h2>
+          <p className="mt-3 text-sm leading-6 text-[#C8D2DF]">{t("home.emptyBody")}</p>
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <Link href="/benefits" data-testid="dashboard-main-cta-benefits" className="inline-flex h-12 items-center justify-center rounded-[16px] bg-[#4CAF50] px-5 text-sm font-semibold text-white shadow-[0_16px_28px_rgba(76,175,80,0.22)] transition hover:bg-[#3F9E48]">
+            <Gift className="mr-2 size-4" />
+            {benefitsLabel}
+          </Link>
+          <Link href="/tax-return" data-testid="dashboard-main-cta-tax-return" className="inline-flex h-12 items-center justify-center rounded-[16px] border border-white/[0.15] bg-white/[0.06] px-5 text-sm font-semibold text-white transition hover:border-[#4CAF50]/35 hover:bg-white/[0.1]">
+            <FileText className="mr-2 size-4" />
+            {taxReturnLabel}
+          </Link>
+        </div>
+      </CardContent>
     </Card>
   );
 }
 
-function SummaryRow({ label, value, emphasized = false }: { label: string; value: string; emphasized?: boolean }) {
+function DashboardPrimaryCaseCard({
+  title,
+  status,
+  statusTone,
+  nextStep,
+  progress,
+  href,
+  cta,
+  updated,
+}: {
+  title: string;
+  status: string;
+  statusTone: "success" | "warning" | "neutral";
+  nextStep: string;
+  progress: number;
+  href: string;
+  cta: string;
+  updated: string;
+}) {
+  const t = useTranslations("Dashboard.overview");
+
   return (
-    <div className={cn("flex items-center justify-between rounded-[1rem] border px-4 py-3", emphasized ? "border-green/25 bg-green/5" : "border-border/35 bg-surface")}>
-      <dt className="text-sm text-secondary">{label}</dt>
-      <dd className={cn("font-mono text-sm font-semibold", emphasized ? "text-green" : "text-text")}>{value}</dd>
-    </div>
+    <Card variant="glass" padding="lg" className="rounded-[30px]" data-testid="dashboard-primary-case-card">
+      <CardContent className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <StatusBadge tone={statusTone}>{status}</StatusBadge>
+            <span className="text-sm text-[#9FB0C4]">{t("home.updated", { value: updated })}</span>
+          </div>
+          <h2 className="mt-5 text-[clamp(1.8rem,3vw,2.7rem)] font-bold leading-tight text-white">{title}</h2>
+          <p className="mt-3 text-sm leading-6 text-[#C8D2DF]">{t("home.nextStep", { step: nextStep })}</p>
+        </div>
+        <div className="rounded-[24px] border border-white/10 bg-white/[0.045] p-5">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9FB0C4]">{t("home.progress")}</span>
+            <span className="font-mono text-sm font-semibold text-white">{progress}%</span>
+          </div>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full rounded-full bg-[#4CAF50]" style={{ width: `${progress}%` }} />
+          </div>
+          <Link href={href} className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-[16px] bg-[#4CAF50] px-4 text-sm font-semibold text-white transition hover:bg-[#3F9E48]">
+            {cta}
+            <ArrowRight className="ml-2 size-4" />
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function DashboardQuickActionCard({ icon, title, value, href }: { icon: React.ReactNode; title: string; value: string; href: string }) {
+  return (
+    <Link
+      href={href}
+      data-testid="dashboard-quick-action-card"
+      className="rounded-[24px] border border-white/10 bg-white/[0.045] p-5 text-white transition hover:border-[#4CAF50]/35 hover:bg-white/[0.075]"
+    >
+      <span className="grid size-11 place-items-center rounded-[16px] bg-[#4CAF50]/[0.14] text-[#74D07B]">{icon}</span>
+      <h3 className="mt-4 text-base font-bold">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-[#C8D2DF]">{value}</p>
+    </Link>
+  );
+}
+
+function DashboardSimpleTimeline({ steps, currentStep }: { steps: string[]; currentStep: number }) {
+  return (
+    <Card variant="glass" padding="md" className="rounded-[28px]" data-testid="dashboard-simple-timeline">
+      <CardContent>
+        <ol className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
+          {steps.map((step, index) => {
+            const number = index + 1;
+            const completed = number < currentStep;
+            const current = number === currentStep;
+            return (
+              <li key={step} className={cn("rounded-[18px] border p-4", current ? "border-[#4CAF50]/45 bg-[#4CAF50]/[0.14]" : "border-white/10 bg-white/[0.035]")}>
+                <div className={cn("grid size-8 place-items-center rounded-full text-sm font-semibold", completed ? "bg-[#4CAF50] text-white" : current ? "bg-[#EAF7EC] text-[#3F9E48]" : "bg-white/[0.08] text-[#9FB0C4]")}>
+                  {completed ? <CheckCircle2 className="size-4" /> : number}
+                </div>
+                <p className="mt-3 text-sm font-semibold text-white">{step}</p>
+              </li>
+            );
+          })}
+        </ol>
+      </CardContent>
+    </Card>
   );
 }

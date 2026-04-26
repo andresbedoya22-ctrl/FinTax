@@ -1,6 +1,6 @@
 import { getDocumentChecklistForBenefit } from "../documents";
 import { getManualReviewReasons } from "../engine/manual-review";
-import { normalizeHousehold } from "../engine/normalize-household";
+import { coerceHouseholdSnapshot, normalizeHousehold } from "../engine/normalize-household";
 import { NL_TOESLAGEN_2026 } from "../parameters";
 import type { BenefitEvaluationResult, CalculationStep, HouseholdSnapshot } from "../types";
 
@@ -13,40 +13,41 @@ function roundCurrency(value: number) {
 }
 
 export function calculateZorgtoeslag(snapshot: HouseholdSnapshot): BenefitEvaluationResult {
-  const normalized = normalizeHousehold(snapshot);
+  const safeSnapshot = coerceHouseholdSnapshot(snapshot);
+  const normalized = normalizeHousehold(safeSnapshot);
   const params = NL_TOESLAGEN_2026.zorgtoeslag;
-  const manualReasons = getManualReviewReasons(snapshot, "zorgtoeslag");
+  const manualReasons = getManualReviewReasons(safeSnapshot, "zorgtoeslag");
   const blockingReasons: BenefitEvaluationResult["blockingReasons"] = [];
   const warningReasons: BenefitEvaluationResult["warningReasons"] = [...manualReasons];
   const steps: CalculationStep[] = [];
 
-  const applicantAge = new Date("2026-01-01T00:00:00.000Z").getUTCFullYear() - new Date(`${snapshot.applicant.birthDate}T00:00:00.000Z`).getUTCFullYear();
+  const applicantAge = new Date("2026-01-01T00:00:00.000Z").getUTCFullYear() - new Date(`${safeSnapshot.applicant.birthDate}T00:00:00.000Z`).getUTCFullYear();
   if (applicantAge < params.minAge) {
     blockingReasons.push("ZORG_UNDER_18");
   }
-  if (!snapshot.applicant.hasDutchHealthInsurance && !snapshot.specialSituations.cakInsured) {
+  if (!safeSnapshot.applicant.hasDutchHealthInsurance && !safeSnapshot.specialSituations.cakInsured) {
     blockingReasons.push("ZORG_NO_DUTCH_HEALTH_INSURANCE");
   }
 
-  if (normalized.hasPartner && snapshot.partner && !snapshot.partner.hasDutchHealthInsurance && !snapshot.specialSituations.cakInsured) {
+  if (normalized.hasPartner && safeSnapshot.partner && !safeSnapshot.partner.hasDutchHealthInsurance && !safeSnapshot.specialSituations.cakInsured) {
     warningReasons.push("ZORG_PARTNER_NO_DUTCH_HEALTH_INSURANCE");
   }
 
-  if (!snapshot.applicant.nlResident && !snapshot.specialSituations.foreignResidence && !snapshot.specialSituations.cakInsured) {
+  if (!safeSnapshot.applicant.nlResident && !safeSnapshot.specialSituations.foreignResidence && !safeSnapshot.specialSituations.cakInsured) {
     warningReasons.push("ZORG_FOREIGN_CASE_MANUAL_REVIEW");
   }
 
   const incomeCap = normalized.hasPartner ? params.maxIncomeWithPartner : params.maxIncomeSingle;
   const assetsCap = normalized.hasPartner ? params.maxAssetsWithPartner : params.maxAssetsSingle;
-  const incomeForFormula = normalized.hasPartner ? normalized.jointIncome : snapshot.applicant.annualIncome;
+  const incomeForFormula = normalized.hasPartner ? normalized.jointIncome : safeSnapshot.applicant.annualIncome;
   const assetsForFormula = normalized.hasPartner
-    ? snapshot.assets.applicantAssets1Jan + snapshot.assets.partnerAssets1Jan
-    : snapshot.assets.applicantAssets1Jan;
+    ? safeSnapshot.assets.applicantAssets1Jan + safeSnapshot.assets.partnerAssets1Jan
+    : safeSnapshot.assets.applicantAssets1Jan;
 
   if (incomeForFormula > incomeCap) {
     blockingReasons.push("ZORG_INCOME_TOO_HIGH");
   }
-  if (assetsForFormula > assetsCap || snapshot.assets.hasSpecialAssets) {
+  if (assetsForFormula > assetsCap || safeSnapshot.assets.hasSpecialAssets) {
     blockingReasons.push("ZORG_ASSETS_TOO_HIGH");
   }
 
@@ -59,7 +60,7 @@ export function calculateZorgtoeslag(snapshot: HouseholdSnapshot): BenefitEvalua
 
   let annual = Math.max(0, standaardPremie - normPremie);
 
-  if (normalized.hasPartner && snapshot.partner && !snapshot.partner.hasDutchHealthInsurance) {
+  if (normalized.hasPartner && safeSnapshot.partner && !safeSnapshot.partner.hasDutchHealthInsurance) {
     annual *= 0.5;
   }
 
@@ -92,7 +93,7 @@ export function calculateZorgtoeslag(snapshot: HouseholdSnapshot): BenefitEvalua
   );
 
   const eligible = blockingReasons.length === 0 && annual > 0;
-  const docs = getDocumentChecklistForBenefit(snapshot, "zorgtoeslag");
+  const docs = getDocumentChecklistForBenefit(safeSnapshot, "zorgtoeslag");
 
   return {
     benefit: "zorgtoeslag",

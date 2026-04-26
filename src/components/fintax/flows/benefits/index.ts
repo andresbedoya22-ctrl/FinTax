@@ -1,6 +1,7 @@
 export * from "./BenefitsBundleSummary";
 export * from "./BenefitsEligibilityCard";
 export * from "./BenefitsIntro";
+export * from "./BenefitsSelectionStep";
 export * from "./BenefitsPostPaymentNextSteps";
 export * from "./BenefitsProgressHeader";
 export * from "./BenefitsResults";

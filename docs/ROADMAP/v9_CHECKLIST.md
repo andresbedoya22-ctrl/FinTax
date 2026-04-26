@@ -159,6 +159,19 @@ Still pending or intentionally deferred:
 - Remaining limitation:
   - benefits post-payment document collection is staged with checklist guidance and existing case endpoints, but a dedicated benefits upload workspace is still a follow-up item
 
+## Premium UI Application Fix
+
+- Branch name: `fix/apply-premium-ui-correctly`
+- Status:
+  - [x] Premium UI application fix scoped to real app screens
+  - [x] AppShell applied through authenticated route shells for Benefits, Dashboard, Success, and benefits case detail
+  - [x] Benefits wizard legacy panels replaced visually with premium stepper, option cards, field cards, and contextual dark panel
+  - [x] Dashboard white cards replaced with dark/glass metric and panel variants
+  - [x] Localized benefits terminology verified for navigation labels: Benefits, Subsidios, Toeslagen, Świadczenia, Beneficii
+  - [x] Tests updated for shell/nav, benefits wizard premium cards, and dashboard premium card IDs
+- Gates run:
+  - Pending final full-gate run in this branch before merge decision
+
 ## Notes For Maintainers
 
 - Do not treat the older March append-only notes as current truth.

@@ -1,6 +1,6 @@
 import { getDocumentChecklistForBenefit } from "../documents";
 import { getManualReviewReasons } from "../engine/manual-review";
-import { getAgeOnReferenceDate, normalizeHousehold } from "../engine/normalize-household";
+import { coerceHouseholdSnapshot, getAgeOnReferenceDate, normalizeHousehold } from "../engine/normalize-household";
 import { NL_TOESLAGEN_2026 } from "../parameters";
 import type { BenefitEvaluationResult, CalculationStep, ChildSnapshot, HouseholdSnapshot, ResidentSnapshot } from "../types";
 
@@ -28,18 +28,19 @@ function childTaxableIncome(child: ChildSnapshot, exemption: number) {
 }
 
 export function calculateHuurtoeslag(snapshot: HouseholdSnapshot): BenefitEvaluationResult {
-  const normalized = normalizeHousehold(snapshot);
+  const safeSnapshot = coerceHouseholdSnapshot(snapshot);
+  const normalized = normalizeHousehold(safeSnapshot);
   const params = NL_TOESLAGEN_2026.huurtoeslag;
-  const housing = snapshot.housing;
+  const housing = safeSnapshot.housing;
   const blockingReasons: BenefitEvaluationResult["blockingReasons"] = [];
-  const warningReasons: BenefitEvaluationResult["warningReasons"] = getManualReviewReasons(snapshot, "huurtoeslag");
+  const warningReasons: BenefitEvaluationResult["warningReasons"] = getManualReviewReasons(safeSnapshot, "huurtoeslag");
   const steps: CalculationStep[] = [];
 
   if (!housing) {
     blockingReasons.push("HUUR_NO_RENTAL_CONTRACT");
   }
 
-  const applicantAge = getAgeOnReferenceDate(snapshot.applicant.birthDate);
+  const applicantAge = getAgeOnReferenceDate(safeSnapshot.applicant.birthDate);
   if (applicantAge < params.minAge) {
     blockingReasons.push("HUUR_UNDER_18");
   }
@@ -55,15 +56,15 @@ export function calculateHuurtoeslag(snapshot: HouseholdSnapshot): BenefitEvalua
   if (housing?.groupHousingForElderlyOrAssistedLiving && !housing.recognizedException) {
     blockingReasons.push("HUUR_GROUP_HOUSING_UNRECOGNIZED");
   }
-  const combinedPartnerAssets = snapshot.assets.applicantAssets1Jan + snapshot.assets.partnerAssets1Jan;
-  if (!normalized.hasPartner && snapshot.assets.applicantAssets1Jan > params.maxAssetsSingle) {
+  const combinedPartnerAssets = safeSnapshot.assets.applicantAssets1Jan + safeSnapshot.assets.partnerAssets1Jan;
+  if (!normalized.hasPartner && safeSnapshot.assets.applicantAssets1Jan > params.maxAssetsSingle) {
     blockingReasons.push("HUUR_APPLICANT_ASSETS_TOO_HIGH");
   }
   if (normalized.hasPartner && combinedPartnerAssets > params.maxAssetsWithPartner) {
     blockingReasons.push("HUUR_PARTNER_ASSETS_TOO_HIGH");
   }
   if (
-    snapshot.residents.some(
+    safeSnapshot.residents.some(
       (resident) =>
         !resident.isSubtenant &&
         resident.assets1Jan > params.maxAssetsPerMedebewoner,
@@ -85,14 +86,14 @@ export function calculateHuurtoeslag(snapshot: HouseholdSnapshot): BenefitEvalua
       ? params.aftoppingsgrensThreeOrMorePersons
       : params.aftoppingsgrensOneOrTwoPersons;
 
-  const relevantResidents = snapshot.residents.filter(
+  const relevantResidents = safeSnapshot.residents.filter(
     (resident) => !(resident.isSubtenant && resident.hasSubrentContract),
   );
   const rekeninkomen =
-    snapshot.applicant.annualIncome +
-    (normalized.hasPartner && snapshot.partner ? snapshot.partner.annualIncome : 0) +
+    safeSnapshot.applicant.annualIncome +
+    (normalized.hasPartner && safeSnapshot.partner ? safeSnapshot.partner.annualIncome : 0) +
     relevantResidents.reduce((total, resident) => total + residentTaxableIncome(resident), 0) +
-    snapshot.children.reduce(
+    safeSnapshot.children.reduce(
       (total, child) => total + childTaxableIncome(child, params.childrenUnder23IncomeExemption),
       0,
     );
@@ -136,7 +137,7 @@ export function calculateHuurtoeslag(snapshot: HouseholdSnapshot): BenefitEvalua
   );
 
   const eligible = blockingReasons.length === 0;
-  const docs = getDocumentChecklistForBenefit(snapshot, "huurtoeslag");
+  const docs = getDocumentChecklistForBenefit(safeSnapshot, "huurtoeslag");
 
   return {
     benefit: "huurtoeslag",

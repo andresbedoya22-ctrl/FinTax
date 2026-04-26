@@ -100,3 +100,16 @@ Branch: `feature/toeslagen-2026-official-engine`
   - Polish: Świadczenia
   - Romanian: Beneficii
 - The Dutch term remains in domain code, official-source references, and `docs/toeslagen` because the canonical engine models Dutch Toeslagen rules.
+
+## Benefits Wizard Premium Application Fix
+
+- The premium redesign is now applied to the full Benefits wizard, not only the results surface:
+  - first-step benefit selection uses icon-led option cards;
+  - field groups sit inside a spacious navy wizard card;
+  - checkbox rows are visually promoted into selectable cards;
+  - repeaters for children, childcare arrangements, and residents use separated elevated sections;
+  - contextual help is shown in a dark side panel on desktop.
+- Pre-payment visual behavior remains range-only and does not expose exact totals, calculation trace, or full document checklists.
+- Post-payment visual behavior keeps the same premium shell but unlocks detailed estimates, calculation trace, documents, and next steps.
+- Localized user-facing labels are: English `Benefits`, Spanish `Subsidios`, Dutch `Toeslagen`, Polish `Świadczenia`, Romanian `Beneficii`.
+- Remaining limitation: post-payment document collection still relies on existing generic case/docflow endpoints; a dedicated benefits upload workspace remains a follow-up.

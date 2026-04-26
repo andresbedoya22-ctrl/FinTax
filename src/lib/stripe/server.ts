@@ -1,9 +1,11 @@
 import Stripe from "stripe";
 
+import { getEnv } from "../env";
+
 let stripeSingleton: Stripe | null = null;
 
 export function getStripeServerClient() {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
+  const { STRIPE_SECRET_KEY: secretKey } = getEnv();
   if (!secretKey) return null;
 
   if (!stripeSingleton) {

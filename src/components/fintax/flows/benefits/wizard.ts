@@ -139,7 +139,7 @@ export type BenefitsFormValues = z.infer<typeof benefitsWizardSchema>;
 
 export const benefitsDefaultValues: BenefitsFormValues = {
   year: 2026,
-  selectedBenefits: ["zorgtoeslag", "huurtoeslag", "kindgebondenBudget", "kinderopvangtoeslag"],
+  selectedBenefits: [],
   applicant: {
     id: "applicant",
     birthDate: "1995-06-01",
@@ -259,7 +259,7 @@ function coerceLegacyValues(value: Record<string, unknown>): BenefitsFormValues 
     year: 2026,
     selectedBenefits: Array.isArray(value.selectedBenefits) && value.selectedBenefits.length
       ? (value.selectedBenefits as BenefitKey[])
-      : ["zorgtoeslag", "huurtoeslag", "kindgebondenBudget", "kinderopvangtoeslag"],
+      : [],
     applicant: {
       id: "applicant",
       birthDate: `${2026 - age}-01-01`,

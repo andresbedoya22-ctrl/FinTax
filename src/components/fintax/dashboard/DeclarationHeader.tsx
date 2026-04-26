@@ -31,33 +31,33 @@ export function DeclarationHeader({
   secondaryDisabled = false,
 }: DeclarationHeaderProps) {
   return (
-    <header className="overflow-hidden rounded-[1.75rem] border border-border/55 bg-[linear-gradient(135deg,rgba(247,250,248,0.98),rgba(238,244,239,0.92))] p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)] sm:p-6 lg:p-7">
+    <header className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0B2340]/80 p-5 text-white shadow-[0_22px_56px_rgba(0,0,0,0.16)] backdrop-blur sm:p-6 lg:p-7">
       <div className="flex flex-col gap-6">
-        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#9FB0C4]">
           <span>{breadcrumbLabel}</span>
-          <span className="h-1 w-1 rounded-full bg-border/80" aria-hidden="true" />
-          <span className="text-green">
+          <span className="h-1 w-1 rounded-full bg-white/30" aria-hidden="true" />
+          <span className="text-[#74D07B]">
             {declarationLabel} {taxYear}
           </span>
         </div>
 
         <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-3xl space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-green/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-green shadow-[0_10px_25px_rgba(21,128,61,0.08)]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#4CAF50]/25 bg-[#4CAF50]/[0.14] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#74D07B] shadow-[0_10px_25px_rgba(76,175,80,0.08)]">
               <FolderOpen className="h-3.5 w-3.5" />
               <span>{declarationLabel}</span>
             </div>
             <div className="space-y-2">
-              <h1 className="font-heading text-[2.15rem] leading-none tracking-[-0.05em] text-text sm:text-[2.45rem] lg:text-[2.8rem]">
+              <h1 className="font-heading text-[2.15rem] leading-none text-white sm:text-[2.45rem] lg:text-[2.8rem]">
                 {declarationLabel} {taxYear}
               </h1>
-              <div className="flex flex-col gap-2 text-sm text-secondary sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <div className="flex flex-col gap-2 text-sm text-[#C8D2DF] sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <span className="inline-flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4 text-copper" />
+                  <CalendarDays className="h-4 w-4 text-[#D97706]" />
                   {updatedLabel}
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4 text-green" />
+                  <CalendarDays className="h-4 w-4 text-[#4CAF50]" />
                   {deadlineLabel}
                 </span>
               </div>
@@ -65,7 +65,7 @@ export function DeclarationHeader({
           </div>
 
           <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap xl:w-auto">
-            <Link href={primaryHref} className={buttonVariants({ size: "lg" }) + " w-full sm:w-auto"}>
+            <Link href={primaryHref} className={buttonVariants({ size: "lg" }) + " w-full bg-[#4CAF50] text-white shadow-[0_16px_28px_rgba(76,175,80,0.22)] hover:bg-[#3F9E48] sm:w-auto"}>
               <FileUp className="h-4 w-4" />
               {primaryLabel}
             </Link>
@@ -73,7 +73,7 @@ export function DeclarationHeader({
               type="button"
               variant="secondary"
               size="lg"
-              className="w-full sm:w-auto"
+              className="w-full border-white/[0.15] bg-white/[0.06] text-white hover:border-[#4CAF50]/35 hover:bg-white/[0.1] sm:w-auto"
               disabled={secondaryDisabled}
               title={secondaryDisabled ? secondaryHint : undefined}
             >

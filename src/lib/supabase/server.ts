@@ -2,6 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
+import { getEnv } from "../env";
+
 type CookieOptions = {
   domain?: string;
   maxAge?: number;
@@ -19,10 +21,11 @@ function secureCookieOptions(options?: CookieOptions) {
 
 export async function createClient() {
   const cookieStore = await cookies();
+  const env = getEnv();
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    env.NEXT_PUBLIC_SUPABASE_URL!,
+    env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -43,9 +46,11 @@ export async function createClient() {
 }
 
 export async function createAdminClient() {
+  const env = getEnv();
+
   return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    env.NEXT_PUBLIC_SUPABASE_URL!,
+    env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       auth: {
         autoRefreshToken: false,

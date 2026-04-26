@@ -1,6 +1,6 @@
 import { getDocumentChecklistForBenefit } from "../documents";
 import { getManualReviewReasons } from "../engine/manual-review";
-import { normalizeHousehold } from "../engine/normalize-household";
+import { coerceHouseholdSnapshot, normalizeHousehold } from "../engine/normalize-household";
 import { KINDEROPVANGTOESLAG_2026_TABLE, NL_TOESLAGEN_2026 } from "../parameters";
 import type { BenefitEvaluationResult, CalculationStep, ChildSnapshot, HouseholdSnapshot } from "../types";
 
@@ -39,20 +39,21 @@ function percentageBandForIncome(income: number) {
 }
 
 export function calculateKinderopvangtoeslag(snapshot: HouseholdSnapshot): BenefitEvaluationResult {
-  const normalized = normalizeHousehold(snapshot);
+  const safeSnapshot = coerceHouseholdSnapshot(snapshot);
+  const normalized = normalizeHousehold(safeSnapshot);
   const params = NL_TOESLAGEN_2026.kinderopvangtoeslag;
   const blockingReasons: BenefitEvaluationResult["blockingReasons"] = [];
-  const warningReasons: BenefitEvaluationResult["warningReasons"] = getManualReviewReasons(snapshot, "kinderopvangtoeslag");
+  const warningReasons: BenefitEvaluationResult["warningReasons"] = getManualReviewReasons(safeSnapshot, "kinderopvangtoeslag");
   const steps: CalculationStep[] = [];
 
-  if (!hasValidActivity(snapshot.applicant.activityStatus)) {
+  if (!hasValidActivity(safeSnapshot.applicant.activityStatus)) {
     blockingReasons.push("KOT_NO_VALID_ACTIVITY_APPLICANT");
   }
-  if (normalized.hasPartner && snapshot.partner && !hasValidActivity(snapshot.partner.activityStatus)) {
+  if (normalized.hasPartner && safeSnapshot.partner && !hasValidActivity(safeSnapshot.partner.activityStatus)) {
     blockingReasons.push("KOT_NO_VALID_ACTIVITY_PARTNER");
   }
 
-  const eligibleChildren = snapshot.children
+  const eligibleChildren = safeSnapshot.children
     .filter((child) => child.goesToChildcare)
     .map((child) => {
       const eligibleHoursTotal = child.childcareArrangements.reduce((sum, arrangement) => {
@@ -148,7 +149,7 @@ export function calculateKinderopvangtoeslag(snapshot: HouseholdSnapshot): Benef
     { code: "annual", labelKey: "Benefits.results.calculation.annualAmount", value: annual },
   );
 
-  const docs = getDocumentChecklistForBenefit(snapshot, "kinderopvangtoeslag");
+  const docs = getDocumentChecklistForBenefit(safeSnapshot, "kinderopvangtoeslag");
   const eligible = blockingReasons.length === 0;
 
   return {

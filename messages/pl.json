@@ -361,6 +361,29 @@
       "alerts": "Alerty"
     },
     "overview": {
+      "home": {
+        "eyebrow": "Control center",
+        "fallbackName": "there",
+        "greeting": "Hi, {name}",
+        "subtitle": "This is the current status of your FinTax cases.",
+        "taxReturnCta": "Start tax return",
+        "benefitsCta": "Calculate benefits",
+        "emptyTitle": "You do not have active cases yet",
+        "emptyBody": "Start with a benefits estimate or open a tax return. FinTax will keep the next steps here once a case exists.",
+        "continueCta": "Continue",
+        "updated": "Updated {value}",
+        "nextStep": "Next step: {step}",
+        "progress": "Progress",
+        "documentsAction": "Pending documents",
+        "pendingDocuments": "{count} document(s) need attention",
+        "noPendingDocuments": "No document blockers right now",
+        "paymentAction": "Payments",
+        "paymentPending": "Payment is still pending",
+        "paymentClear": "No payment action needed",
+        "reviewAction": "Review",
+        "reviewNeeded": "Manual review or authorization needs attention",
+        "reviewClear": "No review blocker right now"
+      },
       "apiError": {
         "eyebrow": "Dashboard API",
         "body": "The declaration overview could not be refreshed.",
@@ -584,7 +607,15 @@
       "badge": "Guided intake",
       "stepCount": "Step {current} of {total}",
       "completionLabel": "Progress",
-      "currentStepLabel": "Current step: {step}"
+      "currentStepLabel": "Current step: {step}",
+      "completedPercent": "{percent}% complete",
+      "previousStep": "Previous: {step}",
+      "currentStep": "Current: {step}",
+      "nextStep": "Next: {step}",
+      "firstStep": "First step",
+      "lastStep": "Last step",
+      "showSteps": "View all steps",
+      "hideSteps": "Hide steps"
     },
     "steps": {
       "start": {
