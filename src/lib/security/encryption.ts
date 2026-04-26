@@ -1,5 +1,7 @@
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 
+import { getBsnKeyRingEnv } from "../env";
+
 const ALGO = "aes-256-gcm";
 const IV_LENGTH = 12;
 
@@ -20,14 +22,14 @@ function decodeKey(raw: string) {
 
 function parseKeyRing(): KeyRing {
   const ring = new Map<string, Buffer>();
-  const legacy = process.env.BSN_ENCRYPTION_KEY;
+  const { rawRing, activeKeyId } = getBsnKeyRingEnv();
+  const legacy = rawRing && !rawRing.includes(":") && !rawRing.trim().startsWith("{") ? rawRing : undefined;
   if (legacy) {
     const decoded = decodeKey(legacy);
     if (decoded.length !== 32) throw new Error("BSN_ENCRYPTION_KEY must decode to 32 bytes");
     ring.set("v1", decoded);
   }
 
-  const rawRing = process.env.BSN_ENCRYPTION_KEYS;
   if (rawRing) {
     const normalized = rawRing.trim();
     if (normalized.startsWith("{")) {
@@ -51,9 +53,8 @@ function parseKeyRing(): KeyRing {
 
   if (ring.size === 0) throw new Error("No BSN encryption keys configured");
 
-  const activeFromEnv = process.env.BSN_ENCRYPTION_ACTIVE_KEY_ID?.trim();
-  const activeKeyId = activeFromEnv && ring.has(activeFromEnv) ? activeFromEnv : Array.from(ring.keys())[0];
-  return { activeKeyId, keys: ring };
+  const resolvedActiveKeyId = activeKeyId && ring.has(activeKeyId) ? activeKeyId : Array.from(ring.keys())[0];
+  return { activeKeyId: resolvedActiveKeyId, keys: ring };
 }
 
 function getKeyRing() {

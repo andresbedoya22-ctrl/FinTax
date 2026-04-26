@@ -21,8 +21,9 @@ import {
   type BenefitsFormValues,
   type BenefitCardKey,
 } from "@/components/fintax/flows/benefits";
-import { PremiumStepper, benefitIcons } from "@/components/fintax/ui";
-import { cn } from "@/lib/cn";
+import { BenefitsCompactProgress } from "@/components/fintax/flows/benefits/BenefitsCompactProgress";
+import { BenefitsOptionCard } from "@/components/fintax/flows/benefits/BenefitsOptionCard";
+import { benefitIcons } from "@/components/fintax/ui";
 import { apiGet, apiPost, isApiClientError } from "@/hooks/api-client";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -66,7 +67,7 @@ export function BenefitsFlow({
   const values = form.watch();
   const normalizedValues = React.useMemo(() => normalizeBenefitsValues(values), [values]);
   const evaluation = React.useMemo(
-    () => evaluateToeslagen(toHouseholdSnapshot(normalizedValues)),
+    () => (normalizedValues.selectedBenefits.length > 0 ? evaluateToeslagen(toHouseholdSnapshot(normalizedValues)) : null),
     [normalizedValues],
   );
 
@@ -184,7 +185,7 @@ export function BenefitsFlow({
           locale,
           selectedBenefits: normalizedValues.selectedBenefits,
           snapshot,
-          evaluation,
+          evaluation: evaluation!,
         },
       );
 
@@ -280,6 +281,7 @@ export function BenefitsFlow({
         currentStep={currentStep}
         stepTitle={t(`steps.${benefitStepKeys[currentStep]}.title`)}
         stepDescription={t(`steps.${benefitStepKeys[currentStep]}.description`)}
+        onStepClick={(step) => setCurrentStep(step)}
       >
           {checkoutError ? (
             <div className="rounded-[20px] border border-[#D97706]/25 bg-[#FFF4E5] px-4 py-3 text-sm text-[#8A4B0B]">
@@ -318,7 +320,7 @@ export function BenefitsFlow({
                 {benefitStepKeys[currentStep] === "results" ? (
                   <BenefitsResults
                     mode="prePayment"
-                    results={evaluation}
+                    results={evaluation!}
                     selectedKeys={normalizedValues.selectedBenefits}
                     onToggleSelected={toggleBundleSelection}
                     onContinueToCheckout={continueToCheckout}
@@ -332,6 +334,7 @@ export function BenefitsFlow({
                   type="button"
                   variant="secondary"
                   className="rounded-[16px] border-white/[0.15] bg-white/[0.07] text-white hover:bg-white/[0.1]"
+                  data-testid="benefits-back-button"
                   onClick={prevStep}
                   disabled={currentStep === 0}
                   leftIcon={<ChevronLeft className="size-4" />}
@@ -340,7 +343,7 @@ export function BenefitsFlow({
                 </Button>
 
                 {benefitStepKeys[currentStep] !== "results" ? (
-                  <Button type="button" className="rounded-[16px] px-6" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />}>
+                  <Button type="button" className="rounded-[16px] px-6" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />} data-testid="benefits-next-button">
                     {t("next")}
                   </Button>
                 ) : null}
@@ -357,12 +360,14 @@ function BenefitsWizardShell({
   currentStep,
   stepTitle,
   stepDescription,
+  onStepClick,
   children,
 }: {
   isResultsStage: boolean;
   currentStep: number;
   stepTitle: string;
   stepDescription: string;
+  onStepClick: (step: number) => void;
   children: React.ReactNode;
 }) {
   const t = useTranslations("Benefits");
@@ -373,10 +378,18 @@ function BenefitsWizardShell({
   }
 
   return (
-    <section className="space-y-7">
-      <PremiumStepper steps={steps} currentStep={currentStep} />
+    <section className="space-y-6">
+      <BenefitsCompactProgress
+        currentStep={currentStep}
+        totalSteps={benefitStepKeys.length}
+        currentLabel={steps[currentStep]}
+        previousLabel={currentStep > 0 ? steps[currentStep - 1] : undefined}
+        nextLabel={currentStep < steps.length - 1 ? steps[currentStep + 1] : undefined}
+        allSteps={steps}
+        onStepClick={onStepClick}
+      />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
-        <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#0B2340]/[0.86] shadow-[0_28px_70px_rgba(0,0,0,0.22)] backdrop-blur" data-testid="benefits-step-card">
+        <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#0B2340]/[0.86] shadow-[0_28px_70px_rgba(0,0,0,0.22)] backdrop-blur" data-testid="benefits-step-main-card">
           <div className="border-b border-white/10 px-5 py-5 sm:px-7">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#74cf7a]">
               {t("progress.stepCount", { current: currentStep + 1, total: benefitStepKeys.length })}
@@ -386,7 +399,7 @@ function BenefitsWizardShell({
           </div>
           <div className="space-y-6 px-5 py-5 sm:px-7 sm:py-7">{children}</div>
         </div>
-        <aside className="rounded-[30px] border border-white/10 bg-white/[0.045] p-6 text-white shadow-[0_24px_64px_rgba(0,0,0,0.16)]">
+        <aside className="rounded-[30px] border border-white/10 bg-white/[0.045] p-6 text-white shadow-[0_24px_64px_rgba(0,0,0,0.16)]" data-testid="benefits-step-help-panel">
           <div className="grid size-12 place-items-center rounded-[18px] bg-[#4CAF50]/[0.18] text-[#74cf7a]">
             <BriefcaseBusiness className="size-6" />
           </div>
@@ -446,16 +459,7 @@ function CheckboxRow({
   onChange: (next: boolean) => void;
 }) {
   return (
-    <label
-      className={cn(
-        "flex cursor-pointer items-center gap-3 rounded-[18px] border px-4 py-4 text-sm text-white transition",
-        checked ? "border-[#4CAF50]/50 bg-[#4CAF50]/[0.14] shadow-[0_14px_34px_rgba(76,175,80,0.08)]" : "border-white/10 bg-white/[0.045] hover:border-white/[0.18] hover:bg-white/[0.07]",
-      )}
-      data-testid="benefits-option-card"
-    >
-      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="size-4 accent-[#4CAF50]" />
-      <span>{label}</span>
-    </label>
+    <BenefitsOptionCard selected={checked} title={label} onToggle={() => onChange(!checked)} />
   );
 }
 
@@ -470,34 +474,22 @@ function StartStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
           {benefitKeys.map((key) => {
             const Icon = benefitIcons[key];
             return (
-              <label
+              <BenefitsOptionCard
                 key={key}
-                data-testid="benefits-option-card"
-                className={cn(
-                  "flex cursor-pointer items-start gap-4 rounded-[22px] border p-5 transition",
-                  selected.includes(key)
-                    ? "border-[#4CAF50]/55 bg-[#4CAF50]/[0.14]"
-                    : "border-white/10 bg-white/[0.045] hover:border-white/[0.18] hover:bg-white/[0.07]",
-                )}
-              >
-                <input
-                  type="checkbox"
-                  className="sr-only"
-                  checked={selected.includes(key)}
-                  onChange={(event) => {
-                    const checked = event.target.checked;
-                    const next = checked ? [...selected, key] : selected.filter((value) => value !== key);
-                    form.setValue("selectedBenefits", Array.from(new Set(next)), { shouldDirty: true, shouldValidate: true });
-                  }}
-                />
-                <span className="grid size-12 shrink-0 place-items-center rounded-[18px] bg-[#EAF7EC] text-[#3F9E48]">
-                  <Icon className="size-6" />
-                </span>
-                <span>
-                  <span className="block text-base font-bold text-white">{t(`results.cards.${key}.title`)}</span>
-                  <span className="mt-1 block text-sm leading-6 text-[#C8D2DF]">{t(`results.cards.${key}.subtitle`)}</span>
-                </span>
-              </label>
+                selected={selected.includes(key)}
+                title={t(`results.cards.${key}.title`)}
+                description={t(`results.cards.${key}.subtitle`)}
+                icon={<Icon className="size-6" />}
+                onToggle={() => {
+                  const checked = !selected.includes(key);
+                  const next = checked ? [...selected, key] : selected.filter((value) => value !== key);
+                  form.setValue("selectedBenefits", Array.from(new Set(next)), {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                    shouldValidate: true,
+                  });
+                }}
+              />
             );
           })}
         </div>
@@ -523,8 +515,8 @@ function ApplicantStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
           </div>
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          <CheckboxRow checked={form.watch("applicant.nlResident")} label={t("fields.applicantNlResident")} onChange={(value) => form.setValue("applicant.nlResident", value, { shouldDirty: true })} />
-          <CheckboxRow checked={form.watch("applicant.bsnKnown")} label={t("fields.applicantBsnKnown")} onChange={(value) => form.setValue("applicant.bsnKnown", value, { shouldDirty: true })} />
+          <CheckboxRow checked={form.watch("applicant.nlResident")} label={t("fields.applicantNlResident")} onChange={(value) => form.setValue("applicant.nlResident", value, { shouldDirty: true, shouldValidate: true })} />
+          <CheckboxRow checked={form.watch("applicant.bsnKnown")} label={t("fields.applicantBsnKnown")} onChange={(value) => form.setValue("applicant.bsnKnown", value, { shouldDirty: true, shouldValidate: true })} />
         </div>
       </Panel>
     </StepShell>
@@ -549,8 +541,8 @@ function PartnerStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
               <Label>{t("fields.partnerCountryOfResidence")}</Label>
               <Input {...form.register("partner.countryOfResidence")} />
             </div>
-            <CheckboxRow checked={form.watch("partner.sameAddress") ?? true} label={t("fields.partnerSameAddress")} onChange={(value) => form.setValue("partner.sameAddress", value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch("partner.isToeslagPartner") ?? true} label={t("fields.partnerIsToeslagPartner")} onChange={(value) => form.setValue("partner.isToeslagPartner", value, { shouldDirty: true })} />
+            <CheckboxRow checked={form.watch("partner.sameAddress") ?? true} label={t("fields.partnerSameAddress")} onChange={(value) => form.setValue("partner.sameAddress", value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch("partner.isToeslagPartner") ?? true} label={t("fields.partnerIsToeslagPartner")} onChange={(value) => form.setValue("partner.isToeslagPartner", value, { shouldDirty: true, shouldValidate: true })} />
           </div>
         ) : null}
       </Panel>
@@ -587,7 +579,7 @@ function IncomeStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
               label={t(`activityStatus.${status}`)}
               onChange={(checked) => {
                 const next = checked ? [...applicantActivity, status as BenefitsFormValues["applicant"]["activityStatus"][number]] : applicantActivity.filter((value) => value !== status);
-                form.setValue("applicant.activityStatus", next.length ? Array.from(new Set(next)) : ["none"], { shouldDirty: true });
+                form.setValue("applicant.activityStatus", next.length ? Array.from(new Set(next)) : ["none"], { shouldDirty: true, shouldValidate: true });
               }}
             />
           ))}
@@ -601,7 +593,7 @@ function IncomeStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
                 label={t(`activityStatus.${status}`)}
                 onChange={(checked) => {
                   const next = checked ? [...partnerActivity, status as BenefitsFormValues["applicant"]["activityStatus"][number]] : partnerActivity.filter((value) => value !== status);
-                  form.setValue("partner.activityStatus", next.length ? Array.from(new Set(next)) : ["none"], { shouldDirty: true });
+                  form.setValue("partner.activityStatus", next.length ? Array.from(new Set(next)) : ["none"], { shouldDirty: true, shouldValidate: true });
                 }}
               />
             ))}
@@ -620,11 +612,11 @@ function HealthStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
     <StepShell title={t("steps.health.title")} description={t("steps.health.description")}>
       <Panel>
         <div className="grid gap-3 md:grid-cols-2">
-          <CheckboxRow checked={form.watch("applicant.hasDutchHealthInsurance")} label={t("fields.applicantHasDutchHealthInsurance")} onChange={(value) => form.setValue("applicant.hasDutchHealthInsurance", value, { shouldDirty: true })} />
+          <CheckboxRow checked={form.watch("applicant.hasDutchHealthInsurance")} label={t("fields.applicantHasDutchHealthInsurance")} onChange={(value) => form.setValue("applicant.hasDutchHealthInsurance", value, { shouldDirty: true, shouldValidate: true })} />
           {hasPartner ? (
-            <CheckboxRow checked={form.watch("partner.hasDutchHealthInsurance") ?? true} label={t("fields.partnerHasDutchHealthInsurance")} onChange={(value) => form.setValue("partner.hasDutchHealthInsurance", value, { shouldDirty: true })} />
+            <CheckboxRow checked={form.watch("partner.hasDutchHealthInsurance") ?? true} label={t("fields.partnerHasDutchHealthInsurance")} onChange={(value) => form.setValue("partner.hasDutchHealthInsurance", value, { shouldDirty: true, shouldValidate: true })} />
           ) : null}
-          <CheckboxRow checked={form.watch("specialSituations.cakInsured")} label={t("fields.cakInsured")} onChange={(value) => form.setValue("specialSituations.cakInsured", value, { shouldDirty: true })} />
+          <CheckboxRow checked={form.watch("specialSituations.cakInsured")} label={t("fields.cakInsured")} onChange={(value) => form.setValue("specialSituations.cakInsured", value, { shouldDirty: true, shouldValidate: true })} />
         </div>
       </Panel>
     </StepShell>
@@ -654,12 +646,12 @@ function ChildrenStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
             </div>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <CheckboxRow checked={form.watch(`children.${index}.livesWithApplicant`)} label={t("fields.childLivesWithApplicant")} onChange={(value) => form.setValue(`children.${index}.livesWithApplicant`, value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch(`children.${index}.isCoParentingChild`)} label={t("fields.childIsCoParenting")} onChange={(value) => form.setValue(`children.${index}.isCoParentingChild`, value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch(`children.${index}.receivesKinderbijslag`)} label={t("fields.childReceivesKinderbijslag")} onChange={(value) => form.setValue(`children.${index}.receivesKinderbijslag`, value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch(`children.${index}.bsnKnown`)} label={t("fields.childBsnKnown")} onChange={(value) => form.setValue(`children.${index}.bsnKnown`, value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch(`children.${index}.hasIncome`)} label={t("fields.childHasIncome")} onChange={(value) => form.setValue(`children.${index}.hasIncome`, value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch(`children.${index}.goesToChildcare`)} label={t("fields.childGoesToChildcare")} onChange={(value) => form.setValue(`children.${index}.goesToChildcare`, value, { shouldDirty: true })} />
+            <CheckboxRow checked={form.watch(`children.${index}.livesWithApplicant`)} label={t("fields.childLivesWithApplicant")} onChange={(value) => form.setValue(`children.${index}.livesWithApplicant`, value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch(`children.${index}.isCoParentingChild`)} label={t("fields.childIsCoParenting")} onChange={(value) => form.setValue(`children.${index}.isCoParentingChild`, value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch(`children.${index}.receivesKinderbijslag`)} label={t("fields.childReceivesKinderbijslag")} onChange={(value) => form.setValue(`children.${index}.receivesKinderbijslag`, value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch(`children.${index}.bsnKnown`)} label={t("fields.childBsnKnown")} onChange={(value) => form.setValue(`children.${index}.bsnKnown`, value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch(`children.${index}.hasIncome`)} label={t("fields.childHasIncome")} onChange={(value) => form.setValue(`children.${index}.hasIncome`, value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch(`children.${index}.goesToChildcare`)} label={t("fields.childGoesToChildcare")} onChange={(value) => form.setValue(`children.${index}.goesToChildcare`, value, { shouldDirty: true, shouldValidate: true })} />
           </div>
           {form.watch(`children.${index}.hasIncome`) ? (
             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -752,9 +744,9 @@ function ChildcareChildEditor({
               </div>
             </div>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <CheckboxRow checked={form.watch(`children.${childIndex}.childcareArrangements.${arrangementIndex}.registeredLrk`)} label={t("fields.registeredLrk")} onChange={(value) => form.setValue(`children.${childIndex}.childcareArrangements.${arrangementIndex}.registeredLrk`, value, { shouldDirty: true })} />
-              <CheckboxRow checked={form.watch(`children.${childIndex}.childcareArrangements.${arrangementIndex}.hasContract`)} label={t("fields.hasContract")} onChange={(value) => form.setValue(`children.${childIndex}.childcareArrangements.${arrangementIndex}.hasContract`, value, { shouldDirty: true })} />
-              <CheckboxRow checked={form.watch(`children.${childIndex}.childcareArrangements.${arrangementIndex}.parentsPayContribution`)} label={t("fields.parentsPayContribution")} onChange={(value) => form.setValue(`children.${childIndex}.childcareArrangements.${arrangementIndex}.parentsPayContribution`, value, { shouldDirty: true })} />
+              <CheckboxRow checked={form.watch(`children.${childIndex}.childcareArrangements.${arrangementIndex}.registeredLrk`)} label={t("fields.registeredLrk")} onChange={(value) => form.setValue(`children.${childIndex}.childcareArrangements.${arrangementIndex}.registeredLrk`, value, { shouldDirty: true, shouldValidate: true })} />
+              <CheckboxRow checked={form.watch(`children.${childIndex}.childcareArrangements.${arrangementIndex}.hasContract`)} label={t("fields.hasContract")} onChange={(value) => form.setValue(`children.${childIndex}.childcareArrangements.${arrangementIndex}.hasContract`, value, { shouldDirty: true, shouldValidate: true })} />
+              <CheckboxRow checked={form.watch(`children.${childIndex}.childcareArrangements.${arrangementIndex}.parentsPayContribution`)} label={t("fields.parentsPayContribution")} onChange={(value) => form.setValue(`children.${childIndex}.childcareArrangements.${arrangementIndex}.parentsPayContribution`, value, { shouldDirty: true, shouldValidate: true })} />
             </div>
           </div>
         ))}
@@ -794,9 +786,9 @@ function ResidentsStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
             </div>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <CheckboxRow checked={form.watch(`residents.${index}.sameAddressRegistered`)} label={t("fields.sameAddressRegistered")} onChange={(value) => form.setValue(`residents.${index}.sameAddressRegistered`, value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch(`residents.${index}.isSubtenant`)} label={t("fields.isSubtenant")} onChange={(value) => form.setValue(`residents.${index}.isSubtenant`, value, { shouldDirty: true })} />
-            <CheckboxRow checked={form.watch(`residents.${index}.hasSubrentContract`)} label={t("fields.hasSubrentContract")} onChange={(value) => form.setValue(`residents.${index}.hasSubrentContract`, value, { shouldDirty: true })} />
+            <CheckboxRow checked={form.watch(`residents.${index}.sameAddressRegistered`)} label={t("fields.sameAddressRegistered")} onChange={(value) => form.setValue(`residents.${index}.sameAddressRegistered`, value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch(`residents.${index}.isSubtenant`)} label={t("fields.isSubtenant")} onChange={(value) => form.setValue(`residents.${index}.isSubtenant`, value, { shouldDirty: true, shouldValidate: true })} />
+            <CheckboxRow checked={form.watch(`residents.${index}.hasSubrentContract`)} label={t("fields.hasSubrentContract")} onChange={(value) => form.setValue(`residents.${index}.hasSubrentContract`, value, { shouldDirty: true, shouldValidate: true })} />
           </div>
         </Panel>
       ))}
@@ -824,12 +816,12 @@ function HousingStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
           </div>
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          <CheckboxRow checked={form.watch("housing.independentHome")} label={t("fields.independentHome")} onChange={(value) => form.setValue("housing.independentHome", value, { shouldDirty: true })} />
-          <CheckboxRow checked={form.watch("housing.hasRentalContract")} label={t("fields.hasRentalContract")} onChange={(value) => form.setValue("housing.hasRentalContract", value, { shouldDirty: true })} />
-          <CheckboxRow checked={form.watch("housing.rentsRoom")} label={t("fields.rentsRoom")} onChange={(value) => form.setValue("housing.rentsRoom", value, { shouldDirty: true })} />
-          <CheckboxRow checked={form.watch("housing.groupHousingForElderlyOrAssistedLiving")} label={t("fields.groupHousing")} onChange={(value) => form.setValue("housing.groupHousingForElderlyOrAssistedLiving", value, { shouldDirty: true })} />
-          <CheckboxRow checked={form.watch("housing.recognizedException")} label={t("fields.recognizedException")} onChange={(value) => form.setValue("housing.recognizedException", value, { shouldDirty: true })} />
-          <CheckboxRow checked={form.watch("housing.isWoonwagen")} label={t("fields.isWoonwagen")} onChange={(value) => form.setValue("housing.isWoonwagen", value, { shouldDirty: true })} />
+          <CheckboxRow checked={form.watch("housing.independentHome")} label={t("fields.independentHome")} onChange={(value) => form.setValue("housing.independentHome", value, { shouldDirty: true, shouldValidate: true })} />
+          <CheckboxRow checked={form.watch("housing.hasRentalContract")} label={t("fields.hasRentalContract")} onChange={(value) => form.setValue("housing.hasRentalContract", value, { shouldDirty: true, shouldValidate: true })} />
+          <CheckboxRow checked={form.watch("housing.rentsRoom")} label={t("fields.rentsRoom")} onChange={(value) => form.setValue("housing.rentsRoom", value, { shouldDirty: true, shouldValidate: true })} />
+          <CheckboxRow checked={form.watch("housing.groupHousingForElderlyOrAssistedLiving")} label={t("fields.groupHousing")} onChange={(value) => form.setValue("housing.groupHousingForElderlyOrAssistedLiving", value, { shouldDirty: true, shouldValidate: true })} />
+          <CheckboxRow checked={form.watch("housing.recognizedException")} label={t("fields.recognizedException")} onChange={(value) => form.setValue("housing.recognizedException", value, { shouldDirty: true, shouldValidate: true })} />
+          <CheckboxRow checked={form.watch("housing.isWoonwagen")} label={t("fields.isWoonwagen")} onChange={(value) => form.setValue("housing.isWoonwagen", value, { shouldDirty: true, shouldValidate: true })} />
         </div>
       </Panel>
     </StepShell>
@@ -856,7 +848,7 @@ function AssetsStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
           ) : null}
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          <CheckboxRow checked={form.watch("assets.hasSpecialAssets")} label={t("fields.hasSpecialAssets")} onChange={(value) => form.setValue("assets.hasSpecialAssets", value, { shouldDirty: true })} />
+          <CheckboxRow checked={form.watch("assets.hasSpecialAssets")} label={t("fields.hasSpecialAssets")} onChange={(value) => form.setValue("assets.hasSpecialAssets", value, { shouldDirty: true, shouldValidate: true })} />
         </div>
       </Panel>
     </StepShell>
@@ -892,7 +884,7 @@ function SpecialSituationsStep({ form }: { form: UseFormReturn<BenefitsFormValue
               key={key}
               checked={form.watch(`specialSituations.${key}`)}
               label={t(`fields.${key}`)}
-              onChange={(value) => form.setValue(`specialSituations.${key}`, value, { shouldDirty: true })}
+              onChange={(value) => form.setValue(`specialSituations.${key}`, value, { shouldDirty: true, shouldValidate: true })}
             />
           ))}
         </div>

@@ -11,7 +11,7 @@
     "lint": "eslint . --ignore-pattern .tmp-test-build --max-warnings=0",
     "format": "prettier --write .",
     "typecheck": "next typegen && tsc -p tsconfig.json --noEmit",
-    "test": "vitest run tests/ui tests/seo tests/domain tests/toeslagen && node --experimental-strip-types tests/case-status-stepper.test.mjs && node --experimental-strip-types tests/encryption-roundtrip.test.mjs && node --experimental-strip-types tests/stripe-webhook-mapper.test.mjs && node --experimental-strip-types tests/stripe-webhook-idempotency.test.mjs && node --experimental-strip-types tests/api-contracts.test.mjs && node --experimental-strip-types tests/api-client-envelope.test.mjs && node --experimental-strip-types tests/observability-sanitize.test.mjs",
+    "test": "vitest run tests/ui tests/seo tests/domain tests/toeslagen && tsx tests/case-status-stepper.test.mjs && tsx tests/encryption-roundtrip.test.mjs && tsx tests/stripe-webhook-mapper.test.mjs && tsx tests/stripe-webhook-idempotency.test.mjs && tsx tests/api-contracts.test.mjs && tsx tests/api-client-envelope.test.mjs && tsx tests/observability-sanitize.test.mjs && tsx tests/env-validation.test.mjs",
     "precommit": "pnpm lint && pnpm typecheck",
     "qa": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "audit:prod": "pnpm audit --prod --audit-level=high",

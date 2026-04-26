@@ -375,6 +375,29 @@
       "alerts": "Alertas"
     },
     "overview": {
+      "home": {
+        "eyebrow": "Centro de control",
+        "fallbackName": "cliente",
+        "greeting": "Hola, {name}",
+        "subtitle": "Este es el estado actual de tus trámites.",
+        "taxReturnCta": "Iniciar declaración",
+        "benefitsCta": "Calcular subsidios",
+        "emptyTitle": "Aún no tienes trámites activos",
+        "emptyBody": "Empieza con una estimación de subsidios o inicia una declaración. Cuando exista un caso, verás aquí el siguiente paso claro.",
+        "continueCta": "Continuar",
+        "updated": "Actualizado {value}",
+        "nextStep": "Siguiente paso: {step}",
+        "progress": "Progreso",
+        "documentsAction": "Documentos pendientes",
+        "pendingDocuments": "{count} documento(s) requieren atención",
+        "noPendingDocuments": "No hay bloqueos documentales ahora",
+        "paymentAction": "Pagos",
+        "paymentPending": "El pago sigue pendiente",
+        "paymentClear": "No hay acciones de pago",
+        "reviewAction": "Revisión",
+        "reviewNeeded": "La revisión manual o autorización requiere atención",
+        "reviewClear": "No hay bloqueos de revisión"
+      },
       "apiError": {
         "eyebrow": "API del dashboard",
         "body": "No se pudo refrescar el resumen de la declaración.",
@@ -1024,26 +1047,34 @@
   },
   "Benefits": {
     "heroTitle": "Subsidios 2026",
-    "heroSubtitle": "Este es un c?lculo estimado seg?n las reglas 2026 y la informaci?n que nos has proporcionado. El importe final depender? de la revisi?n oficial.",
+    "heroSubtitle": "Este es un cálculo estimado según las reglas 2026 y la información que nos has proporcionado. El importe final dependerá de la revisión oficial.",
     "wizardTitle": "Subsidios eligibility wizard",
-    "back": "Atr?s",
+    "back": "Atrás",
     "next": "Siguiente",
     "intro": {
       "eyebrow": "Proefberekening 2026",
       "highlights": {
         "rulesLabel": "Motor de reglas",
-        "rulesValue": "Par?metros oficiales 2026 con calculadoras por subsidio.",
+        "rulesValue": "Parámetros oficiales 2026 con calculadoras por subsidio.",
         "scopeLabel": "Cobertura",
-        "scopeValue": "Elegibilidad, importes mensuales y anuales, documentos y flags de revisi?n.",
-        "reviewLabel": "Postura del resultado",
-        "reviewValue": "Estimado, nunca resoluci?n definitiva."
+        "scopeValue": "Elegibilidad, importes mensuales y anuales, documentos y flags de revisión.",
+        "reviewLabel": "Sobre este resultado",
+        "reviewValue": "Estimación, nunca resolución definitiva."
       }
     },
     "progress": {
       "badge": "Intake guiado",
       "stepCount": "Paso {current} de {total}",
       "completionLabel": "Progreso",
-      "currentStepLabel": "Paso actual: {step}"
+      "currentStepLabel": "Paso actual: {step}",
+      "completedPercent": "{percent}% completado",
+      "previousStep": "Anterior: {step}",
+      "currentStep": "Actual: {step}",
+      "nextStep": "Siguiente: {step}",
+      "firstStep": "Primer paso",
+      "lastStep": "Último paso",
+      "showSteps": "Ver todos los pasos",
+      "hideSteps": "Ocultar pasos"
     },
     "steps": {
       "start": {
@@ -1058,7 +1089,7 @@
       },
       "partner": {
         "short": "Partner",
-        "title": "Situaci?n de partner",
+        "title": "Situación de pareja",
         "description": "Confirma si existe toeslagpartner y captura los datos cuando aplique."
       },
       "income": {
@@ -1069,27 +1100,27 @@
       "health": {
         "short": "Salud",
         "title": "Seguro de salud",
-        "description": "Registra seguro neerland?s y excepciones relacionadas con CAK."
+        "description": "Registra seguro médico neerlandés y excepciones relacionadas con CAK."
       },
       "children": {
         "short": "Hijos",
         "title": "Hijos y hechos familiares",
-        "description": "A?ade hijos, kinderbijslag, co-ouderschap e ingresos a nivel hijo."
+        "description": "Añade hijos, kinderbijslag, custodia compartida e ingresos del hijo si aplica."
       },
       "childcare": {
-        "short": "Guarder?a",
-        "title": "Acuerdos de childcare",
-        "description": "Captura LRK, horas, tarifas y contrato por arreglo."
+        "short": "Guardería",
+        "title": "Guardería",
+        "description": "Añade LRK, horas, tarifa y contrato solo cuando un hijo use guardería."
       },
       "residents": {
         "short": "Residentes",
         "title": "Medebewoners y subtenants",
-        "description": "A?ade miembros extra del hogar que puedan afectar huurtoeslag e ingresos."
+        "description": "Añade personas adicionales del hogar que puedan afectar el subsidio de alquiler."
       },
       "housing": {
         "short": "Vivienda",
         "title": "Datos de vivienda",
-        "description": "Captura renta, vivienda independiente y excepciones para huurtoeslag."
+        "description": "Añade alquiler, vivienda independiente y excepciones relevantes."
       },
       "assets": {
         "short": "Patrimonio",
@@ -1099,7 +1130,7 @@
       "specialSituations": {
         "short": "Especial",
         "title": "Situaciones especiales",
-        "description": "Marca escenarios que requieren revisi?n manual o evidencia especial."
+        "description": "Marca situaciones que requieren revisión manual o evidencia especial."
       },
       "results": {
         "short": "Resultados",
@@ -1178,12 +1209,12 @@
       "manualReviewNotes": "Manual review notes"
     },
     "actions": {
-      "addChild": "A?adir hijo",
-      "addArrangement": "A?adir arreglo",
-      "addResident": "A?adir residente"
+      "addChild": "Añadir hijo",
+      "addArrangement": "Añadir arreglo",
+      "addResident": "Añadir residente"
     },
     "emptyStates": {
-      "noChildcareChildren": "No hacen falta arreglos de childcare salvo que al menos un hijo est? marcado como usuario de childcare."
+      "noChildcareChildren": "No hacen falta datos de guardería salvo que al menos un hijo esté marcado como usuario de guardería."
     },
     "activityStatus": {
       "employed": "Employed",
@@ -1298,34 +1329,34 @@
     },
     "results": {
       "summary": {
-        "none": "Ning?n subsidio supera hoy los chequeos base 2026.",
+        "none": "Ningún subsidio supera hoy los chequeos base 2026.",
         "one": "Un subsidio supera hoy los chequeos base 2026.",
         "multiple": "Varios subsidios superan hoy los chequeos base 2026."
       },
       "summaryBadge": "Resultado estimado 2026",
-      "disclaimer": "Estimado, no definitivo. El derecho final lo determina Dienst Toeslagen tras la evaluaci?n oficial y la evidencia aportada.",
+      "disclaimer": "Estimación, nunca resolución definitiva. El derecho final lo determina Dienst Toeslagen tras la evaluación oficial y la evidencia aportada.",
       "totalLabel": "Total anual estimado",
-      "totalCaption": "Suma de todos los subsidios seleccionados con c?lculo disponible.",
+      "totalCaption": "Suma de todos los subsidios seleccionados con cálculo disponible.",
       "eligibleCountLabel": "Subsidios",
       "eligibleCountCaption": "Subsidios que hoy superan las condiciones principales visibles.",
       "noneEligibleTitle": "No se detecta derecho directo",
-      "noneEligibleCopy": "Revisa las razones de bloqueo y las ramas de revisi?n manual antes de aconsejar solicitar o no solicitar.",
+      "noneEligibleCopy": "Revisa las razones de bloqueo y las ramas de revisión manual antes de aconsejar solicitar o no solicitar.",
       "honestyTitle": "Nota de uso profesional",
-      "honestyCopy": "Este m?dulo replica la l?gica p?blica cuando hay datos oficiales, pero no sustituye la resoluci?n definitiva de Dienst Toeslagen.",
-      "manualReviewTitle": "Revisi?n manual requerida",
-      "manualReviewCopy": "Al menos un subsidio seleccionado entra en una rama que exige revisi?n documental o manejo especializado antes de confiar en el resultado.",
+      "honestyCopy": "Este módulo replica la lógica pública cuando hay datos oficiales, pero no sustituye la resolución definitiva de Dienst Toeslagen.",
+      "manualReviewTitle": "Revisión manual requerida",
+      "manualReviewCopy": "Al menos un subsidio seleccionado entra en una rama que exige revisión documental o manejo especializado antes de confiar en el resultado.",
       "eligible": "Elegible",
       "notEligible": "No elegible",
-      "manualReview": "Revisi?n manual",
+      "manualReview": "Revisión manual",
       "estimatedAnnualLabel": "Importe anual estimado",
       "statusLabel": "Estado actual",
       "topReasonsLabel": "Principales razones",
-      "calculationTraceLabel": "Traza de c?lculo",
+      "calculationTraceLabel": "Traza de cálculo",
       "documentsLabel": "Checklist documental",
       "removeFromPlan": "Quitar del plan",
-      "addToPlan": "A?adir al plan",
-      "reviewNotice": "Rev?salo con el cliente antes de presentar.",
-      "manualReviewNotice": "Se requiere revisi?n manual antes de confiar en este resultado.",
+      "addToPlan": "Añadir al plan",
+      "reviewNotice": "Revísalo con el cliente antes de presentar.",
+      "manualReviewNotice": "Se requiere revisión manual antes de confiar en este resultado.",
       "month": "mes",
       "range": {
         "monthly": "Rango estimado mensual",
@@ -1339,12 +1370,12 @@
           "cta": "Continuar y dejar que FinTax prepare mi solicitud",
           "supportingTitle": "Cómo continúa FinTax",
           "supporting": "Revisamos tus datos, te pedimos solo los documentos necesarios y preparamos la solicitud para reducir errores y complicaciones.",
-          "disclaimer": "Este es un c?lculo estimado seg?n las reglas 2026 y la informaci?n que nos has proporcionado. El importe final depender? de la revisi?n oficial.",
+          "disclaimer": "Este es un cálculo estimado según las reglas 2026 y la información que nos has proporcionado. El importe final dependerá de la revisión oficial.",
           "manualReview": "Tu caso tiene una situación especial. Podemos revisarlo antes de preparar la solicitud.",
           "amountHidden": "Los importes estimados exactos se desbloquean después del pago."
         },
         "postPayment": {
-          "title": "C?lculo detallado desbloqueado",
+          "title": "Cálculo detallado desbloqueado",
           "status": "Pago recibido",
           "nextStep": "Sube los documentos requeridos. Cuando estén completos, revisaremos tu caso y prepararemos la solicitud.",
           "documentsIntro": "Solo pedimos los documentos necesarios para los subsidios que parecen aplicar a tu situación.",
@@ -1365,7 +1396,7 @@
           "subtitle": "Income-related child budget for children under 18."
         },
         "kinderopvangtoeslag": {
-          "title": "Subsidio de guarder?a",
+          "title": "Subsidio de guardería",
           "subtitle": "Childcare allowance based on valid activity, LRK and official percentage bands."
         }
       },
@@ -1399,7 +1430,7 @@
       "selectedServicesLabel": "Subsidios seleccionados",
       "empty": "No hay subsidios seleccionados.",
       "recommendedNextLabel": "Siguiente paso recomendado",
-      "recommendedNextSelected": "Re?ne los documentos requeridos, confirma supuestos y revisa las ramas manuales antes de presentar ninguna solicitud.",
+      "recommendedNextSelected": "Reúne los documentos requeridos, confirma supuestos y revisa las ramas manuales antes de presentar ninguna solicitud.",
       "recommendedNextNone": "Selecciona los subsidios relevantes o revisa primero los datos del intake.",
       "annualImpactLabel": "Impacto anual",
       "annualImpactCopy": "Total anual estimado para los subsidios seleccionados.",
@@ -1414,31 +1445,31 @@
     },
     "premium": {
       "stepper": [
-        "Diagn?stico",
+        "Diagnóstico",
         "Resultado",
         "Pago",
         "Documentos",
         "Solicitud"
       ],
-      "prePaymentSubtitle": "Este es un c?lculo estimado seg?n las reglas 2026 y la informaci?n que nos has proporcionado. El importe final depender? de la revisi?n oficial.",
-      "postPaymentSubtitle": "Tu pago est? confirmado. Ya puedes ver c?lculos detallados, documentos y siguientes pasos para la preparaci?n experta.",
-      "totalEstimateLabel": "Tu estimaci?n mensual total",
+      "prePaymentSubtitle": "Este es un cálculo estimado según las reglas 2026 y la información que nos has proporcionado. El importe final dependerá de la revisión oficial.",
+      "postPaymentSubtitle": "Tu pago está confirmado. Ya puedes ver cálculos detallados, documentos y siguientes pasos para la preparación experta.",
+      "totalEstimateLabel": "Tu estimación mensual total",
       "between": "Entre",
       "potentialCount": "{count} subsidios potenciales",
-      "manualReviewCount": "{count} caso con revisi?n manual",
+      "manualReviewCount": "{count} caso con revisión manual",
       "action": {
-        "title": "D?janos preparar tu solicitud",
-        "postTitle": "Contin?a la preparaci?n documental",
-        "copy": "Revisamos tus datos, preparamos la documentaci?n necesaria y maximizamos tus posibilidades de obtener los subsidios a los que puedes optar.",
-        "postCopy": "Tu estimaci?n detallada est? desbloqueada. Contin?a con el checklist documental para que FinTax prepare la solicitud.",
+        "title": "Déjanos preparar tu solicitud",
+        "postTitle": "Continúa la preparación documental",
+        "copy": "Revisamos tus datos, preparamos la documentación necesaria y maximizamos tus posibilidades de obtener los subsidios a los que puedes optar.",
+        "postCopy": "Tu estimación detallada está desbloqueada. Continúa con el checklist documental para que FinTax prepare la solicitud.",
         "footer": "Pago seguro y cifrado"
       },
       "process": {
-        "title": "C?mo funciona",
+        "title": "Cómo funciona",
         "steps": [
           {
-            "title": "Diagn?stico gratis",
-            "body": "Analizamos tu informaci?n y calculamos tus posibles subsidios."
+            "title": "Diagnóstico gratis",
+            "body": "Analizamos tu información y calculamos tus posibles subsidios."
           },
           {
             "title": "Pago seguro",
@@ -1446,21 +1477,21 @@
           },
           {
             "title": "Subida de documentos",
-            "body": "Subes tus documentos y nosotros los preparamos para la revisi?n."
+            "body": "Subes tus documentos y nosotros los preparamos para la revisión."
           },
           {
-            "title": "Preparaci?n de solicitud",
+            "title": "Preparación de solicitud",
             "body": "Preparamos tu solicitud para enviarla y hacemos seguimiento de tu caso."
           }
         ]
       },
       "unlocks": {
-        "title": "Qu? desbloqueas despu?s del pago",
+        "title": "Qué desbloqueas después del pago",
         "items": [
-          "C?lculo detallado por subsidio",
+          "Cálculo detallado por subsidio",
           "Checklist documental personalizado",
-          "Revisi?n del caso por expertos",
-          "Preparaci?n de tu solicitud para env?o"
+          "Revisión del caso por expertos",
+          "Preparación de tu solicitud para envío"
         ]
       }
     }

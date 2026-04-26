@@ -1,7 +1,7 @@
 /// <reference types="vitest/globals" />
 
 import { fireEvent, render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { beforeEach, vi } from "vitest";
 
 import enMessages from "../../messages/en.json";
 
@@ -11,9 +11,16 @@ import { evaluateToeslagen } from "@/lib/toeslagen";
 
 import { createBaseHousehold } from "../toeslagen/helpers";
 
+beforeEach(() => {
+  window.localStorage.clear();
+});
+
 vi.mock("next-intl", () => ({
   useTranslations: (namespace: string) => {
-    const source = (enMessages as Record<string, unknown>)[namespace] as Record<string, unknown>;
+    const source = namespace.split(".").reduce<unknown>((acc, segment) => {
+      if (!acc || typeof acc !== "object") return undefined;
+      return (acc as Record<string, unknown>)[segment];
+    }, enMessages as Record<string, unknown>) as Record<string, unknown>;
 
     const translate = ((key: string, values?: Record<string, string | number>) => {
       const rawValue = key.split(".").reduce<unknown>((acc, segment) => {
@@ -125,7 +132,61 @@ describe("Benefits wizard premium shell", () => {
     render(<BenefitsFlow />);
 
     expect(screen.getByTestId("benefits-wizard-shell")).toBeInTheDocument();
-    expect(screen.getByTestId("benefits-step-card")).toBeInTheDocument();
-    expect(screen.getAllByTestId("benefits-option-card").length).toBeGreaterThanOrEqual(4);
+    expect(screen.getByTestId("benefits-step-main-card")).toBeInTheDocument();
+    expect(screen.getByTestId("benefits-step-help-panel")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /benefit|support/i }).length).toBeGreaterThanOrEqual(4);
+  });
+
+  it("toggles selected benefits by click, space and enter", () => {
+    render(<BenefitsFlow />);
+
+    const health = screen.getByRole("button", { name: /health benefit/i });
+    expect(health).toHaveAttribute("data-state", "selected");
+    fireEvent.click(health);
+    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "unselected");
+    fireEvent.click(screen.getByRole("button", { name: /health benefit/i }));
+    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "selected");
+
+    const rent = screen.getByRole("button", { name: /rent benefit/i });
+    fireEvent.keyDown(rent, { key: " " });
+    expect(screen.getByRole("button", { name: /rent benefit/i })).toHaveAttribute("data-state", "unselected");
+
+    const family = screen.getByRole("button", { name: /family support/i });
+    fireEvent.keyDown(family, { key: "Enter" });
+    expect(screen.getByRole("button", { name: /family support/i })).toHaveAttribute("data-state", "unselected");
+  });
+
+  it("blocks moving forward when no benefit is selected and preserves selection after next/back", async () => {
+    render(<BenefitsFlow />);
+
+    const optionNames = [/health benefit/i, /rent benefit/i, /family support/i, /childcare benefit/i] as const;
+    for (const name of optionNames) {
+      fireEvent.click(screen.getByRole("button", { name }));
+    }
+
+    fireEvent.click(screen.getByTestId("benefits-next-button"));
+    expect(screen.getAllByRole("heading", { name: /select benefits/i }).length).toBeGreaterThan(0);
+
+    const health = screen.getByRole("button", { name: /health benefit/i });
+    fireEvent.click(health);
+    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "selected");
+
+    fireEvent.click(screen.getByTestId("benefits-next-button"));
+    expect((await screen.findAllByRole("heading", { name: /applicant details/i })).length).toBeGreaterThan(0);
+
+    fireEvent.click(screen.getByTestId("benefits-back-button"));
+    expect((await screen.findAllByRole("heading", { name: /select benefits/i })).length).toBeGreaterThan(0);
+    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "selected");
+  });
+
+  it("uses compact progress and hides the full step list by default", () => {
+    render(<BenefitsFlow />);
+
+    expect(screen.getByTestId("benefits-compact-progress")).toBeInTheDocument();
+    expect(screen.getAllByText(/Step 1 of 12/i).length).toBeGreaterThan(0);
+    expect(screen.queryByTestId("benefits-progress-disclosure")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /view all steps/i }));
+    expect(screen.getByTestId("benefits-progress-disclosure")).toBeInTheDocument();
   });
 });

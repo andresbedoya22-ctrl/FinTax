@@ -1,9 +1,11 @@
 import { Resend } from "resend";
 
+import { getEnv } from "../env";
+
 let resendSingleton: Resend | null = null;
 
 export function getResendClient() {
-  const apiKey = process.env.RESEND_API_KEY;
+  const { RESEND_API_KEY: apiKey } = getEnv();
   if (!apiKey) return null;
 
   if (!resendSingleton) {
@@ -23,8 +25,9 @@ export async function sendCaseEmailNotification(params: {
     return { sent: false, reason: "missing_resend_api_key" as const };
   }
 
-  const from = process.env.RESEND_FROM_EMAIL ?? "FinTax <notifications@fintax.local>";
-  if (process.env.NODE_ENV === "production" && from.endsWith("@fintax.local>")) {
+  const env = getEnv();
+  const from = env.RESEND_FROM_EMAIL ?? "FinTax <notifications@fintax.local>";
+  if (env.NODE_ENV === "production" && from.endsWith("@fintax.local>")) {
     return { sent: false, reason: "invalid_production_from_email" as const };
   }
 
