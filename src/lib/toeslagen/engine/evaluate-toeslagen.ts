@@ -1,19 +1,21 @@
 import { calculateHuurtoeslag, calculateKindgebondenBudget, calculateKinderopvangtoeslag, calculateZorgtoeslag } from "../calculators";
+import { coerceHouseholdSnapshot } from "./normalize-household";
 import { validateSnapshot } from "./validation";
 import type { BenefitKey, ToeslagenEvaluation, HouseholdSnapshot } from "../types";
 
 export function evaluateToeslagen(snapshot: HouseholdSnapshot): ToeslagenEvaluation {
-  validateSnapshot(snapshot);
+  const safeSnapshot = coerceHouseholdSnapshot(snapshot);
+  validateSnapshot(safeSnapshot);
 
   const results = {
-    zorgtoeslag: calculateZorgtoeslag(snapshot),
-    huurtoeslag: calculateHuurtoeslag(snapshot),
-    kindgebondenBudget: calculateKindgebondenBudget(snapshot),
-    kinderopvangtoeslag: calculateKinderopvangtoeslag(snapshot),
+    zorgtoeslag: calculateZorgtoeslag(safeSnapshot),
+    huurtoeslag: calculateHuurtoeslag(safeSnapshot),
+    kindgebondenBudget: calculateKindgebondenBudget(safeSnapshot),
+    kinderopvangtoeslag: calculateKinderopvangtoeslag(safeSnapshot),
   };
 
   for (const benefit of Object.keys(results) as BenefitKey[]) {
-    if (!snapshot.selectedBenefits.includes(benefit)) {
+    if (!safeSnapshot.selectedBenefits.includes(benefit)) {
       results[benefit] = {
         ...results[benefit],
         eligible: false,

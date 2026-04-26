@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getDocumentChecklistForBenefit } from "@/lib/toeslagen";
+import { evaluateToeslagen, getDocumentChecklistForBenefit } from "@/lib/toeslagen";
 
 import { createBaseHousehold } from "./helpers";
 
@@ -74,5 +74,77 @@ describe("documents matrix", () => {
     const docs = getDocumentChecklistForBenefit(household, "kinderopvangtoeslag");
 
     expect(docs.requiredDocuments.map((doc) => doc.code)).toContain("foreign_childcare_registration");
+  });
+
+  it("does not crash when partner exists without activityStatus", () => {
+    const household = createBaseHousehold();
+    household.partner = {
+      id: "partner",
+      birthDate: "1994-03-01",
+      countryOfResidence: "NL",
+      nlResident: true,
+      bsnKnown: true,
+      annualIncome: 8000,
+      assets1Jan: 1000,
+      hasDutchHealthInsurance: true,
+      sameAddress: true,
+      isToeslagPartner: true,
+    } as typeof household.partner;
+
+    expect(() => getDocumentChecklistForBenefit(household, "kinderopvangtoeslag")).not.toThrow();
+  });
+
+  it("does not crash when no partner exists", () => {
+    const household = createBaseHousehold();
+    household.partner = null;
+
+    expect(() => getDocumentChecklistForBenefit(household, "kinderopvangtoeslag")).not.toThrow();
+  });
+
+  it("does not crash when children are missing or empty", () => {
+    const household = {
+      ...createBaseHousehold(),
+      children: undefined,
+    } as unknown as ReturnType<typeof createBaseHousehold>;
+
+    expect(() => getDocumentChecklistForBenefit(household, "kinderopvangtoeslag")).not.toThrow();
+  });
+
+  it("returns KOT activity documents when applicant is employed and partner activity is missing", () => {
+    const household = createBaseHousehold();
+    household.partner = {
+      id: "partner",
+      birthDate: "1994-03-01",
+      countryOfResidence: "NL",
+      nlResident: true,
+      bsnKnown: true,
+      annualIncome: 8000,
+      assets1Jan: 1000,
+      hasDutchHealthInsurance: true,
+      sameAddress: true,
+      isToeslagPartner: true,
+    } as typeof household.partner;
+
+    const docs = getDocumentChecklistForBenefit(household, "kinderopvangtoeslag");
+
+    expect(docs.requiredDocuments.map((doc) => doc.code)).toContain("employment_contract_or_payslip");
+    expect(docs.requiredDocuments.map((doc) => doc.code)).toContain("partner_income_activity_proof");
+  });
+
+  it("does not crash evaluateToeslagen for KOT with incomplete partner data", () => {
+    const household = createBaseHousehold();
+    household.selectedBenefits = ["kinderopvangtoeslag"];
+    household.partner = {
+      id: "partner",
+      birthDate: "1994-03-01",
+      countryOfResidence: "NL",
+      nlResident: true,
+      annualIncome: 8000,
+      assets1Jan: 1000,
+      sameAddress: true,
+      isToeslagPartner: true,
+    } as typeof household.partner;
+
+    expect(() => evaluateToeslagen(household)).not.toThrow();
   });
 });

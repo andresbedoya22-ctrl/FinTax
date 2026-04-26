@@ -1,6 +1,6 @@
 import { getDocumentChecklistForBenefit } from "../documents";
 import { getManualReviewReasons } from "../engine/manual-review";
-import { getAgeOnReferenceDate, normalizeHousehold } from "../engine/normalize-household";
+import { coerceHouseholdSnapshot, getAgeOnReferenceDate, normalizeHousehold } from "../engine/normalize-household";
 import { NL_TOESLAGEN_2026 } from "../parameters";
 import type { BenefitEvaluationResult, CalculationStep, HouseholdSnapshot } from "../types";
 
@@ -9,13 +9,14 @@ function floorEuro(value: number) {
 }
 
 export function calculateKindgebondenBudget(snapshot: HouseholdSnapshot): BenefitEvaluationResult {
-  const normalized = normalizeHousehold(snapshot);
+  const safeSnapshot = coerceHouseholdSnapshot(snapshot);
+  const normalized = normalizeHousehold(safeSnapshot);
   const params = NL_TOESLAGEN_2026.kindgebondenBudget;
   const blockingReasons: BenefitEvaluationResult["blockingReasons"] = [];
-  const warningReasons: BenefitEvaluationResult["warningReasons"] = getManualReviewReasons(snapshot, "kindgebondenBudget");
+  const warningReasons: BenefitEvaluationResult["warningReasons"] = getManualReviewReasons(safeSnapshot, "kindgebondenBudget");
   const steps: CalculationStep[] = [];
 
-  const eligibleChildren = snapshot.children.filter((child) => getAgeOnReferenceDate(child.birthDate) < 18);
+  const eligibleChildren = safeSnapshot.children.filter((child) => getAgeOnReferenceDate(child.birthDate) < 18);
   if (!eligibleChildren.length) {
     blockingReasons.push("KGB_NO_CHILD_UNDER_18");
   }
@@ -32,9 +33,9 @@ export function calculateKindgebondenBudget(snapshot: HouseholdSnapshot): Benefi
 
   const assetLimit = normalized.hasPartner ? params.maxAssetsWithPartner : params.maxAssetsSingle;
   const relevantAssets = normalized.hasPartner
-    ? snapshot.assets.applicantAssets1Jan + snapshot.assets.partnerAssets1Jan
-    : snapshot.assets.applicantAssets1Jan;
-  if (relevantAssets > assetLimit || snapshot.assets.hasSpecialAssets) {
+    ? safeSnapshot.assets.applicantAssets1Jan + safeSnapshot.assets.partnerAssets1Jan
+    : safeSnapshot.assets.applicantAssets1Jan;
+  if (relevantAssets > assetLimit || safeSnapshot.assets.hasSpecialAssets) {
     blockingReasons.push("KGB_ASSETS_TOO_HIGH");
   }
 
@@ -65,13 +66,13 @@ export function calculateKindgebondenBudget(snapshot: HouseholdSnapshot): Benefi
   const annual = Math.round(annualRaw * 100) / 100;
   const monthly = floorEuro(annual / 12);
 
-  if (snapshot.specialSituations.childAbroad) {
+  if (safeSnapshot.specialSituations.childAbroad) {
     warningReasons.push("KGB_FOREIGN_CHILD_MANUAL_REVIEW");
   }
-  if (snapshot.specialSituations.composedFamily) {
+  if (safeSnapshot.specialSituations.composedFamily) {
     warningReasons.push("KGB_COMPOSED_FAMILY_MANUAL_REVIEW");
   }
-  if (snapshot.children.some((child) => child.isCoParentingChild)) {
+  if (safeSnapshot.children.some((child) => child.isCoParentingChild)) {
     warningReasons.push("KGB_CO_PARENTING_MANUAL_REVIEW");
   }
   if (income > threshold && annual === 0) {
@@ -91,8 +92,8 @@ export function calculateKindgebondenBudget(snapshot: HouseholdSnapshot): Benefi
     { code: "monthly", labelKey: "Benefits.results.calculation.monthlyAmount", value: monthly, formula: "floor(annual / 12)" },
   );
 
-  const docs = getDocumentChecklistForBenefit(snapshot, "kindgebondenBudget");
-  const exactAmountBlocked = snapshot.specialSituations.childAbroad;
+  const docs = getDocumentChecklistForBenefit(safeSnapshot, "kindgebondenBudget");
+  const exactAmountBlocked = safeSnapshot.specialSituations.childAbroad;
   const eligible = blockingReasons.length === 0;
 
   return {

@@ -4,6 +4,11 @@ import type {
   HouseholdSnapshot,
   ToeslagenEvaluation,
 } from "./types";
+import {
+  coerceHouseholdSnapshot,
+  DEFAULT_ASSETS_SNAPSHOT,
+  DEFAULT_FALSE_SPECIAL_SITUATIONS,
+} from "./engine/normalize-household";
 
 function createDocument(
   code: string,
@@ -51,6 +56,14 @@ export function getDocumentChecklistForBenefit(
   benefit: BenefitKey,
   evaluation?: ToeslagenEvaluation,
 ) {
+  const safeSnapshot = coerceHouseholdSnapshot(snapshot);
+  const applicantActivity = safeSnapshot.applicant.activityStatus ?? [];
+  const partnerActivity = safeSnapshot.partner?.activityStatus ?? [];
+  const children = safeSnapshot.children ?? [];
+  const residents = safeSnapshot.residents ?? [];
+  const assets = safeSnapshot.assets ?? DEFAULT_ASSETS_SNAPSHOT;
+  const specialSituations = safeSnapshot.specialSituations ?? DEFAULT_FALSE_SPECIAL_SITUATIONS;
+  const housing = safeSnapshot.housing;
   const baseDocs: DocumentRequirement[] = [
     createDocument("identity_document", [benefit], "required", ["all_applications"]),
     createDocument("bsn_applicant", [benefit], "required", ["all_applications"]),
@@ -65,7 +78,7 @@ export function getDocumentChecklistForBenefit(
     ),
   ];
 
-  if (snapshot.partner) {
+  if (safeSnapshot.partner) {
     baseDocs.push(
       createDocument("partner_details_if_applicable", [benefit], "required", ["partner_present"]),
     );
@@ -75,19 +88,19 @@ export function getDocumentChecklistForBenefit(
 
   if (benefit === "zorgtoeslag") {
     items.push(createDocument("health_insurance_policy_applicant", [benefit], "required", ["zorgtoeslag"]));
-    if (snapshot.partner) {
+    if (safeSnapshot.partner) {
       items.push(createDocument("health_insurance_policy_partner", [benefit], "required", ["partner_present"]));
     }
     items.push(createDocument("income_proof", [benefit], "required", ["zorgtoeslag"]));
     items.push(createDocument("assets_statement_if_near_limit", [benefit], "recommended", ["assets_near_limit"]));
-    if (snapshot.specialSituations.foreignResidence || snapshot.specialSituations.cakInsured) {
+    if (specialSituations.foreignResidence || specialSituations.cakInsured) {
       items.push(createDocument("cak_or_verdragsgerechtigde_proof", [benefit], "manual_review", ["foreign_or_cak_case"]));
     }
     if (
-      snapshot.specialSituations.military ||
-      snapshot.specialSituations.detained ||
-      snapshot.specialSituations.gemoedsbezwaarde ||
-      snapshot.specialSituations.noFixedAddress
+      specialSituations.military ||
+      specialSituations.detained ||
+      specialSituations.gemoedsbezwaarde ||
+      specialSituations.noFixedAddress
     ) {
       items.push(createDocument("special_status_evidence", [benefit], "manual_review", ["special_status"]));
     }
@@ -99,29 +112,29 @@ export function getDocumentChecklistForBenefit(
     items.push(createDocument("landlord_rent_change_letter", [benefit], "recommended", ["rent_changed"]));
     items.push(createDocument("brp_registration_proof", [benefit], "recommended", ["address_confirmation_needed"]));
     items.push(createDocument("rent_payment_proof", [benefit], "required", ["huurtoeslag"]));
-    if (snapshot.partner) {
+    if (safeSnapshot.partner) {
       items.push(createDocument("partner_income_assets_proof", [benefit], "required", ["partner_present"]));
     }
-    if (snapshot.residents.some((resident) => !resident.isSubtenant)) {
+    if (residents.some((resident) => !resident.isSubtenant)) {
       items.push(createDocument("resident_income_assets_proof", [benefit], "required", ["medebewoners_present"]));
     }
-    if (snapshot.residents.some((resident) => resident.isSubtenant)) {
+    if (residents.some((resident) => resident.isSubtenant)) {
       items.push(createDocument("subtenant_contract_and_bank_statements", [benefit], "required", ["subtenant_present"]));
     }
-    if (snapshot.housing?.isWoonwagen) {
+    if (housing?.isWoonwagen) {
       items.push(createDocument("woonwagen_standplaats_proof", [benefit], "required", ["woonwagen_case"]));
     }
-    if (snapshot.housing?.groupHousingForElderlyOrAssistedLiving) {
+    if (housing?.groupHousingForElderlyOrAssistedLiving) {
       items.push(createDocument("group_housing_recognition_proof", [benefit], "manual_review", ["group_housing_case"]));
     }
-    if (snapshot.children.some((child) => child.isCoParentingChild)) {
+    if (children.some((child) => child.isCoParentingChild)) {
       items.push(createDocument("co_parenting_agreement", [benefit], "recommended", ["co_parenting_child"]));
     }
     if (
-      snapshot.specialSituations.bijzonderInkomen ||
-      snapshot.specialSituations.bijzondereVermogen ||
-      snapshot.specialSituations.longAbsenceFromHome ||
-      snapshot.specialSituations.homeCareSituation
+      specialSituations.bijzonderInkomen ||
+      specialSituations.bijzondereVermogen ||
+      specialSituations.longAbsenceFromHome ||
+      specialSituations.homeCareSituation
     ) {
       items.push(createDocument("special_income_assets_manual_review_proof", [benefit], "manual_review", ["special_huur_case"]));
     }
@@ -132,22 +145,22 @@ export function getDocumentChecklistForBenefit(
     items.push(createDocument("child_birth_date", [benefit], "required", ["child_present"]));
     items.push(createDocument("svb_kinderbijslag_proof", [benefit], "required", ["child_present"]));
     items.push(createDocument("assets_1_january", [benefit], "required", ["kgb"]));
-    if (snapshot.partner) {
+    if (safeSnapshot.partner) {
       items.push(createDocument("partner_income_proof", [benefit], "required", ["partner_present"]));
     }
-    if (snapshot.children.some((child) => child.isCoParentingChild)) {
+    if (children.some((child) => child.isCoParentingChild)) {
       items.push(createDocument("co_parenting_agreement", [benefit], "recommended", ["co_parenting_child"]));
     }
-    if (snapshot.specialSituations.composedFamily) {
+    if (specialSituations.composedFamily) {
       items.push(createDocument("composed_family_documents", [benefit], "manual_review", ["composed_family"]));
     }
-    if (snapshot.specialSituations.childAbroad) {
+    if (specialSituations.childAbroad) {
       items.push(createDocument("child_abroad_residence_and_woonlandfactor_documents", [benefit], "manual_review", ["child_abroad"]));
     }
-    if (snapshot.specialSituations.adoptionFosterStepChild) {
+    if (specialSituations.adoptionFosterStepChild) {
       items.push(createDocument("foster_step_adoption_documents", [benefit], "recommended", ["family_status_exception"]));
     }
-    if (snapshot.assets.childAssets1Jan > 0) {
+    if (assets.childAssets1Jan > 0) {
       items.push(createDocument("child_assets_proof", [benefit], "recommended", ["child_assets_present"]));
     }
   }
@@ -164,37 +177,37 @@ export function getDocumentChecklistForBenefit(
     items.push(createDocument("bank_payment_proof", [benefit], "required", ["kot"]));
     items.push(createDocument("child_bsn", [benefit], "required", ["child_present"]));
     items.push(createDocument("applicant_income_proof", [benefit], "required", ["kot"]));
-    if (snapshot.partner) {
+    if (safeSnapshot.partner) {
       items.push(createDocument("partner_income_activity_proof", [benefit], "required", ["partner_present"]));
     }
-    if (snapshot.applicant.activityStatus.includes("employed") || snapshot.partner?.activityStatus.includes("employed")) {
+    if (applicantActivity.includes("employed") || partnerActivity.includes("employed")) {
       items.push(createDocument("employment_contract_or_payslip", [benefit], "required", ["employment_activity"]));
     }
-    if (snapshot.applicant.activityStatus.includes("selfEmployed") || snapshot.partner?.activityStatus.includes("selfEmployed")) {
+    if (applicantActivity.includes("selfEmployed") || partnerActivity.includes("selfEmployed")) {
       items.push(createDocument("zzp_kvk_invoices_bookkeeping_hours", [benefit], "required", ["self_employed_activity"]));
     }
-    if (snapshot.applicant.activityStatus.includes("studentRecognized") || snapshot.partner?.activityStatus.includes("studentRecognized")) {
+    if (applicantActivity.includes("studentRecognized") || partnerActivity.includes("studentRecognized")) {
       items.push(createDocument("education_enrollment_proof", [benefit], "required", ["student_activity"]));
     }
-    if (snapshot.applicant.activityStatus.includes("inburgeringCourse") || snapshot.partner?.activityStatus.includes("inburgeringCourse")) {
+    if (applicantActivity.includes("inburgeringCourse") || partnerActivity.includes("inburgeringCourse")) {
       items.push(createDocument("inburgering_course_proof", [benefit], "required", ["inburgering_activity"]));
     }
     if (
-      snapshot.applicant.activityStatus.includes("trajectoryToWork") ||
-      snapshot.applicant.activityStatus.includes("workReintegration") ||
-      snapshot.partner?.activityStatus.includes("trajectoryToWork") ||
-      snapshot.partner?.activityStatus.includes("workReintegration")
+      applicantActivity.includes("trajectoryToWork") ||
+      applicantActivity.includes("workReintegration") ||
+      partnerActivity.includes("trajectoryToWork") ||
+      partnerActivity.includes("workReintegration")
     ) {
       items.push(createDocument("uwv_or_municipality_trajectory_proof", [benefit], "required", ["trajectory_activity"]));
     }
-    if (snapshot.children.some((child) => child.isCoParentingChild)) {
+    if (children.some((child) => child.isCoParentingChild)) {
       items.push(createDocument("co_parenting_agreement", [benefit], "recommended", ["co_parenting_child"]));
     }
-    if (snapshot.specialSituations.childcareAbroad) {
+    if (specialSituations.childcareAbroad) {
       items.push(createDocument("foreign_childcare_registration", [benefit], "manual_review", ["foreign_childcare"]));
     }
     if (
-      snapshot.children.some((child) =>
+      children.some((child) =>
         child.childcareArrangements.some((arrangement) => arrangement.providerType === "gastouder"),
       )
     ) {
