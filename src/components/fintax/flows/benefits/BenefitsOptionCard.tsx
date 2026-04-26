@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Check } from "lucide-react";
 
 import { cn } from "@/lib/cn";
@@ -24,8 +23,6 @@ export function BenefitsOptionCard({
   disabled = false,
   testId = "benefits-option-card",
 }: BenefitsOptionCardProps) {
-  const skipNextClickRef = React.useRef(false);
-
   return (
     <button
       type="button"
@@ -33,25 +30,11 @@ export function BenefitsOptionCard({
       disabled={disabled}
       data-state={selected ? "selected" : "unselected"}
       data-testid={testId}
-      onClick={() => {
-        if (skipNextClickRef.current) {
-          skipNextClickRef.current = false;
-          return;
-        }
-
-        onToggle();
-      }}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          skipNextClickRef.current = true;
-          onToggle();
-        }
-      }}
+      onClick={onToggle}
       className={cn(
         "group flex w-full items-start gap-4 rounded-[22px] border p-5 text-left text-white outline-none transition focus-visible:ring-4 focus-visible:ring-[#4CAF50]/25 disabled:cursor-not-allowed disabled:opacity-60",
         selected
-          ? "border-[#4CAF50] bg-[#4CAF50]/[0.14] shadow-[0_18px_42px_rgba(76,175,80,0.12)]"
+          ? "border-[#4CAF50] bg-[#4CAF50]/20 shadow-[0_18px_42px_rgba(76,175,80,0.12)]"
           : "border-white/10 bg-white/[0.045] hover:border-white/[0.18] hover:bg-white/[0.07]",
       )}
     >

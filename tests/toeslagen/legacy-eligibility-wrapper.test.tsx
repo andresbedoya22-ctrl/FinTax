@@ -6,6 +6,7 @@ import { BenefitsResults } from "@/components/fintax/flows/benefits/BenefitsResu
 import { evaluateToeslagen } from "@/lib/toeslagen";
 import { toHouseholdSnapshot, benefitsDefaultValues } from "@/components/fintax/flows/benefits/wizard";
 import { calculateEligibility } from "@/lib/utils/eligibility-calculator";
+import { createBaseHousehold } from "./helpers";
 
 const messages = {
   Benefits: {
@@ -83,13 +84,16 @@ describe("legacy eligibility wrapper", () => {
   });
 
   it("does not crash BenefitsResults when fed the legacy wrapper output", () => {
-    const result = evaluateToeslagen(toHouseholdSnapshot(benefitsDefaultValues));
+    const result = evaluateToeslagen({
+      ...toHouseholdSnapshot(benefitsDefaultValues),
+      selectedBenefits: createBaseHousehold().selectedBenefits,
+    });
 
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
         <BenefitsResults
           results={result}
-          selectedKeys={[]}
+          selectedKeys={["zorgtoeslag"]}
           onToggleSelected={() => undefined}
         />
       </NextIntlClientProvider>,

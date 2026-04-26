@@ -4,11 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { BriefcaseBusiness, ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
-import { useFieldArray, useForm, type UseFormReturn } from "react-hook-form";
+import { useFieldArray, useForm, useWatch, type UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/fintax/Button";
 import {
   BenefitsResults,
+  BenefitsSelectionStep,
   benefitsDefaultValues,
   benefitsWizardSchema,
   benefitStepKeys,
@@ -23,7 +24,6 @@ import {
 } from "@/components/fintax/flows/benefits";
 import { BenefitsCompactProgress } from "@/components/fintax/flows/benefits/BenefitsCompactProgress";
 import { BenefitsOptionCard } from "@/components/fintax/flows/benefits/BenefitsOptionCard";
-import { benefitIcons } from "@/components/fintax/ui";
 import { apiGet, apiPost, isApiClientError } from "@/hooks/api-client";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -32,13 +32,6 @@ import type { Case } from "@/types/database";
 import { loadWizardSnapshot, persistWizardSnapshot, readWizardSnapshot } from "@/lib/wizards/persistence";
 
 const storageKey = "fintax-benefits-wizard";
-
-const benefitKeys: BenefitCardKey[] = [
-  "zorgtoeslag",
-  "huurtoeslag",
-  "kindgebondenBudget",
-  "kinderopvangtoeslag",
-];
 
 export function BenefitsFlow({
   initialMode = "prePayment",
@@ -65,6 +58,7 @@ export function BenefitsFlow({
   const hasAutoCheckoutRef = React.useRef(false);
 
   const values = form.watch();
+  const selectedBenefits = useWatch({ control: form.control, name: "selectedBenefits" }) ?? [];
   const normalizedValues = React.useMemo(() => normalizeBenefitsValues(values), [values]);
   const evaluation = React.useMemo(
     () => (normalizedValues.selectedBenefits.length > 0 ? evaluateToeslagen(toHouseholdSnapshot(normalizedValues)) : null),
@@ -104,12 +98,6 @@ export function BenefitsFlow({
       },
     });
   }, [currentStep, mode, normalizedValues, postPaymentCaseId]);
-
-  React.useEffect(() => {
-    if (JSON.stringify(normalizedValues) !== JSON.stringify(values)) {
-      form.reset(normalizedValues, { keepDirtyValues: true });
-    }
-  }, [form, normalizedValues, values]);
 
   React.useEffect(() => {
     if (mode !== "postPayment" || !postPaymentCaseId) {
@@ -251,6 +239,10 @@ export function BenefitsFlow({
 
   const nextStep = async () => {
     if (benefitStepKeys[currentStep] === "results") return;
+    if (benefitStepKeys[currentStep] === "start" && selectedBenefits.length === 0) {
+      await form.trigger("selectedBenefits");
+      return;
+    }
     const valid = await form.trigger(getStepFieldNames(currentStep) as never);
     if (!valid) return;
     setCurrentStep((step) => Math.min(step + 1, benefitStepKeys.length - 1));
@@ -306,7 +298,7 @@ export function BenefitsFlow({
           ) : (
             <>
               <form onSubmit={form.handleSubmit(() => undefined)} className="space-y-6" noValidate>
-                {benefitStepKeys[currentStep] === "start" ? <StartStep form={form} /> : null}
+                {benefitStepKeys[currentStep] === "start" ? <BenefitsSelectionStep form={form} /> : null}
                 {benefitStepKeys[currentStep] === "applicant" ? <ApplicantStep form={form} /> : null}
                 {benefitStepKeys[currentStep] === "partner" ? <PartnerStep form={form} /> : null}
                 {benefitStepKeys[currentStep] === "income" ? <IncomeStep form={form} /> : null}
@@ -343,7 +335,14 @@ export function BenefitsFlow({
                 </Button>
 
                 {benefitStepKeys[currentStep] !== "results" ? (
-                  <Button type="button" className="rounded-[16px] px-6" onClick={nextStep} rightIcon={<ChevronRight className="size-4" />} data-testid="benefits-next-button">
+                  <Button
+                    type="button"
+                    className="rounded-[16px] px-6"
+                    onClick={nextStep}
+                    rightIcon={<ChevronRight className="size-4" />}
+                    data-testid="benefits-next-button"
+                    disabled={benefitStepKeys[currentStep] === "start" && selectedBenefits.length === 0}
+                  >
                     {t("next")}
                   </Button>
                 ) : null}
@@ -460,41 +459,6 @@ function CheckboxRow({
 }) {
   return (
     <BenefitsOptionCard selected={checked} title={label} onToggle={() => onChange(!checked)} />
-  );
-}
-
-function StartStep({ form }: { form: UseFormReturn<BenefitsFormValues> }) {
-  const t = useTranslations("Benefits");
-  const selected = form.watch("selectedBenefits") ?? [];
-
-  return (
-    <StepShell title={t("steps.start.title")} description={t("steps.start.description")}>
-      <Panel>
-        <div className="grid gap-3 md:grid-cols-2">
-          {benefitKeys.map((key) => {
-            const Icon = benefitIcons[key];
-            return (
-              <BenefitsOptionCard
-                key={key}
-                selected={selected.includes(key)}
-                title={t(`results.cards.${key}.title`)}
-                description={t(`results.cards.${key}.subtitle`)}
-                icon={<Icon className="size-6" />}
-                onToggle={() => {
-                  const checked = !selected.includes(key);
-                  const next = checked ? [...selected, key] : selected.filter((value) => value !== key);
-                  form.setValue("selectedBenefits", Array.from(new Set(next)), {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                    shouldValidate: true,
-                  });
-                }}
-              />
-            );
-          })}
-        </div>
-      </Panel>
-    </StepShell>
   );
 }
 

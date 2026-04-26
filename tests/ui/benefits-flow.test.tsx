@@ -1,6 +1,7 @@
 /// <reference types="vitest/globals" />
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, vi } from "vitest";
 
 import enMessages from "../../messages/en.json";
@@ -37,10 +38,11 @@ vi.mock("next-intl", () => ({
       );
     }) as ((key: string, values?: Record<string, string | number>) => string) & { raw: (key: string) => unknown };
 
-    translate.raw = (key: string) => key.split(".").reduce<unknown>((acc, segment) => {
-      if (!acc || typeof acc !== "object") return undefined;
-      return (acc as Record<string, unknown>)[segment];
-    }, source);
+    translate.raw = (key: string) =>
+      key.split(".").reduce<unknown>((acc, segment) => {
+        if (!acc || typeof acc !== "object") return undefined;
+        return (acc as Record<string, unknown>)[segment];
+      }, source);
 
     return translate;
   },
@@ -108,9 +110,10 @@ describe("Benefits results modes", () => {
     expect(screen.getAllByText(/upload the required documents/i).length).toBeGreaterThan(0);
   });
 
-  it("prePayment checkout CTA can be triggered", () => {
+  it("prePayment checkout CTA can be triggered", async () => {
     const results = buildEvaluation();
     const onContinueToCheckout = vi.fn();
+    const user = userEvent.setup();
 
     render(
       <BenefitsResults
@@ -122,71 +125,108 @@ describe("Benefits results modes", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /continue and let fintax prepare my application/i }));
+    await user.click(screen.getByRole("button", { name: /continue and let fintax prepare my application/i }));
     expect(onContinueToCheckout).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("Benefits wizard premium shell", () => {
-  it("renders the start step as premium option cards", () => {
+describe("Benefits wizard option selection", () => {
+  function renderBenefitsFlow() {
+    const user = userEvent.setup();
     render(<BenefitsFlow />);
 
-    expect(screen.getByTestId("benefits-wizard-shell")).toBeInTheDocument();
-    expect(screen.getByTestId("benefits-step-main-card")).toBeInTheDocument();
-    expect(screen.getByTestId("benefits-step-help-panel")).toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: /benefit|support/i }).length).toBeGreaterThanOrEqual(4);
+    return {
+      user,
+      nextButton: screen.getByTestId("benefits-next-button"),
+      healthCard: screen.getByTestId("benefit-option-zorgtoeslag"),
+      rentCard: screen.getByTestId("benefit-option-huurtoeslag"),
+      familyCard: screen.getByTestId("benefit-option-kindgebondenBudget"),
+      debugSelected: () => screen.getByTestId("benefits-debug-selected"),
+    };
+  }
+
+  it("starts with no selected benefits and a disabled continue button", () => {
+    const { nextButton, healthCard, rentCard, familyCard, debugSelected } = renderBenefitsFlow();
+
+    expect(healthCard).toHaveAttribute("data-state", "unselected");
+    expect(rentCard).toHaveAttribute("data-state", "unselected");
+    expect(familyCard).toHaveAttribute("data-state", "unselected");
+    expect(debugSelected()).toHaveTextContent("[]");
+    expect(nextButton).toBeDisabled();
+    expect(screen.getByTestId("benefits-selection-help")).toHaveTextContent(/select at least one benefit to continue/i);
   });
 
-  it("toggles selected benefits by click, space and enter", () => {
-    render(<BenefitsFlow />);
+  it("clicking a benefit selects it, updates debug state, and enables continue", async () => {
+    const { user, nextButton, healthCard, debugSelected } = renderBenefitsFlow();
 
-    const health = screen.getByRole("button", { name: /health benefit/i });
-    expect(health).toHaveAttribute("data-state", "selected");
-    fireEvent.click(health);
-    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "unselected");
-    fireEvent.click(screen.getByRole("button", { name: /health benefit/i }));
-    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "selected");
+    await user.click(healthCard);
 
-    const rent = screen.getByRole("button", { name: /rent benefit/i });
-    fireEvent.keyDown(rent, { key: " " });
-    expect(screen.getByRole("button", { name: /rent benefit/i })).toHaveAttribute("data-state", "unselected");
-
-    const family = screen.getByRole("button", { name: /family support/i });
-    fireEvent.keyDown(family, { key: "Enter" });
-    expect(screen.getByRole("button", { name: /family support/i })).toHaveAttribute("data-state", "unselected");
+    expect(healthCard).toHaveAttribute("data-state", "selected");
+    expect(debugSelected()).toHaveTextContent('"zorgtoeslag"');
+    expect(nextButton).toBeEnabled();
   });
 
-  it("blocks moving forward when no benefit is selected and preserves selection after next/back", async () => {
-    render(<BenefitsFlow />);
+  it("clicking the same benefit again deselects it without crashing and disables continue", async () => {
+    const { user, nextButton, healthCard, debugSelected } = renderBenefitsFlow();
 
-    const optionNames = [/health benefit/i, /rent benefit/i, /family support/i, /childcare benefit/i] as const;
-    for (const name of optionNames) {
-      fireEvent.click(screen.getByRole("button", { name }));
-    }
+    await user.click(healthCard);
+    await user.click(healthCard);
 
-    fireEvent.click(screen.getByTestId("benefits-next-button"));
+    expect(healthCard).toHaveAttribute("data-state", "unselected");
+    expect(debugSelected()).toHaveTextContent("[]");
+    expect(nextButton).toBeDisabled();
     expect(screen.getAllByRole("heading", { name: /select benefits/i }).length).toBeGreaterThan(0);
+  });
 
-    const health = screen.getByRole("button", { name: /health benefit/i });
-    fireEvent.click(health);
-    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "selected");
+  it("stores multiple selected benefit keys", async () => {
+    const { user, nextButton, healthCard, rentCard, debugSelected } = renderBenefitsFlow();
 
-    fireEvent.click(screen.getByTestId("benefits-next-button"));
+    await user.click(healthCard);
+    await user.click(rentCard);
+
+    expect(healthCard).toHaveAttribute("data-state", "selected");
+    expect(rentCard).toHaveAttribute("data-state", "selected");
+    expect(debugSelected()).toHaveTextContent('"zorgtoeslag"');
+    expect(debugSelected()).toHaveTextContent('"huurtoeslag"');
+    expect(nextButton).toBeEnabled();
+  });
+
+  it("supports native keyboard toggling with enter and space", async () => {
+    const { user, healthCard, rentCard, debugSelected } = renderBenefitsFlow();
+
+    healthCard.focus();
+    await user.keyboard("{Enter}");
+    expect(healthCard).toHaveAttribute("data-state", "selected");
+    expect(debugSelected()).toHaveTextContent('"zorgtoeslag"');
+
+    rentCard.focus();
+    await user.keyboard(" ");
+    expect(rentCard).toHaveAttribute("data-state", "selected");
+    expect(debugSelected()).toHaveTextContent('"huurtoeslag"');
+  });
+
+  it("preserves selected benefits after navigating next and back", async () => {
+    const { user, nextButton, healthCard } = renderBenefitsFlow();
+
+    await user.click(healthCard);
+    await user.click(nextButton);
+
     expect((await screen.findAllByRole("heading", { name: /applicant details/i })).length).toBeGreaterThan(0);
 
-    fireEvent.click(screen.getByTestId("benefits-back-button"));
+    await user.click(screen.getByTestId("benefits-back-button"));
+
     expect((await screen.findAllByRole("heading", { name: /select benefits/i })).length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /health benefit/i })).toHaveAttribute("data-state", "selected");
+    expect(screen.getByTestId("benefit-option-zorgtoeslag")).toHaveAttribute("data-state", "selected");
   });
 
-  it("uses compact progress and hides the full step list by default", () => {
-    render(<BenefitsFlow />);
+  it("uses compact progress and hides the full step list by default", async () => {
+    const { user } = renderBenefitsFlow();
 
     expect(screen.getByTestId("benefits-compact-progress")).toBeInTheDocument();
     expect(screen.getAllByText(/Step 1 of 12/i).length).toBeGreaterThan(0);
     expect(screen.queryByTestId("benefits-progress-disclosure")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /view all steps/i }));
+    await user.click(screen.getByRole("button", { name: /view all steps/i }));
     expect(screen.getByTestId("benefits-progress-disclosure")).toBeInTheDocument();
   });
 });
