@@ -17,6 +17,7 @@ export async function persistWizardSnapshot(params: {
   storageKey: string;
   caseId?: string;
   payload: Record<string, unknown>;
+  skipRemote?: boolean;
 }) {
   const snapshot = buildLocalWizardSnapshot(params);
 
@@ -24,7 +25,7 @@ export async function persistWizardSnapshot(params: {
     window.localStorage.setItem(params.storageKey, JSON.stringify(snapshot));
   }
 
-  if (!params.caseId) return;
+  if (!params.caseId || params.skipRemote) return;
 
   try {
     const supabase = createClient();
